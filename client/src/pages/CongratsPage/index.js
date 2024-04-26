@@ -1,0 +1,1 @@
+export { CongratsPage } from './CongratsPage';

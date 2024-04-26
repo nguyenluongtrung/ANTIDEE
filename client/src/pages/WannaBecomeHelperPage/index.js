@@ -1,0 +1,1 @@
+export { WannaBecomeHelperPage } from './WannaBecomeHelperPage';

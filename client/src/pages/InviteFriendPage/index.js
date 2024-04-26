@@ -1,0 +1,1 @@
+export { InviteFriendPage } from './InviteFriendPage';
