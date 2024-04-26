@@ -1,8 +1,15 @@
-import React from 'react'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { Layout } from './layout';
 
 const App = () => {
   return (
-    <div className='text-center'>App</div>
+    <div>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Layout />}></Route>
+        </Routes>
+      </Router>
+    </div>
   )
 }
 
