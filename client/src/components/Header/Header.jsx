@@ -94,6 +94,7 @@ export const Header = () => {
 					</button>
 				</div>
 			</div>
+			<hr className='hr-header'></hr>
 		</div>
 	);
 };
