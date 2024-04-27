@@ -6,8 +6,8 @@ const accountSchema = mongoose.Schema(
 	{
 		role: {
 			type: String,
-			enum: ['guest', 'customer', 'domestic_helper', 'admin'],
-			default: 'guest',
+			enum: ['customer', 'domestic_helper', 'admin'],
+			default: 'customer',
 		},
 		name: {
 			type: String,
