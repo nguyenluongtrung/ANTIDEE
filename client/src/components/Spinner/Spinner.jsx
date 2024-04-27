@@ -1,7 +1,9 @@
-import React from 'react'
+import './Spinner.css'
 
 export const Spinner = () => {
   return (
-    <div>Spinner</div>
+    <div className='loadingSpinnerContainer'>
+        <div className='loadingSpinner'></div>
+    </div>
   )
 }

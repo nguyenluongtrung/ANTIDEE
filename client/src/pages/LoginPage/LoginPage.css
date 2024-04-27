@@ -1,0 +1,21 @@
+@import './../../constants/colors';
+
+.login-container {
+	border: 1px solid var(--gray-color);
+	padding: 15px 20px;
+	width: 25vw;
+}
+
+.primary-color {
+	color: var(--primary-color);
+}
+
+input, button{
+	width: 100%
+}
+
+.login-btn{
+	background-color: var(--primary-color);
+
+}
+

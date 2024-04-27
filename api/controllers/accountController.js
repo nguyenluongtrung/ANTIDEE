@@ -9,9 +9,9 @@ const generateToken = (id) => {
 };
 
 const login = asyncHandler(async (req, res) => {
-	const { email, password } = req.body;
+	const { phoneNumber, password } = req.body;
 
-	const account = await Account.findOne({ email }).select('+password');
+	const account = await Account.findOne({ phoneNumber }).select('+password');
 
 	if (
 		account &&
@@ -26,7 +26,7 @@ const login = asyncHandler(async (req, res) => {
 		});
 	} else {
 		res.status(400);
-		throw new Error('Email or password is invalid!');
+		throw new Error('Phone number or password is invalid!');
 	}
 });
 
