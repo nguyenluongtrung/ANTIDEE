@@ -1,0 +1,52 @@
+.normal-text {
+	font-size: 14px;
+}
+
+.header-login-btn,
+.header-register-btn {
+	padding: 3px 0 5px 0;
+}
+
+.logo-text {
+	font-size: 16px;
+}
+
+.dropbtn {
+	border: none;
+	cursor: pointer;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 350px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+.dropdown-content span {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: inline-block;
+}
+
+.dropdown-content span:hover {
+	background-color: #f1f1f1;
+}
+
+.dropdown:hover {
+	display: block;
+    
+    .dropdown-content{
+        display: flex;
+    }
+}
+
+
