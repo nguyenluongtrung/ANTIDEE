@@ -9,7 +9,7 @@ export const Header = () => {
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 	const [isOpenRegisterForm, setIsOpenRegisterForm] = useState(false);
 	return (
-		<div>
+		<div className='mb-7'>
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 			{isOpenRegisterForm && (
 				<RegisterPage

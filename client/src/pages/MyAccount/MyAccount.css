@@ -1,0 +1,25 @@
+.right-container{
+    width: 51vw;
+    border: 1px solid rgb(155, 154, 154);
+}
+
+.left-vertical{
+    border-left: 1px solid rgb(204, 203, 203);
+}
+
+.right-vertical{
+    border-right: 1px solid rgb(204, 203, 203);
+}
+
+.bottom-horizontal{
+    border-bottom: 1px solid rgb(204, 203, 203);
+}
+
+.rounded-customized-gray{
+    border: 1px solid rgb(155, 154, 154);
+}
+
+.update-btn{
+    padding: 8px;
+    width: 42%;
+}

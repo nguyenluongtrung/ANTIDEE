@@ -6,8 +6,8 @@ const accountSchema = mongoose.Schema(
 	{
 		role: {
 			type: String,
-			enum: ['customer', 'domestic_helper', 'admin'],
-			default: 'customer',
+			enum: ['Khách hàng', 'Người giúp việc', 'Admin'],
+			default: 'Khách hàng',
 		},
 		name: {
 			type: String,
@@ -20,15 +20,16 @@ const accountSchema = mongoose.Schema(
 		},
 		email: {
 			type: String,
-			required: [true, 'Account email is mandatory'],
-			validate: [validator.isEmail, 'Please enter a valid email'],
+			required: [true, 'Email là bắt buộc'],
+			validate: [validator.isEmail, 'Nhập lại email cho đúng'],
 		},
 		dob: {
 			type: Date,
 		},
 		gender: {
 			type: String,
-			enum: ['male', 'female', 'other'],
+			enum: ['Nam', 'Nữ', 'Khác'],
+			default: 'Nam',
 		},
 		avatar: {
 			type: String,
@@ -37,6 +38,8 @@ const accountSchema = mongoose.Schema(
 			customerLevel: {
 				name: {
 					type: String,
+					enum: ['Đồng', 'Bạc', 'Vàng', 'Kim cương'],
+					default: 'Đồng',
 				},
 				description: {
 					type: String,
@@ -51,6 +54,14 @@ const accountSchema = mongoose.Schema(
 			domesticHelperLevel: {
 				name: {
 					type: String,
+					enum: [
+						'Kiến con',
+						'Kiến trưởng thành',
+						'Kiến thợ',
+						'Kiến chiến binh',
+						'Kiến chúa',
+					],
+					default: 'Kiến con',
 				},
 				description: {
 					type: String,
