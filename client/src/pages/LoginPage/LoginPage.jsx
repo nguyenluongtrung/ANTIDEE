@@ -5,12 +5,19 @@ import { BsFacebook } from 'react-icons/bs';
 import { TfiEmail } from 'react-icons/tfi';
 import { FcGoogle } from 'react-icons/fc';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { rules } from '../../utils/rules';
+import { login, reset } from '../../features/auth/authSlice';
+import { Spinner } from '../../components';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
-export const LoginPage = ({setIsOpenLoginForm}) => {
+export const LoginPage = ({ setIsOpenLoginForm }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { account, isLoading, isError, isSuccess, message } = useSelector(
+		(state) => state.auth
+	);
 
 	const {
 		register,
@@ -19,15 +26,36 @@ export const LoginPage = ({setIsOpenLoginForm}) => {
 	} = useForm();
 
 	const onSubmit = (data) => {
-		console.log(data);
+		const account = data;
+		dispatch(login(account));
 	};
+
+	useEffect(() => {
+		if (isError) {
+			toast.error(message);
+		}
+
+		if (isSuccess || account) {
+			setIsOpenLoginForm(false);
+			navigate('/home');
+		}
+
+		dispatch(reset());
+	}, [account, isError, isSuccess, message, navigate, dispatch]);
+
+	if (isLoading) {
+		return <Spinner />;
+	}
 
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
 			<div className="content login-container m-auto rounded-xl">
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<AiOutlineClose className="absolute text-sm hover:cursor-pointer" onClick={() => setIsOpenLoginForm(false)}/>
+					<AiOutlineClose
+						className="absolute text-sm hover:cursor-pointer"
+						onClick={() => setIsOpenLoginForm(false)}
+					/>
 					<h5 className="text-center font-bold mb-3">Đăng nhập</h5>
 					<hr></hr>
 					<p className="font-bold mt-3">
@@ -36,11 +64,12 @@ export const LoginPage = ({setIsOpenLoginForm}) => {
 					<div className="mb-3 mt-5">
 						<p className="small-text">Số điện thoại</p>
 						<input
+							type="number"
 							className="border border-gray-500 rounded-md p-1"
 							{...register('phoneNumber', rules.phoneNumber)}
 						/>
 						{errors.phoneNumber && (
-							<p className="text-red-500 small-text">
+							<p className="text-red small-text">
 								{errors.phoneNumber.message}
 							</p>
 						)}
@@ -48,13 +77,12 @@ export const LoginPage = ({setIsOpenLoginForm}) => {
 					<div className="mb-4">
 						<p className="small-text">Mật khẩu</p>
 						<input
+							type="password"
 							className="border border-gray-500 rounded-md p-1"
 							{...register('password', rules.password)}
 						/>
 						{errors.password && (
-							<p className="text-red-500 small-text">
-								{errors.password.message}
-							</p>
+							<p className="text-red small-text">{errors.password.message}</p>
 						)}
 					</div>
 					<button

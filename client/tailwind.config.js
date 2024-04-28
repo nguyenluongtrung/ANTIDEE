@@ -9,6 +9,7 @@ export default {
 			brown: '#7d3f06',
 			gray: '#7d7b7b',
 			white: '#ffffff',
+			red: '#D2042D',
 		},
 	},
 	plugins: [],

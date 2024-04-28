@@ -39,6 +39,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
 					<div className="mb-3 mt-5">
 						<p className="small-text">Số điện thoại</p>
 						<input
+							type='number'
 							className="border border-gray-500 rounded-md p-1"
 							{...register('phoneNumber', rules.phoneNumber)}
 						/>
@@ -51,6 +52,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
 					<div className="mb-4">
 						<p className="small-text">Mật khẩu</p>
 						<input
+							type='password'
 							className="border border-gray-500 rounded-md p-1"
 							{...register('password', rules.password)}
 						/>
