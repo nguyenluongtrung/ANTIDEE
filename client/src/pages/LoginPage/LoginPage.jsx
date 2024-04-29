@@ -66,7 +66,7 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 						<p className="small-text">Số điện thoại</p>
 						<input
 							type="number"
-							className="border border-gray-500 rounded-md p-1"
+							className="border border-gray-500 rounded-md p-1 text-sm focus:outline-none"
 							{...register('phoneNumber', rules.phoneNumber)}
 						/>
 						{errors.phoneNumber && (
@@ -79,7 +79,7 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 						<p className="small-text">Mật khẩu</p>
 						<input
 							type="password"
-							className="border border-gray-500 rounded-md p-1"
+							className="border border-gray-500 rounded-md p-1 text-sm focus:outline-none"
 							{...register('password', rules.password)}
 						/>
 						{errors.password && (
