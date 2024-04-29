@@ -49,8 +49,14 @@ export const MyAccount = () => {
 		}
 	}, [file]);
 
+	async function initiateAccountInformation() {
+		let output = await dispatch(getAccountInformation());
+
+		setAvatarUrl(output.payload.avatar);
+	}
+
 	useEffect(() => {
-		dispatch(getAccountInformation());
+		initiateAccountInformation();
 	}, []);
 
 	const handleClickPencilIcon = () => {
@@ -368,7 +374,7 @@ export const MyAccount = () => {
 							className="block w-16 mr-2 mb-5 ml-10 rounded-full"
 						/>
 						<button
-							className="rounded-md rounded-customized-gray p-1"
+							className="rounded-md rounded-customized-gray p-1 hover:cursor-pointer"
 							onClick={() => fileRef.current.click()}
 						>
 							<span>Chọn ảnh đại diện</span>
