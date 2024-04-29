@@ -17,11 +17,13 @@ const accountSchema = mongoose.Schema(
 		},
 		phoneNumber: {
 			type: String,
+			unique: true,
 		},
 		email: {
 			type: String,
 			required: [true, 'Email là bắt buộc'],
 			validate: [validator.isEmail, 'Nhập lại email cho đúng'],
+			unique: true,
 		},
 		dob: {
 			type: Date,

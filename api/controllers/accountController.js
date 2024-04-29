@@ -31,13 +31,20 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const register = asyncHandler(async (req, res) => {
-	const { email } = req.body;
+	const { email, phoneNumber } = req.body;
 
-	const accountExists = await Account.findOne({ email });
+	const accountExistsByEmail = await Account.findOne({ email });
 
-	if (accountExists) {
+	if (accountExistsByEmail) {
 		res.status(400);
-		throw new Error('Tài khoản đã tồn tại');
+		throw new Error('Email đã tồn tại');
+	}
+
+	const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
+
+	if (accountExistsByPhoneNumber) {
+		res.status(400);
+		throw new Error('Số điện thoại đã tồn tại');
 	}
 
 	const account = await Account.create(req.body);
@@ -57,6 +64,22 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const updateAccountInformation = asyncHandler(async (req, res) => {
+	const { email, phoneNumber } = req.body;
+
+	const accountExistsByEmail = await Account.findOne({ email });
+
+	if (email !== req.account.email && accountExistsByEmail) {
+		res.status(400);
+		throw new Error('Email đã tồn tại');
+	}
+
+	const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
+
+	if (phoneNumber !== req.account.phoneNumber && accountExistsByPhoneNumber) {
+		res.status(400);
+		throw new Error('Số điện thoại đã tồn tại');
+	}
+
 	const updatedAccount = await Account.findByIdAndUpdate(
 		req.account._id,
 		req.body,

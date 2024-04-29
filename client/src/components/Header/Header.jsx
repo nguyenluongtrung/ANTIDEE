@@ -17,18 +17,18 @@ export const Header = () => {
 					setIsOpenLoginForm={setIsOpenLoginForm}
 				/>
 			)}
-			<div class="navbar-container flex justify-between px-16 py-3">
+			<div className="navbar-container flex justify-between px-16 py-3">
 				<Link to="">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>
-				<ul class="navbar-menu flex text-gray normal-text pt-2">
+				<ul className="navbar-menu flex text-gray normal-text pt-2">
 					<li className="mr-5 dropdown">
 						<Link to={''}>
 							<span className="dropbtn">
 								Dịch vụ <IoIosArrowDown className="inline" />
 							</span>
 						</Link>
-						<div class="dropdown-content">
+						<div className="dropdown-content">
 							<div className='mr-3'>
 								<Link to={''} className='block'>
 									<span>Dọn dẹp văn phòng</span>

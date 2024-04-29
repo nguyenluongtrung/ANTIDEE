@@ -16,23 +16,22 @@ import {
 	updateAccountInformation,
 } from '../../features/auth/authSlice';
 import { Spinner } from './../../components';
-import { toast } from 'react-toastify';
 import { rules } from '../../utils/rules';
 import { formatDate, formatDateInput } from '../../utils/format';
+import toast from 'react-hot-toast';
+import { errorStyle, successStyle } from '../../utils/toast-customize';
 
 export const MyAccount = () => {
 	const fileRef = useRef(null);
-	const { account } = useSelector((state) => state.auth);
+	const { account, isLoading } = useSelector((state) => state.auth);
 	const [file, setFile] = useState(undefined);
 	const [filePerc, setFilePerc] = useState(0);
 	const [fileUploadError, setFileUploadError] = useState(false);
 	const [avatarUrl, setAvatarUrl] = useState('');
 	const [isUpdateAccountInformation, setIsUpdateAccountInformation] =
 		useState(false);
+
 	const dispatch = useDispatch();
-	const { isLoading, isError, message, isSucess } = useSelector(
-		(state) => state.auth
-	);
 
 	const maxDate = new Date();
 	maxDate.setFullYear(maxDate.getFullYear() - 18);
@@ -53,6 +52,11 @@ export const MyAccount = () => {
 	useEffect(() => {
 		dispatch(getAccountInformation());
 	}, []);
+
+	const handleClickPencilIcon = () => {
+		setIsUpdateAccountInformation(true);
+		dispatch(getAccountInformation());
+	};
 
 	const handleFileUpload = (file) => {
 		const storage = getStorage(app);
@@ -78,13 +82,18 @@ export const MyAccount = () => {
 		);
 	};
 
-	const onSubmit = (data) => {
+	const onSubmit = async (data) => {
 		setIsUpdateAccountInformation(false);
-		const account = avatarUrl !== '' ? { ...data, avatar: avatarUrl } : {...data};
-		dispatch(updateAccountInformation(account));
-		if (isSucess) {
-			toast.success('Cập nhật thông tin tài khoản thành công');
+		const account =
+			avatarUrl !== '' ? { ...data, avatar: avatarUrl } : { ...data };
+		const result = await dispatch(updateAccountInformation(account));
+
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Cập nhật thông tin tài khoản thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
 		}
+		await dispatch(getAccountInformation());
 	};
 
 	if (isLoading) {
@@ -96,11 +105,11 @@ export const MyAccount = () => {
 			<div className="left-container pr-24 pt-3">
 				<div className="flex mb-4">
 					<img
-						src={`${account.avatar}` || 'src/assets/img/Ellipse 16.png'}
+						src={`${account?.avatar}` || 'src/assets/img/Ellipse 16.png'}
 						className="block w-12 mr-2 rounded-full"
 					/>
 					<div className="mt-2">
-						<p className="font-bold">{account.name}</p>
+						<p className="font-bold">{account?.name}</p>
 						<Link to={''}>
 							<p className="text-primary">
 								Xem hồ sơ <IoIosArrowForward className="inline" />
@@ -170,7 +179,7 @@ export const MyAccount = () => {
 				<img
 					src="src/assets/img/material-symbols_edit-outline.png"
 					className="w-6 absolute top-5 right-5 hover:cursor-pointer"
-					onClick={() => setIsUpdateAccountInformation(true)}
+					onClick={handleClickPencilIcon}
 				/>
 				<h5 className="font-bold">Hồ sơ của tôi</h5>
 				<p className="mb-2 bottom-horizontal pb-3">
@@ -180,145 +189,152 @@ export const MyAccount = () => {
 					<div className="pl-5 customized-width">
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<table className="">
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Họ và tên</span>
-									</td>
-									<td>
-										{isUpdateAccountInformation ? (
-											<input
-												type="text"
-												className="update-input ml-10 w-40"
-												{...register('name')}
-												defaultValue={account.name}
-											/>
-										) : (
-											<span className="pl-10">{account.name}</span>
-										)}
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Email</span>
-									</td>
-									<td>
-										{isUpdateAccountInformation ? (
-											<input
-												type="text"
-												className={`update-input ml-10 w-40 ${errors.email && 'text-red'}`}
-												{...register('email', rules.email)}
-												defaultValue={account.email}
-											/>
-										) : (
-											<span className="pl-10">{account.email}</span>
-										)}
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Số điện thoại</span>
-									</td>
-									<td>
-										{isUpdateAccountInformation ? (
-											<input
-												type="text"
-												className={`update-input ml-10 w-40 ${errors.phoneNumber && 'text-red'}`}
-												{...register('phoneNumber', rules.phoneNumber)}
-												defaultValue={account.phoneNumber}
-											/>
-										) : (
-											<span className="pl-10">{account.phoneNumber}</span>
-										)}
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Giới tính</span>
-									</td>
-									<td>
-										{isUpdateAccountInformation ? (
-											<div className="flex">
+								<thead></thead>
+								<tbody>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Họ và tên</span>
+										</td>
+										<td>
+											{isUpdateAccountInformation ? (
 												<input
-													type="radio"
-													className="block update-input ml-10 mr-2 w-3"
-													value={'Nam'}
-													{...register('gender')}
-													defaultChecked={account.gender === 'Nam'}
-												/>{' '}
-												<span className="mr-2">Nam</span>
+													type="text"
+													className="update-input ml-10 w-40"
+													{...register('name')}
+													defaultValue={account?.name}
+												/>
+											) : (
+												<span className="pl-10">{account?.name}</span>
+											)}
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Email</span>
+										</td>
+										<td>
+											{isUpdateAccountInformation ? (
 												<input
-													type="radio"
-													className="block update-input mr-2 w-3"
-													value={'Nữ'}
-													{...register('gender')}
-													defaultChecked={account.gender === 'Nữ'}
-												/>{' '}
-												<span className="mr-2">Nữ</span>
+													type="text"
+													className={`update-input ml-10 w-40 ${
+														errors.email && 'text-red'
+													}`}
+													{...register('email', rules.email)}
+													defaultValue={account?.email}
+												/>
+											) : (
+												<span className="pl-10">{account?.email}</span>
+											)}
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Số điện thoại</span>
+										</td>
+										<td>
+											{isUpdateAccountInformation ? (
 												<input
-													type="radio"
-													className="block update-input mr-2 w-3"
-													value={'Khác'}
-													{...register('gender')}
-													defaultChecked={account.gender === 'Khác'}
-												/>{' '}
-												<span className="mr-2">Khác</span>
-											</div>
-										) : (
-											<span className="pl-10">{account.gender}</span>
-										)}
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">aPoints</span>
-										<span className="right-vertical px-10">
-											{account.aPoints} điểm
-										</span>
-									</td>
-									<td>
-										<span className="text-gray px-10">Ngày sinh</span>
-										{isUpdateAccountInformation ? (
-											<input
-												type="date"
-												className="update-input w-28"
-												{...register('dob')}
-												max={maxDateString}
-												min={new Date(1900, 0, 1).toISOString().split('T')[0]}
-												defaultValue={formatDateInput(account.dob)}
-											/>
-										) : (
-											<span className="">{formatDate(account.dob)}</span>
-										)}
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Hạng khách hàng</span>
-									</td>
-									<td>
-										<span className="pl-10">
-											{account.accountLevel?.customerLevel?.name}
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Hạng giúp việc</span>
-									</td>
-									<td>
-										<span className="pl-10">
-											{account.accountLevel?.domesticHelperLevel?.name}
-										</span>
-									</td>
-								</tr>
-								<tr>
-									<td className="py-1">
-										<span className="text-gray">Mật khẩu</span>
-									</td>
-									<td>
-										<span className="pl-10">***********</span>
-									</td>
-								</tr>
+													type="text"
+													className={`update-input ml-10 w-40 ${
+														errors.phoneNumber && 'text-red'
+													}`}
+													{...register('phoneNumber', rules.phoneNumber)}
+													defaultValue={account?.phoneNumber}
+												/>
+											) : (
+												<span className="pl-10">{account?.phoneNumber}</span>
+											)}
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Giới tính</span>
+										</td>
+										<td>
+											{isUpdateAccountInformation ? (
+												<div className="flex">
+													<input
+														type="radio"
+														className="block update-input ml-10 mr-2 w-3"
+														value={'Nam'}
+														{...register('gender')}
+														defaultChecked={account?.gender === 'Nam'}
+													/>{' '}
+													<span className="mr-2">Nam</span>
+													<input
+														type="radio"
+														className="block update-input mr-2 w-3"
+														value={'Nữ'}
+														{...register('gender')}
+														defaultChecked={account?.gender === 'Nữ'}
+													/>{' '}
+													<span className="mr-2">Nữ</span>
+													<input
+														type="radio"
+														className="block update-input mr-2 w-3"
+														value={'Khác'}
+														{...register('gender')}
+														defaultChecked={account?.gender === 'Khác'}
+													/>{' '}
+													<span className="mr-2">Khác</span>
+												</div>
+											) : (
+												<span className="pl-10">{account?.gender}</span>
+											)}
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">aPoints</span>
+											<span className="right-vertical px-10">
+												{account?.aPoints} điểm
+											</span>
+										</td>
+										<td>
+											<span className="text-gray px-10">Ngày sinh</span>
+											{isUpdateAccountInformation ? (
+												<input
+													type="date"
+													className="update-input w-28"
+													{...register('dob')}
+													max={maxDateString}
+													min={new Date(1900, 0, 1).toISOString().split('T')[0]}
+													defaultValue={formatDateInput(account?.dob)}
+												/>
+											) : (
+												<span className="">{formatDate(account?.dob)}</span>
+											)}
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Hạng khách hàng</span>
+										</td>
+										<td>
+											<span className="pl-10">
+												{account?.accountLevel?.customerLevel?.name}
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Hạng giúp việc</span>
+										</td>
+										<td>
+											<span className="pl-10">
+												{account?.accountLevel?.domesticHelperLevel?.name}
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td className="py-1">
+											<span className="text-gray">Mật khẩu</span>
+										</td>
+										<td>
+											<span className="pl-10">***********</span>
+										</td>
+									</tr>
+								</tbody>
 							</table>
 							{isUpdateAccountInformation ? (
 								<div className="flex">
