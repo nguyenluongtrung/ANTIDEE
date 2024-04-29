@@ -33,6 +33,7 @@ const accountSchema = mongoose.Schema(
 		},
 		avatar: {
 			type: String,
+			default: '',
 		},
 		accountLevel: {
 			customerLevel: {

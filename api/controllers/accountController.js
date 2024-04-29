@@ -26,7 +26,7 @@ const login = asyncHandler(async (req, res) => {
 		});
 	} else {
 		res.status(400);
-		throw new Error('Phone number or password is invalid!');
+		throw new Error('Số điện thoại hoặc mật khẩu không đúng');
 	}
 });
 
@@ -37,7 +37,7 @@ const register = asyncHandler(async (req, res) => {
 
 	if (accountExists) {
 		res.status(400);
-		throw new Error('Account already exists');
+		throw new Error('Tài khoản đã tồn tại');
 	}
 
 	const account = await Account.create(req.body);
@@ -52,11 +52,39 @@ const register = asyncHandler(async (req, res) => {
 		});
 	} else {
 		res.status(400);
-		throw new Error('Invalid accound data');
+		throw new Error('Tài khoản không hợp lệ');
 	}
+});
+
+const updateAccountInformation = asyncHandler(async (req, res) => {
+	const updatedAccount = await Account.findByIdAndUpdate(
+		req.account._id,
+		req.body,
+		{ new: true }
+	);
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			updatedAccount,
+		},
+	});
+});
+
+const getAccountInformation = asyncHandler(async (req, res) => {
+	const account = await Account.findById(req.account._id);
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			account,
+		},
+	});
 });
 
 module.exports = {
 	register,
 	login,
+	updateAccountInformation,
+	getAccountInformation,
 };

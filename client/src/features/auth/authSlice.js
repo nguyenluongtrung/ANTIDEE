@@ -22,6 +22,46 @@ export const login = createAsyncThunk(
 	}
 );
 
+export const updateAccountInformation = createAsyncThunk(
+	'auth/updateAccountInformation',
+	async (account, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.updateAccountInformation(account, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const getAccountInformation = createAsyncThunk(
+	'auth/getAccountInformation',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.getAccountInformation(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	account: account || null,
 	isError: false,
@@ -52,6 +92,34 @@ export const authSlice = createSlice({
 				state.account = action.payload;
 			})
 			.addCase(login.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.account = null;
+			})
+			.addCase(updateAccountInformation.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateAccountInformation.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(updateAccountInformation.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.account = null;
+			})
+			.addCase(getAccountInformation.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAccountInformation.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(getAccountInformation.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
