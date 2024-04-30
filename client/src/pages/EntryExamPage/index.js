@@ -1,0 +1,1 @@
+export { EntryExamPage } from './EntryExamPage';
