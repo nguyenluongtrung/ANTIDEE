@@ -16,9 +16,10 @@ import {
 	updateAccountInformation,
 } from '../../features/auth/authSlice';
 import { Spinner } from './../../components';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { rules } from '../../utils/rules';
 import { formatDate, formatDateInput } from '../../utils/format';
+import { successStyle } from '../../utils/toast-customize';
 
 export const MyAccount = () => {
 	const fileRef = useRef(null);
@@ -83,7 +84,7 @@ export const MyAccount = () => {
 		const account = avatarUrl !== '' ? { ...data, avatar: avatarUrl } : {...data};
 		dispatch(updateAccountInformation(account));
 		if (isSucess) {
-			toast.success('Cập nhật thông tin tài khoản thành công');
+			toast.success('Cập nhật thông tin tài khoản thành công',successStyle);
 		}
 	};
 

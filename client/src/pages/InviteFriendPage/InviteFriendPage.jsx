@@ -36,9 +36,9 @@ export const InviteFriendPage = () => {
                     <button className='bg-green text-white rounded-2xl max-w-24'>Gửi</button>
                 </div>
                 <span className='grid text-lg justify-center m-auto'>hoặc</span>
-                <div className=' bg-primary rounded-2xl flex p-3'>
-                    <img src={logoFacebook} className='size-7 mr-3 ml-3' />
-                    <p className='text-lg text-white '>Chia sẻ qua Facebook</p>
+                <div className=' bg-primary rounded-2xl flex p-4'>
+                    <img src={logoFacebook} className='size-6 mr-3 ml-4' />
+                    <p className='text-base text-white '>Chia sẻ qua Facebook</p>
                 </div>
             </div>
             <div className='ml-40 mr-40 mt-10 max-w-screen-xl'>

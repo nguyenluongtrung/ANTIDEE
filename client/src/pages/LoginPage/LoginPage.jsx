@@ -10,7 +10,8 @@ import { rules } from '../../utils/rules';
 import { login, reset } from '../../features/auth/authSlice';
 import { Spinner } from '../../components';
 import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
+import { errorStyle } from '../../utils/toast-customize';
 
 export const LoginPage = ({ setIsOpenLoginForm }) => {
 	const dispatch = useDispatch();
@@ -32,7 +33,7 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 
 	useEffect(() => {
 		if (isError) {
-			toast.error(message);
+			toast.error(message, errorStyle);
 		}
 
 		if (isSuccess || account) {
