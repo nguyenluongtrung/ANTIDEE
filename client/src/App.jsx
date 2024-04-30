@@ -5,6 +5,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { HomePage } from './pages/HomePage';
 import { MyAccount } from './pages/MyAccount';
 import { EntryExamPage } from './pages/EntryExamPage';
+import { InviteFriendPage } from './pages/InviteFriendPage';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/entry-exam" element={<EntryExamPage />} />
+          <Route path="/invite-friend" element={<InviteFriendPage/>}/>
           </Route>
         </Routes>
       </Router>

@@ -1,0 +1,15 @@
+.test{
+    border-right: 2px solid rgb(199, 190, 190);
+}
+.inviteCode{
+    background: #ffedcb;
+}
+.giftContent{
+    background: #d1fdca;
+}
+.giftContent h3{
+    color:#2b5723;
+}
+.giftContent p{
+    color:#5e8a57;
+}
