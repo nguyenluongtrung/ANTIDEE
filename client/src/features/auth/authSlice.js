@@ -22,6 +22,10 @@ export const login = createAsyncThunk(
 	}
 );
 
+export const logout = createAsyncThunk('auth/logout', async () => {
+	await authService.logout();
+});
+
 export const updateAccountInformation = createAsyncThunk(
 	'auth/updateAccountInformation',
 	async (account, thunkAPI) => {
@@ -95,6 +99,9 @@ export const authSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
+				state.account = null;
+			})
+			.addCase(logout.fulfilled, (state) => {
 				state.account = null;
 			})
 			.addCase(updateAccountInformation.pending, (state) => {

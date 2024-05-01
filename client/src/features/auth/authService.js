@@ -12,6 +12,10 @@ const login = async (accountData) => {
 	return response.data.data.account;
 };
 
+const logout = async () => {
+	localStorage.removeItem('account');
+};
+
 const updateAccountInformation = async (accountData, token) => {
 	const config = {
 		headers: {
@@ -40,6 +44,7 @@ const getAccountInformation = async (token) => {
 
 const authService = {
 	login,
+	logout,
 	updateAccountInformation,
 	getAccountInformation,
 };
