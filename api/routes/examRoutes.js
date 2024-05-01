@@ -11,12 +11,12 @@ const router = express.Router();
 
 router
 	.route('/')
-	.post(protect, restrict('admin'), createExam)
-	.get(protect, restrict('admin'), getAllExams);
+	.post(protect, restrict('Admin'), createExam)
+	.get(protect, restrict('Admin'), getAllExams);
 router
 	.route('/:examId')
-	.get(protect, restrict('admin'), getExam)
-	.delete(protect, restrict('admin'), deleteExam)
-	.patch(protect, restrict('admin'), updateExam);
+	.get(protect, restrict('Admin'), getExam)
+	.delete(protect, restrict('Admin'), deleteExam)
+	.patch(protect, restrict('Admin'), updateExam);
 
 module.exports = router;

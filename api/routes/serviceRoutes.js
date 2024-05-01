@@ -12,12 +12,12 @@ const router = express.Router();
 
 router
 	.route('/')
-	.post(protect, restrict('admin'), createService)
-	.get(protect, restrict('admin'), getAllServices);
+	.post(protect, restrict('Admin'), createService)
+	.get(protect, restrict('Admin'), getAllServices);
 router
 	.route('/:serviceId')
-	.get(protect, restrict('admin'), getService)
-	.delete(protect, restrict('admin'), deleteService)
-	.patch(protect, restrict('admin'), updateService);
+	.get(protect, restrict('Admin'), getService)
+	.delete(protect, restrict('Admin'), deleteService)
+	.patch(protect, restrict('Admin'), updateService);
 
 module.exports = router;

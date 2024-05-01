@@ -11,7 +11,6 @@ const serviceSchema = mongoose.Schema({
 	},
 	image: {
 		type: String,
-		required: true,
 	},
 	requiredQualification: {
 		type: mongoose.Schema.Types.ObjectId,

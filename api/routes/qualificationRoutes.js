@@ -12,12 +12,12 @@ const router = express.Router();
 
 router
 	.route('/')
-	.post(protect, restrict('admin'), createQualification)
-	.get(protect, restrict('admin'), getAllQualifications);
+	.post(protect, restrict('Admin'), createQualification)
+	.get(protect, restrict('Admin'), getAllQualifications);
 router
 	.route('/:qualificationId')
-	.get(protect, restrict('admin'), getQualification)
-	.delete(protect, restrict('admin'), deleteQualification)
-	.patch(protect, restrict('admin'), updateQualification);
+	.get(protect, restrict('Admin'), getQualification)
+	.delete(protect, restrict('Admin'), deleteQualification)
+	.patch(protect, restrict('Admin'), updateQualification);
 
 module.exports = router;
