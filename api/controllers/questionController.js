@@ -64,7 +64,8 @@ const updateQuestion = asyncHandler(async (req, res) => {
 
 	const updatedQuestion = await Question.findByIdAndUpdate(
 		req.params.questionId,
-		req.body
+		req.body,
+		{ new: true }
 	);
 
 	res.status(200).json({

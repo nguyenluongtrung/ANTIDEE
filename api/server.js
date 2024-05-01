@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use('/antidee/api/accounts', require('./routes/accountRoutes'));
 app.use('/antidee/api/questions', require('./routes/questionRoutes'));
+app.use('/antidee/api/exams', require('./routes/examRoutes'));
 app.use('/antidee/api/qualifications', require('./routes/qualificationRoutes'));
 app.use('/antidee/api/services', require('./routes/serviceRoutes'));
 
