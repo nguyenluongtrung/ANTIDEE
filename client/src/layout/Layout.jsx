@@ -1,15 +1,26 @@
-import { Footer, Header } from '../components'
-import { ToastContainer } from 'react-toastify'
-import { Outlet } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
+import { Footer, Header } from '../components';
+import { Outlet } from 'react-router-dom';
+import { Toaster, ToastBar } from 'react-hot-toast';
 
 export const Layout = () => {
-  return (
-    <div>
-        <Header />
-        <Outlet />
-        <Footer />
-        <ToastContainer />
-    </div>
-  )
-}
+	return (
+		<>
+			<Header />
+			<Outlet />
+			<Footer />
+			<Toaster>
+				{(t) => (
+					<ToastBar
+						toast={t}
+						style={{
+							...t.style,
+							animation: t.visible
+								? 'custom-enter 1s ease'
+								: 'custom-exit 1s ease',
+						}}
+					/>
+				)}
+			</Toaster>
+		</>
+	);
+};
