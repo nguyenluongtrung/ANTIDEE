@@ -121,9 +121,72 @@ const updateExam = asyncHandler(async (req, res) => {
 		throw new Error('Không tìm thấy đề thi');
 	}
 
+	const {
+		numOfEasyQuestion,
+		numOfMediumQuestion,
+		numOfHardQuestion,
+		numOfQuestions,
+		duration,
+		description,
+		category,
+		passGrade,
+	} = req.body;
+
+	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
+	const allMediumQuestionList = await Question.find({
+		difficultyLevel: 'Bình thường',
+	});
+	const allHardQuestionList = await Question.find({ difficultyLevel: 'Khó' });
+
+	const randomEasyQuestionList = [];
+	const randomMediumQuestionList = [];
+	const randomHardQuestionList = [];
+
+	for (let i = 0; i < Number(numOfEasyQuestion); i++) {
+		const randomIndex = Math.floor(Math.random() * allEasyQuestionList.length);
+		const randomQuestion = allEasyQuestionList.splice(randomIndex, 1)[0];
+		randomEasyQuestionList.push(randomQuestion);
+	}
+
+	for (let i = 0; i < Number(numOfMediumQuestion); i++) {
+		const randomIndex = Math.floor(
+			Math.random() * allMediumQuestionList.length
+		);
+		const randomQuestion = allMediumQuestionList.splice(randomIndex, 1)[0];
+		randomMediumQuestionList.push(randomQuestion);
+	}
+
+	for (let i = 0; i < Number(numOfHardQuestion); i++) {
+		const randomIndex = Math.floor(Math.random() * allHardQuestionList.length);
+		const randomQuestion = allHardQuestionList.splice(randomIndex, 1)[0];
+		randomHardQuestionList.push(randomQuestion);
+	}
+
+	const examInfo = {
+		questions: {
+			numOfQuestions,
+			easyQuestion: {
+				numOfEasyQuestion,
+				easyQuestionList: randomEasyQuestionList,
+			},
+			mediumQuestion: {
+				numOfMediumQuestion,
+				mediumQuestionList: randomMediumQuestionList,
+			},
+			hardQuestion: {
+				numOfHardQuestion,
+				hardQuestionList: randomHardQuestionList,
+			},
+		},
+		duration,
+		description,
+		category,
+		passGrade,
+	};
+
 	const updatedExam = await Exam.findByIdAndUpdate(
 		req.params.examId,
-		req.body,
+		examInfo,
 		{ new: true }
 	);
 
