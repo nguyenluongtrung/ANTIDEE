@@ -61,7 +61,6 @@ export const MyAccount = () => {
 
 	const handleClickPencilIcon = () => {
 		setIsUpdateAccountInformation(true);
-		dispatch(getAccountInformation());
 	};
 
 	const handleFileUpload = (file) => {
