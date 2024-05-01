@@ -92,7 +92,7 @@ export const Header = () => {
 						</Link>
 					</li>
 					<li className="mr-5">
-						<Link to={''}>
+						<Link to={'/become-helper'}>
 							<span>Trở thành người giúp việc</span>
 						</Link>
 					</li>
