@@ -18,7 +18,7 @@ export const Header = () => {
 				/>
 			)}
 			<div className="navbar-container flex justify-between px-16 py-3">
-				<Link to="">
+				<Link to="/home">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>
 				<ul className="navbar-menu flex text-gray normal-text pt-2">
