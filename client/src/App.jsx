@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage';
 import { MyAccount } from './pages/MyAccount';
 import { EntryExamPage } from './pages/EntryExamPage';
 import { InviteFriendPage } from './pages/InviteFriendPage';
+import {WannaBecomeHelperPage} from './pages/WannaBecomeHelperPage'
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/entry-exam" element={<EntryExamPage />} />
           <Route path="/invite-friend" element={<InviteFriendPage/>}/>
+          <Route path="/become-helper" element={<WannaBecomeHelperPage/>}/>
           </Route>
         </Routes>
       </Router>
