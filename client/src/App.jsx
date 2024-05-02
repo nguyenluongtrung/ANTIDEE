@@ -7,6 +7,7 @@ import { MyAccount } from './pages/MyAccount';
 import { EntryExamPage } from './pages/EntryExamPage';
 import { InviteFriendPage } from './pages/InviteFriendPage';
 import {WannaBecomeHelperPage} from './pages/WannaBecomeHelperPage'
+import { CongratsPage } from './pages/CongratsPage';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/entry-exam" element={<EntryExamPage />} />
           <Route path="/invite-friend" element={<InviteFriendPage/>}/>
           <Route path="/become-helper" element={<WannaBecomeHelperPage/>}/>
+          <Route path="/congrats" element={<CongratsPage/>}/>
           </Route>
         </Routes>
       </Router>
