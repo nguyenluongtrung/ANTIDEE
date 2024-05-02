@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import img31 from '../../assets/img/image 31.png';
 export const CongratsPage = () => {
 	return (
