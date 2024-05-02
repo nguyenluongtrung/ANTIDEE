@@ -14,8 +14,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 export default function AdminSidebar() {
   const menu = [
     { name: "Trang Chủ", icon: <BiHomeAlt /> },
-    { name: "Tài Khoản", icon: <BiGridAlt /> },
-    { name: "Thẻ", icon: <BiCreditCardAlt /> },
+    { name: "Sự kiện khuyến mãi", icon: <BiGridAlt /> },
+    { name: "Câu hỏi và đề thi", icon: <BiCreditCardAlt /> },
     { name: "Liên hệ", icon: <BiUser /> },
     { name: "Tính Toán Chi Phí", icon: <BiCalculator /> },
     { name: "Thông Báo", icon: <BiNotification /> },
