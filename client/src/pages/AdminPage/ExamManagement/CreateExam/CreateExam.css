@@ -1,0 +1,7 @@
+.create-exam-input{
+    border-bottom: 1px solid rgb(204, 203, 203);
+}
+
+.create-exam-input:focus{
+    outline: none;
+}

@@ -12,6 +12,7 @@ export default {
 			red: '#d2042d',
 			light: '#fef2e6',
 			light_purple: '#f4ebfc',
+			pink: '#FA3694',
 		},
 	},
 	plugins: [],

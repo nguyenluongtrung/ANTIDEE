@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AdminSidebar from '../components/AdminSidebar/AdminSidebar';
 import './ExamManagement.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,8 +8,9 @@ import { CreateExam } from './CreateExam/CreateExam';
 import toast, { Toaster, ToastBar } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
-
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
 export const ExamManagement = () => {
+	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
 	const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
 
@@ -47,13 +48,36 @@ export const ExamManagement = () => {
 						/>
 					)}
 				</Toaster>
-				<CreateExam />
-				<table className="w-full border-b border-gray">
+
+				{isOpenCreateExam && <CreateExam setIsOpenCreateExam={setIsOpenCreateExam}/>}
+				
+				<div className="flex">
+					<div className="flex-1 pt-2">
+						<span>Hiển thị </span>
+						<select
+							className="rounded-md p-1 mx-1 hover:cursor-pointer"
+							style={{ backgroundColor: '#E0E0E0' }}
+						>
+							<option>10</option>
+							<option>20</option>
+							<option>30</option>
+						</select>
+						<span> hàng</span>
+					</div>
+					<button
+						className="bg-pink text-white py-2 rounded-md block mx-auto"
+						style={{ width: '100px' }}
+						onClick={() => setIsOpenCreateExam(true)}
+					>
+						<span>Thêm đề thi</span>
+					</button>
+				</div>
+				<table className="w-full border-b border-gray mt-3">
 					<thead>
 						<tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
 							<td className="py-2 px-4 text-center font-bold">STT</td>
 							<td className="py-2 px-4 text-center font-bold">Danh mục</td>
-							<td className="py-2 px-4 text-center font-bold">Thời lượng</td>
+							<td className="py-2 px-4 text-center font-bold">Thời gian</td>
 							<td className="py-2 px-4 text-center font-bold">Điểm cần đạt</td>
 							<td className="py-2 px-4 text-center font-bold">Chi tiết</td>
 							<td className="py-2 px-4 text-center font-bold">Hành Động</td>
@@ -73,14 +97,18 @@ export const ExamManagement = () => {
 										<span>{exam.duration} phút</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{exam.passGrade} / {exam.questions.numOfQuestions}</span>
+										<span>
+											{exam.passGrade} / {exam.questions.numOfQuestions}
+										</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span></span>
+										<button className="hover:cursor-pointer text-xl pt-1.5">
+											<MdOutlineRemoveRedEye className="block mx-auto" />
+										</button>
 									</td>
 									<td className="">
 										<div className="flex items-center justify-center">
-											<button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-green text-xl">
+											<button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-green  text-xl">
 												<BiEdit className="text-green group-hover:text-white" />
 											</button>
 											<button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-red text-xl">
