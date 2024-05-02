@@ -9,6 +9,7 @@ import { InviteFriendPage } from './pages/InviteFriendPage';
 import { WannaBecomeHelperPage } from './pages/WannaBecomeHelperPage';
 import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
+import { CongratsPage } from './pages/CongratsPage';
 
 const App = () => {
 	return (
@@ -24,6 +25,7 @@ const App = () => {
 						<Route path="/entry-exam" element={<EntryExamPage />} />
 						<Route path="/invite-friend" element={<InviteFriendPage />} />
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
+						<Route path="/congrats" element={<CongratsPage/>}/>
 					</Route>
 					<Route path="/admin" element={<AdminPage />} />
 					<Route path="/admin-exam" element={<ExamManagement />} />
