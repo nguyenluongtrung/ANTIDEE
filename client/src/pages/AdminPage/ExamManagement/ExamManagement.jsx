@@ -9,8 +9,11 @@ import toast, { Toaster, ToastBar } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { UpdateExam } from './UpdateExam/UpdateExam';
 export const ExamManagement = () => {
 	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
+	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
+	const [chosenExamId, setChosenExamId] = useState('');
 	const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
 
@@ -49,8 +52,13 @@ export const ExamManagement = () => {
 					)}
 				</Toaster>
 
-				{isOpenCreateExam && <CreateExam setIsOpenCreateExam={setIsOpenCreateExam}/>}
-				
+				{isOpenCreateExam && (
+					<CreateExam setIsOpenCreateExam={setIsOpenCreateExam} />
+				)}
+				{isOpenUpdateExam && (
+					<UpdateExam setIsOpenUpdateExam={setIsOpenUpdateExam} chosenExamId={chosenExamId}/>
+				)}
+
 				<div className="flex">
 					<div className="flex-1 pt-2">
 						<span>Hiển thị </span>
@@ -108,7 +116,13 @@ export const ExamManagement = () => {
 									</td>
 									<td className="">
 										<div className="flex items-center justify-center">
-											<button className="flex items-center justify-end py-3 pr-2 text-xl">
+											<button
+												className="flex items-center justify-end py-3 pr-2 text-xl"
+												onClick={() => {
+													setIsOpenUpdateExam(true);
+													setChosenExamId(exam._id);
+												}}
+											>
 												<BiEdit className="text-green" />
 											</button>
 											<button className="flex items-center justify-start py-3 pl-2 text-xl">

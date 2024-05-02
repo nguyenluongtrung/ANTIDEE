@@ -24,6 +24,17 @@ const createExam = async (token, examData) => {
 	return response.data.data.exam;
 };
 
+const updateExam = async (token, examData, id) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(API_URL + `${id}`, examData, config);
+	return response.data.data.updatedExam;
+};
+
 const deleteExam = async (token, id) => {
 	const config = {
 		headers: {
@@ -38,6 +49,7 @@ const deleteExam = async (token, id) => {
 const examService = {
 	getAllExams,
 	createExam,
+	updateExam,
 	deleteExam,
 };
 
