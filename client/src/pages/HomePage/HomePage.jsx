@@ -163,7 +163,7 @@ export const HomePage = () => {
 								<p className=" mt-2 text-black text-lg font-bold ">
 									{benefit.name}
 								</p>
-								<p className="w-40">{benefit.text}</p>
+								<p className="w-40 text-xs text-gray">{benefit.text}</p>
 							</div>
 						</div>
 					))}
