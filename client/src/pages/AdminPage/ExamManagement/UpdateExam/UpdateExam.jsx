@@ -6,9 +6,11 @@ import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateExam.css';
 import { updateExam } from '../../../../features/exams/examSlice';
+import { useState } from 'react';
 
-export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
-    const { isLoading } = useSelector((state) => state.exams);
+export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
+	const { exams, isLoading } = useSelector((state) => state.exams);
+    const [chosenExam, setChosenExam] = useState(exams[exams.findIndex((exam) => exam._id == chosenExamId)]);
 	const {
 		register,
 		handleSubmit,
@@ -25,7 +27,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 				Number(data.numOfMediumQuestion) +
 				Number(data.numOfEasyQuestion),
 		};
-		const result = await dispatch(updateExam({examData, id: chosenExamId}));
+		const result = await dispatch(updateExam({ examData, id: chosenExamId }));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Cập nhật bài kiểm tra thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
@@ -50,8 +52,10 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={() => setIsOpenUpdateExam(false)}
 				/>
-				<p className='grid text-green font-bold text-xl justify-center'>CẬP NHẬT ĐỀ THI</p>
-				<table className='mt-3'>
+				<p className="grid text-green font-bold text-xl justify-center">
+					CẬP NHẬT ĐỀ THI
+				</p>
+				<table className="mt-3">
 					<tbody>
 						<tr>
 							<td>
@@ -62,7 +66,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="radio"
 									{...register('category')}
-									defaultValue={'Kiểm tra đầu vào'}
+									defaultChecked={chosenExam?.category == 'Kiểm tra đầu vào'}
 									value={'Kiểm tra đầu vào'}
 									className="w-5"
 								/>{' '}
@@ -70,6 +74,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="radio"
 									{...register('category')}
+                                    defaultChecked={chosenExam?.category == 'Kiểm tra training'}
 									value={'Kiểm tra training'}
 									className="w-5"
 								/>{' '}
@@ -84,6 +89,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="number"
 									{...register('duration')}
+									defaultValue={chosenExam?.duration}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -96,6 +102,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="number"
 									{...register('passGrade')}
+									defaultValue={chosenExam?.passGrade}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -109,6 +116,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="number"
 									{...register('numOfEasyQuestion')}
+									defaultValue={chosenExam?.questions?.easyQuestion?.numOfEasyQuestion}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -121,6 +129,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="number"
 									{...register('numOfMediumQuestion')}
+									defaultValue={chosenExam?.questions?.mediumQuestion?.numOfMediumQuestion}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -133,6 +142,7 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 								<input
 									type="number"
 									{...register('numOfHardQuestion')}
+									defaultValue={chosenExam?.questions?.hardQuestion?.numOfHardQuestion}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -148,4 +158,4 @@ export const UpdateExam = ({setIsOpenUpdateExam, chosenExamId}) => {
 			</form>
 		</div>
 	);
-}
+};
