@@ -1,4 +1,4 @@
-import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import AdminSidebar from "./components/AdminSidebar/AdminSidebar";
 import { BiUser, BiBlock, BiTrash, BiEdit, BiSun, BiSearch } from "react-icons/bi";
 import { GrUserManager } from "react-icons/gr";
 import { GiConfirmed } from "react-icons/gi";
@@ -64,12 +64,9 @@ export const AdminPage = () => {
   ];
   return (
     <div className="w-full min-h-screen bg-white flex flex-row">
-      {/* Admin page */}
       <AdminSidebar />
-      {/* Admin Main */}
-      <div className="flex-1 px-10">
-        {/* Admin Header */}
-        <div className="pb-6 border-b border-gray border-opacity-50">
+      <div className="flex-1 px-10 pt-5">
+        <div className="pb-3 border-b border-gray border-opacity-50">
           <div className="flex flex-row justify-between items-center">
             <div className="font-semibold">Ngày: 1/5/2024</div>
             <div className="border pl-5 pr-72 py-1 rounded-full flex items-center content-start">
@@ -87,9 +84,7 @@ export const AdminPage = () => {
             </div>
           </div>
         </div>
-        {/* Admin Components */}
         <div className="py-5 px-2">
-          {/* Admin Components Title */}
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-semibold">Tài Khoản</h1>
@@ -109,7 +104,6 @@ export const AdminPage = () => {
               </div>
             </div>
           </div>
-          {/* Admin Components Choose */}
           <ul className="flex gap-x-5 items-center justify-between px-4 border-y border-gray border-opacity-50 mt-10">
             {menu.map((item, index) => {
               return (
@@ -126,7 +120,6 @@ export const AdminPage = () => {
               );
             })}
           </ul>
-          {/* Admin Components Content */}
           <table className="w-full border-b border-gray">
             <thead>
               <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">

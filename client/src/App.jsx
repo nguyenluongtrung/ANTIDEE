@@ -15,15 +15,16 @@ const App = () => {
 			<Router>
 				<Routes>
 					<Route path="/" element={<Layout />}>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/home" element={<HomePage />} />
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/login" element={<LoginPage />} />
-						<Route path="/home" element={<HomePage />} />
 						<Route path="/my-account" element={<MyAccount />} />
 						<Route path="/entry-exam" element={<EntryExamPage />} />
 						<Route path="/invite-friend" element={<InviteFriendPage />} />
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
-						<Route path="/admin" element={<AdminPage />} />
 					</Route>
+          <Route path="/admin" element={<AdminPage />} />
 				</Routes>
 			</Router>
 		</div>
