@@ -30,7 +30,6 @@ export default function AdminSidebar() {
   return (
     <div className="h-screen border-r border-opacity-50 border-gray w-64 px-9 pt-5">
       <div className="flex flex-row">
-        {/* <img src="" alt="Antidee Logo" className="w-9 h-36" /> */}
         <div className="text-primary font-bold logo-text pt-1">Antidee</div>
       </div>
 
@@ -56,7 +55,7 @@ export default function AdminSidebar() {
 
         <div>
           <ul className="space-y-5">
-            <div className="mb-4 font-semibold text-sm">Mở Rộng</div>
+            <div className="mb-4 font-semibold">Mở Rộng</div>
             {menuBottom.map((item, index) => {
               return (
                 <li key={index}>
