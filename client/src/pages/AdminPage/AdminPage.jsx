@@ -188,34 +188,34 @@ export const AdminPage = () => {
             <tbody>
               {users.map((user, index) => {
                 return (
-                  <tr className="hover:bg-primary transition-colors group">
+                  <tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
                     <td className="font-medium text-center text-gray p-3">
-                      {index + 1}
+                      <span>{index + 1}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.name}
+                    <span>{user.name}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.age}
+                      <span>{user.age}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.dateRegister}
+                      <span>{user.dateRegister}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.rating}
+                      <span>{user.rating}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.budget}
+                      <span>{user.budget}</span>
                     </td>
                     <td>
-                      <TableRow status={user.status} />
+                      <span><TableRow status={user.status} /></span>
                     </td>
                     <td className="">
                       <div className="flex items-center justify-center">
-                        <button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-green">
+                        <button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-green text-xl">
                           <BiEdit className="text-green group-hover:text-white" />
                         </button>
-                        <button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-red">
+                        <button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-red text-xl">
                           <BiTrash className="text-red group-hover:text-white" />
                         </button>
                       </div>

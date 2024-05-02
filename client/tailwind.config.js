@@ -10,6 +10,7 @@ export default {
 			gray: '#7d7b7b',
 			white: '#ffffff',
 			red: '#D2042D',
+			light_purple: '#f4ebfc',
 		},
 	},
 	plugins: [],

@@ -31,39 +31,39 @@ export const Header = () => {
 						<div className="dropdown-content">
 							<div className='mr-3'>
 								<Link to={''} className='block'>
-									<span>Dọn dẹp văn phòng</span>
+									<span className='text-xs'>Dọn dẹp văn phòng</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Vệ sinh máy lạnh</span>
+									<span className='text-xs'>Vệ sinh máy lạnh</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Giúp việc nhà theo giờ</span>
+									<span className='text-xs'>Giúp việc nhà theo giờ</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Trông trẻ tại nhà</span>
+									<span className='text-xs'>Trông trẻ tại nhà</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Chăm sóc người bệnh</span>
+									<span className='text-xs'>Chăm sóc người bệnh</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Chăm sóc người cao tuổi</span>
+									<span className='text-xs'>Chăm sóc người cao tuổi</span>
 								</Link>
 							</div>
 							<div>
 								<Link to={''} className='block'>
-									<span>Tổng vệ sinh</span>
+									<span className='text-xs'>Tổng vệ sinh</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Vệ sinh sofa, rèm, nệm</span>
+									<span className='text-xs'>Vệ sinh sofa, rèm, nệm</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Đi chợ</span>
+									<span className='text-xs'>Đi chợ</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Nấu ăn gia đình</span>
+									<span className='text-xs'>Nấu ăn gia đình</span>
 								</Link>
 								<Link to={''} className='block'>
-									<span>Giặt ủi</span>
+									<span className='text-xs'>Giặt ủi</span>
 								</Link>
 							</div>
 						</div>
