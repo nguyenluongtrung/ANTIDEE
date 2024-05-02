@@ -108,12 +108,12 @@ export const ExamManagement = () => {
 									</td>
 									<td className="">
 										<div className="flex items-center justify-center">
-											<button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-green  text-xl">
-												<BiEdit className="text-green group-hover:text-white" />
+											<button className="flex items-center justify-end py-3 pr-2 text-xl">
+												<BiEdit className="text-green" />
 											</button>
-											<button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-red text-xl">
+											<button className="flex items-center justify-start py-3 pl-2 text-xl">
 												<BiTrash
-													className="text-red group-hover:text-white"
+													className="text-red"
 													onClick={() => handleDeleteExam(exam._id)}
 												/>
 											</button>
