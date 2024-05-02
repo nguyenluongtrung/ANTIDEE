@@ -44,8 +44,8 @@ export default function AdminSidebar() {
               return (
                 <li key={index}>
                   <button className="flex flex-row items-center text-gray hover:text-primary group">
-                    <div className="mr-5">{item.icon}</div>
-                    <div>{item.name}</div>
+                    <div className="mr-3">{item.icon}</div>
+                    <div><span>{item.name}</span></div>
                     <span className="absolute w-1.5 h-8 bg-primary rounded-r-full left-0 scale-y-0 -translate-x-full group-hover:scale-y-100 group-hover:translate-x-0 ease-in-out" />
                   </button>
                 </li>
@@ -56,13 +56,13 @@ export default function AdminSidebar() {
 
         <div>
           <ul className="space-y-5">
-            <div className="mb-4 font-semibold">Mở Rộng</div>
+            <div className="mb-4 font-semibold text-sm">Mở Rộng</div>
             {menuBottom.map((item, index) => {
               return (
                 <li key={index}>
                   <button className="flex flex-row items-center text-gray hover:text-primary group">
-                    <div className="mr-5">{item.icon}</div>
-                    <div>{item.name}</div>
+                    <div className="mr-3">{item.icon}</div>
+                    <div><span>{item.name}</span></div>
                     <span className="absolute w-1.5 h-8 bg-primary rounded-r-full left-0 scale-y-0 -translate-x-full group-hover:scale-y-100 group-hover:translate-x-0 ease-in-out" />
                   </button>
                 </li>

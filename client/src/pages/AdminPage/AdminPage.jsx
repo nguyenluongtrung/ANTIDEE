@@ -1,7 +1,16 @@
-import AdminSidebar from "./components/AdminSidebar/AdminSidebar";
-import { BiUser, BiBlock, BiTrash, BiEdit, BiSun, BiSearch } from "react-icons/bi";
+import {
+  BiUser,
+  BiBlock,
+  BiTrash,
+  BiEdit,
+  BiSun,
+  BiSearch,
+  BiChevronLeft,
+  BiChevronRight,
+} from "react-icons/bi";
 import { GrUserManager } from "react-icons/gr";
 import { GiConfirmed } from "react-icons/gi";
+import AdminSidebar from "./components/AdminSidebar/AdminSidebar";
 
 export const AdminPage = () => {
   const menu = [
@@ -18,6 +27,7 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Thành Công",
     },
     {
       name: "Hưng",
@@ -25,6 +35,7 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Đã Huỷ",
     },
     {
       name: "Hưng",
@@ -32,6 +43,7 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Đang Làm",
     },
     {
       name: "Hưng",
@@ -39,6 +51,7 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Đang Làm",
     },
     {
       name: "Hưng",
@@ -46,6 +59,7 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Đang Làm",
     },
     {
       name: "Hưng",
@@ -53,6 +67,7 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Đang Làm",
     },
     {
       name: "Hưng",
@@ -60,8 +75,37 @@ export const AdminPage = () => {
       dateRegister: "1/5/2024",
       rating: "5",
       budget: "10",
+      status: "Đang Làm",
     },
   ];
+
+  const pages = [1, 2, 3, 4, 5];
+  //Cột Trạng Thái ==================================
+  function getStatusColor(status) {
+    let backgroundColor = "";
+    if (status === "Thành Công") {
+      backgroundColor = "bg-green bg-opacity-25 text-green font-semibold";
+    } else if (status === "Đã Huỷ") {
+      backgroundColor = "bg-red bg-opacity-25 text-red font-semibold";
+    } else if (status === "Đang Làm") {
+      backgroundColor = "bg-yellow bg-opacity-25 text-primary font-semibold";
+    }
+    return backgroundColor;
+  }
+
+  function TableRow({ status }) {
+    const backgroundColor = getStatusColor(status);
+
+    return (
+      <div
+        className={`p-1 rounded-full ${backgroundColor} flex items-center justify-center`}
+      >
+        <div>{status}</div>
+      </div>
+    );
+  }
+  //==============================================
+
   return (
     <div className="w-full min-h-screen bg-white flex flex-row">
       <AdminSidebar />
@@ -123,49 +167,78 @@ export const AdminPage = () => {
           <table className="w-full border-b border-gray">
             <thead>
               <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
+                <td className="py-2 px-4 text-center">ID</td>
                 <td className="py-2 px-4 text-center">Tên</td>
                 <td className="py-2 px-4 text-center">Tuổi</td>
                 <td className="py-2 px-4 text-center">Ngày Đăng Kí</td>
                 <td className="py-2 px-4 text-center">Đánh Giá</td>
-                <td className="py-2 px-4 text-center">Số dư</td>
-                <td className="py-2 px-4 text-center">Sửa</td>
-                <td className="py-2 px-4 text-center">Xoá</td>
+                <td className="py-2 px-4 text-center">Số Dư</td>
+                <td className="py-2 px-4 text-center">Trạng Thái</td>
+                <td className="py-2 px-4 text-center">Hành Động</td>
+                {/* <td className="py-2 px-4 text-center">Xoá</td> */}
               </tr>
             </thead>
             <tbody>
               {users.map((user, index) => {
                 return (
-                  <tr className="hover:bg-primary transition-colors group">
-                    <td className="font-medium text-center text-gray">
-                      {user.name}
+                  <tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
+                    <td className="font-medium text-center text-gray p-3">
+                      <span>{index + 1}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.age}
+                    <span>{user.name}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.dateRegister}
+                      <span>{user.age}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.rating}
+                      <span>{user.dateRegister}</span>
                     </td>
                     <td className="font-medium text-center text-gray">
-                      {user.budget}
+                      <span>{user.rating}</span>
+                    </td>
+                    <td className="font-medium text-center text-gray">
+                      <span>{user.budget}</span>
                     </td>
                     <td>
-                      <button className="flex items-center justify-center hover:rounded-md py-2 hover:bg-green">
-                        <BiEdit />
-                      </button>
+                      <span><TableRow status={user.status} /></span>
                     </td>
-                    <td>
-                      <button className="flex items-center justify-center hover:rounded-md py-2 hover:bg-red">
-                        <BiTrash />
-                      </button>
+                    <td className="">
+                      <div className="flex items-center justify-center">
+                        <button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-green text-xl">
+                          <BiEdit className="text-green group-hover:text-white" />
+                        </button>
+                        <button className="flex items-center justify-center hover:rounded-md py-3 hover:bg-red text-xl">
+                          <BiTrash className="text-red group-hover:text-white" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
+
+          <div className="flex gap-x-2 justify-center pt-8">
+            <button className="flex justify-center items-center w-8 h-8">
+              <BiChevronLeft className="w-6 h-6 hover:text-primary" />
+            </button>
+            {/* Thử  UI 1 nút */}
+            <button className="w-8 h-8 font-medium rounded-full bg-primary text-white ">
+              1
+            </button>
+            {pages.map((index, page) => {
+              return (
+                <button className="flex items-center justify-center w-8 h-8 font-medium rounded-full hover:text-primary"> 
+                {/* bg-gray bg-opacity-25 */}
+                  {page + 2}
+                </button>
+              );
+            })}
+            <button className="flex justify-center items-center w-8 h-8">
+              <BiChevronRight className="w-6 h-6 hover:text-primary" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
