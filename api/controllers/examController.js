@@ -111,6 +111,9 @@ const deleteExam = asyncHandler(async (req, res) => {
 
 	res.status(200).json({
 		status: 'success',
+		data: {
+			id: req.params.examId,
+		},
 	});
 });
 const updateExam = asyncHandler(async (req, res) => {

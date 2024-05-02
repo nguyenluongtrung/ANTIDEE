@@ -13,8 +13,32 @@ const getAllExams = async (token) => {
 	return response.data.data.exams;
 };
 
+const createExam = async (token, examData) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.post(API_URL, examData, config);
+	return response.data.data.exam;
+};
+
+const deleteExam = async (token, id) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.delete(API_URL + `${id}`, config);
+	return response.data.data.id;
+};
+
 const examService = {
 	getAllExams,
+	createExam,
+	deleteExam,
 };
 
 export default examService;
