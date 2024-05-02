@@ -167,15 +167,14 @@ export const AdminPage = () => {
           <table className="w-full border-b border-gray">
             <thead>
               <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
-                <td className="py-2 px-4 text-center">ID</td>
-                <td className="py-2 px-4 text-center">Tên</td>
-                <td className="py-2 px-4 text-center">Tuổi</td>
-                <td className="py-2 px-4 text-center">Ngày Đăng Kí</td>
-                <td className="py-2 px-4 text-center">Đánh Giá</td>
-                <td className="py-2 px-4 text-center">Số Dư</td>
-                <td className="py-2 px-4 text-center">Trạng Thái</td>
-                <td className="py-2 px-4 text-center">Hành Động</td>
-                {/* <td className="py-2 px-4 text-center">Xoá</td> */}
+                <td className="py-2 px-4 text-center font-bold">STT</td>
+                <td className="py-2 px-4 text-center font-bold">Tên</td>
+                <td className="py-2 px-4 text-center font-bold">Tuổi</td>
+                <td className="py-2 px-4 text-center font-bold">Ngày Đăng Kí</td>
+                <td className="py-2 px-4 text-center font-bold">Đánh Giá</td>
+                <td className="py-2 px-4 text-center font-bold">Số Dư</td>
+                <td className="py-2 px-4 text-center font-bold">Trạng Thái</td>
+                <td className="py-2 px-4 text-center font-bold">Hành Động</td>
               </tr>
             </thead>
             <tbody>

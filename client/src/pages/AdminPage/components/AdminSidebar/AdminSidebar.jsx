@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BiHomeAlt,
   BiGridAlt,
@@ -10,16 +9,17 @@ import {
   BiSupport,
 } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom'
 
 export default function AdminSidebar() {
   const menu = [
-    { name: "Trang Chủ", icon: <BiHomeAlt /> },
-    { name: "Sự kiện khuyến mãi", icon: <BiGridAlt /> },
-    { name: "Câu hỏi và đề thi", icon: <BiCreditCardAlt /> },
-    { name: "Liên hệ", icon: <BiUser /> },
-    { name: "Tính Toán Chi Phí", icon: <BiCalculator /> },
-    { name: "Thông Báo", icon: <BiNotification /> },
-    { name: "Tin Nhắn", icon: <BiMessage /> },
+    { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
+    { name: "Sự kiện khuyến mãi", icon: <BiGridAlt />, to: '' },
+    { name: "Đề thi", icon: <BiCreditCardAlt />, to: '/admin-exam' },
+    { name: "Liên hệ", icon: <BiUser />, to: '' },
+    { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },
+    { name: "Thông Báo", icon: <BiNotification />, to: '' },
+    { name: "Tin Nhắn", icon: <BiMessage />, to: '' },
   ];
 
   const menuBottom = [
@@ -42,11 +42,11 @@ export default function AdminSidebar() {
             {menu.map((item, index) => {
               return (
                 <li key={index}>
-                  <button className="flex flex-row items-center text-gray hover:text-primary group">
+                  <Link className="flex flex-row items-center text-gray hover:text-primary group" to={item.to}>
                     <div className="mr-3">{item.icon}</div>
                     <div><span>{item.name}</span></div>
                     <span className="absolute w-1.5 h-8 bg-primary rounded-r-full left-0 scale-y-0 -translate-x-full group-hover:scale-y-100 group-hover:translate-x-0 ease-in-out" />
-                  </button>
+                  </Link>
                 </li>
               );
             })}
