@@ -77,7 +77,11 @@ const createExam = asyncHandler(async (req, res) => {
 	});
 });
 const getAllExams = asyncHandler(async (req, res) => {
-	const exams = await Exam.find({}).populate('serviceId');
+	const exams = await Exam.find({})
+		.populate('serviceId')
+		.populate('questions.easyQuestion.easyQuestionList')
+		.populate('questions.mediumQuestion.mediumQuestionList')
+		.populate('questions.hardQuestion.hardQuestionList');
 
 	res.status(200).json({
 		status: 'success',

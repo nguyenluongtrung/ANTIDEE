@@ -16,8 +16,6 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 		exams[exams.findIndex((exam) => String(exam._id) == String(chosenExamId))]
 	);
 
-    console.log('examid: ', chosenExamId)
-
 	const dispatch = useDispatch();
 
 	useEffect(() => {
