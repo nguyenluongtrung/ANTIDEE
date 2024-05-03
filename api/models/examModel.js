@@ -44,6 +44,10 @@ const examSchema = mongoose.Schema(
 				],
 			},
 		},
+		serviceId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Service',
+		},
 		duration: {
 			type: Number,
 			required: true,

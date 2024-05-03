@@ -10,9 +10,11 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { UpdateExam } from './UpdateExam/UpdateExam';
+import { ExamDetail } from './ExamDetail/ExamDetail';
 export const ExamManagement = () => {
 	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
 	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
+	const [isOpenDetailExam, setIsOpenDetailExam] = useState(false);
 	const [chosenExamId, setChosenExamId] = useState('');
 	const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
@@ -28,6 +30,12 @@ export const ExamManagement = () => {
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+	};
+
+	const handleGetAllExams = () => {
+		Promise.all([dispatch(getAllExams())]).catch((error) => {
+			console.error('Error during dispatch:', error);
+		});
 	};
 
 	if (isLoading) {
@@ -53,10 +61,24 @@ export const ExamManagement = () => {
 				</Toaster>
 
 				{isOpenCreateExam && (
-					<CreateExam setIsOpenCreateExam={setIsOpenCreateExam} />
+					<CreateExam
+						setIsOpenCreateExam={setIsOpenCreateExam}
+						handleGetAllExams={handleGetAllExams}
+					/>
 				)}
 				{isOpenUpdateExam && (
-					<UpdateExam setIsOpenUpdateExam={setIsOpenUpdateExam} chosenExamId={chosenExamId}/>
+					<UpdateExam
+						setIsOpenUpdateExam={setIsOpenUpdateExam}
+						handleGetAllExams={handleGetAllExams}
+						chosenExamId={chosenExamId}
+					/>
+				)}
+				{isOpenDetailExam && (
+					<ExamDetail
+						setIsOpenDetailExam={setIsOpenDetailExam}
+						handleGetAllExams={handleGetAllExams}
+						chosenExamId={chosenExamId}
+					/>
 				)}
 
 				<div className="flex">
@@ -84,6 +106,7 @@ export const ExamManagement = () => {
 					<thead>
 						<tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
 							<td className="py-2 px-4 text-center font-bold">STT</td>
+							<td className="py-2 px-4 text-center font-bold">Dịch vụ</td>
 							<td className="py-2 px-4 text-center font-bold">Danh mục</td>
 							<td className="py-2 px-4 text-center font-bold">Thời gian</td>
 							<td className="py-2 px-4 text-center font-bold">Điểm cần đạt</td>
@@ -99,6 +122,9 @@ export const ExamManagement = () => {
 										<span>{index + 1}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
+										<span>{exam.serviceId.name}</span>
+									</td>
+									<td className="font-medium text-center text-gray">
 										<span>{exam.category}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
@@ -110,7 +136,13 @@ export const ExamManagement = () => {
 										</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<button className="hover:cursor-pointer text-xl pt-1.5">
+										<button
+											className="hover:cursor-pointer text-xl pt-1.5"
+											onClick={() => {
+												setIsOpenDetailExam(true);
+												setChosenExamId(exam._id);
+											}}
+										>
 											<MdOutlineRemoveRedEye className="block mx-auto" />
 										</button>
 									</td>

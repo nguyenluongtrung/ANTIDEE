@@ -6,9 +6,12 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateExam.css';
+import { useEffect } from 'react';
+import { getAllServices } from '../../../../features/services/serviceSlice';
 
-export const CreateExam = ({ setIsOpenCreateExam }) => {
-	const { isLoading } = useSelector((state) => state.exams);
+export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
+	const { isLoading: examLoading } = useSelector((state) => state.exams);
+	const { services, isLoading: serviceLoading } = useSelector((state) => state.services);
 	const {
 		register,
 		handleSubmit,
@@ -16,6 +19,10 @@ export const CreateExam = ({ setIsOpenCreateExam }) => {
 	} = useForm();
 
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getAllServices());
+	}, []);
 
 	const onSubmit = async (data) => {
 		const examData = {
@@ -32,9 +39,10 @@ export const CreateExam = ({ setIsOpenCreateExam }) => {
 			toast.error(result?.payload, errorStyle);
 		}
 		setIsOpenCreateExam(false);
+		handleGetAllExams();
 	};
 
-	if (isLoading) {
+	if (examLoading || serviceLoading) {
 		return <Spinner />;
 	}
 
@@ -50,9 +58,19 @@ export const CreateExam = ({ setIsOpenCreateExam }) => {
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={() => setIsOpenCreateExam(false)}
 				/>
-				<p className='grid text-green font-bold text-xl justify-center'>TẠO ĐỀ THI</p>
-				<table className='mt-3'>
+				<p className="grid text-green font-bold text-xl justify-center">
+					TẠO ĐỀ THI
+				</p>
+				<table className="mt-3">
 					<tbody>
+						<tr>
+							<td><span>Dịch vụ</span></td>
+							<td>
+								<select {...register('serviceId')} className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm">
+									{services?.map((service) => <option value={service._id}>{service.name}</option>)}
+								</select>
+							</td>
+						</tr>
 						<tr>
 							<td>
 								{' '}

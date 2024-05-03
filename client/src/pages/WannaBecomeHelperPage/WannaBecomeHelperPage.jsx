@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import img26 from '../../assets/img/image 26.png';
 import img27 from '../../assets/img/image 27.png';
 import img28 from '../../assets/img/image 28.png';
@@ -22,7 +23,7 @@ export const WannaBecomeHelperPage = () => {
                         <p className='text-primary text-sm row-start-2'>0%</p>
                     </div>
                     <div className='grid justify-center h-2 m-0'>
-                        <button className='bg-green text-white w-28 p-1 rounded-full'>Vào thi</button>
+                        <Link className='bg-green text-center text-white w-28 p-1 rounded-full' to={'/entry-exam'}>Vào thi</Link>
                     </div>
 
                 </div>

@@ -6,11 +6,15 @@ import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateExam.css';
 import { updateExam } from '../../../../features/exams/examSlice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getAllServices } from '../../../../features/services/serviceSlice';
 
-export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
-	const { exams, isLoading } = useSelector((state) => state.exams);
-    const [chosenExam, setChosenExam] = useState(exams[exams.findIndex((exam) => exam._id == chosenExamId)]);
+export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExams }) => {
+	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
+	const { services, isLoading: serviceLoading } = useSelector((state) => state.services);
+	const [chosenExam, setChosenExam] = useState(
+		exams[exams.findIndex((exam) => exam._id == chosenExamId)]
+	);
 	const {
 		register,
 		handleSubmit,
@@ -18,6 +22,10 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 	} = useForm();
 
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getAllServices());
+	}, []);
 
 	const onSubmit = async (data) => {
 		const examData = {
@@ -34,9 +42,10 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 			toast.error(result?.payload, errorStyle);
 		}
 		setIsOpenUpdateExam(false);
+		handleGetAllExams();
 	};
 
-	if (isLoading) {
+	if (examLoading || serviceLoading) {
 		return <Spinner />;
 	}
 
@@ -59,6 +68,22 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 					<tbody>
 						<tr>
 							<td>
+								<span>Dịch vụ</span>
+							</td>
+							<td>
+								<select
+									{...register('serviceId')}
+									className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm"
+									defaultValue={chosenExam?.serviceId._id}
+								>
+									{services?.map((service) => (
+										<option value={service._id}>{service.name}</option>
+									))}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								{' '}
 								<span>Danh mục</span>
 							</td>
@@ -74,7 +99,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 								<input
 									type="radio"
 									{...register('category')}
-                                    defaultChecked={chosenExam?.category == 'Kiểm tra training'}
+									defaultChecked={chosenExam?.category == 'Kiểm tra training'}
 									value={'Kiểm tra training'}
 									className="w-5"
 								/>{' '}
@@ -116,7 +141,9 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 								<input
 									type="number"
 									{...register('numOfEasyQuestion')}
-									defaultValue={chosenExam?.questions?.easyQuestion?.numOfEasyQuestion}
+									defaultValue={
+										chosenExam?.questions?.easyQuestion?.numOfEasyQuestion
+									}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -129,7 +156,9 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 								<input
 									type="number"
 									{...register('numOfMediumQuestion')}
-									defaultValue={chosenExam?.questions?.mediumQuestion?.numOfMediumQuestion}
+									defaultValue={
+										chosenExam?.questions?.mediumQuestion?.numOfMediumQuestion
+									}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -142,7 +171,9 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId }) => {
 								<input
 									type="number"
 									{...register('numOfHardQuestion')}
-									defaultValue={chosenExam?.questions?.hardQuestion?.numOfHardQuestion}
+									defaultValue={
+										chosenExam?.questions?.hardQuestion?.numOfHardQuestion
+									}
 									className="create-exam-input text-center"
 								/>
 							</td>

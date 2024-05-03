@@ -12,6 +12,7 @@ const createExam = asyncHandler(async (req, res) => {
 		description,
 		category,
 		passGrade,
+		serviceId,
 	} = req.body;
 
 	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
@@ -60,6 +61,7 @@ const createExam = asyncHandler(async (req, res) => {
 				hardQuestionList: randomHardQuestionList,
 			},
 		},
+		serviceId,
 		duration,
 		description,
 		category,
@@ -75,7 +77,7 @@ const createExam = asyncHandler(async (req, res) => {
 	});
 });
 const getAllExams = asyncHandler(async (req, res) => {
-	const exams = await Exam.find({});
+	const exams = await Exam.find({}).populate('serviceId');
 
 	res.status(200).json({
 		status: 'success',
@@ -85,7 +87,7 @@ const getAllExams = asyncHandler(async (req, res) => {
 	});
 });
 const getExam = asyncHandler(async (req, res) => {
-	const exam = await Exam.findById(req.params.examId);
+	const exam = await Exam.findById(req.params.examId).populate('serviceId');
 
 	if (!exam) {
 		res.status(404);
@@ -133,6 +135,7 @@ const updateExam = asyncHandler(async (req, res) => {
 		description,
 		category,
 		passGrade,
+		serviceId,
 	} = req.body;
 
 	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
@@ -181,6 +184,7 @@ const updateExam = asyncHandler(async (req, res) => {
 				hardQuestionList: randomHardQuestionList,
 			},
 		},
+		serviceId,
 		duration,
 		description,
 		category,

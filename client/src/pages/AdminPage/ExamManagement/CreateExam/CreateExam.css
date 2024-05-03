@@ -2,6 +2,11 @@
     border-bottom: 1px solid rgb(204, 203, 203);
 }
 
-.create-exam-input:focus{
+.create-exam-input, .create-exam-select:focus{
     outline: none;
+}
+
+.create-exam-select{
+    border-bottom: 1px solid rgb(204, 203, 203);
+    width: 92%;
 }
