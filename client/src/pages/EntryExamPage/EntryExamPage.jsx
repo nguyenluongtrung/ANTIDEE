@@ -40,7 +40,7 @@ export const EntryExamPage = () => {
 		}
 	}, [chosenExam]);
 
-	const handleChangeAnswer = (content, questionId) => {
+	const handleChangeAnswer = (content, questionId, questionNumber) => {
 		const answer = answers.find((answer) => answer.questionId == questionId);
 		if (answer) {
 			answer.answerContent = content;
@@ -51,6 +51,7 @@ export const EntryExamPage = () => {
 				{
 					questionId,
 					answerContent: content,
+					questionNumber
 				},
 			]);
 		}
@@ -108,9 +109,8 @@ export const EntryExamPage = () => {
 							block: 'start'
 						  });
 						};
-
 						return (
-							<div className="number-item rounded-md text-center mr-3 hover:cursor-pointer" onClick={handleClickQuestion}>
+							<div className={`${answers.find(answer => Number(answer.questionNumber) === Number(item)) && 'bg-yellow'} number-item rounded-md text-center mr-3 hover:cursor-pointer`} onClick={handleClickQuestion}>
 								<span>{item}</span>
 							</div>
 						);
@@ -133,14 +133,15 @@ export const EntryExamPage = () => {
 				)}
 			</div>
 			<div className="question-list">
-				{questionList?.map((question, index) => {
+				{questionList?.map((question, customIndex) => {
 					return (
-						<div ref={(ref) => (questionRefs.current[index] = ref)} className="question-item rounded-xl p-3 shadow-[-10px_13px_10px_-10px_rgba(0,0,0,0.8)] mb-8">
+						<div ref={(ref) => (questionRefs.current[customIndex] = ref)} className="question-item rounded-xl p-3 shadow-[-10px_13px_10px_-10px_rgba(0,0,0,0.8)] mb-8">
 							<div>
-								<span className="font-bold underline">Câu {index + 1}: </span>
+								<span className="font-bold underline">Câu {customIndex + 1}: </span>
 								<span>{question?.content}</span>
 							</div>
 							{question?.choices.map((choice, index) => {
+								const isWrongAnswer = isSubmit && answers.find((answer) => Number(answer.questionNumber) === Number(customIndex + 1) && answer.answerContent != question.correctAnswer && choice == answer.answerContent);
 								return (
 									<div>
 										<input
@@ -150,18 +151,18 @@ export const EntryExamPage = () => {
 											name={question._id}
 											value={choice}
 											onChange={(e) =>
-												handleChangeAnswer(e.target.value, question._id)
+												handleChangeAnswer(e.target.value, question._id, customIndex + 1)
 											}
 										/>
-										<span>
+										<span className={`${isSubmit && (choice === question?.correctAnswer && 'text-green') } ${isWrongAnswer && 'text-red'}`}>
 											{String.fromCharCode(index + 65)}. {choice}
 										</span>
 									</div>
 								);
 							})}
 							{isSubmit && (
-								<p className="mt-2 text-xs text-green">
-									Đáp án đúng: {question?.correctAnswer}
+								<p className="mt-2 text-xs text-gray">
+									Giải thích: {question?.explanation}
 								</p>
 							)}
 						</div>
