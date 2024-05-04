@@ -5,6 +5,7 @@ import { Spinner } from './../../components';
 import { useEffect, useState, useRef } from 'react';
 import { getAllExams } from '../../features/exams/examSlice';
 import { ScoreNotification } from './ScoreNotification/ScoreNotification';
+import { TimerCountDown } from './TimerCountDown/TimerCountDown';
 
 export const EntryExamPage = () => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
@@ -69,7 +70,7 @@ export const EntryExamPage = () => {
 		setIsSubmit(true);
 	};
 
-	if (!Array.isArray(questionList) || examLoading) {
+	if (!Array.isArray(questionList) || examLoading || !chosenExam) {
 		return <Spinner />;
 	}
 
@@ -94,7 +95,7 @@ export const EntryExamPage = () => {
 				<p className="mb-1">
 					Thời gian còn lại:{' '}
 					<span className="text-primary text-sm font-bold">
-						{chosenExam?.duration} phút
+						<TimerCountDown seconds={parseInt(chosenExam?.duration) * 60} handleSubmitExam={handleSubmitExam} isSubmit={isSubmit}/>
 					</span>
 				</p>
 				<p className="mb-1">Câu hỏi:</p>
