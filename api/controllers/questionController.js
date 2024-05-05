@@ -13,7 +13,7 @@ const createQuestion = asyncHandler(async (req, res) => {
 });
 
 const getAllQuestions = asyncHandler(async (req, res) => {
-	const questions = await Question.find({});
+	const questions = await Question.find({}).populate('serviceId');
 
 	res.status(200).json({
 		status: 'success',
@@ -24,7 +24,9 @@ const getAllQuestions = asyncHandler(async (req, res) => {
 });
 
 const getQuestion = asyncHandler(async (req, res) => {
-	const question = await Question.findById(req.params.questionId);
+	const question = await Question.findById(req.params.questionId).populate(
+		'serviceId'
+	);
 
 	if (!question) {
 		res.status(404);

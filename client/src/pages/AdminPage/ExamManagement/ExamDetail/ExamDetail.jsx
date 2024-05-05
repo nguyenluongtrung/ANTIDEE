@@ -41,7 +41,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 					<tbody>
 						<tr>
 							<td>
-								<span>Dịch vụ</span>
+								<span className='font-bold'>Dịch vụ</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -52,7 +52,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						<tr>
 							<td>
 								{' '}
-								<span>Danh mục</span>
+								<span className='font-bold'>Danh mục</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -62,7 +62,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span>Thời gian</span>
+								<span className='font-bold'>Thời gian</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -72,7 +72,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span>Điểm cần đạt</span>
+								<span className='font-bold'>Điểm cần đạt</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -92,7 +92,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						<tr>
 							<td>
 								{' '}
-								<span>Số lượng câu dễ</span>
+								<span className='font-bold'>Số lượng câu dễ</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -102,7 +102,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span>Số lượng câu bình thường</span>
+								<span className='font-bold'>Số lượng câu bình thường</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -113,7 +113,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span>Số lượng câu khó</span>
+								<span className='font-bold'>Số lượng câu khó</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
