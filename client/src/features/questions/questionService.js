@@ -43,6 +43,7 @@ const deleteQuestion = async (token, id) => {
 	};
 
 	const response = await axios.delete(API_URL + `${id}`, config);
+	console.log(response);
 	return response.data.data.id;
 };
 
