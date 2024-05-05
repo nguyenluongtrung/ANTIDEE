@@ -35,10 +35,22 @@ const updateQuestion = async (token, questionData, id) => {
 	return response.data.data.updatedQuestion;
 };
 
+const deleteQuestion = async (token, id) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.delete(API_URL + `${id}`, config);
+	return response.data.data.id;
+};
+
 const questionService = {
 	getAllQuestions,
 	createQuestion,
 	updateQuestion,
+	deleteQuestion,
 };
 
 export default questionService;

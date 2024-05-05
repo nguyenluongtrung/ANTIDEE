@@ -71,7 +71,7 @@ export const CreateQuestion = ({
 					<tbody>
 						<tr>
 							<td className="w-28">
-								<span>Dịch vụ</span>
+								<span className='font-bold'>Dịch vụ</span>
 							</td>
 							<td>
 								<select
@@ -87,7 +87,7 @@ export const CreateQuestion = ({
 						<tr>
 							<td>
 								{' '}
-								<span>Nội dung</span>
+								<span className='font-bold'>Nội dung</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -99,7 +99,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span>Các lựa chọn</span>
+								<span className='font-bold'>Các lựa chọn</span>
 							</td>
 							<td className="pl-6 py-1">
 								{choices.map((choice, index) => (
@@ -129,7 +129,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span>Câu trả lời đúng</span>
+								<span className='font-bold'>Câu trả lời đúng</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -141,7 +141,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span>Giải thích</span>
+								<span className='font-bold'>Giải thích</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -153,7 +153,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span>Độ khó</span>
+								<span className='font-bold'>Độ khó</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input

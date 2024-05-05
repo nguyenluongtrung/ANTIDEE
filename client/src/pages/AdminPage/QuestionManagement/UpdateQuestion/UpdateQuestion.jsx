@@ -8,6 +8,7 @@ import './UpdateQuestion.css';
 import { useEffect, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
 import { updateQuestion } from '../../../../features/questions/questionSlice';
+import { IoAddCircleOutline } from 'react-icons/io5';
 
 export const UpdateQuestion = ({
 	setIsOpenUpdateQuestion,
@@ -27,6 +28,7 @@ export const UpdateQuestion = ({
 			)
 		]
 	);
+    const [choices, setChoices] = useState([chosenQuestion?.choices]);
 	const {
 		register,
 		handleSubmit,
@@ -42,8 +44,11 @@ export const UpdateQuestion = ({
 	const onSubmit = async (data) => {
 		const questionData = {
 			...data,
+            choices
 		};
-		const result = await dispatch(updateQuestion({ questionData, id: chosenQuestionId }));
+		const result = await dispatch(
+			updateQuestion({ questionData, id: chosenQuestionId })
+		);
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Cập nhật câu hỏi thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
@@ -76,7 +81,7 @@ export const UpdateQuestion = ({
 					<tbody>
 						<tr>
 							<td>
-								<span>Dịch vụ</span>
+								<span className='font-bold'>Dịch vụ</span>
 							</td>
 							<td>
 								<select
@@ -93,32 +98,57 @@ export const UpdateQuestion = ({
 						<tr>
 							<td>
 								{' '}
-								<span>Nội dung</span>
+								<span className='font-bold'>Nội dung</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
 									type="text"
 									{...register('content')}
-                                    defaultValue={chosenQuestion?.content}
+									defaultValue={chosenQuestion?.content}
 									className="create-question-input text-center text-sm w-80"
 								/>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<span>Các lựa chọn</span>
+								<span className='font-bold'>Các lựa chọn</span>
 							</td>
-							<td className="pl-6 py-1"></td>
+							<td className="pl-6 py-1">
+								{chosenQuestion?.choices.map((choice, index) => (
+									<div className="flex mb-2.5" key={index}>
+										<input
+											type="text"
+											className="create-question-input text-center text-sm w-80 mr-2"
+											// value={choice}
+                                            defaultValue={choice}
+											onChange={(e) => {
+												const updatedChoices = [...choices];
+												updatedChoices[index] = e.target.value;
+												setChoices(updatedChoices);
+											}}
+											name="choice"
+										/>
+										{index === choices.length - 1 && (
+											<IoAddCircleOutline
+												className="hover:cursor-pointer"
+												onClick={() => {
+													setChoices([...choices, '']);
+												}}
+											/>
+										)}
+									</div>
+								))}
+							</td>
 						</tr>
 						<tr>
 							<td>
-								<span>Câu trả lời đúng</span>
+								<span className='font-bold'>Câu trả lời đúng</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
 									type="text"
 									{...register('correctAnswer')}
-                                    defaultValue={chosenQuestion?.correctAnswer}
+									defaultValue={chosenQuestion?.correctAnswer}
 									className="create-question-input text-center text-sm w-80"
 								/>
 							</td>
@@ -126,20 +156,20 @@ export const UpdateQuestion = ({
 						<tr>
 							<td>
 								{' '}
-								<span>Giải thích</span>
+								<span className='font-bold'>Giải thích</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
 									type="text"
 									{...register('explanation')}
-                                    defaultValue={chosenQuestion?.explanation}
+									defaultValue={chosenQuestion?.explanation}
 									className="create-question-input text-center text-sm w-80"
 								/>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<span>Độ khó</span>
+								<span className='font-bold'>Độ khó</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -153,7 +183,9 @@ export const UpdateQuestion = ({
 								<input
 									type="radio"
 									{...register('difficultyLevel')}
-                                    defaultChecked={chosenQuestion?.difficultyLevel == 'Bình thường'}
+									defaultChecked={
+										chosenQuestion?.difficultyLevel == 'Bình thường'
+									}
 									value={'Bình thường'}
 									className="w-5"
 								/>{' '}
@@ -161,7 +193,7 @@ export const UpdateQuestion = ({
 								<input
 									type="radio"
 									{...register('difficultyLevel')}
-                                    defaultChecked={chosenQuestion?.difficultyLevel == 'Khó'}
+									defaultChecked={chosenQuestion?.difficultyLevel == 'Khó'}
 									value={'Khó'}
 									className="w-5"
 								/>{' '}

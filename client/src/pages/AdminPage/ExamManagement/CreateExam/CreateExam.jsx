@@ -64,7 +64,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 				<table className="mt-3">
 					<tbody>
 						<tr>
-							<td><span>Dịch vụ</span></td>
+							<td><span className='font-bold'>Dịch vụ</span></td>
 							<td>
 								<select {...register('serviceId')} className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm">
 									{services?.map((service) => <option value={service._id}>{service.name}</option>)}
@@ -74,7 +74,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 						<tr>
 							<td>
 								{' '}
-								<span>Danh mục</span>
+								<span className='font-bold'>Danh mục</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -96,7 +96,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 						</tr>
 						<tr>
 							<td>
-								<span>Thời gian</span>
+								<span className='font-bold'>Thời gian</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -108,7 +108,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 						</tr>
 						<tr>
 							<td>
-								<span>Điểm cần đạt</span>
+								<span className='font-bold'>Điểm cần đạt</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -121,7 +121,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 						<tr>
 							<td>
 								{' '}
-								<span>Số lượng câu dễ</span>
+								<span className='font-bold'>Số lượng câu dễ</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -133,7 +133,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 						</tr>
 						<tr>
 							<td>
-								<span>Số lượng câu bình thường</span>
+								<span className='font-bold'>Số lượng câu bình thường</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -145,7 +145,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 						</tr>
 						<tr>
 							<td>
-								<span>Số lượng câu khó</span>
+								<span className='font-bold'>Số lượng câu khó</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input

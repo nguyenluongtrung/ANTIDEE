@@ -1,11 +1,11 @@
-import { ToastBar, Toaster } from 'react-hot-toast';
+import toast, { ToastBar, Toaster } from 'react-hot-toast';
 import AdminSidebar from '../components/AdminSidebar/AdminSidebar';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
-import { getAllQuestions } from '../../../features/questions/questionSlice';
+import { deleteQuestion, getAllQuestions } from '../../../features/questions/questionSlice';
 import { Spinner } from '../../../components';
 import { CreateQuestion } from './CreateQuestion/CreateQuestion';
 import { QuestionDetail } from './QuestionDetail/QuestionDetail';
@@ -27,6 +27,15 @@ export const QuestionManagement = () => {
 		Promise.all([dispatch(getAllQuestions())]).catch((error) => {
 			console.error('Error during dispatch:', error);
 		});
+	};
+
+	const handleDeleteQuestion = async (id) => {
+		const result = await dispatch(deleteQuestion(id));
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Xoá câu hỏi thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
 	};
 
 	if (isLoading) {
@@ -145,7 +154,7 @@ export const QuestionManagement = () => {
 												<BiEdit className="text-green" />
 											</button>
 											<button className="flex items-center justify-start py-3 pl-2 text-xl">
-												<BiTrash className="text-red" />
+												<BiTrash className="text-red" onClick={() => handleDeleteQuestion(question._id)}/>
 											</button>
 										</div>
 									</td>

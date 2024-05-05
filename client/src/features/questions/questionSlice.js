@@ -61,6 +61,26 @@ export const updateQuestion = createAsyncThunk(
 	}
 );
 
+export const deleteQuestion = createAsyncThunk(
+	'exams/deleteQuestion',
+	async (id, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await questionService.deleteQuestion(token, id);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	questions: null,
 	isError: false,
@@ -122,6 +142,21 @@ export const questionSlice = createSlice({
 				] = action.payload;
 			})
 			.addCase(updateQuestion.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(deleteQuestion.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(deleteQuestion.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.questions = state.questions.filter(
+					(question) => String(question._id) !== String(action.payload)
+				);
+			})
+			.addCase(deleteQuestion.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
