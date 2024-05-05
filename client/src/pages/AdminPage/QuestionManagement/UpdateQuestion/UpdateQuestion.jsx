@@ -28,7 +28,6 @@ export const UpdateQuestion = ({
 			)
 		]
 	);
-    const [choices, setChoices] = useState([chosenQuestion?.choices]);
 	const {
 		register,
 		handleSubmit,
@@ -44,7 +43,7 @@ export const UpdateQuestion = ({
 	const onSubmit = async (data) => {
 		const questionData = {
 			...data,
-            choices
+			choices: chosenQuestion?.choices,
 		};
 		const result = await dispatch(
 			updateQuestion({ questionData, id: chosenQuestionId })
@@ -81,7 +80,7 @@ export const UpdateQuestion = ({
 					<tbody>
 						<tr>
 							<td>
-								<span className='font-bold'>Dịch vụ</span>
+								<span className="font-bold">Dịch vụ</span>
 							</td>
 							<td>
 								<select
@@ -98,7 +97,7 @@ export const UpdateQuestion = ({
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Nội dung</span>
+								<span className="font-bold">Nội dung</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -111,7 +110,7 @@ export const UpdateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Các lựa chọn</span>
+								<span className="font-bold">Các lựa chọn</span>
 							</td>
 							<td className="pl-6 py-1">
 								{chosenQuestion?.choices.map((choice, index) => (
@@ -119,20 +118,26 @@ export const UpdateQuestion = ({
 										<input
 											type="text"
 											className="create-question-input text-center text-sm w-80 mr-2"
-											// value={choice}
-                                            defaultValue={choice}
+											value={choice}
 											onChange={(e) => {
-												const updatedChoices = [...choices];
-												updatedChoices[index] = e.target.value;
-												setChoices(updatedChoices);
-											}}
+												const updatedChoices = chosenQuestion.choices.map((c, i) =>
+												  i === index ? e.target.value : c
+												);
+												setChosenQuestion(prevQuestion => ({
+												  ...prevQuestion,
+												  choices: updatedChoices.filter(choice => choice.trim() !== '')
+												}));
+											  }}
 											name="choice"
 										/>
-										{index === choices.length - 1 && (
+										{index === chosenQuestion.choices.length - 1 && (
 											<IoAddCircleOutline
 												className="hover:cursor-pointer"
 												onClick={() => {
-													setChoices([...choices, '']);
+													setChosenQuestion((prevQuestion) => ({
+														...prevQuestion,
+														choices: [...prevQuestion.choices, ''],
+													}));
 												}}
 											/>
 										)}
@@ -142,7 +147,7 @@ export const UpdateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Câu trả lời đúng</span>
+								<span className="font-bold">Câu trả lời đúng</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -156,7 +161,7 @@ export const UpdateQuestion = ({
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Giải thích</span>
+								<span className="font-bold">Giải thích</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -169,7 +174,7 @@ export const UpdateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Độ khó</span>
+								<span className="font-bold">Độ khó</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
