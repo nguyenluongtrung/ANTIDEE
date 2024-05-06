@@ -34,7 +34,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 					<tbody>
 						<tr>
 							<td>
-								<span>Tên voucher</span>
+								<span className='font-bold'>Tên voucher</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -45,7 +45,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						<tr>
 							<td>
 								{' '}
-								<span>Mô tả</span>
+								<span className='font-bold'>Mô tả</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -55,7 +55,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Ngày bắt đầu</span>
+								<span className='font-bold'>Ngày bắt đầu</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -65,7 +65,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Ngày kết thúc</span>
+								<span className='font-bold'>Ngày kết thúc</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -75,7 +75,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Giá trị chiết khấu</span>
+								<span className='font-bold'>Giá trị chiết khấu</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -85,7 +85,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Số lượng</span>
+								<span className='font-bold'>Số lượng</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -95,7 +95,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Điểm trao đổi</span>
+								<span className='font-bold'>Điểm trao đổi</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -105,7 +105,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Trạng thái</span>
+								<span className='font-bold'>Trạng thái</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -115,7 +115,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Mã giảm giá</span>
+								<span className='font-bold'>Mã giảm giá</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -125,7 +125,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						</tr>
 						<tr>
 							<td>
-								<span>Thương hiệu</span>
+								<span className='font-bold'>Thương hiệu</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>

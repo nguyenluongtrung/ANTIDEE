@@ -7,7 +7,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateVoucher.css';
 import { updateVoucher } from '../../../../features/vouchers/voucherSlice';
 import { useEffect, useState } from 'react';
-import { formatDate } from '../../../../utils/format';
+import { formatDate, formatDateInput } from '../../../../utils/format';
 
 export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleGetAllVouchers }) => {
     const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
@@ -66,6 +66,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     {...register('name')}
                                     className="ml-6 py-1 update-voucher-input hover:cursor-pointer text-center"
                                     defaultValue={chosenVoucher?.name}
+                                    style={{width: '93%'}}
                                 >
                                 </input>
                             </td>
@@ -79,7 +80,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('description')}
                                     defaultValue={chosenVoucher?.description}
-                                    className="w-80 text-sm update-voucher-input"
+                                    className="text-sm update-voucher-input text-center"
                                 />{' '}
                             </td>
                         </tr>
@@ -91,7 +92,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('startDate')}
                                     type="date"
-                                    defaultValue={formatDate(chosenVoucher?.startDate)}
+                                    defaultValue={formatDateInput(chosenVoucher?.startDate)}
                                     className="update-voucher-input text-center"
                                 />
                             </td>
@@ -104,7 +105,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('endDate')}
                                     type="date"
-                                    defaultValue={formatDate(chosenVoucher?.endDate)}
+                                    defaultValue={formatDateInput(chosenVoucher?.endDate)}
                                     className="update-voucher-input text-center"
                                 />
                             </td>
