@@ -10,6 +10,7 @@ import { WannaBecomeHelperPage } from './pages/WannaBecomeHelperPage';
 import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
 import { CongratsPage } from './pages/CongratsPage';
+import { VoucherManagement} from './pages/AdminPage/VoucherManagement/VoucherManagement';
 
 const App = () => {
 	return (
@@ -31,7 +32,7 @@ const App = () => {
 					<Route path="/admin-exam" element={<ExamManagement />} />
 					<Route path="/admin" element={<AdminPage />} />
 					<Route path="/admin" element={<AdminPage />} />
-					<Route path="/admin" element={<AdminPage />} />
+					<Route path="/admin-voucher" element={<VoucherManagement />} />
 				</Routes>
 			</Router>
 		</div>

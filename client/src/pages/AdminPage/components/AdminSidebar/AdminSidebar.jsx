@@ -7,7 +7,9 @@ import {
   BiNotification,
   BiMessage,
   BiSupport,
+
 } from "react-icons/bi";
+import { BsTicket } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Link } from 'react-router-dom'
 
@@ -20,6 +22,7 @@ export default function AdminSidebar() {
     { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },
     { name: "Thông Báo", icon: <BiNotification />, to: '' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '' },
+    { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
   ];
 
   const menuBottom = [
