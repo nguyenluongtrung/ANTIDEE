@@ -16,6 +16,7 @@ export default function AdminSidebar() {
     { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
     { name: "Sự kiện khuyến mãi", icon: <BiGridAlt />, to: '' },
     { name: "Đề thi", icon: <BiCreditCardAlt />, to: '/admin-exam' },
+    { name: "Các chứng chỉ", icon: <BiCreditCardAlt />, to: '/admin-qualification' },
     { name: "Liên hệ", icon: <BiUser />, to: '' },
     { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },
     { name: "Thông Báo", icon: <BiNotification />, to: '' },
