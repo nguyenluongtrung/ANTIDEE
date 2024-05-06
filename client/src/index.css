@@ -3,14 +3,27 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    font-family: "Inter", sans-serif;
+body {
+	font-family: 'Inter', sans-serif;
 }
 
-h5, p, span{
-    font-size: 14px
+h5,
+p,
+span {
+	font-size: 14px;
 }
 
-.small-text{
-    font-size: 10px;
+.small-text {
+	font-size: 10px;
+}
+
+.app-container {
+	position: relative;
+}
+
+.sidebar-container{
+    position: fixed;
+    top: 50vh;
+    left: 10px;
+    transform: translateY(-50%);
 }
