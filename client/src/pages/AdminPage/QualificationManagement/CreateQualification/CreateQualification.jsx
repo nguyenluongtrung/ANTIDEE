@@ -57,7 +57,7 @@ export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAll
 							<td>
 								<span>Tên chứng chỉ</span>
 							</td>
-							<td className="pl-6 py-1">
+							<td className="pl-6 py-1 w-96">
 								<input
 									type="text"
 									{...register('name')}
@@ -73,7 +73,8 @@ export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAll
 								<textarea
 									type="text"
 									{...register('description')}
-									className="create-exam-input text-center"
+									className="create-exam-textarea text-center"
+									rows="3" cols="40"
 								/>
 							</td>
 						</tr>

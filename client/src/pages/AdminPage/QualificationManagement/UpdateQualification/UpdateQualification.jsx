@@ -61,7 +61,7 @@ export const UpdateQualification = ({ setIsOpenUpdateQualification, handleGetAll
 							<td>
 								<span>Tên chứng chỉ</span>
 							</td>
-							<td className="pl-6 py-1">
+							<td className="pl-6 py-1 w-80">
 								<input
 									type="text"
 									{...register('name')}
@@ -72,14 +72,15 @@ export const UpdateQualification = ({ setIsOpenUpdateQualification, handleGetAll
 						</tr>
                         <tr>
 							<td>
-								<span>Mô tả</span>
+								<span className=''>Mô tả</span>
 							</td>
 							<td className="pl-6 py-1">
 								<textarea
 									type="text"
 									{...register('description')}
                                     defaultValue={chosenQualification?.description}
-									className="create-exam-input text-center"
+									className="create-exam-textarea text-center"
+									rows="3" cols="40"
 								/>
 							</td>
 						</tr>
