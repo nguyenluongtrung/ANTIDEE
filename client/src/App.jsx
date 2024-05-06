@@ -10,29 +10,38 @@ import { WannaBecomeHelperPage } from './pages/WannaBecomeHelperPage';
 import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
 import { CongratsPage } from './pages/CongratsPage';
+import { Sidebar } from './components';
 
 const App = () => {
 	return (
-		<div>
+		<div className="app-container">
 			<Router>
-				<Routes>
-					<Route path="/" element={<Layout />}>
-						<Route path="/" element={<HomePage />} />
-						<Route path="/home" element={<HomePage />} />
-						<Route path="/register" element={<RegisterPage />} />
-						<Route path="/login" element={<LoginPage />} />
-						<Route path="/my-account" element={<MyAccount />} />
-						<Route path="/entry-exam" element={<EntryExamPage />} />
-						<Route path="/invite-friend" element={<InviteFriendPage />} />
-						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
-						<Route path="/congrats" element={<CongratsPage/>}/>
-					</Route>
-					<Route path="/admin" element={<AdminPage />} />
-					<Route path="/admin-exam" element={<ExamManagement />} />
-					<Route path="/admin" element={<AdminPage />} />
-					<Route path="/admin" element={<AdminPage />} />
-					<Route path="/admin" element={<AdminPage />} />
-				</Routes>
+				<div className='sidebar-container'>
+					<Sidebar/>
+				</div>
+				<div className="content-container">
+					<Routes>
+						<Route path="/" element={<Layout />}>
+							<Route path="/" element={<HomePage />} />
+							<Route path="/home" element={<HomePage />} />
+							<Route path="/register" element={<RegisterPage />} />
+							<Route path="/login" element={<LoginPage />} />
+							<Route path="/my-account" element={<MyAccount />} />
+							<Route path="/entry-exam" element={<EntryExamPage />} />
+							<Route path="/invite-friend" element={<InviteFriendPage />} />
+							<Route
+								path="/become-helper"
+								element={<WannaBecomeHelperPage />}
+							/>
+							<Route path="/congrats" element={<CongratsPage />} />
+						</Route>
+						<Route path="/admin" element={<AdminPage />} />
+						<Route path="/admin-exam" element={<ExamManagement />} />
+						<Route path="/admin" element={<AdminPage />} />
+						<Route path="/admin" element={<AdminPage />} />
+						<Route path="/admin" element={<AdminPage />} />
+					</Routes>
+				</div>
 			</Router>
 		</div>
 	);
