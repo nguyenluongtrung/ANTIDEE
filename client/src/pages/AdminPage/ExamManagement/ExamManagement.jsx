@@ -11,6 +11,7 @@ import { BiEdit, BiTrash } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { UpdateExam } from './UpdateExam/UpdateExam';
 import { ExamDetail } from './ExamDetail/ExamDetail';
+import { IoAddOutline } from 'react-icons/io5';
 export const ExamManagement = () => {
 	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
 	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
@@ -95,11 +96,14 @@ export const ExamManagement = () => {
 						<span> hàng</span>
 					</div>
 					<button
-						className="bg-pink text-white py-2 rounded-md block mx-auto"
-						style={{ width: '100px' }}
+						className="bg-pink text-white rounded-md block mx-auto"
+						style={{ width: '150px' }}
 						onClick={() => setIsOpenCreateExam(true)}
 					>
-						<span>Thêm đề thi</span>
+						<div className="flex items-center">
+                            <IoAddOutline className='size-8 pl-2 mr-2' />
+                            <span className="text-sm pr-2">Thêm đề thi</span>
+                        </div>
 					</button>
 				</div>
 				<table className="w-full border-b border-gray mt-3">
