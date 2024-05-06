@@ -85,7 +85,7 @@ export const QualificationManagement = () => {
         )}
 
         <div className="flex items-center justify-center">
-          <div className="flex-1 pt-2">
+          <div className="flex-1 pt-2" style={{paddingRight: '70%'}}>
             <span>Hiển thị </span>
             <select
               className="rounded-md p-1 mx-1 hover:cursor-pointer"
