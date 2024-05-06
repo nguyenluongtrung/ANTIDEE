@@ -4,6 +4,7 @@ import examReducer from './../features/exams/examSlice';
 import serviceReducer from './../features/services/serviceSlice';
 import questionReducer from './../features/questions/questionSlice';
 import voucherReducer from './../features/vouchers/voucherSlice';
+import qualificationReducer from './../features/qualifications/qualificationSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
 		services: serviceReducer,
 		questions: questionReducer,
 		vouchers: voucherReducer,
+		qualifications: qualificationReducer,
 	},
 });

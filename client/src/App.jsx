@@ -9,6 +9,7 @@ import { InviteFriendPage } from './pages/InviteFriendPage';
 import { WannaBecomeHelperPage } from './pages/WannaBecomeHelperPage';
 import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
+import { QualificationManagement } from './pages/AdminPage/QualificationManagement/QualificationManagement';
 import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
 import { WeatherForecastPage } from './pages/WeatherForecastPage';
@@ -46,6 +47,7 @@ const App = () => {
 						<Route path="/admin-exam" element={<ExamManagement />} />
 						<Route path="/admin-question" element={<QuestionManagement />} />
 						<Route path="/admin-voucher" element={<VoucherManagement />} />
+						<Route path="/admin-qualification" element={<QualificationManagement />} />
 					</Routes>
 				</div>
 			</Router>
