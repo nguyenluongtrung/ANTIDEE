@@ -307,7 +307,7 @@ export const MyAccount = () => {
 													defaultValue={formatDateInput(account?.dob)}
 												/>
 											) : (
-												<span className="">{formatDate(account?.dob)}</span>
+												<span className="">{account?.dob ? formatDate(account?.dob) : 'Chưa cập nhật'}</span>
 											)}
 										</td>
 									</tr>

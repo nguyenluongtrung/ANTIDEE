@@ -18,6 +18,7 @@ app.use('/antidee/api/questions', require('./routes/questionRoutes'));
 app.use('/antidee/api/exams', require('./routes/examRoutes'));
 app.use('/antidee/api/qualifications', require('./routes/qualificationRoutes'));
 app.use('/antidee/api/services', require('./routes/serviceRoutes'));
+app.use('/antidee/api/vouchers', require('./routes/voucherRouter'));
 
 app.use(errorHandler);
 

@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Question = require('../models/questionModel');
+const Exam = require('../models/examModel');
 
 const createQuestion = asyncHandler(async (req, res) => {
 	const question = await Question.create(req.body);
@@ -13,7 +14,7 @@ const createQuestion = asyncHandler(async (req, res) => {
 });
 
 const getAllQuestions = asyncHandler(async (req, res) => {
-	const questions = await Question.find({});
+	const questions = await Question.find({}).populate('serviceId');
 
 	res.status(200).json({
 		status: 'success',
@@ -24,7 +25,9 @@ const getAllQuestions = asyncHandler(async (req, res) => {
 });
 
 const getQuestion = asyncHandler(async (req, res) => {
-	const question = await Question.findById(req.params.questionId);
+	const question = await Question.findById(req.params.questionId).populate(
+		'serviceId'
+	);
 
 	if (!question) {
 		res.status(404);
@@ -41,16 +44,39 @@ const getQuestion = asyncHandler(async (req, res) => {
 
 const deleteQuestion = asyncHandler(async (req, res) => {
 	const question = await Question.findById(req.params.questionId);
+	const exams = await Exam.find({});
 
 	if (!question) {
 		res.status(404);
 		throw new Error('Không tìm thấy câu hỏi');
 	}
 
+	await Exam.updateMany(
+		{
+			$or: [
+				{ 'questions.easyQuestion.easyQuestionList': req.params.questionId },
+				{
+					'questions.mediumQuestion.mediumQuestionList': req.params.questionId,
+				},
+				{ 'questions.hardQuestion.hardQuestionList': req.params.questionId },
+			],
+		},
+		{
+			$pull: {
+				'questions.easyQuestion.easyQuestionList': req.params.questionId,
+				'questions.mediumQuestion.mediumQuestionList': req.params.questionId,
+				'questions.hardQuestion.hardQuestionList': req.params.questionId,
+			},
+		}
+	);
+
 	await Question.findByIdAndDelete(req.params.questionId);
 
 	res.status(200).json({
 		status: 'success',
+		data: {
+			id: req.params.questionId,
+		},
 	});
 });
 

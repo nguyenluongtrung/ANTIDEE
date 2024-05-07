@@ -1,9 +1,11 @@
 import './EntryExamPage.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom'
 import { Spinner } from './../../components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getAllExams } from '../../features/exams/examSlice';
 import { ScoreNotification } from './ScoreNotification/ScoreNotification';
+import { TimerCountDown } from './TimerCountDown/TimerCountDown';
 
 export const EntryExamPage = () => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
@@ -13,7 +15,9 @@ export const EntryExamPage = () => {
 	const [answers, setAnswers] = useState([]);
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [isOpenScoreNotification, setIsOpenScoreNotification] = useState(false);
+	const questionRefs = useRef([]);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const asyncFn = async () => {
@@ -37,7 +41,7 @@ export const EntryExamPage = () => {
 		}
 	}, [chosenExam]);
 
-	const handleChangeAnswer = (content, questionId) => {
+	const handleChangeAnswer = (content, questionId, questionNumber) => {
 		const answer = answers.find((answer) => answer.questionId == questionId);
 		if (answer) {
 			answer.answerContent = content;
@@ -48,6 +52,7 @@ export const EntryExamPage = () => {
 				{
 					questionId,
 					answerContent: content,
+					questionNumber
 				},
 			]);
 		}
@@ -65,7 +70,7 @@ export const EntryExamPage = () => {
 		setIsSubmit(true);
 	};
 
-	if (!Array.isArray(questionList) || examLoading) {
+	if (!Array.isArray(questionList) || examLoading || !chosenExam) {
 		return <Spinner />;
 	}
 
@@ -90,7 +95,7 @@ export const EntryExamPage = () => {
 				<p className="mb-1">
 					Thời gian còn lại:{' '}
 					<span className="text-primary text-sm font-bold">
-						{chosenExam?.duration} phút
+						<TimerCountDown seconds={parseInt(chosenExam?.duration) * 60} handleSubmitExam={handleSubmitExam} isSubmit={isSubmit}/>
 					</span>
 				</p>
 				<p className="mb-1">Câu hỏi:</p>
@@ -98,32 +103,46 @@ export const EntryExamPage = () => {
 					{Array.from(
 						{ length: questionList.length },
 						(_, index) => index + 1
-					).map((item) => {
+					).map((item, index) => {
+						const handleClickQuestion = () => {
+						  questionRefs.current[index].scrollIntoView({
+							behavior: 'smooth',
+							block: 'start'
+						  });
+						};
 						return (
-							<div className="number-item rounded-md text-center mr-3">
+							<div className={`${answers.find(answer => Number(answer.questionNumber) === Number(item)) && 'bg-yellow'} number-item rounded-md text-center mr-3 hover:cursor-pointer`} onClick={handleClickQuestion}>
 								<span>{item}</span>
 							</div>
 						);
 					})}
 				</div>
-				{!isOpenScoreNotification && (
+				{!isOpenScoreNotification ? (
 					<button
-						className="inline text-center mt-0.5 pb-1 rounded-md bg-white text-primary submit-test-btn"
+						className="inline text-center mt-0.5 pb-1 rounded-md bg-white text-primary submit-test-btn hover:bg-primary hover:text-white"
 						onClick={handleSubmitExam}
 					>
 						<span>Nộp bài</span>
 					</button>
+				) : (
+					<button
+						className="inline text-center mt-0.5 pb-1 rounded-md bg-white text-primary submit-test-btn hover:bg-primary hover:text-white"
+						onClick={() => navigate('/become-helper')}
+					>
+						<span>Quay về</span>
+					</button>
 				)}
 			</div>
 			<div className="question-list">
-				{questionList?.map((question, index) => {
+				{questionList?.map((question, customIndex) => {
 					return (
-						<div className="question-item rounded-xl p-3 shadow-[-10px_13px_10px_-10px_rgba(0,0,0,0.8)] mb-8">
+						<div ref={(ref) => (questionRefs.current[customIndex] = ref)} className="question-item rounded-xl p-3 shadow-[-10px_13px_10px_-10px_rgba(0,0,0,0.8)] mb-8">
 							<div>
-								<span className="font-bold underline">Câu {index + 1}: </span>
+								<span className="font-bold underline">Câu {customIndex + 1}: </span>
 								<span>{question?.content}</span>
 							</div>
 							{question?.choices.map((choice, index) => {
+								const isWrongAnswer = isSubmit && answers.find((answer) => Number(answer.questionNumber) === Number(customIndex + 1) && answer.answerContent != question.correctAnswer && choice == answer.answerContent);
 								return (
 									<div>
 										<input
@@ -133,18 +152,18 @@ export const EntryExamPage = () => {
 											name={question._id}
 											value={choice}
 											onChange={(e) =>
-												handleChangeAnswer(e.target.value, question._id)
+												handleChangeAnswer(e.target.value, question._id, customIndex + 1)
 											}
 										/>
-										<span>
+										<span className={`${isSubmit && (choice === question?.correctAnswer && 'text-green') } ${isWrongAnswer && 'text-red'}`}>
 											{String.fromCharCode(index + 65)}. {choice}
 										</span>
 									</div>
 								);
 							})}
 							{isSubmit && (
-								<p className="mt-2 text-xs text-green">
-									Đáp án đúng: {question?.correctAnswer}
+								<p className="mt-2 text-xs text-gray">
+									Giải thích: {question?.explanation}
 								</p>
 							)}
 						</div>
