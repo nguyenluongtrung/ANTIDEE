@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Route,
+	Routes,
+	useLocation,
+} from 'react-router-dom';
 import { Layout } from './layout';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -18,39 +23,51 @@ import { Sidebar } from './components';
 
 const App = () => {
 	return (
+		<Router>
+			<AppContent />
+		</Router>
+	);
+};
+
+const AppContent = () => {
+	const { pathname } = useLocation();
+
+	const isAdminPage = pathname.startsWith('/admin');
+	return (
 		<div className="app-container">
-			<Router>
+			{!isAdminPage && (
 				<div className="sidebar-container">
 					<Sidebar />
 				</div>
-				<div className="content-container">
-					<Routes>
-						<Route path="/" element={<Layout />}>
-							<Route path="/" element={<HomePage />} />
-							<Route path="/home" element={<HomePage />} />
-							<Route path="/register" element={<RegisterPage />} />
-							<Route path="/login" element={<LoginPage />} />
-							<Route path="/my-account" element={<MyAccount />} />
-							<Route path="/entry-exam" element={<EntryExamPage />} />
-							<Route path="/invite-friend" element={<InviteFriendPage />} />
+			)}
+			<div className="content-container">
+				<Routes>
+					<Route path="/" element={<Layout />}>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/home" element={<HomePage />} />
+						<Route path="/register" element={<RegisterPage />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route path="/my-account" element={<MyAccount />} />
+						<Route path="/entry-exam" element={<EntryExamPage />} />
+						<Route path="/invite-friend" element={<InviteFriendPage />} />
+						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
+						<Route path="/congrats" element={<CongratsPage />} />
+						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
+					</Route>
+					{isAdminPage && (
+						<>
+							<Route path="/admin" element={<AdminPage />} />
+							<Route path="/admin-exam" element={<ExamManagement />} />
+							<Route path="/admin-question" element={<QuestionManagement />} />
+							<Route path="/admin-voucher" element={<VoucherManagement />} />
 							<Route
-								path="/become-helper"
-								element={<WannaBecomeHelperPage />}
+								path="/admin-qualification"
+								element={<QualificationManagement />}
 							/>
-							<Route path="/congrats" element={<CongratsPage />} />
-							<Route
-								path="/weather-forecast"
-								element={<WeatherForecastPage />}
-							/>
-						</Route>
-						<Route path="/admin" element={<AdminPage />} />
-						<Route path="/admin-exam" element={<ExamManagement />} />
-						<Route path="/admin-question" element={<QuestionManagement />} />
-						<Route path="/admin-voucher" element={<VoucherManagement />} />
-						<Route path="/admin-qualification" element={<QualificationManagement />} />
-					</Routes>
-				</div>
-			</Router>
+						</>
+					)}
+				</Routes>
+			</div>
 		</div>
 	);
 };

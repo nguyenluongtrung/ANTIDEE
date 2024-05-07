@@ -13,6 +13,7 @@ import {
 } from "../../../features/qualifications/qualificationSlice";
 import { CreateQualification } from "./CreateQualification/CreateQualification";
 import { UpdateQualification } from "./UpdateQualification/UpdateQualification";
+import { IoAddOutline } from "react-icons/io5";
 
 export const QualificationManagement = () => {
   //Create   Qualification
@@ -98,12 +99,15 @@ export const QualificationManagement = () => {
             <span> hàng</span>
           </div>
           <button
-            className="flex-1 bg-pink text-white p-3 rounded-md block"
-            style={{ width: "100px" }}
-            onClick={() => setIsOpenCreateQualification(true)}
-          >
-            <span>Thêm Chứng Chỉ</span>
-          </button>
+						className="bg-pink text-white rounded-md block mx-auto py-0.5"
+						style={{ width: '170px' }}
+						onClick={() => setIsOpenCreateQualification(true)}
+					>
+						<div className="flex items-center">
+                            <IoAddOutline className='size-8 pl-2 mr-2' />
+                            <span className="text-sm pr-2">Thêm chứng chỉ</span>
+                        </div>
+					</button>
         </div>
         <table className="w-full border-b border-gray mt-3">
           <thead>
