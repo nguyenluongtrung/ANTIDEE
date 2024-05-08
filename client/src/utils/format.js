@@ -20,6 +20,25 @@ export const formatDateInput = (dateString) => {
 	return `${year}-${month}-${day}`;
 };
 
+export const getCurrentTime = () => {
+	const currentTime = new Date();
+	const hours = currentTime.getHours();
+	const minutes = currentTime.getMinutes();
+	let period = 'AM';
+
+	let formattedHours = hours;
+	if (formattedHours >= 12) {
+		formattedHours = formattedHours % 12;
+		period = 'PM';
+	}
+	if (formattedHours === 0) {
+		formattedHours = 12;
+	}
+
+	const formattedMinutes = minutes.toString().padStart(2, '0');
+	return `${formattedHours}:${formattedMinutes} ${period}`;
+};
+
 export const formatTimerCountDown = (time) => {
 	let minutes = Math.floor(time / 60);
 	let seconds = Math.floor(time - minutes * 60);

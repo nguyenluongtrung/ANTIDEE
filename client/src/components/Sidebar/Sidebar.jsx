@@ -10,9 +10,11 @@ import { FaRankingStar } from 'react-icons/fa6';
 import { IoIosPartlySunny } from 'react-icons/io';
 import './Sidebar.css';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 export const Sidebar = () => {
 	const [activeItem, setActiveItem] = useState(null);
+	const navigate = useNavigate();
 
 	const handleMouseEnter = (item) => {
 		setActiveItem(item);
@@ -100,7 +102,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Thời tiết')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<IoIosPartlySunny className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<IoIosPartlySunny className="sidebar-icon mb-7 hover:cursor-pointer" onClick={() => navigate('/weather-forecast')}/>
 				{activeItem === 'Thời tiết' && <div className="description">Thời tiết</div>}
 			</div>
 		</div>
