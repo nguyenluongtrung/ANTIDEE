@@ -11,7 +11,7 @@ import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
 import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
-
+import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 const App = () => {
 	return (
 		<div>
@@ -31,6 +31,7 @@ const App = () => {
 					<Route path="/admin" element={<AdminPage />} />
 					<Route path="/admin-exam" element={<ExamManagement />} />
 					<Route path="/admin-question" element={<QuestionManagement />} />
+					<Route path="/admin-promotion" element={<PromotionManagement />} />
 				</Routes>
 			</Router>
 		</div>
