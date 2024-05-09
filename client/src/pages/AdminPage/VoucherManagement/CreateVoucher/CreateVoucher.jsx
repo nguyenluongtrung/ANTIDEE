@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateVoucher.css';
+import { rules } from '../../../../utils/rules';
 
 export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) => {
     const { isLoading: voucherLoading } = useSelector((state) => state.vouchers);
@@ -197,9 +198,9 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                 </table>
                 <button
                     type="submit"
-                    className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
+                    className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3 hover:bg-primary_dark"
                 >
-                    Tạo bài thi
+                    Tạo voucher
                 </button>
             </form>
         </div>

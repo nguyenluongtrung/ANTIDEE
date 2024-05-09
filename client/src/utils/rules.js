@@ -21,4 +21,46 @@ export const rules = {
 			message: 'Mật khẩu phải chứa ít nhất 8 kí tự',
 		},
 	},
+	name: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
+	description: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
+	discountValue: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
+	quantity: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
+	price: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
+	code: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
+	brand: {
+		required: {
+			value: true,
+			message: "Không được để trống trường này",
+		},
+	},
 };
