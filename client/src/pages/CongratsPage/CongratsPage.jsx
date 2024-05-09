@@ -1,5 +1,7 @@
 import React from 'react';
 import img31 from '../../assets/img/image 31.png';
+
+
 export const CongratsPage = () => {
 	return (
 		<div>
@@ -16,6 +18,8 @@ export const CongratsPage = () => {
 					Khám phá những tính năng của người giúp việc
 				</button>
 			</div>
+
 		</div>
+
 	);
 };

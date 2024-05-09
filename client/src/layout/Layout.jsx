@@ -1,4 +1,4 @@
-import { Footer, Header } from '../components';
+import { Footer, Header, Sidebar } from '../components';
 import { Outlet } from 'react-router-dom';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
@@ -6,7 +6,7 @@ export const Layout = () => {
 	return (
 		<>
 			<Header />
-			<Outlet />
+			<Outlet><Sidebar /></Outlet>
 			<Footer />
 			<Toaster>
 				{(t) => (
