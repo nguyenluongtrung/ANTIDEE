@@ -5,8 +5,8 @@ import cer from "../../assets/img/residencycer.png";
 import resume from "../../assets/img/resume.png";
 export const UpdateProfileForDW = () => {
 	return (
-		<div className="grid m-12">
-			<div className="p-5">
+		<div className="grid mx-12">
+			<div className="">
 			<h1 className=" grid text-green font-bold text-2xl justify-center ">
 				BỔ SUNG HỒ SƠ
 			</h1>
@@ -51,9 +51,9 @@ export const UpdateProfileForDW = () => {
 						<p className="font-bold  ">Giấy xác nhận cư trú</p>
 						<span className="text-red">(* bắt buộc)</span>
 						</div>
-						<div className="justify-center flex">
+						<div className="flex">
 						<p className="font-bold  ">Sơ yếu lý lịch</p>
-						<span className="">(* bạn có thể bổ sung sau)</span>
+						<span className="text-red">(* bắt buộc)</span>
 						</div>
 				</div>
 					
