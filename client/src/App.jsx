@@ -11,6 +11,7 @@ import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
 import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
+import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 
 const App = () => {
 	return (
@@ -27,6 +28,7 @@ const App = () => {
 						<Route path="/invite-friend" element={<InviteFriendPage />} />
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
 						<Route path="/congrats" element={<CongratsPage/>}/>
+						<Route path="/update-dw" element={<UpdateProfileForDW/>}/>
 					</Route>
 					<Route path="/admin" element={<AdminPage />} />
 					<Route path="/admin-exam" element={<ExamManagement />} />
