@@ -2,14 +2,8 @@ import axios from 'axios';
 
 const API_URL = '/antidee/api/qualifications/';
 
-const getAllQualifications = async (token) => {
-	const config = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	};
-
-	const response = await axios.get(API_URL, config);
+const getAllQualifications = async () => {
+	const response = await axios.get(API_URL);
 	return response.data.data.qualifications;
 };
 

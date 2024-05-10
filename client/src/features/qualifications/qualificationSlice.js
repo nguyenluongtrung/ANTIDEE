@@ -5,9 +5,7 @@ export const getAllQualifications = createAsyncThunk(
 	'qualifications/getAllQualifications',
 	async (_, thunkAPI) => {
 		try {
-			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount.data.token;
-			return await qualificationService.getAllQualifications(token);
+			return await qualificationService.getAllQualifications();
 		} catch (error) {
 			const message =
 				(error.response &&

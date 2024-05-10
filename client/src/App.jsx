@@ -20,6 +20,7 @@ import { QuestionManagement } from './pages/AdminPage/QuestionManagement/Questio
 import { WeatherForecastPage } from './pages/WeatherForecastPage';
 import { VoucherManagement } from './pages/AdminPage/VoucherManagement/VoucherManagement';
 import { Sidebar } from './components';
+import { QualificationPage } from './pages/QualificationPage';
 
 const App = () => {
 	return (
@@ -53,6 +54,7 @@ const AppContent = () => {
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
 						<Route path="/congrats" element={<CongratsPage />} />
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
+						<Route path="/qualification" element={<QualificationPage />} />
 					</Route>
 					{isAdminPage && (
 						<>
