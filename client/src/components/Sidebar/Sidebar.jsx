@@ -30,7 +30,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Trang chủ')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<FaHome className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<FaHome className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Trang chủ' && <div className="description">Trang chủ</div>}
 			</div>
 			<div
@@ -38,7 +38,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Hồ sơ')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<IoPerson className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<IoPerson className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Hồ sơ' && <div className="description">Hồ sơ</div>}
 			</div>
 			<div
@@ -46,7 +46,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Mời bạn bè')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<HiUsers className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<HiUsers className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Mời bạn bè' && <div className="description">Mời bạn bè</div>}
 			</div>
 			<div
@@ -54,7 +54,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Tài khoản')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<RiMoneyDollarCircleFill className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<RiMoneyDollarCircleFill className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Tài khoản' && <div className="description">Tài khoản</div>}
 			</div>
 			<div
@@ -62,7 +62,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Ưu đãi')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<IoGiftSharp className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<IoGiftSharp className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Ưu đãi' && <div className="description">Ưu đãi</div>}
 			</div>
 			<div
@@ -70,7 +70,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Diễn đàn')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<GrNotes className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<GrNotes className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Diễn đàn' && <div className="description">Diễn đàn</div>}
 			</div>
 			<div
@@ -78,7 +78,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Công việc')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<FaTasks className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<FaTasks className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Công việc' && <div className="description">Công việc</div>}
 			</div>
 			<div
@@ -86,7 +86,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Hành trình')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<RiMapPinFill className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<RiMapPinFill className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Hành trình' && <div className="description">Hành trình</div>}
 			</div>
 			<div
@@ -94,7 +94,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Xếp hạng')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<FaRankingStar className="sidebar-icon mb-7 hover:cursor-pointer" />
+				<FaRankingStar className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 				{activeItem === 'Xếp hạng' && <div className="description">Xếp hạng</div>}
 			</div>
 			<div
@@ -102,7 +102,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Thời tiết')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<IoIosPartlySunny className="sidebar-icon mb-7 hover:cursor-pointer" onClick={() => navigate('/weather-forecast')}/>
+				<IoIosPartlySunny className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" onClick={() => navigate('/weather-forecast')}/>
 				{activeItem === 'Thời tiết' && <div className="description">Thời tiết</div>}
 			</div>
 		</div>
