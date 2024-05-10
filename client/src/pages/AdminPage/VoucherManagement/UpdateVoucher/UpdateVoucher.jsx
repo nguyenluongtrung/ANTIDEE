@@ -7,10 +7,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateVoucher.css';
 import { updateVoucher } from '../../../../features/vouchers/voucherSlice';
 import { useEffect, useState } from 'react';
-import { formatDate, formatDateInput } from '../../../../utils/format';
+import { formatDateInput, formatDatePicker, validCurrentDate } from '../../../../utils/format';
 import { rules } from '../../../../utils/rules';
 
 export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleGetAllVouchers }) => {
+    const currentDate = validCurrentDate();
     const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
     const [chosenVoucher, setChosenVoucher] = useState(
         vouchers[vouchers.findIndex((voucher) => voucher._id == chosenVoucherId)]
@@ -22,6 +23,10 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
     } = useForm();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        formatDatePicker();
+    })
 
     const onSubmit = async (data) => {
         const voucherData = {
@@ -98,6 +103,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('startDate')}
                                     type="date"
+                                    min={currentDate}
                                     defaultValue={formatDateInput(chosenVoucher?.startDate)}
                                     className="update-voucher-input text-center"
                                 />
@@ -111,6 +117,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('endDate')}
                                     type="date"
+                                    min={currentDate}
                                     defaultValue={formatDateInput(chosenVoucher?.endDate)}
                                     className="update-voucher-input text-center"
                                 />
@@ -158,7 +165,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="number"
-                                    {...register('price',rules.price)}
+                                    {...register('price', rules.price)}
                                     defaultValue={
                                         chosenVoucher?.price
                                     }
@@ -207,7 +214,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="text"
-                                    {...register('code',rules.code)}
+                                    {...register('code', rules.code)}
                                     defaultValue={
                                         chosenVoucher?.code
                                     }
@@ -225,7 +232,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="text"
-                                    {...register('brand',rules.brand)}
+                                    {...register('brand', rules.brand)}
                                     defaultValue={
                                         chosenVoucher?.brand
                                     }

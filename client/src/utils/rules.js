@@ -38,18 +38,30 @@ export const rules = {
 			value: true,
 			message: "Không được để trống trường này",
 		},
+		min: {
+			value: 0,
+			message: " Giá trị chiết khấu không được bé hơn 0"
+		}
 	},
 	quantity: {
 		required: {
 			value: true,
 			message: "Không được để trống trường này",
 		},
+		min: {
+			value: 0,
+			message: " Số lượng không được bé hơn 0"
+		}
 	},
 	price: {
 		required: {
 			value: true,
 			message: "Không được để trống trường này",
 		},
+		min: {
+			value: 0,
+			message: " Điểm trao đổi không được bé hơn 0"
+		}
 	},
 	code: {
 		required: {
