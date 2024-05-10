@@ -41,4 +41,66 @@ export const rules = {
 			message: 'Ngày sinh là bắt buộc',
 		},
 	},
+	description: {
+		required: {
+			value: true,
+			message: 'Không được để trống trường này',
+		},
+	},
+	startDate: {
+		required: {
+			value: true,
+		},
+	},
+	endDate: {
+		required: {
+			value: true,
+		},
+	},
+	discountValue: {
+		required: {
+			value: true,
+			message: 'Không được để trống trường này',
+		},
+		min: {
+			value: 0,
+			message: ' Giá trị chiết khấu không được bé hơn 0',
+		},
+		pattern: {
+			value: /^\d*\.?\d*$/,
+			message: 'Giá trị chiết khấu phải là một số',
+		},
+	},
+	quantity: {
+		required: {
+			value: true,
+			message: 'Không được để trống trường này',
+		},
+		min: {
+			value: 0,
+			message: ' Số lượng không được bé hơn 0',
+		},
+	},
+	price: {
+		required: {
+			value: true,
+			message: 'Không được để trống trường này',
+		},
+		min: {
+			value: 0,
+			message: ' Điểm trao đổi không được bé hơn 0',
+		},
+	},
+	code: {
+		required: {
+			value: true,
+			message: 'Không được để trống trường này',
+		},
+	},
+	brand: {
+		required: {
+			value: true,
+			message: 'Không được để trống trường này',
+		},
+	},
 };
