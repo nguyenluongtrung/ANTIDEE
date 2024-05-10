@@ -70,7 +70,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td>
                                 <input
                                     {...register('name', rules.name)}
-                                    className="ml-6 py-1 update-voucher-input hover:cursor-pointer text-center"
+                                    className="ml-6 py-1 update-voucher-input text-center"
                                     defaultValue={chosenVoucher?.name}
                                     style={{ width: '93%' }}
                                 >
@@ -129,10 +129,10 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             </td>
                             <td className="pl-6 py-1">
                                 <input
-                                    type="number"
+                                    type="text"
                                     {...register('discountValue', rules.discountValue)}
                                     defaultValue={chosenVoucher?.discountValue}
-                                    className="update-voucher-input text-center"
+                                    className="update-voucher-input text-center pr-3.5"
                                 />
                                 {errors.discountValue && (
                                     <p className="text-red small-text text-sm">{errors.discountValue.message}</p>

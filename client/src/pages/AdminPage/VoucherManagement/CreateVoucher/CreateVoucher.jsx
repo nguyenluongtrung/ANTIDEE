@@ -67,7 +67,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pl-12'>
 
-                                <input {...register('name')} className='text-center w-72 create-voucher-input'
+                                <input {...register('name', rules.name)} 
+                                className={`text-center w-72 create-voucher-input ${errors.name ? 'error-border' : ''}`}
                                     placeholder='Nhập tên voucher'></input>
                             </td>
 
@@ -78,8 +79,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input {...register('description')}
-                                    className='text-center create-voucher-input w-72'
+                                <input {...register('description', rules.description)}
+                                    className={`text-center w-72 create-voucher-input ${errors.description ? 'error-border' : ''}`}
                                     placeholder='Mô tả'></input>
                             </td>
 
@@ -90,8 +91,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input {...register('startDate')}
-                                    className='text-center create-voucher-input w-72'
+                                <input {...register('startDate',rules.startDate)}
+                                    className={`text-center create-voucher-input w-72 ${(errors.startDate) ? 'error-input' : ''}`}
                                     type='date'
                                     min={currentDate}
                                     placeholder='Ngày bắt đầu'></input>
@@ -104,8 +105,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input {...register('endDate')}
-                                    className='text-center create-voucher-input w-72'
+                                <input {...register('endDate',rules.endDate)}
+                                    className={`text-center create-voucher-input w-72 ${(errors.endDate) ? 'error-input' : ''}`}
                                     type='date'
                                     min={currentDate}
                                     placeholder='Ngày kết thúc'></input>
@@ -119,12 +120,9 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className='pt-3 pl-12'>
 
                                 <input {...register('discountValue', rules.discountValue)}
-                                    className='text-center create-voucher-input w-72'
-                                    type='number'
+                                    className={`text-center create-voucher-input w-72 pr-3.5 ${errors.discountValue ? 'error-input' : ''}`}
+                                    type='text'
                                     placeholder='Giá trị chiết khấu (%)'></input>
-                                {errors.discountValue && (
-                                    <p className="text-red small-text text-sm">{errors.discountValue.message}</p>
-                                )}
                             </td>
 
                         </tr>
@@ -135,12 +133,9 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className='pt-3 pl-12'>
 
                                 <input {...register('quantity', rules.quantity)}
-                                    className='text-center create-voucher-input w-72'
+                                    className={`text-center create-voucher-input w-72 ${errors.quantity ? 'error-input' : ''}`}
                                     type='number'
                                     placeholder='Số lượng'></input>
-                                {errors.quantity && (
-                                    <p className="text-red small-text text-sm">{errors.quantity.message}</p>
-                                )}
                             </td>
 
                         </tr>
@@ -151,12 +146,9 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className='pt-3 pl-12'>
 
                                 <input {...register('price', rules.price)}
-                                    className='text-center create-voucher-input w-72'
+                                    className={`text-center create-voucher-input w-72 ${errors.price ? 'error-input' : ''}`}
                                     type='number'
                                     placeholder='Điểm trao đổi'></input>
-                                {errors.price && (
-                                    <p className="text-red small-text text-sm">{errors.price.message}</p>
-                                )}
                             </td>
 
                         </tr>
@@ -167,7 +159,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className="pl-6 py-1 pt-3">
                                 <input
                                     type="radio"
-                                    {...register('status')}
+                                    {...register('status',rules.status)}
                                     value={'Đang hoạt động'}
                                     className="w-5"
                                 />{' '}
@@ -195,8 +187,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input  {...register('code')}
-                                    className='text-center create-voucher-input w-72'
+                                <input  {...register('code', rules.code)}
+                                    className={`text-center create-voucher-input w-72 ${errors.code ? 'error-border' : ''}`}
                                     placeholder='Mã giảm giá'></input>
                             </td>
 
@@ -207,8 +199,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input  {...register('brand')}
-                                    className='text-center create-voucher-input w-72'
+                                <input  {...register('brand',rules.brand)}
+                                    className={`text-center create-voucher-input w-72 ${errors.brand ? 'error-border' : ''}`}
                                     placeholder='Thương hiệu'></input>
                             </td>
 

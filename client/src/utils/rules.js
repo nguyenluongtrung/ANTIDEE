@@ -33,6 +33,16 @@ export const rules = {
 			message: "Không được để trống trường này",
 		},
 	},
+	startDate: {
+		required: {
+			value: true
+		}
+	},
+	endDate: {
+		required: {
+			value: true
+		}
+	},
 	discountValue: {
 		required: {
 			value: true,
@@ -41,9 +51,14 @@ export const rules = {
 		min: {
 			value: 0,
 			message: " Giá trị chiết khấu không được bé hơn 0"
+		},
+		pattern: {
+			value: /^\d*\.?\d*$/,
+			message: "Giá trị chiết khấu phải là một số"
 		}
 	},
 	quantity: {
+
 		required: {
 			value: true,
 			message: "Không được để trống trường này",
