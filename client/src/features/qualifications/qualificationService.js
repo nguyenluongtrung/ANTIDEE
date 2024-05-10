@@ -3,13 +3,7 @@ import axios from 'axios';
 const API_URL = '/antidee/api/qualifications/';
 
 const getAllQualifications = async (token) => {
-	const config = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	};
-
-	const response = await axios.get(API_URL, config);
+	const response = await axios.get(API_URL);
 	return response.data.data.qualifications;
 };
 
@@ -31,8 +25,12 @@ const updateQualification = async (token, qualificationData, id) => {
 		},
 	};
 
-	const response = await axios.patch(API_URL + `${id}`, qualificationData, config);
-    console.log(response);
+	const response = await axios.patch(
+		API_URL + `${id}`,
+		qualificationData,
+		config
+	);
+	console.log(response);
 	return response.data.data.updatedQualification;
 };
 

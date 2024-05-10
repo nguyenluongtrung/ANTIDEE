@@ -5,9 +5,7 @@ export const getAllQualifications = createAsyncThunk(
 	'qualifications/getAllQualifications',
 	async (_, thunkAPI) => {
 		try {
-			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount.data.token;
-			return await qualificationService.getAllQualifications(token);
+			return await qualificationService.getAllQualifications();
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -27,7 +25,10 @@ export const createQualification = createAsyncThunk(
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await qualificationService.createQualification(token, qualificationData);
+			return await qualificationService.createQualification(
+				token,
+				qualificationData
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -47,7 +48,11 @@ export const updateQualification = createAsyncThunk(
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await qualificationService.updateQualification(token, qualificationData, id);
+			return await qualificationService.updateQualification(
+				token,
+				qualificationData,
+				id
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -153,7 +158,8 @@ export const qualificationSlice = createSlice({
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.qualifications = state.qualifications.filter(
-					(qualification) => String(qualification._id) !== String(action.payload)
+					(qualification) =>
+						String(qualification._id) !== String(action.payload)
 				);
 			})
 			.addCase(deleteQualification.rejected, (state, action) => {
