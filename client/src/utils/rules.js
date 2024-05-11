@@ -21,4 +21,10 @@ export const rules = {
 			message: 'Mật khẩu phải chứa ít nhất 8 kí tự',
 		},
 	},
+	name:{
+		required: {
+			value:true,
+		}
+	},
+	
 };

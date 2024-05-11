@@ -14,6 +14,7 @@ import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateService.css';
 import { useEffect, useRef, useState } from 'react';
+import { rules } from '../../../../utils/rules';
 export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) => {
 	const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
 	const fileRef = useRef(null);
@@ -93,10 +94,11 @@ export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) 
                     <span className='font-bold'>Tên dịch vụ</span>
                 </td>
                 <td className="pl-[30px] py-2">
+					
                     <input 
                         type="text"
-                        {...register('name')}
-                        className="create-question-input text-center ml-[60px] text-sm w-[380px]"
+                        {...register('name', rules.name)}
+                        className={` ${errors.name && "border-red"} create-question-input text-center ml-[60px] text-sm w-[380px]` } 
                     />
                 </td>
             </tr>
@@ -104,7 +106,42 @@ export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) 
                 <td>
                     <span className='font-bold'>Ảnh dịch vụ</span>
                 </td>
-               
+                <td className="pl-[30px] py-2 grid justify-center">
+				<img 
+							src={`${serviceUrl}` || 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
+							className="block w-16 mx-auto mb-1"
+						/>
+				<span
+	className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
+	onClick={(e) => {
+		e.preventDefault(); // Ngăn chặn hành vi mặc định của nút
+		fileRef.current.click();
+	}}
+>
+	<span>Chọn ảnh dịch vụ</span>
+	
+</span>
+
+				<input
+							type="file"
+							ref={fileRef}
+							hidden
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
+						<p className="text-sm self-center pl-2">
+							{fileUploadError ? (
+								<span className="text-red">
+									Tải ảnh lên thất bại (dung lượng ảnh phải nhỏ hơn 2MB)
+								</span>
+							) : filePerc > 0 && filePerc < 100 ? (
+								<span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
+							) : filePerc === 100 ? (
+								<span className="text-green">Tải ảnh lên thành công!</span>
+							) : (
+								''
+							)}
+						</p>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -149,35 +186,7 @@ export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) 
     >
         Tạo dịch vụ
     </button>
-	<div>
-
-				<button 
-							className="rounded-md rounded-customized-gray p-1 ml-[60px] w-[380px] hover:cursor-pointer"
-							onClick={() => fileRef.current.click()}
-						>
-							<span>Chọn ảnh dịch vụ</span>
-						</button>
-				<input
-							type="file"
-							ref={fileRef}
-							hidden
-							onChange={(e) => setFile(e.target.files[0])}
-						/>
-						<p className="text-sm self-center pl-2">
-							{fileUploadError ? (
-								<span className="text-red">
-									Tải ảnh lên thất bại (dung lượng ảnh phải nhỏ hơn 2MB)
-								</span>
-							) : filePerc > 0 && filePerc < 100 ? (
-								<span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
-							) : filePerc === 100 ? (
-								<span className="text-green">Tải ảnh lên thành công!</span>
-							) : (
-								''
-							)}
-						</p>
-              
-</div>
+	
 </form>
 
 		</div>

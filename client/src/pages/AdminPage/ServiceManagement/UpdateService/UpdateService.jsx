@@ -5,12 +5,24 @@ import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useEffect,useState } from 'react';
+import {
+	getDownloadURL,
+	getStorage,
+	ref,
+	uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../../../../firebase';
+import { useEffect, useRef, useState } from 'react';
 import { updateService } from '../../../../features/services/serviceSlice';
 import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleGetAllServices }) => {
     const { services, isLoading: serviceLoading } = useSelector((state) => state.services);
     const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
+    const fileRef = useRef(null);
+	const [file, setFile] = useState(undefined);
+	const [filePerc, setFilePerc] = useState(0);
+	const [fileUploadError, setFileUploadError] = useState(false);
+	const [serviceUrl, setServiceUrl] = useState('');
     const [chosenService] = useState(
 		services[services.findIndex((service) => service._id == chosenServiceId)]
 	);
@@ -20,10 +32,39 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
 		formState: { errors },
 	} = useForm();
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(getAllQualifications());
+		if (file) {
+			handleFileUpload(file);
+		}
+	}, [file]);
+	const handleFileUpload = (file) => {
+		const storage = getStorage(app);
+		const fileName = new Date().getTime() + file.name;
+		const storageRef = ref(storage, `services/${fileName}`);
+		const uploadTask = uploadBytesResumable(storageRef, file);
+		
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const progress =
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				setFilePerc(Math.round(progress));
+			},
+			(error) => {
+				setFileUploadError(true);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+					setServiceUrl(downloadURL)
+				);
+			}
+		);
+	};
     const onSubmit = async (data) => {
-		const serviceData = {
-			...data,
-		};
+		const serviceData = 
+		serviceUrl !== '' ? { ...data, image: serviceUrl } : { ...data };
+			
         
         const result = await dispatch(updateService({ serviceData, id: chosenServiceId }));
        
@@ -37,9 +78,7 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
 		setIsOpenUpdateService(false);
 		handleGetAllServices();
 	};
-    useEffect(() => {
-		dispatch(getAllQualifications());
-	}, []);
+    
     return(
     <div className="popup active">
         <div className="overlay"> </div>
@@ -74,11 +113,43 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                             {' '}
                             <span className='font-bold'>Ảnh dịch vụ</span>
                         </td>
-                        <td className="pl-[30px] py-2">
-                            <input className="create-question-input text-center ml-[60px] text-sm w-[380px]" type="text" 
-                            {...register('image')}
-                            defaultValue={chosenService?.image}
-                            />{' '}
+                        <td className="pl-[30px] py-2 grid justify-center">
+                        
+                            <img 
+							src={`${serviceUrl}` || chosenService?.image|| 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
+                              className="block w-16 mx-auto mb-1"
+							
+                            defaultValue={`${serviceUrl}`}
+						/>
+				<span
+	className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
+	onClick={(e) => {
+		e.preventDefault(); // Ngăn chặn hành vi mặc định của nút
+		fileRef.current.click();
+	}}
+>
+	<span>Chọn ảnh dịch vụ</span>
+	
+</span>
+<input
+							type="file"
+							ref={fileRef}
+							hidden
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
+						<p className="text-sm self-center pl-2">
+							{fileUploadError ? (
+								<span className="text-red">
+									Tải ảnh lên thất bại (dung lượng ảnh phải nhỏ hơn 2MB)
+								</span>
+							) : filePerc > 0 && filePerc < 100 ? (
+								<span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
+							) : filePerc === 100 ? (
+								<span className="text-green">Tải ảnh lên thành công!</span>
+							) : (
+								''
+							)}
+						</p>
                         </td>
                     </tr>
                     <tr>
