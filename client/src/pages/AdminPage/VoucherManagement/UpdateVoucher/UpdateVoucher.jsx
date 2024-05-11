@@ -7,9 +7,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateVoucher.css';
 import { updateVoucher } from '../../../../features/vouchers/voucherSlice';
 import { useEffect, useState } from 'react';
-import { formatDate, formatDateInput } from '../../../../utils/format';
+import { formatDateInput, formatDatePicker, validCurrentDate } from '../../../../utils/format';
+import { rules } from '../../../../utils/rules';
 
 export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleGetAllVouchers }) => {
+    const currentDate = validCurrentDate();
     const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
     const [chosenVoucher, setChosenVoucher] = useState(
         vouchers[vouchers.findIndex((voucher) => voucher._id == chosenVoucherId)]
@@ -21,6 +23,10 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
     } = useForm();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        formatDatePicker();
+    })
 
     const onSubmit = async (data) => {
         const voucherData = {
@@ -63,25 +69,30 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             </td>
                             <td>
                                 <input
-                                    {...register('name')}
-                                    className="ml-6 py-1 update-voucher-input hover:cursor-pointer text-center"
+                                    {...register('name', rules.name)}
+                                    className="ml-6 py-1 update-voucher-input text-center"
                                     defaultValue={chosenVoucher?.name}
-                                    style={{width: '93%'}}
+                                    style={{ width: '93%' }}
                                 >
                                 </input>
+                                {errors.name && (
+                                    <p className="text-red small-text ml-6 text-sm">{errors.name.message}</p>
+                                )}
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 {' '}
-                                <span  className="font-bold">Mô tả</span>
+                                <span className="font-bold">Mô tả</span>
                             </td>
                             <td className="pl-6 py-1" >
                                 <input
-                                    {...register('description')}
+                                    {...register('description', rules.description)}
                                     defaultValue={chosenVoucher?.description}
                                     className="text-sm update-voucher-input text-center"
-                                />{' '}
+                                />{errors.description && (
+                                    <p className="text-red small-text  text-sm">{errors.description.message}</p>
+                                )}
                             </td>
                         </tr>
                         <tr>
@@ -92,6 +103,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('startDate')}
                                     type="date"
+                                    min={currentDate}
                                     defaultValue={formatDateInput(chosenVoucher?.startDate)}
                                     className="update-voucher-input text-center"
                                 />
@@ -105,6 +117,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('endDate')}
                                     type="date"
+                                    min={currentDate}
                                     defaultValue={formatDateInput(chosenVoucher?.endDate)}
                                     className="update-voucher-input text-center"
                                 />
@@ -116,11 +129,14 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             </td>
                             <td className="pl-6 py-1">
                                 <input
-                                    type="number"
-                                    {...register('discountValue')}
+                                    type="text"
+                                    {...register('discountValue', rules.discountValue)}
                                     defaultValue={chosenVoucher?.discountValue}
-                                    className="update-voucher-input text-center"
+                                    className="update-voucher-input text-center pr-3.5"
                                 />
+                                {errors.discountValue && (
+                                    <p className="text-red small-text text-sm">{errors.discountValue.message}</p>
+                                )}
                             </td>
                         </tr>
                         <tr>
@@ -131,12 +147,15 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="number"
-                                    {...register('quantity')}
+                                    {...register('quantity', rules.quantity)}
                                     defaultValue={
                                         chosenVoucher?.quantity
                                     }
                                     className="update-voucher-input text-center"
                                 />
+                                {errors.quantity && (
+                                    <p className="text-red small-text text-sm">{errors.quantity.message}</p>
+                                )}
                             </td>
                         </tr>
                         <tr>
@@ -146,12 +165,15 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="number"
-                                    {...register('price')}
+                                    {...register('price', rules.price)}
                                     defaultValue={
                                         chosenVoucher?.price
                                     }
                                     className="update-voucher-input text-center"
                                 />
+                                {errors.price && (
+                                    <p className="text-red small-text text-sm">{errors.price.message}</p>
+                                )}
                             </td>
                         </tr>
                         <tr>
@@ -159,30 +181,30 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <span className="font-bold">Trạng thái</span>
                             </td>
                             <td className="pl-6 py-1">
-                            <input
-									type="radio"
-									{...register('status')}
-									defaultChecked={chosenVoucher?.status == 'Đang hoạt động'}
-									value={'Đang hoạt động'}
-									className="w-5"
-								/>{' '}
-								<span className="mr-3">Đang hoạt động</span>
-								<input
-									type="radio"
-									{...register('status')}
-									defaultChecked={chosenVoucher?.status == 'Đã hết hạn'}
-									value={'Đã hết hạn'}
-									className="w-5"
-								/>{' '}
-								<span>Đã hết hạn</span>
                                 <input
-									type="radio"
-									{...register('status')}
-									defaultChecked={chosenVoucher?.status == 'Đã sử dụng'}
-									value={'Đã sử dụng'}
-									className="w-5"
-								/>{' '}
-								<span>Đã sử dụng</span>
+                                    type="radio"
+                                    {...register('status')}
+                                    defaultChecked={chosenVoucher?.status == 'Đang hoạt động'}
+                                    value={'Đang hoạt động'}
+                                    className="w-5"
+                                />{' '}
+                                <span className="mr-3">Đang hoạt động</span>
+                                <input
+                                    type="radio"
+                                    {...register('status')}
+                                    defaultChecked={chosenVoucher?.status == 'Đã hết hạn'}
+                                    value={'Đã hết hạn'}
+                                    className="w-5"
+                                />{' '}
+                                <span>Đã hết hạn</span>
+                                <input
+                                    type="radio"
+                                    {...register('status')}
+                                    defaultChecked={chosenVoucher?.status == 'Đã sử dụng'}
+                                    value={'Đã sử dụng'}
+                                    className="w-5"
+                                />{' '}
+                                <span>Đã sử dụng</span>
                             </td>
                         </tr>
                         <tr>
@@ -192,12 +214,15 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="text"
-                                    {...register('code')}
+                                    {...register('code', rules.code)}
                                     defaultValue={
                                         chosenVoucher?.code
                                     }
                                     className="update-voucher-input text-center"
                                 />
+                                {errors.code && (
+                                    <p className="text-red small-text text-sm">{errors.code.message}</p>
+                                )}
                             </td>
                         </tr>
                         <tr>
@@ -207,12 +232,15 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td className="pl-6 py-1">
                                 <input
                                     type="text"
-                                    {...register('brand')}
+                                    {...register('brand', rules.brand)}
                                     defaultValue={
                                         chosenVoucher?.brand
                                     }
                                     className="update-voucher-input text-center"
                                 />
+                                {errors.brand && (
+                                    <p className="text-red small-text text-sm">{errors.brand.message}</p>
+                                )}
                             </td>
                         </tr>
                     </tbody>
@@ -221,7 +249,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                     type="submit"
                     className="block bg-primary
                      text-white text-center 
-                     rounded-md p-2 font-medium mb-1 mt-3">
+                     rounded-md p-2 font-medium mb-1 mt-3 hover:bg-primary_dark">
                     Cập nhật voucher
                 </button>
             </form>

@@ -21,8 +21,8 @@ export const EntryExamPage = () => {
 
 	useEffect(() => {
 		const asyncFn = async () => {
-			await dispatch(getAllExams());
-			const chosenExam = exams.find(
+			const result = await dispatch(getAllExams());
+			const chosenExam = result.payload.find(
 				(exam) => exam._id === '66344b624efd284146530f4b'
 			);
 			setChosenExam(chosenExam);

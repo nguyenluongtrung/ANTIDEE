@@ -204,8 +204,11 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="text"
-													className="update-input ml-10 w-40"
-													{...register('name')}
+													className={`update-input ml-10 w-40 placeholder:text-red ${
+														errors?.name && 'text-red'
+													}`}
+													placeholder={errors?.name?.message}
+													{...register('name', rules.name)}
 													defaultValue={account?.name}
 												/>
 											) : (
@@ -221,9 +224,10 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="text"
-													className={`update-input ml-10 w-40 ${
-														errors.email && 'text-red'
+													className={`update-input ml-10 w-40 placeholder:text-red ${
+														errors?.email && 'text-red'
 													}`}
+													placeholder={errors?.email?.message}
 													{...register('email', rules.email)}
 													defaultValue={account?.email}
 												/>
@@ -240,9 +244,10 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="text"
-													className={`update-input ml-10 w-40 ${
-														errors.phoneNumber && 'text-red'
+													className={`update-input ml-10 w-40 placeholder:text-red ${
+														errors?.phoneNumber && 'text-red'
 													}`}
+													placeholder={errors?.phoneNumber?.message}
 													{...register('phoneNumber', rules.phoneNumber)}
 													defaultValue={account?.phoneNumber}
 												/>
@@ -300,14 +305,20 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="date"
-													className="update-input w-28"
-													{...register('dob')}
+													className={`update-input ml-10 w-40 ${
+														errors?.dob && 'text-red'
+													}`}
+													{...register('dob', rules.dob)}
 													max={maxDateString}
 													min={new Date(1900, 0, 1).toISOString().split('T')[0]}
 													defaultValue={formatDateInput(account?.dob)}
 												/>
 											) : (
-												<span className="">{account?.dob ? formatDate(account?.dob) : 'Chưa cập nhật'}</span>
+												<span className="">
+													{account?.dob
+														? formatDate(account?.dob)
+														: 'Chưa cập nhật'}
+												</span>
 											)}
 										</td>
 									</tr>
@@ -379,7 +390,7 @@ export const MyAccount = () => {
 							<span>Chọn ảnh đại diện</span>
 						</button>
 						<div className="mt-2">
-							<p className='text-xs'>Dung lượng file tối đa 2MB</p>
+							<p className="text-xs">Dung lượng file tối đa 2MB</p>
 						</div>
 						<input
 							type="file"

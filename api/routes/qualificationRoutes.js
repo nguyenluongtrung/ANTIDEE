@@ -13,7 +13,7 @@ const router = express.Router();
 router
 	.route('/')
 	.post(protect, restrict('Admin'), createQualification)
-	.get(protect, restrict('Admin'), getAllQualifications);
+	.get(getAllQualifications);
 router
 	.route('/:qualificationId')
 	.get(protect, restrict('Admin'), getQualification)

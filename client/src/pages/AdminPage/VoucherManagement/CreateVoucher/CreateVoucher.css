@@ -1,4 +1,13 @@
-.create-voucher-input{
+.create-voucher-input {
     border-bottom: 1px solid rgb(204, 203, 203);
     outline: none;
+}
+
+.error-input {
+    color: #d2042d;
+    border-bottom: 1px solid #d2042d;
+}
+
+.error-border {
+    border-bottom: 1px solid #d2042d;
 }

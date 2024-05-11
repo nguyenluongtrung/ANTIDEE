@@ -90,25 +90,26 @@ const accountSchema = mongoose.Schema(
 			minLength: [8, 'Account password contains more than 8 characters'],
 			select: false,
 		},
-		resume: [
-			{
-				qualifications: [
-					{
-						type: mongoose.Schema.Types.ObjectId,
-						ref: 'Qualification',
-					},
-				],
-				idCard: {
-					type: String,
+		resume: {
+			qualifications: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Qualification',
 				},
-				curriculumVitae: {
-					type: String,
-				},
-				certificateOfResidence: {
-					type: String,
-				},
+			],
+			frontIdCard: {
+				type: String,
 			},
-		],
+			backIdCard: {
+				type: String,
+			},
+			curriculumVitae: {
+				type: String,
+			},
+			certificateOfResidence: {
+				type: String,
+			},
+		},
 	},
 	{
 		timestamps: true,

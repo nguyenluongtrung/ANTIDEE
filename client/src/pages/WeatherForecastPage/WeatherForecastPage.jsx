@@ -4,6 +4,8 @@ import './WeatherForecastPage.css';
 import { useForm } from 'react-hook-form';
 import { formatDate, getCurrentTime } from '../../utils/format';
 import { Spinner } from '../../components';
+import toast from 'react-hot-toast';
+import { errorStyle } from '../../utils/toast-customize';
 export const WeatherForecastPage = () => {
 	const [weatherStatus, setWeatherStatus] = useState();
 	const [location, setLocation] = useState('danang');
@@ -30,8 +32,12 @@ export const WeatherForecastPage = () => {
 			.then(({ data }) => {
 				setWeatherStatus(data);
 				setIsLoading(false);
+			})
+			.catch((error) => {
+				setIsLoading(false);
+				toast.error("Không tìm thấy thành phố bạn cần", errorStyle);
 			});
-	}, []);
+	}, [location]);
 
 	useEffect(() => {
 		const getCurrentHour = () => {
@@ -120,8 +126,8 @@ export const WeatherForecastPage = () => {
 			});
 	};
 
-	if(isLoading){
-		return <Spinner />
+	if (isLoading) {
+		return <Spinner />;
 	}
 
 	return (
@@ -145,14 +151,14 @@ export const WeatherForecastPage = () => {
 							<span>Tìm kiếm</span>
 						</button>
 					</form>
-					<div class="weather-icon flex justify-center">
+					<div className="weather-icon flex justify-center">
 						<img
 							id="icon"
 							src={getIcon(currentWeatherStatus?.icon)}
 							className=""
 						/>
 					</div>
-					<div class="temperature flex justify-center">
+					<div className="temperature flex justify-center">
 						<h1 id="temp" style={{ fontWeight: 'normal' }}>
 							{Number(currentWeatherStatus?.temp).toFixed(0)}
 						</h1>
@@ -170,13 +176,13 @@ export const WeatherForecastPage = () => {
 			</div>
 			<div className="main">
 				<nav>
-					<ul class="options">
-						<button class={`hourly`} onClick={() => setIsToday(true)}>
+					<ul className="options">
+						<button className={`hourly`} onClick={() => setIsToday(true)}>
 							<span className={`${isToday ? 'text-primary' : 'text-gray'}`}>
 								Hôm nay
 							</span>
 						</button>
-						<button class={`week w-56`} onClick={() => setIsToday(false)}>
+						<button className={`week w-56`} onClick={() => setIsToday(false)}>
 							<span className={`${!isToday ? 'text-primary' : 'text-gray'}`}>
 								Các ngày khác
 							</span>
@@ -251,7 +257,10 @@ export const WeatherForecastPage = () => {
 						<div>
 							<div className="cards">
 								{[1, 2, 3, 4, 5, 6].map((index) => (
-									<div className="card2 flex flex-col hover:cursor-pointer hover:bg-light hover:text-brown" key={index}>
+									<div
+										className="card2 flex flex-col hover:cursor-pointer hover:bg-light hover:text-brown"
+										key={index}
+									>
 										<h4 className="card-heading text-center">
 											{formatDate(weatherStatus?.days[index]?.datetime)}
 										</h4>
@@ -263,7 +272,7 @@ export const WeatherForecastPage = () => {
 												style={{ marginTop: '-15px' }}
 											/>
 										</div>
-										<div className="flex justify-center">
+										<div className="flex justify-center mt-auto mb-1.5">
 											<p className="font-bold text-center">
 												{Number(weatherStatus?.days[index]?.temp).toFixed(0)}
 											</p>

@@ -6,8 +6,12 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateVoucher.css';
+import { rules } from '../../../../utils/rules';
+import { formatDatePicker, validCurrentDate } from '../../../../utils/format';
+import { useEffect } from 'react';
 
 export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) => {
+    const currentDate = validCurrentDate();
     const { isLoading: voucherLoading } = useSelector((state) => state.vouchers);
     const {
         register,
@@ -16,6 +20,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
     } = useForm();
 
     const dispatch = useDispatch();
+    
+    useEffect(() => {
+        formatDatePicker();
+    })
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -59,7 +67,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pl-12'>
 
-                                <input {...register('name')} className='text-center w-72 create-voucher-input'
+                                <input {...register('name', rules.name)} 
+                                className={`text-center w-72 create-voucher-input ${errors.name ? 'error-border' : ''}`}
                                     placeholder='Nhập tên voucher'></input>
                             </td>
 
@@ -70,8 +79,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input {...register('description')}
-                                className='text-center create-voucher-input w-72'
+                                <input {...register('description', rules.description)}
+                                    className={`text-center w-72 create-voucher-input ${errors.description ? 'error-border' : ''}`}
                                     placeholder='Mô tả'></input>
                             </td>
 
@@ -82,9 +91,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                             <td className='pt-3 pl-12'>
 
-                                <input {...register('startDate')}
-                                className='text-center create-voucher-input w-72'                                
+                                <input {...register('startDate',rules.startDate)}
+                                    className={`text-center create-voucher-input w-72 ${(errors.startDate) ? 'error-input' : ''}`}
                                     type='date'
+                                    min={currentDate}
                                     placeholder='Ngày bắt đầu'></input>
                             </td>
 
@@ -94,10 +104,12 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Ngày kết thúc</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                                
-                                <input {...register('endDate')}
-                                className='text-center create-voucher-input w-72'
-                                type='date' placeholder='Ngày kết thúc'></input>
+
+                                <input {...register('endDate',rules.endDate)}
+                                    className={`text-center create-voucher-input w-72 ${(errors.endDate) ? 'error-input' : ''}`}
+                                    type='date'
+                                    min={currentDate}
+                                    placeholder='Ngày kết thúc'></input>
                             </td>
 
                         </tr>
@@ -106,10 +118,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold ">Giá trị chiết khấu</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                                
-                                <input {...register('discountValue')}
-                                className='text-center create-voucher-input w-72'
-                                type='number'
+
+                                <input {...register('discountValue', rules.discountValue)}
+                                    className={`text-center create-voucher-input w-72 pr-3.5 ${errors.discountValue ? 'error-input' : ''}`}
+                                    type='text'
                                     placeholder='Giá trị chiết khấu (%)'></input>
                             </td>
 
@@ -119,10 +131,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Số lượng</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                            
-                                <input {...register('quantity')}
-                                className='text-center create-voucher-input w-72'
-                                type='number'
+
+                                <input {...register('quantity', rules.quantity)}
+                                    className={`text-center create-voucher-input w-72 ${errors.quantity ? 'error-input' : ''}`}
+                                    type='number'
                                     placeholder='Số lượng'></input>
                             </td>
 
@@ -132,10 +144,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Điểm trao đổi</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                                
-                                <input {...register('price')}
-                                className='text-center create-voucher-input w-72'
-                                type='number'
+
+                                <input {...register('price', rules.price)}
+                                    className={`text-center create-voucher-input w-72 ${errors.price ? 'error-input' : ''}`}
+                                    type='number'
                                     placeholder='Điểm trao đổi'></input>
                             </td>
 
@@ -145,28 +157,28 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Trạng thái</span>
                             </td>
                             <td className="pl-6 py-1 pt-3">
-                            <input
-									type="radio"
-									{...register('status')}
-									value={'Đang hoạt động'}
-									className="w-5"
-								/>{' '}
-								<span className="mr-3">Đang hoạt động</span>
-								<input
-									type="radio"
-									{...register('status')}
-							
-									value={'Đã hết hạn'}
-									className="w-5"
-								/>{' '}
-								<span>Đã hết hạn</span>
                                 <input
-									type="radio"
-									{...register('status')}
-									value={'Đã sử dụng'}
-									className="w-5"
-								/>{' '}
-								<span>Đã sử dụng</span>
+                                    type="radio"
+                                    {...register('status',rules.status)}
+                                    value={'Đang hoạt động'}
+                                    className="w-5"
+                                />{' '}
+                                <span className="mr-3">Đang hoạt động</span>
+                                <input
+                                    type="radio"
+                                    {...register('status')}
+
+                                    value={'Đã hết hạn'}
+                                    className="w-5"
+                                />{' '}
+                                <span>Đã hết hạn</span>
+                                <input
+                                    type="radio"
+                                    {...register('status')}
+                                    value={'Đã sử dụng'}
+                                    className="w-5"
+                                />{' '}
+                                <span>Đã sử dụng</span>
                             </td>
                         </tr>
                         <tr>
@@ -174,10 +186,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Mã giảm giá</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                               
-                                <input  {...register('code')}
-                                className='text-center create-voucher-input w-72'
-                                placeholder='Mã giảm giá'></input>
+
+                                <input  {...register('code', rules.code)}
+                                    className={`text-center create-voucher-input w-72 ${errors.code ? 'error-border' : ''}`}
+                                    placeholder='Mã giảm giá'></input>
                             </td>
 
                         </tr>
@@ -186,10 +198,10 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Thương hiệu</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                               
-                                <input  {...register('brand')}
-                                className='text-center create-voucher-input w-72'
-                                placeholder='Thương hiệu'></input>
+
+                                <input  {...register('brand',rules.brand)}
+                                    className={`text-center create-voucher-input w-72 ${errors.brand ? 'error-border' : ''}`}
+                                    placeholder='Thương hiệu'></input>
                             </td>
 
                         </tr>
@@ -197,9 +209,9 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                 </table>
                 <button
                     type="submit"
-                    className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
+                    className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3 hover:bg-primary_dark"
                 >
-                    Tạo bài thi
+                    Tạo voucher
                 </button>
             </form>
         </div>

@@ -47,3 +47,27 @@ export const formatTimerCountDown = (time) => {
 	if (seconds < 10) seconds = '0' + seconds;
 	return minutes + ':' + seconds;
 };
+
+export const validCurrentDate = () => {
+	const currentDate = new Date();
+	return currentDate.toISOString().slice(0, 10);
+}
+
+export const formatDatePicker = () => {
+	const startDateInput = document.querySelector('input[name="startDate"]');
+	const endDateInput = document.querySelector('input[name="endDate"]');
+
+	startDateInput.addEventListener('change', function () {
+		endDateInput.min = this.value;
+		if (new Date(endDateInput.value) < new Date(this.value)) {
+			endDateInput.value = this.value;
+		}
+	});
+
+	endDateInput.addEventListener('change', function () {
+		if (new Date(this.value) < new Date(startDateInput.value)) {
+			endDateInput.value = startDateInput.value;
+		}
+	});
+
+}
