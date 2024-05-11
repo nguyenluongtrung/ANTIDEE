@@ -7,7 +7,7 @@ const serviceSchema = mongoose.Schema({
 	},
 	description: {
 		type: String,
-		required: true,
+		
 	},
 	image: {
 		type: String,
@@ -16,7 +16,7 @@ const serviceSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Qualification',
 	},
-	price: {},
+	// price: {},
 });
 
 module.exports = mongoose.model('Service', serviceSchema);
