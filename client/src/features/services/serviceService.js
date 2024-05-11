@@ -41,8 +41,8 @@ const createService = async (token,serviceData) => {
 	};
 
 	const response = await axios.post(API_URL, serviceData, config);
-	console.log(response.data);
 	return response.data.data.newService;
+	
 };
 
 

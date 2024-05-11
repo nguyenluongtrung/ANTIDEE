@@ -3,15 +3,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createService } from '../../../../features/services/serviceSlice';
 import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
+import {
+	getDownloadURL,
+	getStorage,
+	ref,
+	uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../../../../firebase';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateService.css';
-import { useEffect, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import { getAllServices } from '../../../../features/services/serviceSlice';
-import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
+import { useEffect, useRef, useState } from 'react';
 export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) => {
 	const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
+	const fileRef = useRef(null);
+	const [file, setFile] = useState(undefined);
+	const [filePerc, setFilePerc] = useState(0);
+	const [fileUploadError, setFileUploadError] = useState(false);
+	const [serviceUrl, setServiceUrl] = useState('');
 	const {
 		register,
 		handleSubmit,
@@ -21,14 +30,38 @@ export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getAllServices());
-	}, []);
-
+		if (file) {
+			handleFileUpload(file);
+		}
+	}, [file]);
+	const handleFileUpload = (file) => {
+		const storage = getStorage(app);
+		const fileName = new Date().getTime() + file.name;
+		const storageRef = ref(storage, `services/${fileName}`);
+		const uploadTask = uploadBytesResumable(storageRef, file);
+		
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const progress =
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				setFilePerc(Math.round(progress));
+			},
+			(error) => {
+				setFileUploadError(true);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+					setServiceUrl(downloadURL)
+				);
+			}
+		);
+	};
 	const onSubmit = async (data) => {
-		const examData = {
-			...data,
-		};
-		const result = await dispatch(createService(examData));
+		const serviceData = 
+		serviceUrl !== '' ? { ...data, image: serviceUrl } : { ...data };
+			
+		const result = await dispatch(createService(serviceData));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm dịch vụ thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
@@ -38,102 +71,117 @@ export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) 
 		handleGetAllServices();
 	};
 
-
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
 			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="content rounded-md p-5"
-				style={{ width: '35vw' }}
-			>
-				<AiOutlineClose
-					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => setIsOpenCreateService(false)}
-				/>
-				<p className="grid text-green font-bold text-xl justify-center">
-					TẠO DỊCH VỤ
-				</p>
-				<table className="mt-3">
-					<tbody>
-						<tr>
-							<td>
-								{' '}
-								<span className='font-bold'>Tên dịch vụ</span>
-							</td>
-							<td className="pl-6 py-1">
-								<input
-									type="text"
-									{...register('name')}
-									className="create-question-input text-center text-sm w-80"
-								/>{' '}
-								
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span className='font-bold'>Hình ảnh dịch vụ</span>
-							</td>
-							<td className="pl-6 py-1">
-                            <input
-									type="text"
-									{...register('image')}
-									className="create-question-input text-center text-sm w-80"
-								/>{' '}
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<span className='font-bold'>Chứng chỉ cần đạt được</span>
-							</td>
-							<td className="pl-6 py-1">
-							<select
-									{...register('requiredQualification')}
-									className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm"
-								>
-                            {qualifications?.map((qualification) => (
-									<option key={qualification._id} value={qualification._id}>{qualification.name}</option>
-									))}
-								</select>
-                            
-							</td>
-						</tr>
-						<tr>
-							<td>
-								{' '}
-								<span className='font-bold'>Giá</span>
-							</td>
-							<td className="pl-6 py-1">
-								{/* <input
-									type="number"
-									{...register('numOfEasyQuestion')}
-									className="create-service-input text-center"
-								/> */}
-							</td>
-						</tr>
-						<tr>
-							<td>
-								{' '}
-								<span className='font-bold'>Mô tả</span>
-							</td>
-							<td className="pl-6 py-1">
-								<input
-									type="text"
-									{...register('description')}
-									className="create-service-input text-center"
-								/>
-							</td>
-						</tr>
-						
-					</tbody>
-				</table>
-				<button
-					type="submit"
-					className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
-				>
-					Tạo dịch vụ
-				</button>
-			</form>
+    onSubmit={handleSubmit(onSubmit)}
+    className="content rounded-md p-5"
+    style={{ width: '40vw' }}
+>
+    <AiOutlineClose
+        className="absolute text-sm hover:cursor-pointer"
+        onClick={() => setIsOpenCreateService(false)}
+    />
+    <p className="grid text-green font-bold text-xl justify-center">
+        TẠO DỊCH VỤ
+    </p>
+    <table className="mt-3">
+        <tbody>
+            <tr>
+                <td className="py-1 ">
+                    <span className='font-bold'>Tên dịch vụ</span>
+                </td>
+                <td className="pl-[30px] py-2">
+                    <input 
+                        type="text"
+                        {...register('name')}
+                        className="create-question-input text-center ml-[60px] text-sm w-[380px]"
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span className='font-bold'>Ảnh dịch vụ</span>
+                </td>
+               
+            </tr>
+            <tr>
+                <td>
+                    <span className='font-bold'>Chứng chỉ</span>
+                </td>
+                <td className='pl-[30px] py-2'>
+                    <select
+                        {...register('requiredQualification')}
+                        className="create-exam-select hover:cursor-pointer text-center ml-[60px] text-sm w-[380px]"
+                    >
+                        {qualifications?.map((qualification) => (
+                            <option key={qualification._id} value={qualification._id}>{qualification.name}</option>
+                        ))}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span className='font-bold'>Giá</span>
+                </td>
+                <td className="pl-[30px] py-2">
+                    {/* Input for price */}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span className='font-bold'>Mô tả</span>
+                </td>
+                <td className="pl-[30px] py-2">
+                    <input
+                        type="text"
+                        {...register('description')}
+                        className="create-exam-select hover:cursor-pointer text-center ml-[60px] text-sm w-[380px]"
+                    />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button
+        type="submit"
+        className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
+    >
+        Tạo dịch vụ
+    </button>
+	<div>
+
+				<button 
+							className="rounded-md rounded-customized-gray p-1 ml-[60px] w-[380px] hover:cursor-pointer"
+							onClick={() => fileRef.current.click()}
+						>
+							<span>Chọn ảnh dịch vụ</span>
+						</button>
+				<input
+							type="file"
+							ref={fileRef}
+							hidden
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
+						<p className="text-sm self-center pl-2">
+							{fileUploadError ? (
+								<span className="text-red">
+									Tải ảnh lên thất bại (dung lượng ảnh phải nhỏ hơn 2MB)
+								</span>
+							) : filePerc > 0 && filePerc < 100 ? (
+								<span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
+							) : filePerc === 100 ? (
+								<span className="text-green">Tải ảnh lên thành công!</span>
+							) : (
+								''
+							)}
+						</p>
+              
+</div>
+</form>
+
 		</div>
+		
 	);
+	
 };

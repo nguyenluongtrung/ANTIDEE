@@ -54,7 +54,7 @@ export const ServiceDetail = ({ chosenServiceId, setIsOpenDetailService, handleG
 								<p className="text-center" style={{ width: '100%' }}>
                                 <img className="mx-auto"
 															src={chosenService?.image}
-															style={{ width: '40px', height: '60px' }}
+															style={{ width: '50px', height: '50px' }}
 														/>
 								</p>
 							</td>

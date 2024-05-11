@@ -130,7 +130,7 @@ export const ServiceManagement = () => {
 									<td className="font-medium mx-auto text-gray">
                                     <img className="mx-auto"
 															src={services?.image}
-															style={{ width: '40px', height: '60px' }}
+															style={{ width: '50px', height: '50px' }}
 														/>
 									</td>
 									<td className="font-medium text-center text-gray">

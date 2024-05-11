@@ -46,7 +46,7 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
             <form 
             onSubmit={handleSubmit(onSubmit)}
             className="content rounded-md p-5"
-            style={{ width: '35vw' }}
+            style={{ width: '40vw' }}
             >
             <AiOutlineClose
             className="absolute text-sm hover:cursor-pointer"
@@ -61,8 +61,8 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                         <td>
                             <span className="font-bold">Tên dịch vụ</span>
                         </td>
-                        <td>
-                            <input 
+                        <td className="pl-[30px] py-2">
+                            <input  className="create-question-input text-center ml-[60px] text-sm w-[380px]"
                             type="text" 
                             {...register('name')}
                             defaultValue={chosenService?.name}
@@ -72,10 +72,10 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                     <tr>
                         <td>
                             {' '}
-                            <span className='font-bold'>Hình ảnh dịch vụ</span>
+                            <span className='font-bold'>Ảnh dịch vụ</span>
                         </td>
-                        <td className="pl-6 py-1">
-                            <input type="text"
+                        <td className="pl-[30px] py-2">
+                            <input className="create-question-input text-center ml-[60px] text-sm w-[380px]" type="text" 
                             {...register('image')}
                             defaultValue={chosenService?.image}
                             />{' '}
@@ -84,12 +84,12 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                     <tr>
                         <td>
                             {' '}
-                            <span className="font-bold">Chứng chỉ cần đạt</span>
+                            <span className="font-bold">Chứng chỉ </span>
                         </td>
-                        <td>
+                        <td className="pl-[30px] py-2">
                             <select
 									{...register('requiredQualification')}
-									className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm"
+									className="create-question-input text-center ml-[60px] text-sm w-[380px]"
 									defaultValue={chosenService?.requiredQualification?._id}
 								>
                             {qualifications?.map((qualification) => (
@@ -99,14 +99,29 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                             
                         </td>
                     </tr>
+
+                    <tr>
+                        <td>
+                            {' '}
+                            <span className="font-bold">Giá</span>
+                        </td>
+                        <td className="pl-[30px] py-2">
+                            
+                        {/* <input type="text"
+                            {...register('description')}
+                            defaultValue={chosenService?.description}
+                            />{' '} */}
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                             {' '}
                             <span className="font-bold">Mô tả</span>
                         </td>
-                        <td>
+                        <td className='pl-[30px] py-2'>
                         <input type="text"
                             {...register('description')}
+                            className="create-question-input text-center ml-[60px] text-sm w-[380px]"
                             defaultValue={chosenService?.description}
                             />{' '}
                         </td>
