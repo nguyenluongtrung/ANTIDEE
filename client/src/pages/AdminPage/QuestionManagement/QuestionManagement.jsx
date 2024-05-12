@@ -123,7 +123,7 @@ export const QuestionManagement = () => {
 										<span>{index + 1}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{question.serviceId.name}</span>
+										<span>{question?.serviceId?.name}</span>
 									</td>
 									<td className="font-medium text-gray">
 										<span>{question.content}</span>

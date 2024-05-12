@@ -126,7 +126,7 @@ export const ExamManagement = () => {
 										<span>{index + 1}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{exam.serviceId.name}</span>
+										<span>{exam?.serviceId?.name}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>{exam.category}</span>
