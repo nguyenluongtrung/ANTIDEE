@@ -7,11 +7,10 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateVoucher.css';
 import { updateVoucher } from '../../../../features/vouchers/voucherSlice';
 import { useEffect, useState } from 'react';
-import { formatDateInput, formatDatePicker, validCurrentDate } from '../../../../utils/format';
+import { formatDateInput, formatDatePicker } from '../../../../utils/format';
 import { rules } from '../../../../utils/rules';
 
 export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleGetAllVouchers }) => {
-    const currentDate = validCurrentDate();
     const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
     const [chosenVoucher, setChosenVoucher] = useState(
         vouchers[vouchers.findIndex((voucher) => voucher._id == chosenVoucherId)]
@@ -27,6 +26,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
     useEffect(() => {
         formatDatePicker();
     })
+
 
     const onSubmit = async (data) => {
         const voucherData = {
@@ -70,14 +70,11 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td>
                                 <input
                                     {...register('name', rules.name)}
-                                    className="ml-6 py-1 update-voucher-input text-center"
+                                    className={`ml-6 py-1 update-voucher-input text-center ${errors.name ? 'error-border' : ''}`}
                                     defaultValue={chosenVoucher?.name}
                                     style={{ width: '93%' }}
                                 >
                                 </input>
-                                {errors.name && (
-                                    <p className="text-red small-text ml-6 text-sm">{errors.name.message}</p>
-                                )}
                             </td>
                         </tr>
                         <tr>
@@ -89,10 +86,8 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                 <input
                                     {...register('description', rules.description)}
                                     defaultValue={chosenVoucher?.description}
-                                    className="text-sm update-voucher-input text-center"
-                                />{errors.description && (
-                                    <p className="text-red small-text  text-sm">{errors.description.message}</p>
-                                )}
+                                    className={`text-sm update-voucher-input text-center ${errors.description ? 'error-border' : ''}`}
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -101,11 +96,10 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             </td>
                             <td className="pl-6 py-1">
                                 <input
-                                    {...register('startDate')}
+                                    {...register('startDate', rules.startDate)}
                                     type="date"
-                                    min={currentDate}
                                     defaultValue={formatDateInput(chosenVoucher?.startDate)}
-                                    className="update-voucher-input text-center"
+                                    className={`update-voucher-input text-center ${(errors.startDate) ? 'error-input' : ''}`}
                                 />
                             </td>
                         </tr>
@@ -115,11 +109,10 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             </td>
                             <td className="pl-6 py-1">
                                 <input
-                                    {...register('endDate')}
+                                    {...register('endDate', rules.endDate)}
                                     type="date"
-                                    min={currentDate}
                                     defaultValue={formatDateInput(chosenVoucher?.endDate)}
-                                    className="update-voucher-input text-center"
+                                    className={`update-voucher-input text-center ${(errors.endDate) ? 'error-input' : ''}`}
                                 />
                             </td>
                         </tr>
@@ -132,11 +125,9 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     type="text"
                                     {...register('discountValue', rules.discountValue)}
                                     defaultValue={chosenVoucher?.discountValue}
-                                    className="update-voucher-input text-center pr-3.5"
+                                    className={`update-voucher-input text-center pr-3.5 ${(errors.discountValue) ? 'error-input' : ''}`}
                                 />
-                                {errors.discountValue && (
-                                    <p className="text-red small-text text-sm">{errors.discountValue.message}</p>
-                                )}
+                               
                             </td>
                         </tr>
                         <tr>
@@ -151,11 +142,8 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     defaultValue={
                                         chosenVoucher?.quantity
                                     }
-                                    className="update-voucher-input text-center"
+                                    className={`update-voucher-input text-center ${(errors.quantity) ? 'error-input' : ''}`}
                                 />
-                                {errors.quantity && (
-                                    <p className="text-red small-text text-sm">{errors.quantity.message}</p>
-                                )}
                             </td>
                         </tr>
                         <tr>
@@ -169,11 +157,9 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     defaultValue={
                                         chosenVoucher?.price
                                     }
-                                    className="update-voucher-input text-center"
+                                    className={`update-voucher-input text-center ${(errors.price) ? 'error-input' : ''}`}
                                 />
-                                {errors.price && (
-                                    <p className="text-red small-text text-sm">{errors.price.message}</p>
-                                )}
+                                
                             </td>
                         </tr>
                         <tr>
@@ -218,7 +204,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     defaultValue={
                                         chosenVoucher?.code
                                     }
-                                    className="update-voucher-input text-center"
+                                    className={`update-voucher-input text-center ${(errors.code) ? 'error-input' : ''}`}
                                 />
                                 {errors.code && (
                                     <p className="text-red small-text text-sm">{errors.code.message}</p>
@@ -236,11 +222,8 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     defaultValue={
                                         chosenVoucher?.brand
                                     }
-                                    className="update-voucher-input text-center"
+                                    className={`update-voucher-input text-center ${(errors.brand) ? 'error-input' : ''}`}
                                 />
-                                {errors.brand && (
-                                    <p className="text-red small-text text-sm">{errors.brand.message}</p>
-                                )}
                             </td>
                         </tr>
                     </tbody>
