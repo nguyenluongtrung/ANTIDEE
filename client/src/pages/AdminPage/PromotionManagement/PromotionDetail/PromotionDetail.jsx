@@ -76,7 +76,7 @@ export const PromotionDetail = ({ chosenPromotionId, setIsOpenDetailPromotion, h
 							</td>
 							<td className="pl-6 py-1 w-80">
                             <p className="text-center" style={{ width: '100%' }}>
-									{chosenPromotion?.promotionValue} 
+									{chosenPromotion?.promotionValue*100}% 
 								</p>
 							</td>
 						</tr>

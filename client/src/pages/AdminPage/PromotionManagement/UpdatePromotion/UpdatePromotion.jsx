@@ -81,7 +81,7 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
                             <input
 									type="text"
 									{...register('promotionName')}
-									className="create-promotion-input text-center"
+									className="ccreate-question-input text-center ml-[60px] text-sm w-[300px]"
                                     defaultValue={chosenPromotion?.promotionName}
                                     placeholder="Nhập tên của khuyến mãi"
 									required
@@ -100,6 +100,7 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 									min={new Date().toISOString().split('T')[0]}
                                     defaultValue={formatDateInput(chosenPromotion?.startDate)}
 									required
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>{' '}
                                 </td>
                                 </tr>
@@ -114,6 +115,7 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 									min={new Date().toISOString().split('T')[0]}
                                     defaultValue={formatDateInput(chosenPromotion?.endDate)}
 									required
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>{' '}
                                 </td>
                                 </tr>
@@ -128,6 +130,7 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 									placeholder="Nhập mã giảm giá"
                                     defaultValue={chosenPromotion?.promotionCode}
 									required
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>
                                 </td>
                                </tr>
@@ -139,35 +142,39 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 								<td>
                                 <input
 									type="text"
-									{...register('promotionValue')}
-									placeholder="Nhập giá trị giảm giá"
-                                    defaultValue={chosenPromotion?.promotionValue}
-									required
-								/>
+									{...register('promotionValue', { required: 'Giá trị mã là bắt buộc', min: { value: 0, message: 'Giá trị mã phải lớn hơn 0' }, max: { value: 1, message: 'Giá trị mã phải nhỏ hơn hoặc bằng 1' } })}
+                                    placeholder="Nhập giá trị giảm giá"
+									defaultValue={chosenPromotion?.promotionValue}
+                                    className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionValue ? 'border-red' : ''}`}
+                                />
+								
+                                {errors.promotionValue && <p className="text-red text-center">{errors.promotionValue.message}</p>}
                                 </td>
                                </tr>
 						<tr>
 							<td>
 								<span className='font-bold'>Số lượng mã</span><span className="text-red"> * </span>
 							</td>
-							<td className="pl-6 py-1">
-                            <input
+							<td className="">
+							<input
 									type="number"
-									{...register('promotionQuantity')}
-									placeholder="Nhập số lượng mã"
-                                    defaultValue={chosenPromotion?.promotionQuantity}
-									required
-								/>
+									{...register('promotionQuantity', { required: 'Số lượng mã là bắt buộc', min: { value: 1, message: 'Số lượng mã phải lớn hơn 0' }, pattern: { value: /^[1-9]\d*$/, message: 'Số lượng mã phải là số nguyên dương' } })}
+                                    placeholder="Nhập số lượng mã"
+                                    className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionQuantity ? 'border-red' : ''}`}
+									defaultValue={chosenPromotion.promotionQuantity}
+                                />
+                                {errors.promotionQuantity && <p className="text-red text-center">{errors.promotionQuantity.message}</p>}
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<span className='font-bold'>Lựa chọn dịch vụ</span>
 							</td>
-							 <td className="pl-6 py-1">
+							 <td className="">
 							<div className="input-box">
                            
 								<select
+								className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 									size={6}
 									{...register('serviceIds')}
 									multiple
@@ -194,11 +201,11 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 							<tr>
 							
 							 <td>
-								<span className='font-bold'>Các dịch vụ đã chọn:</span>
+								<span className='font-bold'>Đã chọn:</span>
 							</td>
-							<td className="pl-6 py-1">
+							<td className="">
 							{chosenPromotion?.serviceIds.map((service) =>
-							 <li>{service?.name} {service?._id}
+							 <li className="list-none text-center">{service?.name}
 							 					<button
 													className="w-1"
 													onClick={() => removeServiceById(service?._id)}

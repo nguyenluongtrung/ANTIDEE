@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom'
 export default function AdminSidebar() {
   const menu = [
     { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
-    { name: "Sự kiện khuyến mãi", icon: <BiGridAlt />, to: '' },
+    { name: "Sự kiện khuyến mãi", icon: <BiGridAlt />, to: '/admin-promotion' },
     { name: "Đề thi", icon: <BiCreditCardAlt />, to: '/admin-exam' },
     { name: "Ngân hàng câu hỏi", icon: <BiUser />, to: '/admin-question' },
     { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },

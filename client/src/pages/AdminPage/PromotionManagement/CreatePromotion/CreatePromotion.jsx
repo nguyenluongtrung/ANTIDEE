@@ -35,7 +35,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
 		console.log(data);
 		const promotionData = {
 			...data,
-			 serviceIds:selectedServices,
+		serviceIds:selectedServices,
 		};
 		const result = await dispatch(createPromotion(promotionData));
 		if (result.type.endsWith('fulfilled')) {
@@ -74,7 +74,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
                             <input
 									type="text"
 									{...register('promotionName')}
-									className="create-promotion-input text-center"
+									className="create-question-input text-center ml-[60px] text-sm w-[300px]"
                                     placeholder="Nhập tên của khuyến mãi"
 									required
 								/>
@@ -91,6 +91,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
 									{...register('startDate')}
 									min={new Date().toISOString().split('T')[0]}
 									required
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>{' '}
                                 </td>
                                 </tr>
@@ -104,6 +105,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
 									{...register('endDate')}
 									min={new Date().toISOString().split('T')[0]}
 									required
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>{' '}
                                 </td>
                                 </tr>
@@ -117,41 +119,45 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
 									{...register('promotionCode')}
 									placeholder="Nhập mã giảm giá"
 									required
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>
                                 </td>
                                </tr>
 
-							   <tr>
+							<tr>
                                <td>
                                 <span className="font-bold">Giá trị của mã</span><span className="text-red"> * </span>
                                 </td>
 								<td>
                                 <input
 									type="text"
-									{...register('promotionValue')}
-									placeholder="Nhập giá trị giảm giá"
-									required
-								/>
+									{...register('promotionValue', { required: 'Giá trị mã là bắt buộc', min: { value: 0, message: 'Giá trị mã phải lớn hơn 0' }, max: { value: 1, message: 'Giá trị mã phải nhỏ hơn hoặc bằng 1' } })}
+                                    placeholder="Nhập giá trị giảm giá"
+                                    className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionValue ? 'border-red' : ''}`}
+                                />
+								
+                                {errors.promotionValue && <p className="text-red text-center">{errors.promotionValue.message}</p>}
                                 </td>
                                </tr>
 						<tr>
 							<td>
 								<span className='font-bold'>Số lượng mã</span><span className="text-red"> * </span>
 							</td>
-							<td className="pl-6 py-1">
+							<td className="">
                             <input
 									type="number"
-									{...register('promotionQuantity')}
-									placeholder="Nhập số lượng mã"
-									required
-								/>
+									{...register('promotionQuantity', { required: 'Số lượng mã là bắt buộc', min: { value: 1, message: 'Số lượng mã phải lớn hơn 0' }, pattern: { value: /^[1-9]\d*$/, message: 'Số lượng mã phải là số nguyên dương' } })}
+                                    placeholder="Nhập số lượng mã"
+                                    className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionQuantity ? 'border-red' : ''}`}
+                                />
+                                {errors.promotionQuantity && <p className="text-red text-center">{errors.promotionQuantity.message}</p>}
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<span className='font-bold'>Lựa chọn dịch vụ</span>
 							</td>
-							 <td className="pl-6 py-1">
+							 <td className="">
 							<div className="input-box">
                            
 								<select
@@ -161,6 +167,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
 									onChange={(e) => {
 										setSelectedServices([...selectedServices, e.target.value]);
 									}}
+									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								>
 									{services?.map((service) => {
 										if (
@@ -181,9 +188,9 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
 							<tr>
 							
 							 <td>
-								<span className='font-bold'>Các dịch vụ đã chọn:</span>
+								<span className='font-bold'>Đã chọn:</span>
 							</td>
-							<td className="pl-6 py-1">
+							<td className="pl-6 py-1 ">
 									{selectedServices.map((selectedId) => {
 										return (
 											<li className='flex' key={selectedId}>

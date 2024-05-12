@@ -97,7 +97,7 @@ export const PromotionManagement = () => {
 					</div>
 					<button
 						className="bg-pink text-white py-2 rounded-md block mx-auto"
-						style={{ width: '100px' }}
+						style={{ width: '120px' }}
 						onClick={() => setIsOpenCreatePromotion(true)}
 					>
 						<span>Thêm mã ưu đãi</span>
@@ -132,7 +132,7 @@ export const PromotionManagement = () => {
 										<span>{formatDate(promotion?.endDate)}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{promotion?.promotionValue}</span>
+										<span>{promotion?.promotionValue*100} %</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>
