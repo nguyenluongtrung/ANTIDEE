@@ -8,7 +8,7 @@ import './CreateQualification.css';
 import { createQualification } from '../../../../features/qualifications/qualificationSlice';
 
 export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAllQualifications }) => {
-	const { isLoading } = useSelector((state) => state.qualifications);
+	const {qualifications, isLoading } = useSelector((state) => state.qualifications);
 	
     const {
 		register,
@@ -22,6 +22,23 @@ export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAll
 		const qualificateData = {
 			...data
 		};
+
+		const {name, description} = data;
+		if (!name.trim()) {
+			toast.error('Vui lòng nhập "Tên chứng chỉ"', errorStyle);
+			return;
+		} 
+
+		if (!description.trim()) {
+			toast.error('Vui lòng nhập "Mô tả" chứng chỉ', errorStyle);
+			return;
+		}
+
+		if (checkExistNames(name)) {
+			toast.error('Tên chứng chỉ đã tồn tại', errorStyle);
+			return;
+		}
+
 		const result = await dispatch(createQualification(qualificateData));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm chứng chỉ thành công', successStyle);
@@ -31,6 +48,16 @@ export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAll
 		setIsOpenCreateQualification(false);
 		handleGetAllQualifications();
 	};
+
+
+	const checkExistNames = (newName) => {
+		const listNames = qualifications.map(item => item.name);
+		if(listNames.includes(newName)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	if (isLoading) {
 		return <Spinner />;
@@ -60,7 +87,7 @@ export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAll
 							<td className="pl-6 py-1 w-96">
 								<input
 									type="text"
-									{...register('name')}
+									{...register('name')} //, {required: true}
 									className="create-exam-input text-center"
 								/>
 							</td>
@@ -72,10 +99,11 @@ export const CreateQualification = ({ setIsOpenCreateQualification, handleGetAll
 							<td className="pl-6 py-1">
 								<textarea
 									type="text"
-									{...register('description')}
+									{...register('description')} //, {required: true}
 									className="create-exam-textarea text-center"
 									rows="3" cols="40"
 								/>
+								{/* {errors.description && showErrorToast('Vui lòng nhập "Mô tả" Chứng Chỉ')} */}
 							</td>
 						</tr>
 					</tbody>
