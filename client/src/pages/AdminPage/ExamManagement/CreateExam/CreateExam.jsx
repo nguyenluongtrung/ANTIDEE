@@ -7,11 +7,11 @@ import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateExam.css';
 import { useEffect } from 'react';
-import { getAllServices } from '../../../../features/services/serviceSlice';
+import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 
 export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 	const { isLoading: examLoading } = useSelector((state) => state.exams);
-	const { services, isLoading: serviceLoading } = useSelector((state) => state.services);
+	const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
 	const {
 		register,
 		handleSubmit,
@@ -21,7 +21,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getAllServices());
+		dispatch(getAllQualifications());
 	}, []);
 
 	const onSubmit = async (data) => {
@@ -42,7 +42,7 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 		handleGetAllExams();
 	};
 
-	if (examLoading || serviceLoading) {
+	if (examLoading || qualificationLoading) {
 		return <Spinner />;
 	}
 
@@ -64,10 +64,10 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 				<table className="mt-3">
 					<tbody>
 						<tr>
-							<td><span className='font-bold'>Dịch vụ</span></td>
+							<td><span className='font-bold'>Chứng chỉ</span></td>
 							<td>
-								<select {...register('serviceId')} className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm">
-									{services?.map((service) => <option value={service._id}>{service.name}</option>)}
+								<select {...register('qualificationId')} className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm">
+									{qualifications?.map((qualification) => <option value={qualification._id}>{qualification.name}</option>)}
 								</select>
 							</td>
 						</tr>

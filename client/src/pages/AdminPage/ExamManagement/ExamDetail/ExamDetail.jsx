@@ -1,16 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
-import toast from 'react-hot-toast';
-import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './ExamDetail.css';
 import { useEffect, useState } from 'react';
-import { getAllServices } from '../../../../features/services/serviceSlice';
+import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 
 export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExams }) => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
-	const { services, isLoading: serviceLoading } = useSelector(
-		(state) => state.services
+	const { qualifications, isLoading: qualificationLoading } = useSelector(
+		(state) => state.qualifications
 	);
 	const [chosenExam, setChosenExam] = useState(
 		exams[exams.findIndex((exam) => String(exam._id) == String(chosenExamId))]
@@ -19,10 +17,10 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getAllServices());
+		dispatch(getAllQualifications());
 	}, []);
 
-	if (examLoading || serviceLoading) {
+	if (examLoading || qualificationLoading) {
 		return <Spinner />;
 	}
 
@@ -41,11 +39,11 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 					<tbody>
 						<tr>
 							<td>
-								<span className='font-bold'>Dịch vụ</span>
+								<span className='font-bold'>Chứng chỉ</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
-									{chosenExam?.serviceId?.name}
+									{chosenExam?.qualificationId?.name}
 								</p>
 							</td>
 						</tr>

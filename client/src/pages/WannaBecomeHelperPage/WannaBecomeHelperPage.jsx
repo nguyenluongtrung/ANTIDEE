@@ -23,7 +23,7 @@ export const WannaBecomeHelperPage = () => {
                         <p className='text-primary text-sm row-start-2'>0%</p>
                     </div>
                     <div className='grid justify-center h-2 m-0'>
-                        <Link className='bg-green text-center text-white w-28 p-1 rounded-full' to={'/entry-exam'}>Vào thi</Link>
+                        <Link className='bg-green text-center text-white w-28 p-1 rounded-full' to={'/qualifications'}>Vào thi</Link>
                     </div>
 
                 </div>
