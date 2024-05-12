@@ -26,6 +26,23 @@ export const UpdateQualification = ({ setIsOpenUpdateQualification, handleGetAll
 		const qualificateData = {
 			...data
 		};
+		
+		const {name, description} = data;
+		if (!name.trim()) {
+			toast.error('Vui lòng nhập "Tên chứng chỉ"', errorStyle);
+			return;
+		} 
+
+		if (!description.trim()) {
+			toast.error('Vui lòng nhập "Mô tả" chứng chỉ', errorStyle);
+			return;
+		}
+
+		if (checkExistNames(name)) {
+			toast.error('Tên chứng chỉ đã tồn tại', errorStyle);
+			return;
+		}
+
 		const result = await dispatch(updateQualification({qualificationData:qualificateData, id:chosenQualificationId}));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Cập nhật chứng chỉ thành công', successStyle);
@@ -35,6 +52,16 @@ export const UpdateQualification = ({ setIsOpenUpdateQualification, handleGetAll
 		setIsOpenUpdateQualification(false);
 		handleGetAllQualifications();
 	};
+
+	const checkExistNames = (newName) => {
+		const listNames = qualifications.map(item => item.name);
+		if(listNames.includes(newName)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 	if (isLoading) {
 		return <Spinner />;
