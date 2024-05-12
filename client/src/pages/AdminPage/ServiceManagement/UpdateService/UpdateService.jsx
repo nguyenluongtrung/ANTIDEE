@@ -15,6 +15,7 @@ import { app } from '../../../../firebase';
 import { useEffect, useRef, useState } from 'react';
 import { updateService } from '../../../../features/services/serviceSlice';
 import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
+import { rules } from '../../../../utils/rules';
 export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleGetAllServices }) => {
     const { services, isLoading: serviceLoading } = useSelector((state) => state.services);
     const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
@@ -72,7 +73,7 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
 			toast.success('Cập nhật dịch vụ thành công', successStyle);
             
 		} else if (result?.error?.message === 'Rejected') {
-			toast.error(result?.payload, errorStyle);
+			toast.error("Tên dịch vụ không được trùng", errorStyle);
 		}
         
 		setIsOpenUpdateService(false);
@@ -101,9 +102,10 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                             <span className="font-bold">Tên dịch vụ</span>
                         </td>
                         <td className="pl-[30px] py-2">
-                            <input  className="create-question-input text-center ml-[60px] text-sm w-[380px]"
+                            <input 
                             type="text" 
-                            {...register('name')}
+							{...register('name', rules.name)}
+							className={` ${errors.name && "border-red"} create-question-input text-center ml-[60px] text-sm w-[380px]` } 
                             defaultValue={chosenService?.name}
                             />
                         </td>
@@ -117,14 +119,14 @@ export const UpdateService = ({ setIsOpenUpdateService, chosenServiceId, handleG
                         
                             <img 
 							src={`${serviceUrl}` || chosenService?.image|| 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
-                              className="block w-16 mx-auto mb-1"
+                              className="block mx-auto mb-1 w-[70px] h-[70px]"
 							
                             defaultValue={`${serviceUrl}`}
 						/>
 				<span
 	className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
 	onClick={(e) => {
-		e.preventDefault(); // Ngăn chặn hành vi mặc định của nút
+		e.preventDefault(); 
 		fileRef.current.click();
 	}}
 >

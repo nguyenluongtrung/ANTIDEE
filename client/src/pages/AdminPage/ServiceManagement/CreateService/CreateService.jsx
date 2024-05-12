@@ -58,15 +58,18 @@ export const CreateService = ({ setIsOpenCreateService, handleGetAllServices }) 
 			}
 		);
 	};
+	
 	const onSubmit = async (data) => {
+		
+     
 		const serviceData = 
-		serviceUrl !== '' ? { ...data, image: serviceUrl } : { ...data };
+		serviceUrl !== '' ? { ...data, image: serviceUrl } : { ...data,image:'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg' }
 			
 		const result = await dispatch(createService(serviceData));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm dịch vụ thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
-			toast.error(result?.payload, errorStyle);
+			toast.error('Tên dịch vụ đã bị trùng', errorStyle);
 		}
 		setIsOpenCreateService(false);
 		handleGetAllServices();

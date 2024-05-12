@@ -18,7 +18,6 @@ export const ServiceManagement = () => {
 	const [isOpenDetailService, setIsOpenDetailService] = useState(false);
 	const [chosenServiceId, setChosenServiceId] = useState('');
 	const { services,isLoading} = useSelector((state) => state.services);
-	// const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
