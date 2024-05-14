@@ -78,7 +78,7 @@ export const Sidebar = () => {
 				onMouseEnter={() => handleMouseEnter('Công việc')}
 				onMouseLeave={handleMouseLeave}
 			>
-				<FaTasks className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
+				<FaTasks className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" onClick={() => navigate('/job-posts')}/>
 				{activeItem === 'Công việc' && <div className="description">Công việc</div>}
 			</div>
 			<div
