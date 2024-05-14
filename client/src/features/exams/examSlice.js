@@ -153,6 +153,8 @@ export const examSlice = createSlice({
 				state.exams[
 					state.exams.findIndex((exam) => exam._id == action.payload._id)
 				] = action.payload;
+				
+				
 			})
 			.addCase(updateExam.rejected, (state, action) => {
 				state.isLoading = false;

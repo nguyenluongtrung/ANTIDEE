@@ -13,10 +13,10 @@ const router = express.Router();
 router
 	.route('/')
 	.post(protect, restrict('Admin'), createService)
-	.get(protect, restrict('Admin'), getAllServices);
+	.get(getAllServices);
 router
 	.route('/:serviceId')
-	.get(protect, restrict('Admin'), getService)
+	.get(getService)
 	.delete(protect, restrict('Admin'), deleteService)
 	.patch(protect, restrict('Admin'), updateService);
 
