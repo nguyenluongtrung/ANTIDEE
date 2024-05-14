@@ -22,6 +22,7 @@ import { VoucherManagement } from './pages/AdminPage/VoucherManagement/VoucherMa
 import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 import { QualificationPage } from './pages/QualificationPage';
+import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
 
 const App = () => {
 	return (
@@ -57,6 +58,7 @@ const AppContent = () => {
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
 						<Route path="/update-dw" element={<UpdateProfileForDW/>}/>
 						<Route path="/qualifications" element={<QualificationPage />} />
+						<Route path="/job-posts" element={<JobPostListPage />} />
 					</Route>
 					{isAdminPage && (
 						<>

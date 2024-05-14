@@ -1,0 +1,1 @@
+export { JobPostListPage } from './JobPostListPage';
