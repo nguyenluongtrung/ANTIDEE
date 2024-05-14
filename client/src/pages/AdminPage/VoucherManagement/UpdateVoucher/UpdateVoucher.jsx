@@ -29,6 +29,7 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
 
 
     const onSubmit = async (data) => {
+        console.log(data);
         const voucherData = {
             ...data,
         };
@@ -70,9 +71,8 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             <td>
                                 <input
                                     {...register('name', rules.name)}
-                                    className={`ml-6 py-1 update-voucher-input text-center ${errors.name ? 'error-border' : ''}`}
+                                    className={`ml-6 py-1 update-voucher-input text-center w-80 ${errors.name ? 'error-border' : ''}`}
                                     defaultValue={chosenVoucher?.name}
-                                    style={{ width: '93%' }}
                                 >
                                 </input>
                             </td>
@@ -160,37 +160,6 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     className={`update-voucher-input text-center ${(errors.price) ? 'error-input' : ''}`}
                                 />
                                 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span className="font-bold">Trạng thái</span>
-                            </td>
-                            <td className="pl-6 py-1">
-                                <input
-                                    type="radio"
-                                    {...register('status')}
-                                    defaultChecked={chosenVoucher?.status == 'Đang hoạt động'}
-                                    value={'Đang hoạt động'}
-                                    className="w-5"
-                                />{' '}
-                                <span className="mr-3">Đang hoạt động</span>
-                                <input
-                                    type="radio"
-                                    {...register('status')}
-                                    defaultChecked={chosenVoucher?.status == 'Đã hết hạn'}
-                                    value={'Đã hết hạn'}
-                                    className="w-5"
-                                />{' '}
-                                <span>Đã hết hạn</span>
-                                <input
-                                    type="radio"
-                                    {...register('status')}
-                                    defaultChecked={chosenVoucher?.status == 'Đã sử dụng'}
-                                    value={'Đã sử dụng'}
-                                    className="w-5"
-                                />{' '}
-                                <span>Đã sử dụng</span>
                             </td>
                         </tr>
                         <tr>
