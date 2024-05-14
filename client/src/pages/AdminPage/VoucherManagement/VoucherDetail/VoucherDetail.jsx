@@ -109,7 +109,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
-									{chosenVoucher?.status}
+								{new Date(chosenVoucher?.endDate)?.getTime() >= new Date().getTime()?'Đang hoạt động':'Đã hết hạn'}
 								</p>
 							</td>
 						</tr>

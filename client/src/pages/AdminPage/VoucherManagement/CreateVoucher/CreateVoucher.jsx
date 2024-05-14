@@ -154,35 +154,6 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                         </tr>
                         <tr>
                             <td className='pt-3'>
-                                <span className="font-bold">Trạng thái</span>
-                            </td>
-                            <td className="pl-6 py-1 pt-3">
-                                <input
-                                    type="radio"
-                                    {...register('status',rules.status)}
-                                    value={'Đang hoạt động'}
-                                    className="w-5"
-                                />{' '}
-                                <span className="mr-3">Đang hoạt động</span>
-                                <input
-                                    type="radio"
-                                    {...register('status')}
-
-                                    value={'Đã hết hạn'}
-                                    className="w-5"
-                                />{' '}
-                                <span>Đã hết hạn</span>
-                                <input
-                                    type="radio"
-                                    {...register('status')}
-                                    value={'Đã sử dụng'}
-                                    className="w-5"
-                                />{' '}
-                                <span>Đã sử dụng</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className='pt-3'>
                                 <span className="font-bold">Mã giảm giá</span>
                             </td>
                             <td className='pt-3 pl-12'>
