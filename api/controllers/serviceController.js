@@ -2,14 +2,15 @@ const asyncHandler = require('express-async-handler');
 const Service = require('../models/serviceModel');
 
 const createService = asyncHandler(async (req, res) => {
-	const { name, description, image, requiredQualification } = req.body;
-
+	const { name, description, image, requiredQualification, priceOptions } =
+		req.body;
 
 	const newService = await Service.create({
 		name,
 		description,
 		image,
 		requiredQualification,
+		priceOptions,
 	});
 
 	if (!newService) {
@@ -70,7 +71,6 @@ const deleteService = asyncHandler(async (req, res) => {
 		},
 	});
 });
-
 
 const updateService = asyncHandler(async (req, res) => {
 	const oldService = await Service.findById(req.params.serviceId);

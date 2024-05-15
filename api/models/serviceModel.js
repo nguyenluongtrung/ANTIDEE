@@ -4,11 +4,10 @@ const serviceSchema = mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
-		unique: [true,'Name is name is mandatory']
+		unique: [true, 'Name is name is mandatory'],
 	},
 	description: {
 		type: String,
-		
 	},
 	image: {
 		type: String,
@@ -17,9 +16,25 @@ const serviceSchema = mongoose.Schema({
 	requiredQualification: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Qualification',
-		required:true,
+		required: true,
 	},
-	// price: {},
+	priceOptions: [
+		{
+			optionList: [
+				{
+					optionName: {
+						type: String,
+					},
+					optionValue: {
+						type: Number,
+					},
+				},
+			],
+			price: {
+				type: Number,
+			},
+		},
+	],
 });
 
 module.exports = mongoose.model('Service', serviceSchema);

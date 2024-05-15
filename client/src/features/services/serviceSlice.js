@@ -27,6 +27,8 @@ export const createService = createAsyncThunk(
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
+			// const removedItem = serviceData.priceOptions.shift();
+			console.log('serviceData', serviceData);
 			return await serviceService.createService(token, serviceData);
 		} catch (error) {
 			const message =
@@ -99,7 +101,6 @@ export const serviceSlice = createSlice({
 			state.isSuccess = false;
 			state.message = '';
 		},
-		
 	},
 	extraReducers: (builder) => {
 		builder
@@ -152,9 +153,10 @@ export const serviceSlice = createSlice({
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.services[
-					state.services.findIndex((service) => service._id == action.payload?._id)
+					state.services.findIndex(
+						(service) => service._id == action.payload?._id
+					)
 				] = action.payload;
-			
 			})
 			.addCase(updateService.rejected, (state, action) => {
 				state.isLoading = false;

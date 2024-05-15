@@ -110,7 +110,6 @@ export const ServiceManagement = () => {
 							<td className="py-2 px-4 text-center font-bold">Tên</td>
 							<td className="py-2 px-4 text-center font-bold">Hình ảnh</td>
 							<td className="py-2 px-4 text-center font-bold">Chứng chỉ cần có</td>
-							<td className="py-2 px-4 text-center font-bold">Giá</td>
                             <td className="py-2 px-4 text-center font-bold">Chi tiết</td>
                             <td className="py-2 px-4 text-center font-bold">Hành động</td>
 						</tr>
@@ -135,11 +134,6 @@ export const ServiceManagement = () => {
 									<td className="font-medium text-center text-gray">
 										<span>
 													{services?.requiredQualification?.name}	
-										</span>
-									</td>
-									<td className="font-medium text-center text-gray">
-										<span>
-											Toan dep trai
 										</span>
 									</td>
 									<td className="font-medium text-center text-gray">
