@@ -1,0 +1,1 @@
+export {ViewServiceDetail} from "./ViewServiceDetail"
