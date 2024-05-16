@@ -15,6 +15,7 @@ export default {
 			light_purple: '#f4ebfc',
 			light_pink: '#ffd1df',
 			light_yellow: '#e0cda9',
+			light_gray: '#d3d3d3',
 			pink: '#FA3694',
 			primary_dark: '#CE6B0F',
 		},
