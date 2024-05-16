@@ -19,9 +19,18 @@ import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
 import { WeatherForecastPage } from './pages/WeatherForecastPage';
 import { VoucherManagement } from './pages/AdminPage/VoucherManagement/VoucherManagement';
+import { ServiceManagement } from './pages/AdminPage/ServiceManagement/ServiceManagement';
 import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 import { QualificationPage } from './pages/QualificationPage';
+import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
+import {
+	ConfirmPage,
+	DetailOptionPage,
+	TimeAndContactPage,
+	ViewServiceDetail,
+	WorkingLocationPage,
+} from './pages/JobPostingPage';
 
 const App = () => {
 	return (
@@ -55,8 +64,22 @@ const AppContent = () => {
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
 						<Route path="/congrats" element={<CongratsPage />} />
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
-						<Route path="/update-dw" element={<UpdateProfileForDW/>}/>
+						<Route path="/update-dw" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
+						<Route path="/job-posts" element={<JobPostListPage />} />
+						<Route path="/job-posting">
+							<Route
+								path="view-service-detail"
+								element={<ViewServiceDetail />}
+							/>
+							<Route
+								path="working-location"
+								element={<WorkingLocationPage />}
+							/>
+							<Route path="details" element={<DetailOptionPage />} />
+							<Route path="time-contact" element={<TimeAndContactPage />} />
+							<Route path="confirm" element={<ConfirmPage />} />
+						</Route>
 					</Route>
 					{isAdminPage && (
 						<>
@@ -68,6 +91,7 @@ const AppContent = () => {
 								path="/admin-qualification"
 								element={<QualificationManagement />}
 							/>
+							<Route path="/admin-service" element={<ServiceManagement />} />
 						</>
 					)}
 				</Routes>

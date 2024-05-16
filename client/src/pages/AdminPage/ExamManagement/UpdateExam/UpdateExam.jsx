@@ -7,11 +7,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateExam.css';
 import { updateExam } from '../../../../features/exams/examSlice';
 import { useEffect, useState } from 'react';
-import { getAllServices } from '../../../../features/services/serviceSlice';
+import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 
 export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExams }) => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
-	const { services, isLoading: serviceLoading } = useSelector((state) => state.services);
+	const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
 	const [chosenExam, setChosenExam] = useState(
 		exams[exams.findIndex((exam) => exam._id == chosenExamId)]
 	);
@@ -24,7 +24,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getAllServices());
+		dispatch(getAllQualifications());
 	}, []);
 
 	const onSubmit = async (data) => {
@@ -45,7 +45,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 		handleGetAllExams();
 	};
 
-	if (examLoading || serviceLoading) {
+	if (examLoading || qualificationLoading) {
 		return <Spinner />;
 	}
 
@@ -68,16 +68,16 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 					<tbody>
 						<tr>
 							<td>
-								<span className='font-bold'>Dịch vụ</span>
+								<span className='font-bold'>Chứng chỉ</span>
 							</td>
 							<td>
 								<select
-									{...register('serviceId')}
+									{...register('qualificationId')}
 									className="ml-6 py-1 create-exam-select hover:cursor-pointer text-center text-sm"
-									defaultValue={chosenExam?.serviceId._id}
+									defaultValue={chosenExam?.qualificationId._id}
 								>
-									{services?.map((service) => (
-										<option value={service._id}>{service.name}</option>
+									{qualifications?.map((qualification) => (
+										<option value={qualification._id}>{qualification.name}</option>
 									))}
 								</select>
 							</td>

@@ -37,12 +37,6 @@ const voucherSchema = new Schema({
         required: true
     },
 
-    status: {
-        type: String,
-        enum: ['Đang hoạt động', 'Đã hết hạn', 'Đã sử dụng'],
-         required: true
-    },
-
     code: {
         type: String,
         required: true

@@ -61,10 +61,6 @@ const updateVoucher = async (req, res) => {
         error: "Voucher not found",
       });
     }
-    
-    if (findVoucher.endDate < new Date()) {
-      req.body.status = "Đã hết hạn";
-    }
 
     const updatedVoucher = await Voucher.findByIdAndUpdate(
       req.params.voucherId,

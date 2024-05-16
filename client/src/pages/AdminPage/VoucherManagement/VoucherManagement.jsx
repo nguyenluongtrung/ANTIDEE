@@ -139,8 +139,17 @@ export const VoucherManagement = () => {
                                     <td className="font-medium text-center text-gray">
                                         <span>{voucher?.price}</span>
                                     </td>
-                                    <td className="font-medium text-center text-gray">
-                                        <span>{voucher?.status}</span>
+                                    <td>
+                                        <span >
+                                            <div className={`text-center p-2 rounded-full font-semibold text-sm 
+                                        ${new Date(voucher?.endDate)?.getTime() >= new Date().getTime()
+                                                    ? 'bg-green bg-opacity-25 text-green'
+                                                    : 'bg-red bg-opacity-25 text-red'}`
+                                            }>
+                                                {new Date(voucher?.endDate)?.getTime() >= new Date().getTime() ? 'Đang hoạt động' : 'Đã hết hạn'}
+                                            </div>
+
+                                        </span>
                                     </td>
                                     <td className="font-medium text-center text-gray">
                                         <span>{voucher?.brand}</span>

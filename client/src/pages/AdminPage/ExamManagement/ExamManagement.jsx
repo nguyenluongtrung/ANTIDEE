@@ -110,7 +110,7 @@ export const ExamManagement = () => {
 					<thead>
 						<tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
 							<td className="py-2 px-4 text-center font-bold">STT</td>
-							<td className="py-2 px-4 text-center font-bold">Dịch vụ</td>
+							<td className="py-2 px-4 text-center font-bold">Chứng chỉ</td>
 							<td className="py-2 px-4 text-center font-bold">Danh mục</td>
 							<td className="py-2 px-4 text-center font-bold">Thời gian</td>
 							<td className="py-2 px-4 text-center font-bold">Điểm cần đạt</td>
@@ -126,7 +126,7 @@ export const ExamManagement = () => {
 										<span>{index + 1}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{exam?.serviceId?.name}</span>
+										<span>{exam?.qualificationId?.name}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>{exam.category}</span>

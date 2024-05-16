@@ -1,6 +1,6 @@
 import './EntryExamPage.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Spinner } from './../../components';
 import { useEffect, useState, useRef } from 'react';
 import { getAllExams } from '../../features/exams/examSlice';
@@ -18,12 +18,13 @@ export const EntryExamPage = () => {
 	const questionRefs = useRef([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		const asyncFn = async () => {
 			const result = await dispatch(getAllExams());
 			const chosenExam = result.payload.find(
-				(exam) => exam._id === '66344b624efd284146530f4b'
+				(exam) => exam._id === location.state.id
 			);
 			setChosenExam(chosenExam);
 		};
