@@ -24,7 +24,13 @@ import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 import { QualificationPage } from './pages/QualificationPage';
 import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
-import { ViewServiceDetail } from './pages/ViewServiceDetail';
+import {
+	ConfirmPage,
+	DetailOptionPage,
+	TimeAndContactPage,
+	ViewServiceDetail,
+	WorkingLocationPage,
+} from './pages/JobPostingPage';
 
 const App = () => {
 	return (
@@ -58,10 +64,22 @@ const AppContent = () => {
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
 						<Route path="/congrats" element={<CongratsPage />} />
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
-						<Route path="/update-dw" element={<UpdateProfileForDW/>}/>
+						<Route path="/update-dw" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
-						<Route path="/view-service-detail" element={<ViewServiceDetail />} />
+						<Route path="/job-posting">
+							<Route
+								path="view-service-detail"
+								element={<ViewServiceDetail />}
+							/>
+							<Route
+								path="working-location"
+								element={<WorkingLocationPage />}
+							/>
+							<Route path="details" element={<DetailOptionPage />} />
+							<Route path="time-contact" element={<TimeAndContactPage />} />
+							<Route path="confirm" element={<ConfirmPage />} />
+						</Route>
 					</Route>
 					{isAdminPage && (
 						<>
@@ -73,7 +91,7 @@ const AppContent = () => {
 								path="/admin-qualification"
 								element={<QualificationManagement />}
 							/>
-							<Route path ="/admin-service" element ={<ServiceManagement />} />
+							<Route path="/admin-service" element={<ServiceManagement />} />
 						</>
 					)}
 				</Routes>
