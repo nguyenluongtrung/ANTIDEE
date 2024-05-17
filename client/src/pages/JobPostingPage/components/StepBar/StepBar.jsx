@@ -13,7 +13,7 @@ export const StepBar = () => {
   ];
 
   return (
-    <div className="mb-10">
+    <div className="mb-10 mx-auto">
       <ul className="relative flex flex-row gap-x-2 px-10">
         {viewInfo.map((info, index) => {
           const isCurrentPath = location.pathname === info.to;
@@ -23,7 +23,7 @@ export const StepBar = () => {
           return (
             <li
               key={index}
-              className={`flex-1 ${isLastStep ? 'flex-grow-0 flex-shrink' : ''}`}
+              className={`flex-1 ${isLastStep ? 'flex-grow-0 flex-shrink w-auto' : ''}`}
             >
               <div className="min-w-10 min-h-10 w-full inline-flex items-center text-xs align-middle">
                 <span
@@ -39,8 +39,8 @@ export const StepBar = () => {
               </div>
               <div className="mt-3">
                 <span
-                  className="block text-sm font-medium text-gray"
-                  style={{ marginLeft: viewInfo[index].marginLeftPx }}
+                  className="block text-sm font-medium text-gray overflow-hidden whitespace-nowrap text-ellipsis"
+                  style={{ marginLeft: viewInfo[index].marginLeftPx}}
                 >
                   {info.name}
                 </span>
