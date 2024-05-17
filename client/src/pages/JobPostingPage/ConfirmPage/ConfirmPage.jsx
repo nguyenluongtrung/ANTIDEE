@@ -1,11 +1,14 @@
 import { useLocation } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import './ConfirmPage.css';
+import { formatDate, formatWorkingTime } from '../../../utils/format';
 
 export const ConfirmPage = () => {
 	const location = useLocation();
 	const address = location?.state?.address;
 	const contactInfo = location?.state?.contactInfo;
+	const workingTime = location?.state?.workingTime;
+	const otherInfo = location?.state?.otherInfo;
 
 	return (
 		<div className="w-full px-20">
@@ -34,7 +37,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Ghi chú</p>
 							</td>
 							<td style={{ paddingLeft: '150px' }}>
-								<p>{contactInfo?.note}</p>
+								<p>{otherInfo?.note || 'Không có'}</p>
 							</td>
 						</tr>
 						<tr>
@@ -42,7 +45,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Thời gian làm việc</p>
 							</td>
 							<td style={{ paddingLeft: '150px' }}>
-								<p>10:00 - 12:00 thứ sáu, 20/04/2018</p>
+								<p>{`${formatWorkingTime(workingTime?.startingHour)}, ${formatDate(workingTime?.startingDate)} (làm trong ${workingTime?.workingHours} tiếng)`}</p>
 							</td>
 						</tr>
 						<tr>
@@ -104,7 +107,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Phương thức thanh toán</p>
 							</td>
 							<td className="pl-32">
-								<p>{contactInfo?.paymentMethod}</p>
+								<p>{otherInfo?.paymentMethod}</p>
 							</td>
 						</tr>
 					</tbody>
