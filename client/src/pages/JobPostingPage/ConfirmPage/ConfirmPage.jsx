@@ -1,7 +1,12 @@
+import { useLocation } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import './ConfirmPage.css';
 
 export const ConfirmPage = () => {
+	const location = useLocation();
+	const address = location?.state?.address;
+	const contactInfo = location?.state?.contactInfo;
+
 	return (
 		<div className="w-full px-20">
 			<StepBar />
@@ -21,7 +26,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Địa chỉ</p>
 							</td>
 							<td style={{ paddingLeft: '150px' }}>
-								<p>K69/72 Đống Đa - Hải Châu - Đà Nẵng</p>
+								<p>{address?.houseType + ", " + address?.street + ", " + address?.ward + ", " + address?.district + ", " + address?.province}</p>
 							</td>
 						</tr>
 						<tr>
@@ -29,7 +34,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Ghi chú</p>
 							</td>
 							<td style={{ paddingLeft: '150px' }}>
-								<p>Lau 2 phòng ngủ, 1 phòng khách, dọn dẹp bếp, đổ rác</p>
+								<p>{contactInfo?.note}</p>
 							</td>
 						</tr>
 						<tr>
@@ -60,7 +65,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Tên liên hệ</p>
 							</td>
 							<td className="pl-32">
-								<p>Thiên Phú</p>
+								<p>{contactInfo?.fullName}</p>
 							</td>
 						</tr>
 						<tr>
@@ -68,7 +73,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Số điện thoại</p>
 							</td>
 							<td className="pl-32">
-								<p>0909707347</p>
+								<p>{contactInfo?.phoneNumber}</p>
 							</td>
 						</tr>
 						<tr>
@@ -76,7 +81,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Email để nhận biên nhận</p>
 							</td>
 							<td className="pl-32">
-								<p>phthienphu@gmail.com</p>
+								<p>{contactInfo?.email}</p>
 							</td>
 						</tr>
 					</tbody>
@@ -99,7 +104,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Phương thức thanh toán</p>
 							</td>
 							<td className="pl-32">
-								<p>Tiền mặt</p>
+								<p>{contactInfo?.paymentMethod}</p>
 							</td>
 						</tr>
 					</tbody>

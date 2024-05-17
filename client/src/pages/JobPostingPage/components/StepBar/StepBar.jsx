@@ -1,46 +1,54 @@
-export const StepBar = () => {
-	const viewInfo = [
-		{ name: 'Chi tiết công việc' },
-		{ name: 'Chọn vị trí làm việc' },
-		{ name: 'Lựa chọn chi tiết' },
-		{ name: 'Lựa chọn thời gian và thông tin liên hệ' },
-	];
+import { useLocation } from 'react-router-dom';
+import { FaCheck } from "react-icons/fa";
 
-	return (
-		<div className="">
-			{/* Nút */}
-			<ul className="relative flex flex-row gap-x-2 px-10">
-				{viewInfo.map((info, index) => {
-					return (
-						<li className="shrink basis-0 flex-1 group">
-							<div className="min-w-10 min-h-10 w-full inline-flex items-center text-xs align-middle">
-								<span className="size-10 flex justify-center items-center flex-shrink-0 bg-yellow font-medium text-white rounded-full">
-									{index + 1}
-								</span>
-								<div className="ms-2 w-full h-px flex-1 bg-gray group-last:hidden"></div>
-							</div>
-							<div className="mt-3">
-								<span className="block text-sm font-medium text-gray">
-									{info.name}
-								</span>
-							</div>
-						</li>
-					);
-				})}
-				<li className="shrink basis-0 group">
-					<div className="min-w-10 min-h-10 w-full inline-flex items-center text-xs align-middle">
-						<span className="size-10 flex justify-center items-center flex-shrink-0 bg-yellow font-medium text-white rounded-full">
-							5
-						</span>
-						<div className="ms-2 w-full h-px flex-1 bg-gray group-last:hidden"></div>
-					</div>
-					<div className="mt-3">
-						<span className="block text-sm font-medium text-gray">
-							Xác nhận
-						</span>
-					</div>
-				</li>
-			</ul>
-		</div>
-	);
+export const StepBar = () => {
+  const location = useLocation();
+
+  const viewInfo = [
+    { name: 'Chi tiết công việc', marginLeftPx: '-40px', to: '/job-posting/view-service-detail' },
+    { name: 'Chọn vị trí làm việc', marginLeftPx: '-45px', to: '/job-posting/working-location' },
+    { name: 'Lựa chọn chi tiết', marginLeftPx: '-35px', to: '/job-posting/details' },
+    { name: 'Lựa chọn thời gian và thông tin liên hệ', marginLeftPx: '-100px', to: '/job-posting/time-contact' },
+    { name: 'Xác nhận', marginLeftPx: '-10px', to: '/job-posting/confirm' },
+  ];
+
+  return (
+    <div className="mb-10">
+      <ul className="relative flex flex-row gap-x-2 px-10">
+        {viewInfo.map((info, index) => {
+          const isCurrentPath = location.pathname === info.to;
+          const isPreviousPath = index < viewInfo.findIndex((v) => v.to === location.pathname);
+          const isLastStep = index === viewInfo.length - 1;
+
+          return (
+            <li
+              key={index}
+              className={`flex-1 ${isLastStep ? 'flex-grow-0 flex-shrink' : ''}`}
+            >
+              <div className="min-w-10 min-h-10 w-full inline-flex items-center text-xs align-middle">
+                <span
+                  className={`size-10 flex justify-center items-center flex-shrink-0 font-medium ${
+                    isCurrentPath ? 'bg-yellow' : isPreviousPath ? 'bg-primary' : 'bg-yellow'
+                  } text-white rounded-full`}
+                >
+                  {isCurrentPath ? index + 1 : isPreviousPath ? <FaCheck /> : index + 1}
+                </span>
+                {!isLastStep && (
+                  <div className="ms-2 w-full h-px flex-1 bg-gray"></div>
+                )}
+              </div>
+              <div className="mt-3">
+                <span
+                  className="block text-sm font-medium text-gray"
+                  style={{ marginLeft: viewInfo[index].marginLeftPx }}
+                >
+                  {info.name}
+                </span>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 };
