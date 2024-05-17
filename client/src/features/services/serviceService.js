@@ -3,9 +3,18 @@ import axios from 'axios';
 const API_URL = '/antidee/api/services/';
 
 // Get all services
-const getAllServices = async () => {
-	const response = await axios.get(API_URL);
-	return response.data.data.services;
+const getAllServices = async (searchData) => {
+	let response;
+	if (searchData !== '') {
+		response = await axios.get(API_URL + `?${searchData}`);
+	} else {
+		response = await axios.get(API_URL);
+	}
+
+	return {
+		products: response.data.data.products,
+		productSize: response.data.length,
+	};
 };
 
 // Get service
