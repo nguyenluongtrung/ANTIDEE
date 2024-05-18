@@ -1,9 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import './ConfirmPage.css';
 import { formatDate, formatWorkingTime } from '../../../utils/format';
 
 export const ConfirmPage = () => {
+	const { serviceId } = useParams();
 	const location = useLocation();
 	const address = location?.state?.address;
 	const contactInfo = location?.state?.contactInfo;

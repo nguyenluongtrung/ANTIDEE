@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import { Switch } from '@headlessui/react';
 import { useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { errorStyle } from '../../../utils/toast-customize';
 import { formatDateInput } from '../../../utils/format';
 
 export const TimeAndContactPage = () => {
+	const { serviceId } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -49,7 +50,7 @@ export const TimeAndContactPage = () => {
 			note: data.note,
 			paymentMethod: data.paymentMethod
 		}
-		navigate('/job-posting/confirm', { state: { address, workingTime, contactInfo, otherInfo } });
+		navigate(`/job-posting/confirm/${serviceId}`, { state: { address, workingTime, contactInfo, otherInfo } });
 	};
 
 	return (

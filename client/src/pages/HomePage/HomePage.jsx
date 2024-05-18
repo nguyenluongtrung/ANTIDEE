@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './HomePage.css';
 import { FiSearch } from 'react-icons/fi';
 import { SlArrowRight } from 'react-icons/sl';
 import { SlArrowLeft } from 'react-icons/sl';
+import { useDispatch, useSelector } from 'react-redux';
+import { Spinner } from '../../components';
+import { getAllServices } from '../../features/services/serviceSlice';
+import { useNavigate } from 'react-router-dom';
 export const HomePage = () => {
-	const [services, setServices] = useState([
-		{ name: 'Tổng vệ sinh', image: 'image/tongvesinh.png' },
-		{ name: 'Đi chợ', image: 'image/dicho.png' },
-		{ name: 'Nấu ăn gia đình', image: 'image/nauangiadinh.png' },
-		{ name: 'Giặt ủi', image: 'image/giatui.png' },
-		{ name: 'Trông trẻ tại nhà', image: 'image/trongtre.png' },
-	]);
+	const {services, isLoading: serviceLoading} = useSelector((state) => state.services);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	// const [services, setServices] = useState([
+	// 	{ name: 'Tổng vệ sinh', image: 'image/tongvesinh.png' },
+	// 	{ name: 'Đi chợ', image: 'image/dicho.png' },
+	// 	{ name: 'Nấu ăn gia đình', image: 'image/nauangiadinh.png' },
+	// 	{ name: 'Giặt ủi', image: 'image/giatui.png' },
+	// 	{ name: 'Trông trẻ tại nhà', image: 'image/trongtre.png' },
+	// ]);
 	const benefit = [
 		{
 			name: 'Đặt lịch nhanh chóng',
@@ -42,24 +49,36 @@ export const HomePage = () => {
 		},
 		{ name: '11,500,000+', image: 'image/dongho.png', text: 'Giờ làm việc' },
 	];
-	const handleNextService = () => {
-		setServices((prevServices) => {
-			const lastService = prevServices[prevServices.length - 1];
-			const newServices = prevServices.filter(
-				(_, index) => index !== prevServices.length - 1
-			);
-			return [lastService, ...newServices];
-		});
-	};
 
-	const handlePreviousService = () => {
-		setServices((prevServices) => {
-			const firstService = prevServices[0];
-			const newServices = prevServices.filter((_, index) => index !== 0);
-			return [...newServices, firstService];
-		});
-	};
+	useEffect(() => {
+		dispatch(getAllServices());
+	}, []);
 
+	// const handleNextService = () => {
+	// 	setServices((prevServices) => {
+	// 		const lastService = prevServices[prevServices.length - 1];
+	// 		const newServices = prevServices.filter(
+	// 			(_, index) => index !== prevServices.length - 1
+	// 		);
+	// 		return [lastService, ...newServices];
+	// 	});
+	// };
+
+	// const handlePreviousService = () => {
+	// 	setServices((prevServices) => {
+	// 		const firstService = prevServices[0];
+	// 		const newServices = prevServices.filter((_, index) => index !== 0);
+	// 		return [...newServices, firstService];
+	// 	});
+	// };
+
+	const navigateToServicePage = (id) => {
+		navigate(`/job-posting/view-service-detail/${id}`);
+	}
+
+	if(serviceLoading){
+		return <Spinner />
+	}
 	return (
 		<>
 			<div>
@@ -108,7 +127,7 @@ export const HomePage = () => {
 						<div
 							className=" inline-block p-2 rounded-full "
 							style={{ backgroundColor: '#F9F6F6' }}
-							onClick={handlePreviousService}
+							// onClick={handlePreviousService}
 						>
 							<SlArrowLeft className="hover:cursor-pointer" />
 						</div>
@@ -126,6 +145,7 @@ export const HomePage = () => {
 									src={service.image}
 									alt={service.name}
 									className="w-[175px] h-[155px] object-cover rounded-lg "
+									onClick={() => navigateToServicePage(service._id)}
 								/>
 							</div>
 						</div>
@@ -134,7 +154,7 @@ export const HomePage = () => {
 						<div
 							className=" inline-block p-2 rounded-full"
 							style={{ backgroundColor: '#F9F6F6' }}
-							onClick={handleNextService}
+							// onClick={handleNextService}
 						>
 							<SlArrowRight className="hover:cursor-pointer" />
 						</div>

@@ -1,12 +1,14 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { StepBar } from "../components/StepBar/StepBar"
 
 export const DetailOptionPage = () => {
+    const { serviceId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
 	const handleNextStep = () => {
-		navigate('/job-posting/time-contact', { state: { address: location.state.address } });
+		navigate(`/job-posting/time-contact/${serviceId}`, { state: { address: location.state.address } });
+        
 	};
 
     return <div className="w-full px-20">

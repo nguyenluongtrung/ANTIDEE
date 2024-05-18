@@ -29,11 +29,11 @@ export const CreateService = ({
 		{
 			optionList: [
 				{
-					optionName: '',
 					optionValue: '',
+					optionIndex: '',
 				},
 			],
-			price: '',
+			optionName: '',
 		},
 	]);
 	const [file, setFile] = useState(undefined);
@@ -86,8 +86,8 @@ export const CreateService = ({
 		setPriceOptions((prevOptions) => [
 			...prevOptions,
 			{
-				optionList: [{ optionName: '', optionValue: '' }],
-				price: '',
+				optionList: [{ optionValue: '', optionIndex: '' }],
+				optionName: ''
 			},
 		]);
 	};
@@ -123,7 +123,7 @@ export const CreateService = ({
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="content rounded-md p-5"
-				style={{ width: '40vw' }}
+				style={{ width: '50vw' }}
 			>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
@@ -212,7 +212,19 @@ export const CreateService = ({
 							return (
 								<tr>
 									<td>
-										<span className="font-bold">Lựa chọn {index + 1}</span>
+										<input
+											type="text"
+											className="create-question-input text-sm w-44 mr-2"
+											placeholder="Tên lựa chọn"
+											value={priceOption.optionName}
+											onChange={(e) => {
+												setPriceOptions((prevOptions) => {
+													const updatedOptions = [...prevOptions];
+													updatedOptions[index].optionName = e.target.value;
+													return updatedOptions;
+												});
+											}}
+										/>
 									</td>
 									<td className="ml-[30px] py-2">
 										<table>
@@ -223,13 +235,13 @@ export const CreateService = ({
 															<input
 																type="text"
 																className="create-question-input text-center text-sm w-44 mr-2"
-																value={option.optionName}
+																value={option.optionValue}
 																onChange={(e) => {
 																	setPriceOptions((prevOptions) => {
 																		const updatedOptions = [...prevOptions];
 																		updatedOptions[index].optionList[
 																			optionIndex
-																		].optionName = e.target.value;
+																		].optionValue = e.target.value;
 																		return updatedOptions;
 																	});
 																}}
@@ -239,13 +251,14 @@ export const CreateService = ({
 															<input
 																type="text"
 																className="create-question-input text-center text-sm w-44 mr-2"
-																value={option.optionValue}
+																value={option.optionIndex}
+																placeholder="Hệ số (thời gian, %, ...)"
 																onChange={(e) => {
 																	setPriceOptions((prevOptions) => {
 																		const updatedOptions = [...prevOptions];
 																		updatedOptions[index].optionList[
 																			optionIndex
-																		].optionValue = e.target.value;
+																		].optionIndex = e.target.value;
 																		return updatedOptions;
 																	});
 																}}
@@ -268,29 +281,6 @@ export const CreateService = ({
 														</td>
 													</tr>
 												))}
-												<tr className="flex mb-2.5">
-													<td className="pl-[60px] mr-5">
-														<input
-															type="text"
-															className="create-question-input text-center text-sm w-44 mr-2 font-bold text-brown"
-															value={'Giá'}
-														/>
-													</td>
-													<td>
-														<input
-															type="text"
-															className="create-question-input text-center text-sm w-44 mr-2"
-															value={priceOption.price}
-															onChange={(e) => {
-																setPriceOptions((prevOptions) => {
-																	const updatedOptions = [...prevOptions];
-																	updatedOptions[index].price = e.target.value;
-																	return updatedOptions;
-																});
-															}}
-														/>
-													</td>
-												</tr>
 											</tbody>
 										</table>
 									</td>
@@ -307,6 +297,18 @@ export const CreateService = ({
 									<span className="text-gray italic ">Thêm lựa chọn</span>
 									<IoAddCircleOutline className="ml-3 text-gray" />
 								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span className="font-bold">Công thức giá</span>
+							</td>
+							<td className="ml-[30px] py-2">
+								<input
+									type="text"
+									{...register('priceFormula')}
+									className="create-exam-select text-center ml-[60px] text-sm w-[380px]"
+								/>
 							</td>
 						</tr>
 						<tr>

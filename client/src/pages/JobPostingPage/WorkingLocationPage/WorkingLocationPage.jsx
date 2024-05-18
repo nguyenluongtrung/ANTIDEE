@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { errorStyle } from '../../../utils/toast-customize';
 import toast from 'react-hot-toast';
 
 export const WorkingLocationPage = () => {
+	const { serviceId } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
 	const [houseType, setHouseType] = useState('');
 	const navigate = useNavigate();
@@ -88,7 +89,7 @@ export const WorkingLocationPage = () => {
 			district: detailWard.district,
 			ward: detailWard.name
 		};
-		navigate('/job-posting/details', { state: { address } });
+		navigate(`/job-posting/details/${serviceId}`, { state: { address } });
 	};
 
 	if (isLoading) {

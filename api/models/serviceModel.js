@@ -22,19 +22,22 @@ const serviceSchema = mongoose.Schema({
 		{
 			optionList: [
 				{
-					optionName: {
+					optionValue: {
 						type: String,
 					},
-					optionValue: {
+					optionIndex: {
 						type: String,
 					},
 				},
 			],
-			price: {
-				type: Number,
+			optionName: {
+				type: String,
 			},
 		},
 	],
+	priceFormula: {
+		type: String,
+	},
 });
 
 module.exports = mongoose.model('Service', serviceSchema);
