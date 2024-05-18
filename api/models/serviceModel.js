@@ -26,7 +26,7 @@ const serviceSchema = mongoose.Schema({
 						type: String,
 					},
 					optionValue: {
-						type: Number,
+						type: String,
 					},
 				},
 			],

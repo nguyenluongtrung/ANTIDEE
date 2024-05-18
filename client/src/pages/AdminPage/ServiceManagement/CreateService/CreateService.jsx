@@ -83,42 +83,16 @@ export const CreateService = ({
 	};
 
 	const handleAddMoreRow = () => {
-		if (priceOptions.some((option) => option.price !== '')) {
-			const newPriceOption = {
-				optionList: priceOptions.flatMap((option) => option.optionList),
-				price: priceOptions.find((option) => option.price !== '')?.price || '',
-			};
-			setPriceOptions((prevOptions) => [...prevOptions, newPriceOption]);
-			setPriceOptions((prevOptions) =>
-				prevOptions.map((option) => ({
-					optionList: option.optionList.map((item) => ({
-						optionName: item.optionName,
-						optionValue: item.optionValue,
-					})),
-					price: '',
-				}))
-			);
-		}
+		setPriceOptions((prevOptions) => [
+			...prevOptions,
+			{
+				optionList: [{ optionName: '', optionValue: '' }],
+				price: '',
+			},
+		]);
 	};
 
 	const onSubmit = async (data) => {
-		if (priceOptions.some((option) => option.price !== '')) {
-			const newPriceOption = {
-				optionList: priceOptions.flatMap((option) => option.optionList),
-				price: priceOptions.find((option) => option.price !== '')?.price || '',
-			};
-			setPriceOptions((prevOptions) => [...prevOptions, newPriceOption]);
-			setPriceOptions((prevOptions) =>
-				prevOptions.map((option) => ({
-					optionList: option.optionList.map((item) => ({
-						optionName: item.optionName,
-						optionValue: item.optionValue,
-					})),
-					price: '',
-				}))
-			);
-		}
-
 		const serviceData =
 			serviceUrl !== ''
 				? { ...data, image: serviceUrl, priceOptions }
@@ -243,7 +217,7 @@ export const CreateService = ({
 									<td className="ml-[30px] py-2">
 										<table>
 											<tbody>
-												{priceOption.optionList.map((option, optionIndex) => (
+												{priceOption?.optionList?.map((option, optionIndex) => (
 													<tr className="flex mb-2.5" key={optionIndex}>
 														<td className="pl-[60px] mr-5">
 															<input
@@ -276,7 +250,8 @@ export const CreateService = ({
 																	});
 																}}
 															/>
-															{optionIndex === priceOption.optionList?.length - 1 && (
+															{optionIndex ===
+																priceOption.optionList?.length - 1 && (
 																<IoAddCircleOutline
 																	className="hover:cursor-pointer"
 																	onClick={() => {
