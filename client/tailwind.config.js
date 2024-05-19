@@ -18,6 +18,7 @@ export default {
 			light_gray: '#d3d3d3',
 			pink: '#FA3694',
 			primary_dark: '#CE6B0F',
+			info: '#ffc107',
 		},
 	},
 	plugins: [],

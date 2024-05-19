@@ -98,7 +98,7 @@ export const WorkingLocationPage = () => {
 
 	return (
 		<div className="w-full px-20">
-			<StepBar />
+			<StepBar serviceId={serviceId}/>
 
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="location-form m-auto" style={{ width: '530px' }}>

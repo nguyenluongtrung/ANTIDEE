@@ -132,20 +132,20 @@ export const HomePage = () => {
 							<SlArrowLeft className="hover:cursor-pointer" />
 						</div>
 					</div>
-					{services.map((service, index) => (
+					{services?.map((service, index) => (
 						<div
 							key={index}
 							className="mx-4 transition duration-300 ease-in-out transform hover:scale-110 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer"
 						>
 							<div className="p-4">
 								<p className=" mb-3 text-primary text-lg font-bold opacity-80 mt-1">
-									{service.name}
+									{service?.name}
 								</p>
 								<img
-									src={service.image}
-									alt={service.name}
+									src={service?.image}
+									alt={service?.name}
 									className="w-[175px] h-[155px] object-cover rounded-lg "
-									onClick={() => navigateToServicePage(service._id)}
+									onClick={() => navigateToServicePage(service?._id)}
 								/>
 							</div>
 						</div>

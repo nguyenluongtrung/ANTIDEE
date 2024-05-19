@@ -1,15 +1,15 @@
 import { useLocation } from 'react-router-dom';
 import { FaCheck } from "react-icons/fa";
 
-export const StepBar = () => {
+export const StepBar = ({serviceId}) => {
   const location = useLocation();
 
   const viewInfo = [
-    { name: 'Chi tiết công việc', marginLeftPx: '-40px', to: '/job-posting/view-service-detail' },
-    { name: 'Chọn vị trí làm việc', marginLeftPx: '-45px', to: '/job-posting/working-location' },
-    { name: 'Lựa chọn chi tiết', marginLeftPx: '-35px', to: '/job-posting/details' },
-    { name: 'Lựa chọn thời gian và thông tin liên hệ', marginLeftPx: '-100px', to: '/job-posting/time-contact' },
-    { name: 'Xác nhận', marginLeftPx: '-10px', to: '/job-posting/confirm' },
+    { name: 'Chi tiết công việc', marginLeftPx: '-40px', to: `/job-posting/view-service-detail/${serviceId}` },
+    { name: 'Chọn vị trí làm việc', marginLeftPx: '-45px', to: `/job-posting/working-location/${serviceId}` },
+    { name: 'Lựa chọn chi tiết', marginLeftPx: '-35px', to: `/job-posting/details/${serviceId}` },
+    { name: 'Thông tin liên hệ', marginLeftPx: '-35px', to: `/job-posting/time-contact/${serviceId}` },
+    { name: 'Xác nhận', marginLeftPx: '-10px', to: `/job-posting/confirm/${serviceId}` },
   ];
 
   return (

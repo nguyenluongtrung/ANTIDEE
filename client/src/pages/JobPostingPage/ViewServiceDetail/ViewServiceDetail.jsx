@@ -18,7 +18,6 @@ export const ViewServiceDetail = () => {
 	useEffect(() => {
 		const asyncFn = async () => {
 			const result = await dispatch(getAllServices());
-			console.log(result.payload);
 			const chosenService = result.payload.find(
 				(service) => String(service._id) === String(serviceId)
 			);
@@ -33,7 +32,7 @@ export const ViewServiceDetail = () => {
 
 	return (
 		<div className="w-full px-20">
-			<StepBar />
+			<StepBar serviceId={serviceId}/>
 
 			<div className="flex relative gap-x-10 mt-10 mx-40">
 				<div className="">
