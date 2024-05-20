@@ -2,18 +2,14 @@ const mongoose = require('mongoose');
 
 const jobPostSchema = mongoose.Schema(
 	{
-		description: {
-			type: String,
-			required: true,
-		},
-		startingTime: {
-			type: Date,
-			default: Date.now(),
-			required: true,
-		},
-		workingHours: {
-			type: Number,
-			required: true,
+		workingTime: {
+			startingHour: {
+				type: String,
+			},
+			startingDate: {
+				type: Date,
+				default: Date.now(),
+			},
 		},
 		serviceId: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +41,16 @@ const jobPostSchema = mongoose.Schema(
 				required: true,
 			},
 		},
+		workload: [
+			{
+				optionName: {
+					type: String,
+				},
+				optionValue: {
+					type: String,
+				},
+			},
+		],
 		customerId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Account',
@@ -55,6 +61,9 @@ const jobPostSchema = mongoose.Schema(
 		},
 		paymentMethod: {
 			type: String,
+		},
+		totalPrice: {
+			type: Number,
 		},
 	},
 	{

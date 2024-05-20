@@ -2,8 +2,14 @@ const asyncHandler = require('express-async-handler');
 const Service = require('../models/serviceModel');
 
 const createService = asyncHandler(async (req, res) => {
-	const { name, description, image, requiredQualification, priceOptions } =
-		req.body;
+	const {
+		name,
+		description,
+		image,
+		requiredQualification,
+		priceOptions,
+		priceFormula,
+	} = req.body;
 
 	const newService = await Service.create({
 		name,
@@ -11,6 +17,7 @@ const createService = asyncHandler(async (req, res) => {
 		image,
 		requiredQualification,
 		priceOptions,
+		priceFormula,
 	});
 
 	if (!newService) {

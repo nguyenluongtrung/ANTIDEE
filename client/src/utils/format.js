@@ -4,12 +4,10 @@ export const formatDate = (dateString) => {
 		undefined,
 		options
 	);
-	const [day, month, year] = formattedDate.split('/');
+	const [month, day, year] = formattedDate.split('/');
 
 	return `${day}/${month}/${year}`;
 };
-
-
 
 export const formatDateInput = (dateString) => {
 	const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -84,4 +82,13 @@ export const formatTime = (timestamp) => {
 	const formattedMinutes = minutes.toString().padStart(2, '0');
 
 	return `${formattedHours}:${formattedMinutes} ${ampm}`;
+};
+
+export const formatWorkingTime = (time) => {
+	const hours = time.split(':')[0];
+	const minutes = time.split(':')[1];
+	if ((hours == 12 && minutes >= 1) || hours >= 13) {
+		return time + ' PM';
+	}
+	return time + ' AM';
 };

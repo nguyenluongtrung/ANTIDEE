@@ -69,16 +69,16 @@ const AppContent = () => {
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path="/job-posting">
 							<Route
-								path="view-service-detail"
+								path="view-service-detail/:serviceId"
 								element={<ViewServiceDetail />}
 							/>
 							<Route
-								path="working-location"
+								path="working-location/:serviceId"
 								element={<WorkingLocationPage />}
 							/>
-							<Route path="details" element={<DetailOptionPage />} />
-							<Route path="time-contact" element={<TimeAndContactPage />} />
-							<Route path="confirm" element={<ConfirmPage />} />
+							<Route path="details/:serviceId" element={<DetailOptionPage />} />
+							<Route path="time-contact/:serviceId" element={<TimeAndContactPage />} />
+							<Route path="confirm/:serviceId" element={<ConfirmPage />} />
 						</Route>
 					</Route>
 					{isAdminPage && (
