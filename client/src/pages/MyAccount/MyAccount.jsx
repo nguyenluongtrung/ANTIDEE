@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './MyAccount.css';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -32,6 +32,7 @@ export const MyAccount = () => {
 		useState(false);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const maxDate = new Date();
 	maxDate.setFullYear(maxDate.getFullYear() - 18);
@@ -142,6 +143,13 @@ export const MyAccount = () => {
 						className="inline w-4 mr-2"
 					/>
 					<span>Kho Voucher</span>
+				</div>
+				<div className="mb-2.5 hover:text-primary hover:cursor-pointer" onClick={() => navigate('/job-posting-history')}>
+					<img
+						src="src/assets/img/mdi_voucher.png"
+						className="inline w-4 mr-2"
+					/>
+					<span>Công việc đã đăng</span>
 				</div>
 				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
 					<img src="src/assets/img/mdi_heart.png" className="inline w-4 mr-2" />

@@ -41,6 +41,7 @@ export const Sidebar = () => {
 						className="sidebar-item"
 						onMouseEnter={() => handleMouseEnter('Trang chủ')}
 						onMouseLeave={handleMouseLeave}
+						onClick={() => navigate('/')}
 					>
 						<FaHome className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 						{activeItem === 'Trang chủ' && (
@@ -49,30 +50,24 @@ export const Sidebar = () => {
 					</div>
 					<div
 						className="sidebar-item"
-						onMouseEnter={() => handleMouseEnter('Hồ sơ')}
+						onMouseEnter={() => handleMouseEnter('Tài khoản')}
 						onMouseLeave={handleMouseLeave}
+						onClick={() => navigate('/my-account')}
 					>
-						<IoPerson className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
-						{activeItem === 'Hồ sơ' && <div className="description">Hồ sơ</div>}
+						<IoPerson className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary"/>
+						{activeItem === 'Tài khoản' && (
+							<div className="description">Tài khoản</div>
+						)}
 					</div>
 					<div
 						className="sidebar-item"
 						onMouseEnter={() => handleMouseEnter('Mời bạn bè')}
 						onMouseLeave={handleMouseLeave}
+						onClick={() => navigate('/invite-friend')}
 					>
 						<HiUsers className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
 						{activeItem === 'Mời bạn bè' && (
 							<div className="description">Mời bạn bè</div>
-						)}
-					</div>
-					<div
-						className="sidebar-item"
-						onMouseEnter={() => handleMouseEnter('Tài khoản')}
-						onMouseLeave={handleMouseLeave}
-					>
-						<RiMoneyDollarCircleFill className="sidebar-icon mb-7 hover:cursor-pointer hover:text-primary" />
-						{activeItem === 'Tài khoản' && (
-							<div className="description">Tài khoản</div>
 						)}
 					</div>
 					<div

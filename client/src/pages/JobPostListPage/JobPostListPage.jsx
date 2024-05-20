@@ -60,7 +60,7 @@ export const JobPostListPage = () => {
 					return (
 						<div className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer">
 							<p className="text-brown font-bold mb-3">
-								{post?.serviceId?.name.toUpperCase()}
+								{post?.serviceId?.name?.toUpperCase()}
 							</p>
 							<p className="text-gray mb-2">
 								Bắt đầu lúc:{' '}
@@ -75,8 +75,8 @@ export const JobPostListPage = () => {
 									<p className="text-center text-brown font-bold mb-3">
 										{
 											post?.workload?.find(
-												(option) => String(option.optionName) === 'Thời gian'
-											).optionValue
+												(option) => String(option?.optionName) === 'Thời gian'
+											)?.optionValue
 										}{' '}
 										giờ
 									</p>

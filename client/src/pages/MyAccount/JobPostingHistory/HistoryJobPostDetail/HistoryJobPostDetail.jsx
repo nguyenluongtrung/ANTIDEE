@@ -1,20 +1,14 @@
-import { AiOutlineClose } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-import { Spinner } from '../../../components';
 import { useState } from 'react';
-import {
-	formatDate,
-	formatTime,
-	formatWorkingTime,
-} from '../../../utils/format';
+import { useDispatch, useSelector } from 'react-redux';
+import { Spinner } from '../../../../components';
+import { AiOutlineClose } from 'react-icons/ai';
+import { formatDate, formatTime, formatWorkingTime } from '../../../../utils/format';
 
-export const JobPostDetail = ({
+export const HistoryJobPostDetail = ({
 	chosenJobPostId,
-	handleGetAllJobPosts,
 	setIsOpenJobPostDetail,
 }) => {
 	const { jobPosts, isLoading } = useSelector((state) => state.jobPosts);
-	const [isChecked, setIsChecked] = useState(false);
 	const [chosenJobPost, setChosenJobPost] = useState(
 		jobPosts?.find((jobPost) => String(jobPost._id) === String(chosenJobPostId))
 	);
@@ -36,7 +30,7 @@ export const JobPostDetail = ({
 					}}
 				/>
 				<p className="grid text-green font-bold text-xl justify-center mb-3">
-					XEM CHI TIẾT CÔNG VIỆC
+					XEM CHI TIẾT CÔNG VIỆC ĐÃ ĐĂNG
 				</p>
 				<div className="">
 					<p className="text-brown font-bold mb-3">
@@ -49,11 +43,23 @@ export const JobPostDetail = ({
 							{formatWorkingTime(chosenJobPost?.workingTime?.startingHour)}
 						</span>
 					</p>
+					<p className="text-gray mb-2">
+						Đã đăng lúc: {''}
+						<span className="text-brown">
+							{formatDate(chosenJobPost?.createdAt)}{' '}
+							{formatTime(Date.parse(chosenJobPost?.createdAt))}
+						</span>
+					</p>
 					<div className="border-2 border-gray grid grid-cols-2 my-3">
 						<div className="border-r-2 border-gray">
 							<p className="text-gray mb-2 text-center mt-3">Làm trong: </p>
 							<p className="text-center text-brown font-bold mb-3">
-								{chosenJobPost?.workload?.find((option) => String(option?.optionName) === 'Thời gian')?.optionValue} giờ
+								{
+									chosenJobPost?.workload?.find(
+										(option) => String(option?.optionName) === 'Thời gian'
+									)?.optionValue
+								}{' '}
+								giờ
 							</p>
 						</div>
 						<div>
@@ -73,7 +79,7 @@ export const JobPostDetail = ({
 						Khối lượng công việc:
 						{chosenJobPost?.workload?.map((option) => {
 							return (
-								<p className='text-black ml-10'>
+								<p className="text-black ml-10">
 									+ {option?.optionName}: {option?.optionValue}
 								</p>
 							);
@@ -85,27 +91,15 @@ export const JobPostDetail = ({
 							{chosenJobPost?.note ? chosenJobPost?.note : 'Không có'}
 						</span>
 					</p>
-					<div className="flex mb-3">
-						<input
-							type="checkbox"
-							className="w-3 mr-2"
-							onChange={() => setIsChecked(!isChecked)}
-						/>
-						<p className="text-red">
-							Bạn đã đọc kỹ thông tin và muốn nhận việc?
-						</p>
-					</div>
+
 					<div className="flex justify-center">
 						<button
-							className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
-								!isChecked
-									? 'bg-gray'
-									: 'bg-brown hover:bg-light_yellow hover:text-brown'
-							}`}
+							className={
+								'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+							}
 							style={{ width: '70%' }}
-							disabled={!isChecked}
 						>
-							<p className="text-center">Nhận việc</p>
+							<p className="text-center">Hủy việc</p>
 						</button>
 					</div>
 				</div>
