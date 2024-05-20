@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createJobPost } from '../../../features/jobPosts/jobPostsSlice';
 import { getAccountInformation } from '../../../features/auth/authSlice';
 import { Spinner } from '../../../components';
+import toast from 'react-hot-toast';
+import { errorStyle } from '../../../utils/toast-customize';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();

@@ -65,6 +65,16 @@ const jobPostSchema = mongoose.Schema(
 		totalPrice: {
 			type: Number,
 		},
+		hasCompleted: {
+			customerConfirm: {
+				type: Boolean,
+				default: false,
+			},
+			domesticHelperConfirm: {
+				type: Boolean,
+				default: false,
+			},
+		},
 	},
 	{
 		timestamps: true,
