@@ -82,7 +82,7 @@ export const deleteJobPost = createAsyncThunk(
 );
 
 const initialState = {
-	jobPosts: null,
+	jobPosts: [],
 	isError: false,
 	isSuccess: false,
 	isLoading: false,

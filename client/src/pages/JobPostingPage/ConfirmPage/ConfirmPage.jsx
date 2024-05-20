@@ -1,18 +1,71 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import './ConfirmPage.css';
 import { formatDate, formatWorkingTime } from '../../../utils/format';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createJobPost } from '../../../features/jobPosts/jobPostsSlice';
+import { getAccountInformation } from '../../../features/auth/authSlice';
+import { Spinner } from '../../../components';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
 	const [isChecked, setIsChecked] = useState(false);
+	const [customerId, setCustomerId] = useState();
 	const location = useLocation();
 	const address = location?.state?.address;
 	const contactInfo = location?.state?.contactInfo;
 	const workingTime = location?.state?.workingTime;
 	const otherInfo = location?.state?.otherInfo;
 	const inputOptions = location?.state?.inputOptions;
+	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	async function initiateAccountInformation() {
+		let output = await dispatch(getAccountInformation());
+
+		setCustomerId(output.payload._id);
+	}
+
+	useEffect(() => {
+		initiateAccountInformation();
+	}, []);
+
+	const handleSubmitJobPost = async () => {
+		const jobPostData = {
+			workingTime,
+			serviceId: serviceId,
+			note: otherInfo?.note,
+			contactInfo: {
+				address: address?.houseType + ', ' + address?.street + ', ' + address?.ward + ', ' + address?.district + ', ' + address?.province,
+				email: contactInfo?.email,
+				phoneNumber: contactInfo?.phoneNumber,
+				fullName: contactInfo?.fullName,
+			},
+			workload: inputOptions,
+			customerId,
+			paymentMethod: otherInfo?.paymentMethod,
+			totalPrice: otherInfo?.totalPrice
+		}
+		const result = await dispatch(createJobPost(jobPostData));
+
+		if (result.type.endsWith('fulfilled')) {
+			navigate(`/congrats`, {
+				state: {
+					congratsMsg: 'Chúc mừng bạn đã đăng công việc thành công',
+					buttonContent: 'Quay về trang chủ',
+					navigateTo: '/home'
+				},
+			});
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+	}
+
+	if(authLoading){
+		return <Spinner />
+	}
 
 	return (
 		<div className="w-full px-20">
@@ -151,6 +204,7 @@ export const ConfirmPage = () => {
 						!isChecked ? 'bg-gray' : 'bg-green'
 					}`}
 					disabled={!isChecked}
+					onClick={handleSubmitJobPost}
 				>
 					Hoàn tất
 				</button>
