@@ -58,7 +58,7 @@ export const JobPostListPage = () => {
 			<div className="grid grid-cols-3 gap-28">
 				{jobPosts?.map((post) => {
 					return (
-						<div className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer">
+						<div className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative" style={{height: '350px'}}>
 							<p className="text-brown font-bold mb-3">
 								{post?.serviceId?.name?.toUpperCase()}
 							</p>
@@ -69,24 +69,42 @@ export const JobPostListPage = () => {
 									{formatWorkingTime(post?.workingTime?.startingHour)}
 								</span>
 							</p>
-							<div className="border-2 border-gray grid grid-cols-2 my-3">
-								<div className="border-r-2 border-gray">
-									<p className="text-gray mb-2 text-center mt-3">Làm trong: </p>
-									<p className="text-center text-brown font-bold mb-3">
-										{
-											post?.workload?.find(
-												(option) => String(option?.optionName) === 'Thời gian'
-											)?.optionValue
-										}{' '}
-										giờ
-									</p>
-								</div>
-								<div>
-									<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
-									<p className="text-center text-brown font-bold mb-3">
-										{post?.totalPrice} VND
-									</p>
-								</div>
+							<div className="border-2 border-gray  my-3">
+								{post?.workload?.find(
+									(option) => String(option?.optionName) === 'Thời gian'
+								)?.optionValue == undefined ? (
+									<div>
+										<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
+										<p className="text-center text-brown font-bold mb-3">
+											{post?.totalPrice} VND
+										</p>
+									</div>
+								) : (
+									<div className="grid grid-cols-2">
+										<div className="border-r-2 border-gray">
+											<p className="text-gray mb-2 text-center mt-3">
+												Làm trong:{' '}
+											</p>
+											<p className="text-center text-brown font-bold mb-3">
+												{
+													post?.workload?.find(
+														(option) =>
+															String(option?.optionName) === 'Thời gian'
+													)?.optionValue
+												}{' '}
+												giờ
+											</p>
+										</div>
+										<div>
+											<p className="text-gray mb-2 text-center mt-3">
+												Số tiền:{' '}
+											</p>
+											<p className="text-center text-brown font-bold mb-3">
+												{post?.totalPrice} VND
+											</p>
+										</div>
+									</div>
+								)}
 							</div>
 							<p className="text-gray mb-2 ">
 								Tại:{' '}
@@ -98,9 +116,9 @@ export const JobPostListPage = () => {
 									{post?.note ? post?.note : 'Không có'}
 								</span>
 							</p>
-							<div className="flex justify-center">
+							<div className="flex flex-col items-center absolute bottom-5 left-12 w-72">
 								<button
-									className="text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
+									className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
 									style={{ width: '70%' }}
 									onClick={() => {
 										setIsOpenJobPostDetail(true);
