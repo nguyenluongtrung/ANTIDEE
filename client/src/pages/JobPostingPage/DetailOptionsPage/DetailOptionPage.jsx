@@ -93,7 +93,7 @@ export const DetailOptionPage = () => {
 			let condition = '';
 			for (let i = 0; i < chosenService?.priceFormula.length; i++) {
 				const singleFormula = chosenService?.priceFormula[i];
-				condition = singleFormula?.condition?.replaceAll('=', '==');
+				condition = singleFormula?.condition;
 				for (let j = 0; j < inputOptions.length; j++) {
 					const option = inputOptions[j];
 					if (condition.includes(option.optionName)) {
@@ -212,7 +212,7 @@ export const DetailOptionPage = () => {
 		navigate(`/job-posting/time-contact/${serviceId}`, {
 			state: {
 				address: location.state.address,
-				otherInfo: { totalPrice },
+				otherInfo: { totalPrice: Math.round(totalPrice) },
 				workingTime: {
 					startingDate: data.startingDate,
 					startingHour: startingHour,
@@ -475,7 +475,7 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										<p className="font-extrabold text-green text-lg mt-5">
-											{totalPrice} VND
+											{Math.round(totalPrice)} VND
 										</p>
 									</td>
 								</tr>
