@@ -36,6 +36,12 @@ export const CreateService = ({
 			optionName: '',
 		},
 	]);
+	const [priceFormula, setPriceFormula] = useState([
+		{
+			formula: '',
+			condition: '',
+		},
+	]);
 	const [file, setFile] = useState(undefined);
 	const [filePerc, setFilePerc] = useState(0);
 	const [fileUploadError, setFileUploadError] = useState(false);
@@ -87,7 +93,7 @@ export const CreateService = ({
 			...prevOptions,
 			{
 				optionList: [{ optionValue: '', optionIndex: '' }],
-				optionName: ''
+				optionName: '',
 			},
 		]);
 	};
@@ -95,12 +101,13 @@ export const CreateService = ({
 	const onSubmit = async (data) => {
 		const serviceData =
 			serviceUrl !== ''
-				? { ...data, image: serviceUrl, priceOptions }
+				? { ...data, image: serviceUrl, priceOptions, priceFormula }
 				: {
 						...data,
 						image:
 							'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg',
 						priceOptions,
+						priceFormula
 				  };
 
 		const result = await dispatch(createService(serviceData));
@@ -252,7 +259,7 @@ export const CreateService = ({
 																type="text"
 																className="create-question-input text-center text-sm w-44 mr-2"
 																value={option.optionIndex}
-																placeholder="Hệ số (thời gian, %, ...)"
+																placeholder="Thông số khác ..."
 																onChange={(e) => {
 																	setPriceOptions((prevOptions) => {
 																		const updatedOptions = [...prevOptions];
@@ -304,9 +311,63 @@ export const CreateService = ({
 								<span className="font-bold">Công thức giá</span>
 							</td>
 							<td className="ml-[30px] py-2">
+								{priceFormula.map((singleFormula, index) => {
+									return (
+										<>
+											<input
+												type="text"
+												className="create-exam-select text-center ml-[60px] text-sm w-[380px]"
+												value={singleFormula?.formula}
+												onChange={(e) => {
+													setPriceFormula((prevOptions) => {
+														const updatedFormula = [...prevOptions];
+														updatedFormula[index].formula = e.target.value;
+														return updatedFormula;
+													});
+												}}
+											/>
+											<div className="flex justify-end">
+												(
+												<input
+													type="text"
+													placeholder="Điều kiện"
+													className="create-exam-select text-center text-sm w-[250px]"
+													value={singleFormula?.condition}
+													onChange={(e) => {
+														setPriceFormula((prevOptions) => {
+															const updatedFormula = [...prevOptions];
+															updatedFormula[index].condition = e.target.value;
+															return updatedFormula;
+														});
+													}}
+												/>
+												)
+												{index === priceFormula?.length - 1 && (
+													<IoAddCircleOutline
+														className="hover:cursor-pointer"
+														onClick={() => {
+															setPriceFormula((prevOptions) => {
+																const updatedFormula = [...prevOptions];
+																updatedFormula[index + 1] = {};
+																return updatedFormula;
+															});
+														}}
+													/>
+												)}
+											</div>
+										</>
+									);
+								})}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span className="font-bold">Ghi chú</span>
+							</td>
+							<td className="ml-[30px] py-2">
 								<input
 									type="text"
-									{...register('priceFormula')}
+									{...register('note')}
 									className="create-exam-select text-center ml-[60px] text-sm w-[380px]"
 								/>
 							</td>

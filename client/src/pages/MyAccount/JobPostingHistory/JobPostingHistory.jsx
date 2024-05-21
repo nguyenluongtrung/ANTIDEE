@@ -144,29 +144,44 @@ export const JobPostingHistory = () => {
 												{formatTime(Date.parse(post?.createdAt))}
 											</span>
 										</p>
-										<div className="border-2 border-gray grid grid-cols-2 my-3">
-											<div className="border-r-2 border-gray">
-												<p className="text-gray mb-2 text-center mt-3">
-													Làm trong:{' '}
-												</p>
-												<p className="text-center text-brown font-bold mb-3">
-													{
-														post?.workload?.find(
-															(option) =>
-																String(option?.optionName) === 'Thời gian'
-														)?.optionValue
-													}{' '}
-													giờ
-												</p>
-											</div>
-											<div>
-												<p className="text-gray mb-2 text-center mt-3">
-													Số tiền:{' '}
-												</p>
-												<p className="text-center text-brown font-bold mb-3">
-													{post?.totalPrice} VND
-												</p>
-											</div>
+										<div className="border-2 border-gray  my-3">
+											{post?.workload?.find(
+												(option) => String(option?.optionName) === 'Thời gian'
+											)?.optionValue == undefined ? (
+												<div>
+													<p className="text-gray mb-2 text-center mt-3">
+														Số tiền:{' '}
+													</p>
+													<p className="text-center text-brown font-bold mb-3">
+														{post?.totalPrice} VND
+													</p>
+												</div>
+											) : (
+												<div className='grid grid-cols-2'>
+													<div className="border-r-2 border-gray">
+														<p className="text-gray mb-2 text-center mt-3">
+															Làm trong:{' '}
+														</p>
+														<p className="text-center text-brown font-bold mb-3">
+															{
+																post?.workload?.find(
+																	(option) =>
+																		String(option?.optionName) === 'Thời gian'
+																)?.optionValue
+															}{' '}
+															giờ
+														</p>
+													</div>
+													<div>
+														<p className="text-gray mb-2 text-center mt-3">
+															Số tiền:{' '}
+														</p>
+														<p className="text-center text-brown font-bold mb-3">
+															{post?.totalPrice} VND
+														</p>
+													</div>
+												</div>
+											)}
 										</div>
 										<p className="text-gray mb-2 ">
 											Tại:{' '}

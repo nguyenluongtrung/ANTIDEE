@@ -35,7 +35,17 @@ const serviceSchema = mongoose.Schema({
 			},
 		},
 	],
-	priceFormula: {
+	priceFormula: [
+		{
+			formula: {
+				type: String,
+			},
+			condition: {
+				type: String,
+			},
+		},
+	],
+	note: {
 		type: String,
 	},
 });

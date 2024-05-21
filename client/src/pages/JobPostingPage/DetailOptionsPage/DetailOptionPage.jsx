@@ -50,6 +50,15 @@ export const DetailOptionPage = () => {
 	useEffect(() => {
 		const asyncFn = async () => {
 			const newInputOptions = chosenService?.priceOptions?.flatMap((option) => {
+				if (option?.optionList.some((opt) => opt?.optionValue === '')) {
+					return [
+						{
+							optionName: option.optionName,
+							optionValue: '',
+							optionIndex: '',
+						},
+					];
+				}
 				if (option?.optionList.some((opt) => /[^0-9]/.test(opt?.optionValue))) {
 					return option.optionList.map((opt) => ({
 						optionName: opt?.optionValue,
@@ -73,15 +82,40 @@ export const DetailOptionPage = () => {
 	}, [chosenService]);
 
 	useEffect(() => {
-		let formula = chosenService?.priceFormula || '';
-
 		if (inputOptions.some((option) => option.optionValue.trim() === '')) {
 			return;
 		}
 
+		let formula;
+		if (chosenService?.priceFormula?.length == 1) {
+			formula = chosenService?.priceFormula[0]?.formula || '';
+		} else {
+			let condition = '';
+			for (let i = 0; i < chosenService?.priceFormula.length; i++) {
+				const singleFormula = chosenService?.priceFormula[i];
+				condition = singleFormula?.condition?.replaceAll('=', '==');
+				for (let j = 0; j < inputOptions.length; j++) {
+					const option = inputOptions[j];
+					if (condition.includes(option.optionName)) {
+						condition = condition.replaceAll(
+							`[${option.optionName}]`,
+							option.optionValue
+						);
+					}
+				}
+				if (eval(condition)) {
+					formula = singleFormula?.formula;
+					break;
+				}
+			}
+		}
+
 		inputOptions.forEach((option) => {
-			const regex = new RegExp(`\\[${option.optionName}\\](?:\\[(.*?)\\])?`, 'g');
-			formula = formula.replace(regex, (match, p1) => {
+			const regex = new RegExp(
+				`\\[${option.optionName}\\](?:\\[(.*?)\\])?`,
+				'g'
+			);
+			formula = formula?.replace(regex, (match, p1) => {
 				if (p1 === 'hệ số') {
 					return option.optionIndex;
 				} else {
@@ -161,17 +195,29 @@ export const DetailOptionPage = () => {
 		));
 	};
 
+	const handleOpenPriceNote = (note) => {
+		toast.custom((t) => (
+			<div
+				className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
+					t.visible ? 'animate-enter' : 'animate-leave'
+				}`}
+			>
+				{note}
+			</div>
+		));
+	};
+
 	const onSubmit = (data) => {
-		console.log(inputOptions)
+		console.log(inputOptions);
 		navigate(`/job-posting/time-contact/${serviceId}`, {
 			state: {
 				address: location.state.address,
-				otherInfo: { totalPrice, },
+				otherInfo: { totalPrice },
 				workingTime: {
 					startingDate: data.startingDate,
 					startingHour: startingHour,
 				},
-				inputOptions
+				inputOptions,
 			},
 		});
 	};
@@ -199,13 +245,38 @@ export const DetailOptionPage = () => {
 												<p className="mr-3 mb-8">{option?.optionName}</p>
 											</td>
 											<td className="pl-32">
-												{option?.optionList.find((op) =>
-													/[^0-9]/.test(op?.optionValue)
+												{option?.optionList?.some(
+													(opt) => opt?.optionValue === ''
 												) ? (
+													<input
+														type="text"
+														className="border-b-2 border-light_gray w-72 focus:outline-none text-center"
+														onChange={(e) => {
+															setInputOptions((prevInputOptions) => {
+																const updatedInputOptions = [
+																	...prevInputOptions,
+																];
+																const chosenIndex =
+																	updatedInputOptions.findIndex(
+																		(opt) =>
+																			String(opt.optionName) ===
+																			String(option?.optionName)
+																	);
+																updatedInputOptions[chosenIndex] = {
+																	...updatedInputOptions[chosenIndex],
+																	optionValue: e.target.value,
+																};
+																return updatedInputOptions;
+															});
+														}}
+													/>
+												) : option?.optionList?.find((op) =>
+														/[^0-9]/.test(op?.optionValue)
+												  ) ? (
 													<>
 														<table>
 															<tbody>
-																{option?.optionList.map((op1, op1Index) => (
+																{option?.optionList?.map((op1, op1Index) => (
 																	<tr className="flex">
 																		<td>
 																			<p
@@ -297,6 +368,7 @@ export const DetailOptionPage = () => {
 										</tr>
 									);
 								})}
+
 								<tr>
 									<td>
 										<p className="mr-3 mb-8">Chọn ngày làm</p>
@@ -391,7 +463,15 @@ export const DetailOptionPage = () => {
 								</tr>
 								<tr className="border-light_gray border-t-2">
 									<td>
-										<p className="font-extrabold text-lg mt-5">GIÁ TIỀN</p>
+										<div className="flex">
+											<p className="font-extrabold text-lg mt-5">GIÁ TIỀN</p>
+											<span
+												className="italic mt-6 ml-3 text-gray underline hover:text-primary"
+												onClick={() => handleOpenPriceNote(chosenService?.note)}
+											>
+												(Xem lưu ý)
+											</span>
+										</div>
 									</td>
 									<td className="pl-32">
 										<p className="font-extrabold text-green text-lg mt-5">

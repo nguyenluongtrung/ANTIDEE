@@ -2,23 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Service = require('../models/serviceModel');
 
 const createService = asyncHandler(async (req, res) => {
-	const {
-		name,
-		description,
-		image,
-		requiredQualification,
-		priceOptions,
-		priceFormula,
-	} = req.body;
-
-	const newService = await Service.create({
-		name,
-		description,
-		image,
-		requiredQualification,
-		priceOptions,
-		priceFormula,
-	});
+	const newService = await Service.create(req.body);
 
 	if (!newService) {
 		res.status(500).json({

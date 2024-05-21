@@ -38,6 +38,7 @@ export const ViewServiceDetail = () => {
 				<div className="">
 					<img
 						className="rounded-2xl"
+						style={{width: '400px'}}
 						src={chosenService?.image}
 					/>
 				</div>
