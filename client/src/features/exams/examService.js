@@ -35,6 +35,21 @@ const updateExam = async (token, examData, id) => {
 	return response.data.data.updatedExam;
 };
 
+const saveExamResult = async (token, updatedExamData, examId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + 'save-exam-result/' + `${examId}`,
+		updatedExamData,
+		config
+	);
+	return response.data.data.updatedExam;
+};
+
 const deleteExam = async (token, id) => {
 	const config = {
 		headers: {
@@ -51,6 +66,7 @@ const examService = {
 	createExam,
 	updateExam,
 	deleteExam,
+	saveExamResult,
 };
 
 export default examService;

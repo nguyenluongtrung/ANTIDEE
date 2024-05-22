@@ -33,7 +33,7 @@ export const QualificationPage = () => {
 	}, []);
 
 	const handleClickQualification = (id) => {
-		const exam = exams.find(
+		const exam = exams?.find(
 			(exam) =>
 				String(exam.category) === 'Kiểm tra đầu vào' &&
 				String(exam.qualificationId._id) === String(id)

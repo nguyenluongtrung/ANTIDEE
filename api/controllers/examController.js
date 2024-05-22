@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Exam = require('../models/examModel');
+const Account = require('../models/accountModel');
 const Question = require('../models/questionModel');
 
 const createExam = asyncHandler(async (req, res) => {
@@ -210,6 +211,47 @@ const updateExam = asyncHandler(async (req, res) => {
 		},
 	});
 });
+const saveExamResult = asyncHandler(async (req, res) => {
+	const exam = await Exam.findById(req.params.examId);
+
+	if (!exam) {
+		res.status(404);
+		throw new Error('Không tìm thấy đề thi');
+	}
+
+	const { accountId, totalScore, duration, isPassed, takingDate } = req.body;
+	exam.examResults.push({
+		accountId,
+		totalScore,
+		duration,
+		isPassed,
+		takingDate,
+	});
+	await exam.save();
+
+	const account = await Account.findById(accountId);
+
+	account.examResults.push({
+		examId: req.params.examId,
+		totalScore,
+		duration,
+		isPassed,
+		takingDate,
+	});
+	try {
+		await account.save();
+		res.status(200).json({
+			status: 'success',
+			data: {
+				updatedExam: exam,
+			},
+		});
+	} catch (err) {
+		console.error('Error saving account:', err);
+		res.status(500);
+		throw new Error('Error saving account');
+	}
+});
 
 module.exports = {
 	createExam,
@@ -217,4 +259,5 @@ module.exports = {
 	getExam,
 	deleteExam,
 	updateExam,
+	saveExamResult,
 };

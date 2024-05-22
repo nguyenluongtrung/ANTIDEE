@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { formatTimerCountDown } from "../../../utils/format";
 
-export const TimerCountDown = ({seconds, handleSubmitExam, isSubmit}) => {
+export const TimerCountDown = ({seconds, handleSubmitExam, setFinishTime, isSubmit}) => {
     const [countdown, setCountdown] = useState(seconds);
     const timerId = useRef();
 

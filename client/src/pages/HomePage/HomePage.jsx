@@ -76,7 +76,7 @@ export const HomePage = () => {
 		navigate(`/job-posting/view-service-detail/${id}`);
 	}
 
-	if(isLoading){
+	if(isLoading || !Array.isArray(services)){
 		return <Spinner />
 	}
 

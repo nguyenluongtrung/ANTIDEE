@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Spinner } from './../../components';
 import { useEffect, useState, useRef } from 'react';
-import { getAllExams } from '../../features/exams/examSlice';
+import { getAllExams, saveExamResult } from '../../features/exams/examSlice';
 import { ScoreNotification } from './ScoreNotification/ScoreNotification';
 import { TimerCountDown } from './TimerCountDown/TimerCountDown';
 
@@ -15,6 +15,7 @@ export const EntryExamPage = () => {
 	const [answers, setAnswers] = useState([]);
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [isOpenScoreNotification, setIsOpenScoreNotification] = useState(false);
+	const [finishTime, setFinishTime] = useState();
 	const questionRefs = useRef([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -71,6 +72,18 @@ export const EntryExamPage = () => {
 		setIsSubmit(true);
 	};
 
+	useEffect(() => {
+		if(!isOpenScoreNotification && isSubmit){
+			const examResult = {
+				totalScore,
+				duration: 18,
+				isPassed: totalScore >= chosenExam?.passGrade,
+				takingDate: new Date()
+			}
+			dispatch(saveExamResult({examResult, examId: chosenExam?._id}))
+		}
+	}, [isSubmit])
+
 	if (!Array.isArray(questionList) || examLoading || !chosenExam) {
 		return <Spinner />;
 	}
@@ -96,7 +109,7 @@ export const EntryExamPage = () => {
 				<p className="mb-1">
 					Thời gian còn lại:{' '}
 					<span className="text-primary text-sm font-bold">
-						<TimerCountDown seconds={parseInt(chosenExam?.duration) * 60} handleSubmitExam={handleSubmitExam} isSubmit={isSubmit}/>
+						<TimerCountDown seconds={parseInt(chosenExam?.duration) * 60} handleSubmitExam={handleSubmitExam} setFinishTime={setFinishTime} isSubmit={isSubmit}/>
 					</span>
 				</p>
 				<p className="mb-1">Câu hỏi:</p>
