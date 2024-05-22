@@ -1,1 +1,1 @@
-export { SearchVoucher } from './SearchVoucher';
+export { VoucherList } from './VoucherList';

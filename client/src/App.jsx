@@ -24,7 +24,7 @@ import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 import { QualificationPage } from './pages/QualificationPage';
 import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
-import {SearchVoucher} from './pages/SearchVoucherPage/SearchVoucher'
+import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 
 const App = () => {
 	return (
@@ -61,7 +61,7 @@ const AppContent = () => {
 						<Route path="/update-dw" element={<UpdateProfileForDW/>}/>
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
-						<Route path="/search-voucher" element={<SearchVoucher />} />
+						<Route path="/vouchers" element={<VoucherList />} />
 					</Route>
 					{isAdminPage && (
 						<>
