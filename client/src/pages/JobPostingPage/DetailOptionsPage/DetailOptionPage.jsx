@@ -475,7 +475,7 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										<p className="font-extrabold text-green text-lg mt-5">
-											{Math.round(totalPrice)} VND
+											{isNaN(totalPrice) ? 0 : Math.round(totalPrice)} VND
 										</p>
 									</td>
 								</tr>

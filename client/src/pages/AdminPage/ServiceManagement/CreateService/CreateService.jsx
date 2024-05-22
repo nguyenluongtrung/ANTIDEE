@@ -130,7 +130,7 @@ export const CreateService = ({
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="content rounded-md p-5"
-				style={{ width: '50vw' }}
+				style={{ width: '50vw', height: '79vh', overflow: 'auto' }}
 			>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
