@@ -102,7 +102,7 @@ export const ServiceDetail = ({
 								{chosenService?.priceFormula?.map((singleFormula, index) => {
 									return (
 										<p className="" style={{ width: '100%' }}>
-											{`Lựa chọn ${index + 1}: ${singleFormula?.formula} ${
+											{`${chosenService?.priceFormula.length > 1 ? `Lựa chọn ${index + 1}:` : ''} ${singleFormula?.formula} ${
 												singleFormula?.condition &&
 												`nếu ${singleFormula?.condition}`
 											}`}

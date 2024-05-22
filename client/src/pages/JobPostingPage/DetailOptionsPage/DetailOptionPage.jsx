@@ -249,7 +249,7 @@ export const DetailOptionPage = () => {
 													(opt) => opt?.optionValue === ''
 												) ? (
 													<input
-														type="text"
+														type="number"
 														className="border-b-2 border-light_gray w-72 focus:outline-none text-center"
 														onChange={(e) => {
 															setInputOptions((prevInputOptions) => {
@@ -288,7 +288,7 @@ export const DetailOptionPage = () => {
 																		</td>
 																		<td>
 																			<input
-																				type="text"
+																				type="number"
 																				className="ml-3 border-b-2 border-light_gray w-32 focus:outline-none text-center"
 																				onChange={(e) => {
 																					setInputOptions(

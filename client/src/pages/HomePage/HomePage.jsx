@@ -9,6 +9,7 @@ import { getAllServices } from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
+	const {isLoading} = useSelector((state) => state.services)
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const benefit = [
@@ -74,6 +75,11 @@ export const HomePage = () => {
 	const navigateToServicePage = (id) => {
 		navigate(`/job-posting/view-service-detail/${id}`);
 	}
+
+	if(isLoading){
+		return <Spinner />
+	}
+
 	return (
 		<>
 			<div>
