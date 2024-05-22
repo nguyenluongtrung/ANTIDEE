@@ -5,7 +5,7 @@ import { LoginPage } from '../../pages/LoginPage/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAccountInformation, logout } from '../../features/auth/authSlice';
+import { getAccountInformation, logout, reset } from '../../features/auth/authSlice';
 
 export const Header = () => {
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);

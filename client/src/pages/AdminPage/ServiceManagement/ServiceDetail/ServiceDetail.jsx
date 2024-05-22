@@ -7,12 +7,20 @@ import './ServiceDetail.css';
 import { useEffect, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
 
-export const ServiceDetail = ({ chosenServiceId, setIsOpenDetailService, handleGetAllServices }) => {
+export const ServiceDetail = ({
+	chosenServiceId,
+	setIsOpenDetailService,
+	handleGetAllServices,
+}) => {
 	const { services, isLoading: serviceLoading } = useSelector(
 		(state) => state.services
 	);
 	const [chosenService, setChosenService] = useState(
-		services[services.findIndex((service) => String(service._id) == String(chosenServiceId))]
+		services[
+			services.findIndex(
+				(service) => String(service._id) == String(chosenServiceId)
+			)
+		]
 	);
 
 	const dispatch = useDispatch();
@@ -21,62 +29,95 @@ export const ServiceDetail = ({ chosenServiceId, setIsOpenDetailService, handleG
 		dispatch(getAllServices());
 	}, []);
 
-
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
+			<form className="content rounded-md p-5" style={{ width: '50vw' }}>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => {setIsOpenDetailService(false) ; handleGetAllServices()}}
+					onClick={() => {
+						setIsOpenDetailService(false);
+						handleGetAllServices();
+					}}
 				/>
 				<p className="grid text-green font-bold text-xl justify-center">
 					XEM CHI TIẾT DỊCH VỤ
 				</p>
-				<table className="mt-3">
+				<table className="mt-3" style={{ width: '45vw' }}>
 					<tbody>
 						<tr>
-							<td>
-								<span className='font-bold'>Tên Dịch vụ</span>
+							<td style={{ width: '5vw' }}>
+								<span className="font-bold">Tên Dịch vụ</span>
 							</td>
-							<td className="pl-6 py-1 w-80">
-								<p className="text-center" style={{ width: '100%' }}>
+							<td className="pl-6 py-1">
+								<p className="" style={{ width: '100%' }}>
 									{chosenService?.name}
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								{' '}
-								<span className='font-bold'>Hình ảnh</span>
+								<span className="font-bold">Chứng chỉ cần có</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
-								<p className="text-center" style={{ width: '100%' }}>
-                                <img className="mx-auto"
-															src={chosenService?.image}
-															style={{ width: '70px', height: '70px' }}
-														/>
+								<p className="" style={{ width: '100%' }}>
+									{chosenService?.requiredQualification?.name}
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Chứng chỉ cần có</span>
+								<span className="font-bold">Các lựa chọn</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
-								<p className="text-center" style={{ width: '100%' }}>
-									{chosenService?.requiredQualification?.name} 
-								</p>
+								<table>
+									{chosenService?.priceOptions.map((option) => {
+										return (
+											<tr>
+												<td>
+													<p>{option?.optionName}: </p>
+												</td>
+												<td>
+													{option?.optionList.map((list, index) => {
+														return (
+															<span>
+																{list?.optionValue ? list?.optionValue : ' (tự chọn)'}
+																{option?.optionList.length - 1 !== index &&
+																	', '}
+															</span>
+														);
+													})}
+												</td>
+											</tr>
+										);
+									})}
+								</table>
 							</td>
 						</tr>
-                        
-                        <tr>
+						<tr>
 							<td>
-								<span className='font-bold'>Mô tả</span>
+								<span className="font-bold">Công thức giá</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
-								<p className="text-center" style={{ width: '100%' }}>
-                                {chosenService?.description} 
+								{chosenService?.priceFormula?.map((singleFormula, index) => {
+									return (
+										<p className="" style={{ width: '100%' }}>
+											{`Lựa chọn ${index + 1}: ${singleFormula?.formula} ${
+												singleFormula?.condition &&
+												`nếu ${singleFormula?.condition}`
+											}`}
+										</p>
+									);
+								})}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span className="font-bold">Ghi chú</span>
+							</td>
+							<td className="pl-6 py-1 w-80">
+								<p className="" style={{ width: '100%' }}>
+									{chosenService?.note}
 								</p>
 							</td>
 						</tr>
