@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTypewriter } from 'react-simple-typewriter';
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
+	const [currentIndex, setCurrentIndex] = useState(0);
 	const {isLoading} = useSelector((state) => state.services)
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -138,7 +139,7 @@ export const HomePage = () => {
 							<SlArrowLeft className="hover:cursor-pointer" />
 						</div>
 					</div>
-					{services?.map((service, index) => (
+					{services?.slice(currentIndex, currentIndex + 5).map((service, index) => (
 						<div
 							key={index}
 							className="mx-4 transition duration-300 ease-in-out transform hover:scale-110 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer"

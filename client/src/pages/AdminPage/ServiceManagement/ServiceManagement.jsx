@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import AdminSidebar from '../components/AdminSidebar/AdminSidebar';
 import './ServiceManagement.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteService, getAllServices } from '../../../features/services/serviceSlice';
+import {
+	deleteService,
+	getAllServices,
+} from '../../../features/services/serviceSlice';
 import { Spinner } from '../../../components';
 import toast, { Toaster, ToastBar } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
@@ -13,11 +16,11 @@ import { ServiceDetail } from './ServiceDetail/ServiceDetail';
 import { CreateService } from './CreateService/CreateService';
 import { IoAddOutline } from 'react-icons/io5';
 export const ServiceManagement = () => {
-   const [isOpenCreateService, setIsOpenCreateService] = useState(false);
+	const [isOpenCreateService, setIsOpenCreateService] = useState(false);
 	const [isOpenUpdateService, setIsOpenUpdateService] = useState(false);
 	const [isOpenDetailService, setIsOpenDetailService] = useState(false);
 	const [chosenServiceId, setChosenServiceId] = useState('');
-	const { services,isLoading} = useSelector((state) => state.services);
+	const { services, isLoading } = useSelector((state) => state.services);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -57,13 +60,13 @@ export const ServiceManagement = () => {
 						/>
 					)}
 				</Toaster>
-                
+
 				{isOpenCreateService && (
 					<CreateService
 						setIsOpenCreateService={setIsOpenCreateService}
 						handleGetAllServices={handleGetAllServices}
 					/>
-				)}	
+				)}
 				{isOpenUpdateService && (
 					<UpdateService
 						setIsOpenUpdateService={setIsOpenUpdateService}
@@ -71,7 +74,7 @@ export const ServiceManagement = () => {
 						chosenServiceId={chosenServiceId}
 					/>
 				)}
-					{isOpenDetailService && (
+				{isOpenDetailService && (
 					<ServiceDetail
 						setIsOpenDetailService={setIsOpenDetailService}
 						handleGetAllServices={handleGetAllServices}
@@ -98,9 +101,9 @@ export const ServiceManagement = () => {
 						onClick={() => setIsOpenCreateService(true)}
 					>
 						<div className="flex items-center">
-                            <IoAddOutline className='size-8 pl-2 mr-2' />
-                            <span className="text-sm pr-2">Thêm dịch vụ</span>
-                        </div>
+							<IoAddOutline className="size-8 pl-2 mr-2" />
+							<span className="text-sm pr-2">Thêm dịch vụ</span>
+						</div>
 					</button>
 				</div>
 				<table className="w-full border-b border-gray mt-3">
@@ -109,15 +112,16 @@ export const ServiceManagement = () => {
 							<td className="py-2 px-4 text-center font-bold">STT</td>
 							<td className="py-2 px-4 text-center font-bold">Tên</td>
 							<td className="py-2 px-4 text-center font-bold">Hình ảnh</td>
-							<td className="py-2 px-4 text-center font-bold">Chứng chỉ cần có</td>
-                            <td className="py-2 px-4 text-center font-bold">Chi tiết</td>
-                            <td className="py-2 px-4 text-center font-bold">Hành động</td>
+							<td className="py-2 px-4 text-center font-bold">
+								Chứng chỉ cần có
+							</td>
+							<td className="py-2 px-4 text-center font-bold">Chi tiết</td>
+							<td className="py-2 px-4 text-center font-bold">Hành động</td>
 						</tr>
 					</thead>
 					<tbody>
 						{services?.map((services, index) => {
 							return (
-								// eslint-disable-next-line react/jsx-key
 								<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
 									<td className="font-medium text-center text-gray p-3">
 										<span>{index + 1}</span>
@@ -126,15 +130,14 @@ export const ServiceManagement = () => {
 										<span>{services?.name}</span>
 									</td>
 									<td className="font-medium mx-auto text-gray">
-                                    <img className="mx-auto"
-															src={services?.image}
-															style={{ width: '50px', height: '50px' }}
-														/>
+										<img
+											className="mx-auto"
+											src={services?.image}
+											style={{ width: '40px', height: '40px'  }}
+										/>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>
-													{services?.requiredQualification?.name}	
-										</span>
+										<span>{services?.requiredQualification?.name}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<button
