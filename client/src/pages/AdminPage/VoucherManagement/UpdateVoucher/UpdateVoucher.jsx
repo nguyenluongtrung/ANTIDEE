@@ -6,7 +6,14 @@ import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './UpdateVoucher.css';
 import { updateVoucher } from '../../../../features/vouchers/voucherSlice';
-import { useEffect, useState } from 'react';
+import {
+    getDownloadURL,
+    getStorage,
+    ref,
+    uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../../../../firebase';
+import { useEffect, useRef, useState } from 'react';
 import { formatDateInput, formatDatePicker } from '../../../../utils/format';
 import { rules } from '../../../../utils/rules';
 
@@ -15,6 +22,11 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
     const [chosenVoucher, setChosenVoucher] = useState(
         vouchers[vouchers.findIndex((voucher) => voucher._id == chosenVoucherId)]
     );
+    const fileRef = useRef(null);
+	const [file, setFile] = useState(undefined);
+	const [filePerc, setFilePerc] = useState(0);
+	const [fileUploadError, setFileUploadError] = useState(false);
+	const [voucherUrl, setVoucherUrl] = useState(''); 
     const {
         register,
         handleSubmit,
@@ -26,13 +38,42 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
     useEffect(() => {
         formatDatePicker();
     })
+    useEffect(() => {
+		if (file) {
+			handleFileUpload(file);
+		}
+	}, [file]);
+    const handleFileUpload = (file) => {
+		const storage = getStorage(app);
+		const fileName = new Date().getTime() + file.name;
+		const storageRef = ref(storage, `vouchers/${fileName}`);
+		const uploadTask = uploadBytesResumable(storageRef, file);
 
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				setFilePerc(Math.round(progress));
+			},
+			(error) => {
+				setFileUploadError(true);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+					setVoucherUrl(downloadURL)
+				);
+			}
+		);
+	};
 
     const onSubmit = async (data) => {
         console.log(data);
-        const voucherData = {
-            ...data,
-        };
+        const trimmedData = {
+			...data,
+			name: data.name.trim(),  // Trim the voucher name
+		};
+		const voucherData = voucherUrl !== '' ? { ...trimmedData, image: voucherUrl } : { ...trimmedData };
+
         const result = await dispatch(updateVoucher({ voucherData, id: chosenVoucherId }));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Cập nhật voucher thành công', successStyle);
@@ -75,6 +116,48 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                                     defaultValue={chosenVoucher?.name}
                                 >
                                 </input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span className="font-bold">Ảnh ưu đãi</span>
+                            </td>
+                            <td className="pl-[30px] py-2 grid justify-center">
+                                <img 
+                                   src={voucherUrl || chosenVoucher?.image || 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
+                                   className="block mx-auto mb-1 w-[210px] h-[210px]"
+                                />
+                                <span
+                                    className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault(); 
+                                        fileRef.current.click();
+                                    }}
+                                >
+                                    <span>Chọn ảnh ưu đãi</span>
+                                </span>
+                                <input
+                                    type="file"
+                                    ref={fileRef}
+                                    hidden
+                                    onChange={(e) => {
+                                        setFile(e.target.files[0]);
+                                        setFileUploadError(''); // Reset error state on file change
+                                    }}
+                                />
+                                <p className="text-sm self-center pl-2">
+                                    {fileUploadError ? (
+                                        <span className="text-red">
+                                            {fileUploadError}
+                                        </span>
+                                    ) : filePerc > 0 && filePerc < 100 ? (
+                                        <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
+                                    ) : filePerc === 100 ? (
+                                        <span className="text-green">Tải ảnh lên thành công!</span>
+                                    ) : (
+                                        ''
+                                    )}
+                                </p>
                             </td>
                         </tr>
                         <tr>

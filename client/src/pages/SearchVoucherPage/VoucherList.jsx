@@ -62,7 +62,7 @@ export const VoucherList = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 w-[100px] h-10 border-[1px] text-white rounded-full ${
+              className={`px-4 mt-[-2px] py-2 w-[100px] h-10 border-[1px] text-white rounded-full ${
                 selectedCategory === category ? 'bg-[#FF467D] border-[#FF467D]' : 'bg-[#FF9BB9] border-[#FF467D]'
               }`}
             >

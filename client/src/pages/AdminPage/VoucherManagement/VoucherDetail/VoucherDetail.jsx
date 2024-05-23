@@ -45,6 +45,20 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 						<tr>
 							<td>
 								{' '}
+								<span className='font-bold'>Hình ảnh</span>
+							</td>
+							<td className="pl-6 py-1 w-80">
+								<p className="text-center" style={{ width: '100%' }}>
+                                <img className="mx-auto"
+															src={chosenVoucher?.image}
+															style={{ width: '210px', height: '210px' }}
+														/>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{' '}
 								<span className='font-bold'>Mô tả</span>
 							</td>
 							<td className="pl-6 py-1 w-80">

@@ -40,9 +40,13 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
     const now = new Date();
     const aExpiry = new Date(a.expiryDate);
     const bExpiry = new Date(b.expiryDate);
-    if (aExpiry < now && bExpiry >= now) return 1;
-    if (aExpiry >= now && bExpiry < now) return -1;
-    return aExpiry - bExpiry;
+    const aIsValid = aExpiry >= now;
+    const bIsValid = bExpiry >= now;
+
+    if (aIsValid && !bIsValid) return -1;  // a is valid, b is expired
+    if (!aIsValid && bIsValid) return 1;   // a is expired, b is valid
+    if (aIsValid && bIsValid) return aExpiry - bExpiry;  // both are valid, sort by expiry date
+    return aExpiry - bExpiry;  // both are expired, sort by expiry date
   });
 
   const paginatedVouchers = sortedVouchers.slice(currentPage * vouchersPerPage, (currentPage + 1) * vouchersPerPage);
@@ -78,7 +82,8 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
               </div>
             </div>
             <button
-              className="hover:cursor-pointer text-xl pt-1.5"
+              
+              className=" hover:cursor-pointer mt-2 w-[650px] italic self-end py-2 bg-orange-500 text-[#fccb70] rounded-b-lg"
               onClick={() => {
                 setIsOpenDetailVoucher(true);
                 setChosenVoucherId(voucher._id);
