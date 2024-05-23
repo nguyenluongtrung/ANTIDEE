@@ -32,6 +32,7 @@ import {
 	WorkingLocationPage,
 } from './pages/JobPostingPage';
 import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
+import { SignUpPage } from './pages/SignUpPage';
 
 const App = () => {
 	return (
@@ -82,6 +83,7 @@ const AppContent = () => {
 							<Route path="time-contact/:serviceId" element={<TimeAndContactPage />} />
 							<Route path="confirm/:serviceId" element={<ConfirmPage />} />
 						</Route>
+						<Route path="/sign_up" element={<SignUpPage />} />
 					</Route>
 					{isAdminPage && (
 						<>

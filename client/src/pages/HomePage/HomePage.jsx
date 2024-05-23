@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../components';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
+import { useTypewriter } from 'react-simple-typewriter';
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
 	const {isLoading} = useSelector((state) => state.services)
@@ -54,6 +55,12 @@ export const HomePage = () => {
 		initiateServices();
 	}, []);
 
+	const [typeEffect] = useTypewriter({
+		words: ['Việc gì khó có Antidee lo'],
+		loop: {},
+		typeSpeed: 100,
+		deleteSpeed: 40
+	})
 	const handleNextService = () => {
 		setServices((prevServices) => {
 			const lastService = prevServices[prevServices.length - 1];
@@ -84,20 +91,18 @@ export const HomePage = () => {
 		<>
 			<div>
 				<div
-					className="bg-primary p-8 text-white  mx-auto rounded-[20px] mt-20"
+					className="bg-primary p-8 text-white  mx-auto rounded-[20px] mt-20 relative"
 					style={{ maxWidth: '1255px', height: '292px' }}
 				>
 					<p className="text-center mt-6">
 						<span className="text-white opacity-50 text-5xl">
-							Việc gì khó, có{' '}
+							{typeEffect}
 						</span>
-						<span className="text-white text-6xl font-bold">Antidee</span>
-						<span className="text-white opacity-50 text-5xl"> lo</span>
 					</p>
 
 					<div
-						className="mt-4 bg-white flex items-center mx-auto rounded-2xl "
-						style={{ maxWidth: '700px', height: '70px' }}
+						className="absolute top-32 left-72 bg-white flex items-center rounded-2xl "
+						style={{ height: '70px', width: '700px' }}
 					>
 						<input
 							type="text"
