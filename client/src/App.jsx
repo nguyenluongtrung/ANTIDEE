@@ -32,6 +32,8 @@ import {
 	WorkingLocationPage,
 } from './pages/JobPostingPage';
 
+import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHelper';
+
 const App = () => {
 	return (
 		<Router>
@@ -67,6 +69,7 @@ const AppContent = () => {
 						<Route path="/update-dw" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
+						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
