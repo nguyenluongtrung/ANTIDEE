@@ -6,6 +6,7 @@ import questionReducer from './../features/questions/questionSlice';
 import voucherReducer from './../features/vouchers/voucherSlice';
 import qualificationReducer from './../features/qualifications/qualificationSlice';
 import jobPostsReducer from './../features/jobPosts/jobPostsSlice';
+import domesticHelperFeedbackReducer from './../features/domesticHelperFeedback/domesticHelperFeedbackSlice'
 
 export const store = configureStore({
 	reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
 		vouchers: voucherReducer,
 		qualifications: qualificationReducer,
 		jobPosts: jobPostsReducer,
+		domesticHelperFeedbacks: domesticHelperFeedbackReducer,
 	},
 });

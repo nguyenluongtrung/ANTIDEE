@@ -34,6 +34,8 @@ import {
 import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
 import { SignUpPage } from './pages/SignUpPage';
 
+import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHelper';
+
 const App = () => {
 	return (
 		<Router>
@@ -70,6 +72,7 @@ const AppContent = () => {
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/job-posting-history" element={<JobPostingHistory />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
+						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
