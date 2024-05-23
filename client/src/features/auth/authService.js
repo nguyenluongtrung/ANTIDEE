@@ -12,6 +12,16 @@ const login = async (accountData) => {
 	return response.data.data.account;
 };
 
+const register = async (accountData) => {
+	const response = await axios.post(API_URL + 'register', accountData);
+	return response.data.data.account;
+};
+
+const getAllAccounts = async (token) => {
+	const response = await axios.get(API_URL);
+	return response.data.data.accounts;
+};
+
 const logout = async () => {
 	localStorage.removeItem('account');
 };
@@ -45,6 +55,8 @@ const getAccountInformation = async (token) => {
 const authService = {
 	login,
 	logout,
+	register,
+	getAllAccounts,
 	updateAccountInformation,
 	getAccountInformation,
 };

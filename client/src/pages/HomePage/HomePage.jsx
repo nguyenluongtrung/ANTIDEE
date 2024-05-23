@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './HomePage.css';
 import { FiSearch } from 'react-icons/fi';
 import { SlArrowRight } from 'react-icons/sl';
@@ -60,6 +60,34 @@ export const HomePage = () => {
 		});
 	};
 
+
+	// Hiệu ứng ở trang đầu
+	const [
+		displayText,
+		setDisplayText,
+	  ] = useState("");
+	const nameView =
+    "Việc gì khó có Antidee lo";
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let i = 0;
+      const typingEffect = setInterval(() => {
+        if (i < nameView.length) {
+          i++;
+          setDisplayText(
+            (prevText) => prevText + nameView.charAt(i - 1)
+          );
+        } else {
+          clearInterval(typingEffect);
+        }
+      }, 100);
+      return () => clearInterval(typingEffect);
+    }, 900); // Chờ 3 giây trước khi bắt đầu hiệu ứng ghi ra từng chữ
+
+    return () => clearTimeout(timer); // Xóa timer nếu component unmount
+  }, [nameView]);
+
 	return (
 		<>
 			<div>
@@ -68,11 +96,14 @@ export const HomePage = () => {
 					style={{ maxWidth: '1255px', height: '292px' }}
 				>
 					<p className="text-center mt-6">
-						<span className="text-white opacity-50 text-5xl">
+						{/* <span className="text-white opacity-50 text-5xl">
 							Việc gì khó, có{' '}
 						</span>
 						<span className="text-white text-6xl font-bold">Antidee</span>
-						<span className="text-white opacity-50 text-5xl"> lo</span>
+						<span className="text-white opacity-50 text-5xl"> lo</span> */}
+						<span className="text-white opacity-50 text-5xl">
+							{displayText}
+						</span>
 					</p>
 
 					<div

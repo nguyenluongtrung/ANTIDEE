@@ -31,14 +31,16 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const register = asyncHandler(async (req, res) => {
-	const { email, phoneNumber } = req.body;
+	// const { email, phoneNumber } = req.body;
+	const { phoneNumber } = req.body;
 
-	const accountExistsByEmail = await Account.findOne({ email });
 
-	if (accountExistsByEmail) {
-		res.status(400);
-		throw new Error('Email đã tồn tại');
-	}
+	// const accountExistsByEmail = await Account.findOne({ email });
+
+	// if (accountExistsByEmail) {
+	// 	res.status(400);
+	// 	throw new Error('Email đã tồn tại');
+	// }
 
 	const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
 
@@ -54,7 +56,7 @@ const register = asyncHandler(async (req, res) => {
 			status: 'success',
 			data: {
 				account,
-				token: generateToken(account._id),
+				// token: generateToken(account._id),
 			},
 		});
 	} else {
@@ -62,6 +64,17 @@ const register = asyncHandler(async (req, res) => {
 		throw new Error('Tài khoản không hợp lệ');
 	}
 });
+
+const getAllAccounts = asyncHandler(async (req, res) => {
+	const accounts = await Account.find({});
+  
+	res.status(200).json({
+	  status: "success",
+	  data: {
+		accounts,
+	  },
+	});
+  });
 
 const updateAccountInformation = asyncHandler(async (req, res) => {
 	const { email, phoneNumber } = req.body;
@@ -110,4 +123,5 @@ module.exports = {
 	login,
 	updateAccountInformation,
 	getAccountInformation,
+	getAllAccounts
 };
