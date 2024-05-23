@@ -3,6 +3,7 @@ import './HomePage.css';
 import { FiSearch } from 'react-icons/fi';
 import { SlArrowRight } from 'react-icons/sl';
 import { SlArrowLeft } from 'react-icons/sl';
+import { useTypewriter } from 'react-simple-typewriter';
 export const HomePage = () => {
 	const [services, setServices] = useState([
 		{ name: 'Tổng vệ sinh', image: 'image/tongvesinh.png' },
@@ -42,6 +43,12 @@ export const HomePage = () => {
 		},
 		{ name: '11,500,000+', image: 'image/dongho.png', text: 'Giờ làm việc' },
 	];
+	const [typeEffect] = useTypewriter({
+		words: ['Việc gì khó có Antidee lo'],
+		loop: {},
+		typeSpeed: 100,
+		deleteSpeed: 40
+	})
 	const handleNextService = () => {
 		setServices((prevServices) => {
 			const lastService = prevServices[prevServices.length - 1];
@@ -60,55 +67,22 @@ export const HomePage = () => {
 		});
 	};
 
-
-	// Hiệu ứng ở trang đầu
-	const [
-		displayText,
-		setDisplayText,
-	  ] = useState("");
-	const nameView =
-    "Việc gì khó có Antidee lo";
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      let i = 0;
-      const typingEffect = setInterval(() => {
-        if (i < nameView.length) {
-          i++;
-          setDisplayText(
-            (prevText) => prevText + nameView.charAt(i - 1)
-          );
-        } else {
-          clearInterval(typingEffect);
-        }
-      }, 100);
-      return () => clearInterval(typingEffect);
-    }, 900); // Chờ 3 giây trước khi bắt đầu hiệu ứng ghi ra từng chữ
-
-    return () => clearTimeout(timer); // Xóa timer nếu component unmount
-  }, [nameView]);
-
 	return (
 		<>
 			<div>
 				<div
-					className="bg-primary p-8 text-white  mx-auto rounded-[20px] mt-20"
+					className="bg-primary p-8 text-white  mx-auto rounded-[20px] mt-20 relative"
 					style={{ maxWidth: '1255px', height: '292px' }}
 				>
 					<p className="text-center mt-6">
-						{/* <span className="text-white opacity-50 text-5xl">
-							Việc gì khó, có{' '}
-						</span>
-						<span className="text-white text-6xl font-bold">Antidee</span>
-						<span className="text-white opacity-50 text-5xl"> lo</span> */}
 						<span className="text-white opacity-50 text-5xl">
-							{displayText}
+							{typeEffect}
 						</span>
 					</p>
 
 					<div
-						className="mt-4 bg-white flex items-center mx-auto rounded-2xl "
-						style={{ maxWidth: '700px', height: '70px' }}
+						className="absolute top-32 left-72 bg-white flex items-center rounded-2xl "
+						style={{ height: '70px', width: '700px' }}
 					>
 						<input
 							type="text"
