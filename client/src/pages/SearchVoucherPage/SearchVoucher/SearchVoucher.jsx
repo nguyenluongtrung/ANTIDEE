@@ -17,8 +17,6 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
   const [isOpenDetailVoucher, setIsOpenDetailVoucher] = useState(false);
   const [chosenVoucherId, setChosenVoucherId] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const [isSliding, setIsSliding] = useState(false);
-  const [direction, setDirection] = useState('');
 
   const vouchersPerPage = 3;
 
@@ -33,44 +31,46 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
   const filteredVouchers = validVouchers.filter((val) => {
     const matchesSearch = searchName === '' || val.name.toLowerCase().includes(searchName.toLowerCase());
     const matchesBrand = brandName === '' || val.brand.toLowerCase() === brandName.toLowerCase();
-    return matchesSearch && matchesBrand;
+    const isNotExpired = val.endDate && new Date(val.endDate) >= new Date(); // Chỉ giữ lại các voucher chưa hết hạn
+
+    return matchesSearch && matchesBrand && isNotExpired;
   });
 
   const sortedVouchers = filteredVouchers.sort((a, b) => {
-    const now = new Date();
-    const aExpiry = new Date(a.expiryDate);
-    const bExpiry = new Date(b.expiryDate);
-    const aIsValid = aExpiry >= now;
-    const bIsValid = bExpiry >= now;
-
-    if (aIsValid && !bIsValid) return -1;  // a is valid, b is expired
-    if (!aIsValid && bIsValid) return 1;   // a is expired, b is valid
-    if (aIsValid && bIsValid) return aExpiry - bExpiry;  // both are valid, sort by expiry date
-    return aExpiry - bExpiry;  // both are expired, sort by expiry date
+    const aExpiry = new Date(a.endDate);
+    const bExpiry = new Date(b.endDate);
+    return aExpiry - bExpiry; 
   });
 
-  const paginatedVouchers = sortedVouchers.slice(currentPage * vouchersPerPage, (currentPage + 1) * vouchersPerPage);
+  const paginatedVouchers = sortedVouchers.length > vouchersPerPage
+  ? Array.from({ length: vouchersPerPage }, (_, i) => sortedVouchers[(currentPage + i) % sortedVouchers.length])
+  : sortedVouchers;
 
   if (authLoading) {
     return <Spinner />;
   }
 
-  const handlePageChange = (newPage, dir) => {
-    setDirection(dir);
-    setIsSliding(true);
-    setTimeout(() => {
-      setCurrentPage(newPage);
-      setIsSliding(false);
-    }, 300); // Duration of the slide animation
+  const handlePageChange = (increment) => {
+    setCurrentPage((prevPage) => (prevPage + increment + sortedVouchers.length) % sortedVouchers.length);
   };
 
   return (
     <div className="flex justify-between items-center mt-6">
-      <div className={`flex grid grid-cols-3 gap-[15px] ${isSliding ? `slide-${direction}` : ''}`}>
-        {paginatedVouchers.map((voucher) => (
+      {sortedVouchers.length > vouchersPerPage && (
+        <div className="flex items-center mt-4">
+          <button
+            className="px-2 py-2 bg-[#FF467D] text-white rounded-full"
+            onClick={() => handlePageChange(-1)}
+          >
+            <SlArrowLeft className="hover:cursor-pointer" />
+          </button>
+        </div>
+      )}
+      <div className="flex grid grid-cols-3 gap-[15px]">
+        {paginatedVouchers.map((voucher, index) => (
           <div
-            key={voucher?._id}
-            className="transition duration-300 ease-in-out transform hover:scale-90 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer m-4 w-full"
+            key={voucher?._id || index}
+            className="transition duration-300 ease-in-out transform hover:scale-90 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer m-2 w-full"
           >
             <img src='/image/highland.png' alt="Offer" className="w-full h-[150px] object-cover rounded-t-lg" />
             <div className="p-4">
@@ -82,8 +82,7 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
               </div>
             </div>
             <button
-              
-              className=" hover:cursor-pointer mt-2 w-[650px] italic self-end py-2 bg-orange-500 text-[#fccb70] rounded-b-lg"
+              className="hover:cursor-pointer mt-2 w-[650px] italic self-end py-2 bg-orange-500 text-[#fccb70] rounded-b-lg"
               onClick={() => {
                 setIsOpenDetailVoucher(true);
                 setChosenVoucherId(voucher._id);
@@ -101,24 +100,16 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
           chosenVoucherId={chosenVoucherId}
         />
       )}
-      <div className="p-4 flex justify-between items-center mt-4">
-        {currentPage > 0 && (
+      {sortedVouchers.length > vouchersPerPage && (
+        <div className="p-4 flex justify-between mt-4">
           <button
             className="px-2 py-2 bg-[#FF467D] text-white rounded-full"
-            onClick={() => handlePageChange(currentPage - 1, 'left')}
-          >
-            <SlArrowLeft className="hover:cursor-pointer" />
-          </button>
-        )}
-        {(currentPage + 1) * vouchersPerPage < filteredVouchers.length && (
-          <button
-            className="px-2 py-2 bg-[#FF467D] text-white rounded-full"
-            onClick={() => handlePageChange(currentPage + 1, 'right')}
+            onClick={() => handlePageChange(1)}
           >
             <SlArrowRight className="hover:cursor-pointer" />
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
