@@ -35,6 +35,7 @@ import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostin
 import { SignUpPage } from './pages/SignUpPage';
 
 import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHelper';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 
 const App = () => {
 	return (
@@ -86,7 +87,8 @@ const AppContent = () => {
 							<Route path="time-contact/:serviceId" element={<TimeAndContactPage />} />
 							<Route path="confirm/:serviceId" element={<ConfirmPage />} />
 						</Route>
-						<Route path="/sign_up" element={<SignUpPage />} />
+						<Route path="/sign-up" element={<SignUpPage />} />
+						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
 					</Route>
 					{isAdminPage && (
 						<>

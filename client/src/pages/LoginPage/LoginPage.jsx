@@ -92,12 +92,11 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 					>
 						<p>Đăng nhập</p>
 					</button>
-					<Link>
-						<p className="text-right small-text font-medium mb-5">
+					<Link to={"/forgot-password"}>
+						<button className="text-right small-text font-medium mb-5" onClick={() => setIsOpenLoginForm(false)}>
 							Quên mật khẩu
-						</p>
+						</button>
 					</Link>
-
 					<div className="social-login">
 						<button className="block flex border border-gray-500 rounded-md mb-3 p-2 items-center justify-center">
 							<BsFacebook className="mr-2" />{' '}

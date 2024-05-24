@@ -80,7 +80,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
 
           <div className="social-register">
             <Link>
-              <Link to={"/sign_up"}>
+              <Link to={"/sign-up"}>
                 <button className="block flex border border-gray-500 rounded-md mb-3 p-2 items-center justify-center" onClick={() => setIsOpenRegisterForm(false)}>
                   <BsFacebook className="mr-2" />{" "}
                   <p className="font-bold small-text">

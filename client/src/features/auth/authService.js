@@ -41,6 +41,21 @@ const updateAccountInformation = async (accountData, token) => {
 	return response.data.data.updatedAccount;
 };
 
+const updateAccountForgottenPassword = async (password, accountId) => {
+	const response = await axios.patch(
+		API_URL + "lost-account/" + accountId,
+		{password},
+	);
+	console.log("RESPONSE", response.data)
+	return response.data.data.updatedAccount;
+};
+
+const getAccountForgottenPassword = async (phoneNumber) => {
+	const response = await axios.get(API_URL + `lost-account/${phoneNumber}`);
+	console.log("RESPONSE", response.data.data.singleAccount)
+	return response.data.data.singleAccount;
+};
+
 const getAccountInformation = async (token) => {
 	const config = {
 		headers: {
@@ -59,6 +74,8 @@ const authService = {
 	getAllAccounts,
 	updateAccountInformation,
 	getAccountInformation,
+	updateAccountForgottenPassword,
+	getAccountForgottenPassword,
 };
 
 export default authService;
