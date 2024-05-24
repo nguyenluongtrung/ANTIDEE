@@ -35,6 +35,7 @@ import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostin
 import { SignUpPage } from './pages/SignUpPage';
 
 import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHelper';
+import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 
 const App = () => {
 	return (
@@ -87,6 +88,7 @@ const AppContent = () => {
 							<Route path="confirm/:serviceId" element={<ConfirmPage />} />
 						</Route>
 						<Route path="/sign_up" element={<SignUpPage />} />
+						<Route path="/vouchers" element={<VoucherList />} />
 					</Route>
 					{isAdminPage && (
 						<>
