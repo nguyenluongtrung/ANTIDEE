@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './HomePage.css';
 import { FiSearch } from 'react-icons/fi';
 import { SlArrowRight } from 'react-icons/sl';
@@ -8,10 +8,12 @@ import { Spinner } from '../../components';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
 import { useTypewriter } from 'react-simple-typewriter';
+import { FaArrowUp } from 'react-icons/fa';
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
+	const topRef = useRef();
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const {isLoading} = useSelector((state) => state.services)
+	const { isLoading } = useSelector((state) => state.services);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const benefit = [
@@ -60,8 +62,13 @@ export const HomePage = () => {
 		words: ['Việc gì khó có Antidee lo'],
 		loop: {},
 		typeSpeed: 100,
-		deleteSpeed: 40
-	})
+		deleteSpeed: 40,
+	});
+
+	const scrolLWithUseRef = () => {
+		topRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+	};
+
 	const handleNextService = () => {
 		setServices((prevServices) => {
 			const lastService = prevServices[prevServices.length - 1];
@@ -82,23 +89,25 @@ export const HomePage = () => {
 
 	const navigateToServicePage = (id) => {
 		navigate(`/job-posting/view-service-detail/${id}`);
-	}
+	};
 
-	if(isLoading || !Array.isArray(services)){
-		return <Spinner />
+	if (isLoading || !Array.isArray(services)) {
+		return <Spinner />;
 	}
 
 	return (
-		<>
+		<div className="">
+			<div className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80" onClick={scrolLWithUseRef}>
+				<FaArrowUp className="text-pink" />
+			</div>
 			<div>
 				<div
 					className="bg-primary p-8 text-white  mx-auto rounded-[20px] mt-20 relative"
 					style={{ maxWidth: '1255px', height: '292px' }}
+					ref={topRef}
 				>
 					<p className="text-center mt-6">
-						<span className="text-white opacity-50 text-5xl">
-							{typeEffect}
-						</span>
+						<span className="text-white opacity-50 text-5xl">{typeEffect}</span>
 					</p>
 
 					<div
@@ -139,24 +148,29 @@ export const HomePage = () => {
 							<SlArrowLeft className="hover:cursor-pointer" />
 						</div>
 					</div>
-					{services?.slice(currentIndex, currentIndex + 5).map((service, index) => (
-						<div
-							key={index}
-							className="mx-4 transition duration-300 ease-in-out transform hover:scale-110 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer"
-						>
-							<div className="p-4">
-								<p className="mb-3 text-primary font-bold opacity-80 mt-1" style={{fontSize: '15px'}}>
-									{service?.name}
-								</p>
-								<img
-									src={service?.image}
-									alt={service?.name}
-									className="w-[175px] h-[155px] object-cover rounded-lg "
-									onClick={() => navigateToServicePage(service?._id)}
-								/>
+					{services
+						?.slice(currentIndex, currentIndex + 5)
+						.map((service, index) => (
+							<div
+								key={index}
+								className="mx-4 transition duration-300 ease-in-out transform hover:scale-110 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer"
+							>
+								<div className="p-4">
+									<p
+										className="mb-3 text-primary font-bold opacity-80 mt-1"
+										style={{ fontSize: '15px' }}
+									>
+										{service?.name}
+									</p>
+									<img
+										src={service?.image}
+										alt={service?.name}
+										className="w-[175px] h-[155px] object-cover rounded-lg "
+										onClick={() => navigateToServicePage(service?._id)}
+									/>
+								</div>
 							</div>
-						</div>
-					))}
+						))}
 					<div className="mt-[110px]">
 						<div
 							className=" inline-block p-2 rounded-full"
@@ -250,6 +264,6 @@ export const HomePage = () => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
