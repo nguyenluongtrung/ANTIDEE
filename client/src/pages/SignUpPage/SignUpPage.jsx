@@ -1,9 +1,6 @@
-// import { BsFillShieldLockFill, BsTelephoneFill } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import { useEffect, useState } from "react";
-// import { auth } from "../../firebase";
 import { firebase } from "../../firebase";
-// import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { toast, Toaster } from "react-hot-toast";
 import { getAllAccounts, register } from "../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,10 +10,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { FaRegEyeSlash } from "react-icons/fa";
 
 export const SignUpPage = () => {
-  //Logic Tạo Account (xem lại 79,34,16)
-  //Phải lấy được danh sách account để check valid
   const { accounts, isLoading } = useSelector((state) => state.auth);
-  //Logic OTP + Phone
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,30 +18,24 @@ export const SignUpPage = () => {
   const [user, setUser] = useState(false);
   const [inputOtp, setInputOtp] = useState(Array(6).fill(""));
 
-  //Logic Mật Khẩu
   const [password, setPassword] = useState("");
   const [confirmPassword, setcomfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
 
-  //Logic UI show password
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  //Logic UI show phone
   const [
     displayTextViewInInputPhoneNumber,
     setDisplayTextViewInInputPhoneNumber,
   ] = useState("");
 
-  //Logic UI hide phone
   const [hidePhoneNumber, setHidePhoneNumber] = useState("");
 
-  //Logic Tạo Account vào DB ---------------------------------------------------------------------
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const checkExistAccount = (newPhone) => {
-    console.log("Account Data", accounts)
+    console.log("Account Data", accounts);
     const listPhones = accounts.map((item) => item.phoneNumber);
     if (listPhones.includes(newPhone)) {
       return true;
@@ -58,7 +46,7 @@ export const SignUpPage = () => {
 
   useEffect(() => {
     dispatch(getAllAccounts());
-  }, [])
+  }, []);
 
   const onSubmitCreateAccount = async () => {
     const accountData = {
@@ -76,7 +64,6 @@ export const SignUpPage = () => {
     }
   };
 
-  // Logic Làm việc với firebase và OTP ---------------------------------------------------------------------
   const setupRecaptcha = () => {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
       "sign-in-button",
@@ -89,7 +76,7 @@ export const SignUpPage = () => {
 
   const handleSendOTP = async () => {
     if (phoneNumber.length < 9) {
-      toast.error("Vui lòng nhập số điện thoại có 10 chữ số !!!");
+      toast.error("Vui lòng nhập số điện thoại có 10 hoặc 11 chữ số !!!");
       return;
     }
 
@@ -99,10 +86,13 @@ export const SignUpPage = () => {
       phoneNumber: 0 + phoneNumber,
     };
 
-    console.log("Get phone ", accountData.phoneNumber)
+    console.log("Get phone ", accountData.phoneNumber);
     if (checkExistAccount(accountData.phoneNumber)) {
-    	toast.error('Số điện thoại này đã đăng kí tài khoản !!! Hãy thử số điện thoại khác', errorStyle);
-    	return;
+      toast.error(
+        "Số điện thoại này đã đăng kí tài khoản !!! Hãy thử số điện thoại khác",
+        errorStyle
+      );
+      return;
     }
 
     const appVerify = window.recaptchaVerifier;
@@ -128,15 +118,11 @@ export const SignUpPage = () => {
       });
   };
 
-  //Test ở đây
   const handleVerifyOTP = () => {
-    // alert(`OTP in handleVerify: ${otp}`);
-
     setLoading(true);
     window.confirmationResult
       .confirm(otp)
       .then(() => {
-        // console.log(res);
         setUser(true);
         setLoading(false);
         toast.success("Xác thực thành công!!");
@@ -152,19 +138,6 @@ export const SignUpPage = () => {
     setupRecaptcha();
   }, []);
 
-  //Logic Input OTP ---------------------------------------------------------------------
-  // const handleChange = (element, index) => {
-  //   if (isNaN(element.value)) return false;
-  //   setInputOtp([
-  //     ...inputOtp.map((d, idx) => (idx === index ? element.value : d)),
-  //   ]);
-  //   setOtp(inputOtp.join(""));
-  //   // Focus next input
-  //   if (element.nextSibling && element.value) {
-  //     element.nextSibling.focus();
-  //   }
-  // };
-
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return false;
 
@@ -174,7 +147,6 @@ export const SignUpPage = () => {
     setInputOtp(newOtp);
     setOtp(newOtp.join(""));
 
-    // Focus next input
     if (element.nextSibling && element.value) {
       element.nextSibling.focus();
     }
@@ -192,70 +164,53 @@ export const SignUpPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setOtp(inputOtp.join(""));
-    // alert(`OTP: ${otp}`);
     handleVerifyOTP();
   };
 
-  //Logic kiểm tra nhập số điện thoại
   const handlePhoneNumberChange = (e) => {
     if (isNaN(e.target.value)) return false;
     let input = e.target.value;
 
-    if (!input.startsWith("0") && input.length == 10) {
-      toast.error("Vui lòng nhập đúng số điện thoại gồm 9 chữ số không bao gồm số 0")
+    if (!input.startsWith("0") && input.length == 11) {
+      toast.error(
+        "Vui lòng nhập đúng số điện thoại gồm 9 hoặc 10 chữ số không bao gồm số 0"
+      );
       return;
     }
 
-    if (input.startsWith("0") && input.length == 10) {
+    if (input.startsWith("0") && (input.length == 10 || input.length == 11)) {
       input = input.substring(1);
     }
-
     setPhoneNumber(input);
   };
 
-  //Logic kiểm tra mật khẩu ---------------------------------------------------------------------
   const handleCheckPassword = (e) => {
     e.preventDefault();
 
-    // Kiểm tra mật khẩu không chứa ký tự trống
     if (/\s/.test(password)) {
-      setPasswordError("Mật khẩu không được chứa khoảng trắng !!!");
       toast.error("Mật khẩu không được chứa khoảng trắng !!!");
       return;
     }
 
-    // Kiểm tra mật khẩu phải có ít nhất một ký tự in hoa và một số
     if (!/(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      setPasswordError(
-        "Mật khẩu phải chứa ít nhất một ký tự in hoa và một số !!!"
-      );
       toast.error("Mật khẩu phải chứa ít nhất một ký tự in hoa và một số !!!");
       return;
     }
 
-    // Kiểm tra mật khẩu phải dài ít nhất 8 ký tự
     if (password.length < 8) {
-      setPasswordError("Mật khẩu phải dài ít nhất 8 ký tự !!!");
       toast.error("Mật khẩu phải dài ít nhất 8 ký tự !!!");
       return;
     }
 
-    // Kiểm tra mật khẩu và xác nhận mật khẩu phải khớp
-    // Kiểm tra luôn kí tự trống
     if (password.trim() !== confirmPassword.trim()) {
-      setPasswordError("Mật khẩu không khớp!");
       toast.error("Mật khẩu không khớp!");
       return;
     }
 
-    // Nếu tất cả các kiểm tra đều hợp lệ
-    //THêm vào database
-    setPasswordError("");
     toast.success("Mật khẩu hợp lệ");
     onSubmitCreateAccount();
   };
 
-  // Hiệu ứng ở trang đầu
   const nameViewInInputPhoneNumber =
     "Quý khách vui lòng nhập số điện thoại !!!";
 
@@ -273,9 +228,9 @@ export const SignUpPage = () => {
         }
       }, 100);
       return () => clearInterval(typingEffect);
-    }, 900); // Chờ 3 giây trước khi bắt đầu hiệu ứng ghi ra từng chữ
+    }, 900);
 
-    return () => clearTimeout(timer); // Xóa timer nếu component unmount
+    return () => clearTimeout(timer);
   }, [nameViewInInputPhoneNumber]);
 
   return (
@@ -297,7 +252,7 @@ export const SignUpPage = () => {
                   className="flex items-center mb-2 gap-x-2 text-gray cursor-pointer"
                 >
                   {showPassword ? <FaRegEyeSlash /> : <IoEyeOutline />}
-                  {showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  {showPassword ? "Ẩn" : "Hiện"}
                 </div>
               </div>
               <input
@@ -314,7 +269,7 @@ export const SignUpPage = () => {
                   className="flex items-center mb-2 gap-x-2 text-gray cursor-pointer"
                 >
                   {showConfirmPassword ? <FaRegEyeSlash /> : <IoEyeOutline />}
-                  {showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  {showConfirmPassword ? "Ẩn" : "Hiện"}
                 </div>
               </div>
               <input
@@ -323,11 +278,6 @@ export const SignUpPage = () => {
                 value={confirmPassword}
                 onChange={(e) => setcomfirmPassword(e.target.value)}
               />
-              {passwordError && (
-                <div className="flex items-center justify-center">
-                  <div className="mb-4 text-red font-bold">{passwordError}</div>
-                </div>
-              )}
               <button
                 type="submit"
                 className="w-full bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
@@ -389,7 +339,7 @@ export const SignUpPage = () => {
                 <div className="flex items-center justify-center gap-x-3">
                   <span className="py-3 text-[18px]">+84</span>
                   <input
-                    maxLength={10}
+                    maxLength={11}
                     placeholder="Số điện thoại"
                     value={phoneNumber}
                     onChange={handlePhoneNumberChange}
@@ -416,92 +366,3 @@ export const SignUpPage = () => {
     </section>
   );
 };
-
-//Làm xong UI See Password
-//Hiệu ứng chữ input
-
-//Luồng đi của đổi mật khẩu
-//User nhấn vào đổi mật khẩu
-//Nhập số điện thoại để xác thực
-//Trường hợp 1: Nhớ mật khẩu cũ
-//+ Nếu người dùng có tài khoản trên hệ thống thì cho phép đổi
-//+ Nếu người dùng không có tài khoản trên hệ thống thì thông báo "Số đt k có trên hệ thống,..."
-//+ Nhập mật khẩu cũ, mật khẩu mới
-
-//Trường hợp 2:Không Nhớ mật khẩu cũ
-//+ Nếu người dùng có tài khoản trên hệ thống thì cho phép đổi
-//+ Nếu người dùng không có tài khoản trên hệ thống thì thông báo "Số đt k có trên hệ thống,..."
-//+ Nhập mật khẩu cũ, mật khẩu mới
-// const {account, isLoading } = useSelector((state) => state.auth)
-
-// const checkExistAccount = (newPhone) => {
-// 	const listPhones = account.map(item => item.name);
-// 	if(listPhones.includes(newPhone)){
-// 		return true;
-// 	} else {
-// 		return false;
-// 	}
-// }
-
-// if (checkExistAccount(phoneNumber)) {
-// 	toast.error('Số điện thoại đã tồn tại!!!', errorStyle);
-// 	return;
-// }
-
-// import firebase from '../../firebase';
-// import { useEffect, useState } from "react";
-// import firebase from "./../../firebase";
-
-// export const SignUpPage = () => {
-//   const [phoneNumber, setPhoneNumber] = useState("");
-//   const [otp, setOtp] = useState("");
-
-//   const setupRecaptcha = () => {
-//     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-//       "sign-in-button",
-//       {
-//         size: "invisible",
-//         defaultCountry: "VN",
-//       }
-//     );
-//   };
-
-//   const handleSendOTP = async () => {
-//     const appVerify = window.recaptchaVerifier;
-//     await firebase.auth().signInWithPhoneNumber(phoneNumber, appVerify).then((confirmationResult) => {
-//       window.confirmationResult = confirmationResult;
-//       alert("Gửi OTP thành công")
-//     }).catch((error) => {
-//       console.log("ERROR SIGN UP", error)
-//       alert("Gửi OTP Thất bại")
-//     })
-//     ;
-//   };
-
-//   const handleVerifyOTP = () => {
-//     window.confirmationResult.confirm(otp).then(() => {
-//       alert("Xác thực thành công")
-//     }).catch((error) => {
-//       console.log("ERROR SIGN UP", error)
-//       alert("Xác thực Thất bại")
-//     })
-//   }
-
-//   useEffect(() => {
-//     setupRecaptcha();
-//   }, []);
-
-//   return (
-//     <div>
-//       <div className="flex w-[500px]">
-//         <input placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
-//         <button onClick={handleSendOTP}>SEND OTP</button>
-//       </div>
-//       <div className="flex w-[500px] mt-10">
-//         <input placeholder="OTP" value={otp} onChange={(e) => setOtp(e.target.value)}/>
-//         <button className="bg-primary" onClick={handleVerifyOTP}>VERIFI OTP</button>
-//       </div>
-//       <div id="sign-in-button"></div>
-//     </div>
-//   );
-// };
