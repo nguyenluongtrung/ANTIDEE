@@ -32,7 +32,7 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 	};
 
 	useEffect(() => {
-		if (isError) {
+		if (isError && message == 'Số điện thoại hoặc mật khẩu không đúng') {
 			toast.error(message, errorStyle);
 		}
 
