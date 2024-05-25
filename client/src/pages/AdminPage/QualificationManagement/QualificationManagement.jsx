@@ -38,7 +38,7 @@ export const QualificationManagement = () => {
     const result = await dispatch(deleteQualification(id));
     console.log("***", result);
     if (result.type.endsWith("fulfilled")) {
-      toast.success("Xoá chứng chỉ thành công", successStyle);
+      toast.success("Xoá chứng chỉ thành công");
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
