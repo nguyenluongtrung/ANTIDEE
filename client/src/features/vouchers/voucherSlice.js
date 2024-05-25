@@ -79,6 +79,27 @@ export const deleteVoucher = createAsyncThunk(
 	}
 );
 
+export const redeemVoucher = createAsyncThunk(
+	'vouchers/redeemVoucher',
+	async ({userId, voucherId}, thunkAPI)=>{
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await voucherService.redeemVoucher(token, userId, voucherId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
+
 const initialState = {
 	vouchers: null,
 	isError: false,
@@ -159,6 +180,22 @@ export const voucherSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
+			})
+			.addCase(redeemVoucher.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(redeemVoucher.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.vouchers[
+					state.vouchers.findIndex((voucher) => voucher._id == action.payload._id)
+				] = action.payload;
+			})
+			.addCase(redeemVoucher.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.vouchers = null;
 			});
 			
 

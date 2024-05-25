@@ -53,7 +53,18 @@ const voucherSchema = new Schema({
     image: {
         type: String,
         // required: true
-    }
+    },
+    voucherAccounts: [{
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        receivedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 
 },{
     timestamps:true

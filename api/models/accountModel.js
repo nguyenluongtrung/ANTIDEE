@@ -131,6 +131,19 @@ const accountSchema = mongoose.Schema(
 				},
 			},
 		],
+
+		accountVouchers: [{
+			voucherId: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Voucher',
+				required: true
+			},
+			receivedAt: {
+				type: Date,
+				default: Date.now
+			}
+		}]
+
 	},
 	{
 		timestamps: true,

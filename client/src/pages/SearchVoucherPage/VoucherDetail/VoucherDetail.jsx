@@ -5,16 +5,45 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../../../utils/format';
+import { getAllVouchers, redeemVoucher } from '../../../features/vouchers/voucherSlice';
 
 export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleGetAllVouchers }) => {
     const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
-    const [chosenVoucher, setChosenVoucher] = useState(
-        vouchers[vouchers.findIndex((voucher) => String(voucher._id) === String(chosenVoucherId))]
-    );
+    const { account, isLoading: isAuthLoading } = useSelector((state) => state.auth);
+    const [chosenVoucher, setChosenVoucher] = useState();
+
+
+
+    async function initiateVouchers() {
+        let output = await dispatch(getAllVouchers());
+
+        setChosenVoucher(output.payload[output.payload.findIndex((voucher) =>
+            String(voucher._id) === String(chosenVoucherId))]);
+
+    }
+
+    useEffect(() => {
+        initiateVouchers();
+    }, []);
+
+
 
     const dispatch = useDispatch();
+    const handleRedeemVoucher = async (userId, voucherId) => {
+        console.log(userId, voucherId);
+        const result = await dispatch(redeemVoucher({ userId, voucherId }));
 
-    if (voucherLoading) {
+        if (result.type.endsWith('fulfilled')) {
+            toast.success('Nhận voucher thành công', successStyle);
+        } else if (result?.error?.message === 'Rejected') {
+            toast.error(result?.payload, errorStyle);
+            setIsOpenDetailVoucher(false);
+            handleGetAllVouchers();
+        }
+    }
+
+
+    if (voucherLoading || isAuthLoading) {
         return <Spinner />;
     }
 
@@ -115,7 +144,11 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
                 </table>
                 <div className="mt-2">
                     {isVoucherActive ? (
-                        <button className="bg-primary p-2 rounded-full">
+                        <button className="bg-primary p-2 rounded-full"
+                            onClick={() => handleRedeemVoucher(account?._id, chosenVoucher?._id)}
+                        >
+                            <p>{account?._id}</p>
+                            <p>{chosenVoucher._id}</p>
                             {chosenVoucher?.price > 0 ? 'Đổi ngay' : 'Nhận voucher'}
                         </button>
                     ) : (

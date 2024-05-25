@@ -1,4 +1,5 @@
 const Voucher = require("../models/voucherModel");
+const Account = require("../models/accountModel")
 
 const createVoucher = async (req, res) => {
   try {
@@ -69,7 +70,7 @@ const updateVoucher = async (req, res) => {
     );
     res.status(200).json({
       success: true,
-      data: {updatedVoucher},
+      data: { updatedVoucher },
     });
   } catch (error) {
     res.status(500).json({
@@ -102,10 +103,54 @@ const deleteVoucher = async (req, res) => {
   }
 };
 
+const redeemVoucher = async (req, res) => {
+  const { userId, voucherId } = req.body
+
+  try {
+    const user = await Account.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const voucher = await Voucher.findById(voucherId);
+    if (!voucher) {
+      return res.status(404).json({ message: "Voucher not found." });
+    }
+
+    if (user.aPoints < voucher.price) {
+      return res.status(400).json({ message: "Bạn không đủ điểm để đổi voucher này!!!" });
+
+    }
+
+    if (voucher.quantity > 0) {
+      voucher.quantity -= 1;
+      user.aPoints -= voucher.price;
+
+      user.accountVouchers.push({ voucherId: voucher._id });
+      voucher.voucherAccounts.push({ userId: user._id });
+
+      await voucher.save();
+      await user.save();
+      return res.status(200).
+        json({ message: 'Đổi voucher thành công', data: { voucher, account: user } });
+    } else {
+      return res.status(400).json({ message: 'Rất tiếc voucher này đã hết!' });
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   createVoucher,
   getAllVouchers,
   getVoucherById,
   updateVoucher,
   deleteVoucher,
+  redeemVoucher
 };
