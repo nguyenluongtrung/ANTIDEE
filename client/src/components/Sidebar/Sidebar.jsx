@@ -94,6 +94,7 @@ export const Sidebar = () => {
 								className="sidebar-item p-4 cursor-pointer hover:text-primary"
 								onMouseEnter={() => handleMouseEnter('Ưu đãi')}
 								onMouseLeave={handleMouseLeave}
+								onClick={() => navigate('/vouchers')}
 							>
 								<IoGiftSharp className="mr-4" />
 								{activeItem === 'Ưu đãi' && (
@@ -116,7 +117,7 @@ export const Sidebar = () => {
 					{account?.role === 'Người giúp việc' && (
 						<>
 							<div
-								className="flex items-center p-4 cursor-pointer hover:text-primary"
+								className="sidebar-item flex items-center p-4 cursor-pointer hover:text-primary"
 								onMouseEnter={() => handleMouseEnter('Công việc')}
 								onMouseLeave={handleMouseLeave}
 								onClick={() => navigate('/job-posts')}
@@ -127,7 +128,7 @@ export const Sidebar = () => {
 								)}
 							</div>
 							<div
-								className="flex items-center p-4 cursor-pointer hover:text-primary"
+								className="sidebar-item flex items-center p-4 cursor-pointer hover:text-primary"
 								onMouseEnter={() => handleMouseEnter('Hành trình')}
 								onMouseLeave={handleMouseLeave}
 							>
@@ -137,7 +138,7 @@ export const Sidebar = () => {
 								)}
 							</div>
 							<div
-								className="flex items-center p-4 cursor-pointer hover:text-primary"
+								className="sidebar-item flex items-center p-4 cursor-pointer hover:text-primary"
 								onMouseEnter={() => handleMouseEnter('Xếp hạng')}
 								onMouseLeave={handleMouseLeave}
 							>
@@ -147,7 +148,7 @@ export const Sidebar = () => {
 								)}
 							</div>
 							<div
-								className="flex items-center p-4 cursor-pointer hover:text-primary"
+								className="sidebar-item flex items-center p-4 cursor-pointer hover:text-primary"
 								onMouseEnter={() => handleMouseEnter('Thời tiết')}
 								onMouseLeave={handleMouseLeave}
 								onClick={() => navigate('/weather-forecast')}

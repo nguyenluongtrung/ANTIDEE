@@ -143,6 +143,7 @@ export const WeatherForecastPage = () => {
 							type="text"
 							className="w-64 mr-3 rounded-sm"
 							{...register('location')}
+							placeholder='Nhập tên thành phố'
 						/>
 						<button
 							type="submit"
