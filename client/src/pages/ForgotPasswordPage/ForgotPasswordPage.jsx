@@ -2,15 +2,19 @@ import { CgSpinner } from "react-icons/cg";
 import { useEffect, useState } from "react";
 import { firebase } from "../../firebase";
 import { toast, Toaster } from "react-hot-toast";
-import { getAllAccounts, register } from "../../features/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  getAccountForgottenPassword,
+  updateAccountForgottenPassword,
+} from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 import { errorStyle, successStyle } from "../../utils/toast-customize";
 import { useNavigate } from "react-router-dom";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaRegEyeSlash } from "react-icons/fa";
 
-export const SignUpPage = () => {
-  const { accounts, isLoading } = useSelector((state) => state.auth);
+export const ForgotPasswordPage = () => {
+  const [accountId, setAccountId] = useState("");
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,30 +38,16 @@ export const SignUpPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const checkExistAccount = (newPhone) => {
-    console.log("Account Data", accounts);
-    const listPhones = accounts.map((item) => item.phoneNumber);
-    if (listPhones.includes(newPhone)) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    dispatch(getAllAccounts());
-  }, []);
-
   const onSubmitCreateAccount = async () => {
-    const accountData = {
-      phoneNumber: 0 + phoneNumber,
-      password: password,
-    };
 
-    const result = await dispatch(register(accountData));
-    console.log("ACCount Data", accountData);
+    const result = await dispatch(
+      updateAccountForgottenPassword({
+        password,
+        accountId
+      })
+    );
     if (result.type.endsWith("fulfilled")) {
-      toast.success("Đăng Ký Tài Khoản Thành Công !!!!!", successStyle);
+      toast.success("Thay đổi mật khẩu thành công", successStyle);
       navigate("/home");
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
@@ -76,7 +66,7 @@ export const SignUpPage = () => {
 
   const handleSendOTP = async () => {
     if (phoneNumber.length < 9) {
-      toast.error("Vui lòng nhập số điện thoại có 10 hoặc 11 chữ số !!!");
+      toast.error("Vui lòng nhập số điện thoại có 10 chữ số !!!");
       return;
     }
 
@@ -85,16 +75,16 @@ export const SignUpPage = () => {
     const accountData = {
       phoneNumber: 0 + phoneNumber,
     };
-
-    console.log("Get phone ", accountData.phoneNumber);
-    if (checkExistAccount(accountData.phoneNumber)) {
+    const phoneNumber2 = accountData.phoneNumber;
+    let output = await dispatch(getAccountForgottenPassword(phoneNumber2));
+    if (!output.payload) {
       toast.error(
-        "Số điện thoại này đã đăng kí tài khoản !!! Hãy thử số điện thoại khác",
+        "Số điện thoại này chưa đăng kí tài khoản!!! Hãy thử số điện thoại khác",
         errorStyle
       );
       return;
     }
-
+    setAccountId(output.payload._id);
     const appVerify = window.recaptchaVerifier;
     setLoading(true);
 
@@ -109,7 +99,6 @@ export const SignUpPage = () => {
         );
         toast.success("Gửi OTP Thành công!");
         setShowOTP(true);
-        // window.confirmationResult.confirm(testVerificationCode);
       })
       .catch((error) => {
         console.log("ERROR SIGN UP", error);
@@ -166,6 +155,24 @@ export const SignUpPage = () => {
     setOtp(inputOtp.join(""));
     handleVerifyOTP();
   };
+
+  // const handlePhoneNumberChange = (e) => {
+  //   if (isNaN(e.target.value)) return false;
+  //   let input = e.target.value;
+
+  //   if (!input.startsWith("0") && input.length == 10) {
+  //     toast.error(
+  //       "Vui lòng nhập đúng số điện thoại gồm 9 chữ số không bao gồm số 0"
+  //     );
+  //     return;
+  //   }
+
+  //   if (input.startsWith("0") && input.length == 10) {
+  //     input = input.substring(1);
+  //   }
+
+  //   setPhoneNumber(input);
+  // };
 
   const handlePhoneNumberChange = (e) => {
     if (isNaN(e.target.value)) return false;
@@ -228,9 +235,9 @@ export const SignUpPage = () => {
         }
       }, 100);
       return () => clearInterval(typingEffect);
-    }, 900);
+    }, 900); // Chờ 3 giây trước khi bắt đầu hiệu ứng ghi ra từng chữ
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer); // Xóa timer nếu component unmount
   }, [nameViewInInputPhoneNumber]);
 
   return (

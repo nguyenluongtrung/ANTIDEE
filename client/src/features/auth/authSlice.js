@@ -82,6 +82,42 @@ export const updateAccountInformation = createAsyncThunk(
 	}
 );
 
+export const updateAccountForgottenPassword = createAsyncThunk(
+	'auth/updateAccountForgottenPassword',
+	async ({password, accountId}, thunkAPI) => {
+		try {
+			return await authService.updateAccountForgottenPassword(password, accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const getAccountForgottenPassword = createAsyncThunk(
+	'auth/getAccountForgottenPassword',
+	async (phoneNumber2, thunkAPI) => {
+		try {
+			return await authService.getAccountForgottenPassword(phoneNumber2);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const getAccountInformation = createAsyncThunk(
 	'auth/getAccountInformation',
 	async (_, thunkAPI) => {
@@ -109,6 +145,7 @@ const initialState = {
 	isSuccess: false,
 	isLoading: false,
 	message: '',
+	accountId: null,
 };
 
 export const authSlice = createSlice({
@@ -154,6 +191,37 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.account = null;
+			})
+			.addCase(updateAccountForgottenPassword.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateAccountForgottenPassword.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.accounts[
+					state.accounts.findIndex(
+						(account) => account._id == action.payload._id
+					)
+				] = action.payload;
+			})
+			.addCase(updateAccountForgottenPassword.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(getAccountForgottenPassword.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAccountForgottenPassword.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.accountId = action.payload;
+			})
+			.addCase(getAccountForgottenPassword.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.accountId = null;
 			})
 			.addCase(getAccountInformation.pending, (state) => {
 				state.isLoading = true;

@@ -1,127 +1,160 @@
-const asyncHandler = require('express-async-handler');
-const Account = require('./../models/accountModel');
-const jwt = require('jsonwebtoken');
+const asyncHandler = require("express-async-handler");
+const Account = require("./../models/accountModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
 
 const generateToken = (id) => {
-	return jwt.sign({ id }, process.env.SECRET_STR, {
-		expiresIn: '30d',
-	});
+  return jwt.sign({ id }, process.env.SECRET_STR, {
+    expiresIn: "30d",
+  });
 };
 
 const login = asyncHandler(async (req, res) => {
-	const { phoneNumber, password } = req.body;
+  const { phoneNumber, password } = req.body;
 
-	const account = await Account.findOne({ phoneNumber }).select('+password');
+  const account = await Account.findOne({ phoneNumber }).select("+password");
 
-	if (
-		account &&
-		(await account.comparePasswordInDb(password, account.password))
-	) {
-		res.status(200).json({
-			status: 'success',
-			data: {
-				account,
-				token: generateToken(account._id),
-			},
-		});
-	} else {
-		res.status(400);
-		throw new Error('Số điện thoại hoặc mật khẩu không đúng');
-	}
+  if (
+    account &&
+    (await account.comparePasswordInDb(password, account.password))
+  ) {
+    res.status(200).json({
+      status: "success",
+      data: {
+        account,
+        token: generateToken(account._id),
+      },
+    });
+  } else {
+    res.status(400);
+    throw new Error("Số điện thoại hoặc mật khẩu không đúng");
+  }
 });
 
 const register = asyncHandler(async (req, res) => {
-	// const { email, phoneNumber } = req.body;
-	const { phoneNumber } = req.body;
+  // const { email, phoneNumber } = req.body;
+  const { phoneNumber } = req.body;
 
+  // const accountExistsByEmail = await Account.findOne({ email });
 
-	// const accountExistsByEmail = await Account.findOne({ email });
+  // if (accountExistsByEmail) {
+  // 	res.status(400);
+  // 	throw new Error('Email đã tồn tại');
+  // }
 
-	// if (accountExistsByEmail) {
-	// 	res.status(400);
-	// 	throw new Error('Email đã tồn tại');
-	// }
+  const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
 
-	const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
+  if (accountExistsByPhoneNumber) {
+    res.status(400);
+    throw new Error("Số điện thoại đã tồn tại");
+  }
 
-	if (accountExistsByPhoneNumber) {
-		res.status(400);
-		throw new Error('Số điện thoại đã tồn tại');
-	}
+  const account = await Account.create(req.body);
 
-	const account = await Account.create(req.body);
-
-	if (account) {
-		res.status(201).json({
-			status: 'success',
-			data: {
-				account,
-				// token: generateToken(account._id),
-			},
-		});
-	} else {
-		res.status(400);
-		throw new Error('Tài khoản không hợp lệ');
-	}
+  if (account) {
+    res.status(201).json({
+      status: "success",
+      data: {
+        account,
+        // token: generateToken(account._id),
+      },
+    });
+  } else {
+    res.status(400);
+    throw new Error("Tài khoản không hợp lệ");
+  }
 });
 
 const getAllAccounts = asyncHandler(async (req, res) => {
-	const accounts = await Account.find({});
-  
-	res.status(200).json({
-	  status: "success",
-	  data: {
-		accounts,
-	  },
-	});
+  const accounts = await Account.find({});
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      accounts,
+    },
   });
+});
 
 const updateAccountInformation = asyncHandler(async (req, res) => {
-	const { email, phoneNumber } = req.body;
+  const { email, phoneNumber } = req.body;
 
-	const accountExistsByEmail = await Account.findOne({ email });
+  const accountExistsByEmail = await Account.findOne({ email });
 
-	if (email !== req.account.email && accountExistsByEmail) {
-		res.status(400);
-		throw new Error('Email đã tồn tại');
-	}
+  if (email !== req.account.email && accountExistsByEmail) {
+    res.status(400);
+    throw new Error("Email đã tồn tại");
+  }
 
-	const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
+  const accountExistsByPhoneNumber = await Account.findOne({ phoneNumber });
 
-	if (phoneNumber !== req.account.phoneNumber && accountExistsByPhoneNumber) {
-		res.status(400);
-		throw new Error('Số điện thoại đã tồn tại');
-	}
+  if (phoneNumber !== req.account.phoneNumber && accountExistsByPhoneNumber) {
+    res.status(400);
+    throw new Error("Số điện thoại đã tồn tại");
+  }
 
-	const updatedAccount = await Account.findByIdAndUpdate(
-		req.account._id,
-		req.body,
-		{ new: true }
-	);
+  const updatedAccount = await Account.findByIdAndUpdate(
+    req.account._id,
+    req.body,
+    { new: true }
+  );
 
-	res.status(200).json({
-		status: 'success',
-		data: {
-			updatedAccount,
-		},
-	});
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedAccount,
+    },
+  });
+});
+
+const updateAccountForgottenPassword = asyncHandler(async (req, res) => {
+  const accountId = req.params.accountId;
+
+  let {password} = req.body
+  
+  password = await bcrypt.hash(password, 12);
+
+  const updatedAccount = await Account.findByIdAndUpdate(accountId, {password}, {
+    new: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedAccount,
+    },
+  });
+});
+
+const getAccountForgottenPassword = asyncHandler(async (req, res) => {
+
+  const account = await Account.find({ phoneNumber: req.params.phoneNumber });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      singleAccount:account[0],
+    },
+  });
 });
 
 const getAccountInformation = asyncHandler(async (req, res) => {
-	const account = await Account.findById(req.account._id);
+  const account = await Account.findById(req.account._id);
 
-	res.status(200).json({
-		status: 'success',
-		data: {
-			account,
-		},
-	});
+  res.status(200).json({
+    status: "success",
+    data: {
+      account,
+    },
+  });
 });
 
 module.exports = {
-	register,
-	login,
-	updateAccountInformation,
-	getAccountInformation,
-	getAllAccounts
+  register,
+  login,
+  updateAccountInformation,
+  getAccountInformation,
+  getAllAccounts,
+  updateAccountForgottenPassword,
+  getAccountForgottenPassword,
 };
