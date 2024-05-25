@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./RegisterPage.css";
 import { AiOutlineClose } from "react-icons/ai";
-import { BsFacebook } from "react-icons/bs";
+import { BsFacebook, BsPhone } from "react-icons/bs";
 import { TfiEmail } from "react-icons/tfi";
 import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
@@ -33,7 +33,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
           />
           <h5 className="text-center font-bold mb-3">Đăng ký</h5>
           <hr></hr>
-          <p className="font-bold mt-3">
+          <p className="font-bold mt-3 mb-4">
             Chào mừng đến với <span className="text-primary">Antidee</span>
           </p>
           {/* <div className="mb-3 mt-5">
@@ -68,39 +68,51 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
           >
             <p>Đăng ký</p>
           </button> */}
+
           <Link>
-            <p className="text-right small-text font-medium mb-5">
+            <Link to={"/sign-up"}>
+              <button
+                className="flex border border-primary rounded-md mb-3 py-6 px-3 items-center justify-between"
+                onClick={() => setIsOpenRegisterForm(false)}
+              >
+                <BsPhone className="mx-2" />{" "}
+                <p className="font-bold text-xs">Đăng ký bằng Số Điện Thoại</p>
+                <div></div>
+              </button>
+            </Link>{" "}
+          </Link>
+
+          <Link>
+            <p className="text-right text-xs font-medium m-5">
               Đã có tài khoản?{" "}
               <Link to={"/login"}>
-                <span className="small-text text-primary">Đăng nhập</span>
+                <span className="text-xs text-primary">Đăng nhập</span>
               </Link>{" "}
               ở đây
             </p>
           </Link>
 
-          <div className="social-register">
-            <Link>
-              <Link to={"/sign-up"}>
-                <button className="block flex border border-gray-500 rounded-md mb-3 p-2 items-center justify-center" onClick={() => setIsOpenRegisterForm(false)}>
-                  <BsFacebook className="mr-2" />{" "}
-                  <p className="font-bold small-text">
-                    Đăng ký bằng Số Điện Thoại
-                  </p>
-                </button>
-              </Link>{" "}
-            </Link>
+          <div class="flex items-center w-full max-w-md mb-3">
+            <div class="flex-grow border-t border-gray"></div>
+            <span class="mx-4 text-gray">Hoặc</span>
+            <div class="flex-grow border-t border-gray"></div>
+          </div>
 
-            <button className="block flex border border-gray-500 rounded-md mb-3 p-2 items-center justify-center">
-              <BsFacebook className="mr-2" />{" "}
-              <p className="font-bold small-text">Đăng ký bằng Facebook</p>
+          <div className="social-register">
+            <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between">
+              <BsFacebook className="mx-2" />{" "}
+              <p className="font-bold text-xs">Đăng ký bằng Facebook</p>
+              <div></div>
             </button>
-            <button className="block flex border border-gray-500 rounded-md mb-3 p-2 items-center justify-center">
-              <TfiEmail className="mr-2" />{" "}
-              <p className="font-bold small-text">Đăng ký bằng Email</p>
+            <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between">
+              <TfiEmail className="mx-2" />{" "}
+              <p className="font-bold text-xs">Đăng ký bằng Email</p>
+              <div></div>
             </button>
-            <button className="block flex border border-gray-500 rounded-md mb-3 p-2 items-center justify-center">
-              <FcGoogle className="mr-2" />{" "}
-              <p className="font-bold small-text">Đăng ký bằng Google</p>
+            <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between">
+              <FcGoogle className="mx-2" />{" "}
+              <p className="font-bold text-xs">Đăng ký bằng Google</p>
+              <div></div>
             </button>
           </div>
         </form>
