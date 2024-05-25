@@ -1,8 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
 import './MyAccount.css';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { IoIosArrowForward } from 'react-icons/io';
 import {
 	getDownloadURL,
 	getStorage,
@@ -20,6 +18,7 @@ import { rules } from '../../utils/rules';
 import { formatDate, formatDateInput } from '../../utils/format';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../utils/toast-customize';
+import { Sidebar } from './components/Sidebar/Sidebar';
 
 export const MyAccount = () => {
 	const fileRef = useRef(null);
@@ -32,7 +31,6 @@ export const MyAccount = () => {
 		useState(false);
 
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const maxDate = new Date();
 	maxDate.setFullYear(maxDate.getFullYear() - 18);
@@ -109,84 +107,7 @@ export const MyAccount = () => {
 	return (
 		<div className="flex px-16">
 			<div className="left-container pr-24 pt-3">
-				<div className="flex mb-4">
-					<img
-						src={`${account?.avatar}` || 'src/assets/img/Ellipse 16.png'}
-						className="block w-12 mr-2 rounded-full"
-					/>
-					<div className="mt-2">
-						<p className="font-bold">{account?.name}</p>
-						<Link to={''}>
-							<p className="text-primary">
-								Xem hồ sơ <IoIosArrowForward className="inline" />
-							</p>
-						</Link>
-					</div>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/clarity_avatar-solid.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Tài khoản của tôi</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/mingcute_card-pay-fill.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>aPay</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/mdi_voucher.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Kho Voucher</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer" onClick={() => navigate('/job-posting-history')}>
-					<img
-						src="src/assets/img/mdi_voucher.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Công việc đã đăng</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img src="src/assets/img/mdi_heart.png" className="inline w-4 mr-2" />
-					<span>Tasker yêu thích</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/lucide_list-x.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Danh sách chặn</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img src="src/assets/img/mdi_gift.png" className="inline w-4 mr-2" />
-					<span>Săn quà giới thiệu</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/material-symbols_help.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Trợ giúp</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/vaadin_piggy-bank-coin.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Điểm tích lũy</span>
-				</div>
-				<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-					<img
-						src="src/assets/img/ic_sharp-settings.png"
-						className="inline w-4 mr-2"
-					/>
-					<span>Cài đặt</span>
-				</div>
+				<Sidebar account={account}/>
 			</div>
 			<div className="right-container rounded-xl p-5 relative">
 				<img
