@@ -45,10 +45,12 @@ export const UpdateProfileForDW = () => {
 
 	async function initiateAccountInformation() {
 		const output = await dispatch(getAccountInformation());
-		setCertificateOfResidenceUrl(output?.payload?.resume?.certificateOfResidence);
-		setFrontIdCardUrl(output?.payload?.resume?.frontIdCard);
-		setCurriculumVitaeUrl(output?.payload?.resume?.curriculumVitae);
-		setBackIdCardUrl(output?.payload?.resume?.backIdCard);
+		setCertificateOfResidenceUrl(
+			output?.payload?.resume[0]?.certificateOfResidence
+		);
+		setFrontIdCardUrl(output?.payload?.resume[0]?.frontIdCard);
+		setCurriculumVitaeUrl(output?.payload?.resume[0]?.curriculumVitae);
+		setBackIdCardUrl(output?.payload?.resume[0]?.backIdCard);
 	}
 
 	useEffect(() => {
@@ -107,14 +109,17 @@ export const UpdateProfileForDW = () => {
 	};
 
 	const onSubmit = async () => {
-		const resume = {
-			...accountData?.resume,
-			frontIdCard: frontIdCardUrl,
-			backIdCard: backIdCardUrl,
-			curriculumVitae: curriculumVitaeUrl,
-			certificateOfResidence: certificateOfResidenceUrl,
-		};
-		const account = {...accountData, resume };
+		const updatedResume = [
+			{
+				...accountData?.resume[0],
+				frontIdCard: frontIdCardUrl,
+				backIdCard: backIdCardUrl,
+				curriculumVitae: curriculumVitaeUrl,
+				certificateOfResidence: certificateOfResidenceUrl,
+			},
+			...accountData?.resume.slice(1),
+		];
+		const account = { ...accountData, resume: updatedResume };
 		const result = await dispatch(updateAccountInformation(account));
 
 		if (result.type.endsWith('fulfilled')) {
@@ -152,7 +157,11 @@ export const UpdateProfileForDW = () => {
 							<div className="justify-center">
 								<img
 									className="m-auto p-4"
-									src={`${frontIdCardUrl}` || front}
+									src={
+										`${frontIdCardUrl}` !== 'undefined'
+											? `${frontIdCardUrl}`
+											: front
+									}
 									style={{ width: '230px', height: '230px' }}
 								/>
 								<div className="grid justify-center h-5 ">
@@ -173,7 +182,11 @@ export const UpdateProfileForDW = () => {
 							<div className="justify-center">
 								<img
 									className="m-auto p-4"
-									src={`${backIdCardUrl}` || back}
+									src={
+										`${backIdCardUrl}` !== 'undefined'
+											? `${backIdCardUrl}`
+											: back
+									}
 									style={{ width: '230px', height: '230px' }}
 								/>
 								<div className="grid justify-center h-5 ">
@@ -212,7 +225,11 @@ export const UpdateProfileForDW = () => {
 						<p className="text-gray underline italic">Mẫu</p>
 						<img
 							className="m-auto p-4"
-							src={`${certificateOfResidenceUrl}` || cer}
+							src={
+								`${certificateOfResidenceUrl}` !== 'undefined'
+									? `${certificateOfResidenceUrl}`
+									: cer
+							}
 							style={{ height: '586px' }}
 						/>
 						<div className="grid justify-center h-5 ">
@@ -234,7 +251,11 @@ export const UpdateProfileForDW = () => {
 						<p className="text-gray underline italic">Mẫu</p>
 						<img
 							className="m-auto p-4"
-							src={`${curriculumVitaeUrl}` || resume}
+							src={
+								`${curriculumVitaeUrl}` !== 'undefined'
+									? `${curriculumVitaeUrl}`
+									: resume
+							}
 							style={{ height: '586px' }}
 						/>
 						<div className="grid justify-center h-5 ">
