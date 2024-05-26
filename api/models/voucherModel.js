@@ -4,11 +4,13 @@ const Schema = mongoose.Schema;
 const voucherSchema = new Schema({
     name: {
         type: String,
+        maxLength:30,
         required: true
     },
 
     description: {
         type: String,
+        maxLength:255,
         required: true
     },
 
@@ -48,12 +50,24 @@ const voucherSchema = new Schema({
     },
     category: {
         type: String,
-        // required: true
+        enum: ['Mua sắm', 'Dịch vụ', 'Giải trí', 'Du lịch', 'Ẩm thực'],
+        required: true
     },
     image: {
         type: String,
         // required: true
-    }
+    },
+    voucherAccounts: [{
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        receivedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 
 },{
     timestamps:true

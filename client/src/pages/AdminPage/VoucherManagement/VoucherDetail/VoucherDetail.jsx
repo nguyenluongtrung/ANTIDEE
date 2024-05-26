@@ -13,7 +13,29 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 		vouchers[vouchers.findIndex((voucher) => String(voucher._id) == String(chosenVoucherId))]
 	);
 
-	const dispatch = useDispatch();
+	function getStatusColor(status) {
+        let backgroundColor = '';
+        if (status === 'Đang hoạt động') {
+            backgroundColor = 'text-green font-semibold';
+        } else if (status === 'Đã hết hạn') {
+            backgroundColor = 'text-red font-semibold';
+        }
+        return backgroundColor;
+    }
+
+	function TableRow({ status }) {
+		const backgroundColor = getStatusColor(status);
+
+		return (
+			<div className={`p-1 rounded-full ${backgroundColor} flex items-center justify-center`}>
+				<div>{status}</div>
+			</div>
+		);
+	}
+
+	const isVoucherActive = new Date(chosenVoucher?.endDate)?.getTime() >= new Date().getTime();
+	const voucherStatus = isVoucherActive ? 'Đang hoạt động' : 'Đã hết hạn';
+
 
 	if (voucherLoading) {
 		return <Spinner />;
@@ -25,7 +47,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => {setIsOpenDetailVoucher(false) ; handleGetAllVouchers()}}
+					onClick={() => { setIsOpenDetailVoucher(false); handleGetAllVouchers() }}
 				/>
 				<p className="grid text-green font-bold text-xl justify-center">
 					XEM CHI TIẾT VOUCHER
@@ -49,10 +71,10 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
-                                <img className="mx-auto"
-															src={chosenVoucher?.image}
-															style={{ width: '210px', height: '210px' }}
-														/>
+									<img className="mx-auto"
+										src={chosenVoucher?.image}
+										style={{ width: '210px', height: '210px' }}
+									/>
 								</p>
 							</td>
 						</tr>
@@ -64,6 +86,17 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
 									{chosenVoucher?.description}
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{' '}
+								<span className='font-bold'>Thể loại</span>
+							</td>
+							<td className="pl-6 py-1 w-80">
+								<p className="text-center" style={{ width: '100%' }}>
+									{chosenVoucher?.category}
 								</p>
 							</td>
 						</tr>
@@ -83,7 +116,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
-								{formatDate(chosenVoucher?.endDate)}
+									{formatDate(chosenVoucher?.endDate)}
 								</p>
 							</td>
 						</tr>
@@ -118,15 +151,13 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<span className='font-bold'>Trạng thái</span>
-							</td>
-							<td className="pl-6 py-1 w-80">
-								<p className="text-center" style={{ width: '100%' }}>
-								{new Date(chosenVoucher?.endDate)?.getTime() >= new Date().getTime()?'Đang hoạt động':'Đã hết hạn'}
-								</p>
-							</td>
-						</tr>
+                            <td><span className="font-bold">Trạng thái</span></td>
+                            <td className="pl-6 py-1 w-80">
+                                <p className="text-center" style={{ width: '100%' }}>
+                                    <TableRow status={voucherStatus} />
+                                </p>
+                            </td>
+                        </tr>
 						<tr>
 							<td>
 								<span className='font-bold'>Mã giảm giá</span>

@@ -39,11 +39,26 @@ const deleteVoucher = async (token, id) => {
 	const response = await axios.delete(API_URL + `${id}`, config);
 	return response.data.data.id;
 };
+
+const redeemVoucher = async (token, userId, voucherId)=>{
+	const config = {
+		headers:{
+			Authorization:`Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.post(API_URL+'redeemVoucher', {userId, voucherId}, config);
+	console.log(response.data)
+	return response.data.data.voucher;
+}
+
+
 const voucherService = {
 	getAllVouchers,
 	updateVoucher,
 	createVoucher,
 	deleteVoucher,
+	redeemVoucher
 };
 
 export default voucherService;
