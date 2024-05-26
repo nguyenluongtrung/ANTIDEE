@@ -39,6 +39,15 @@ export const getCurrentTime = () => {
 	return `${formattedHours}:${formattedMinutes} ${period}`;
 };
 
+export const getOneHourLaterTimeString = () => {
+	const now = new Date();
+	const oneHourLater = new Date(now.getTime() + 3600000); // Add 1 hour in milliseconds
+	const hours = String(oneHourLater.getHours()).padStart(2, '0');
+	const minutes = String(oneHourLater.getMinutes()).padStart(2, '0');
+	const seconds = String(oneHourLater.getSeconds()).padStart(2, '0');
+	return `${hours}:${minutes}:${seconds}`;
+};
+
 export const formatTimerCountDown = (time) => {
 	let minutes = Math.floor(time / 60);
 	let seconds = Math.floor(time - minutes * 60);

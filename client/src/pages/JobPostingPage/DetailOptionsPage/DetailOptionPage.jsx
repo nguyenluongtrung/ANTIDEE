@@ -1,7 +1,10 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { StepBar } from '../components/StepBar/StepBar';
 import { useForm } from 'react-hook-form';
-import { formatDateInput } from '../../../utils/format';
+import {
+	formatDateInput,
+	getOneHourLaterTimeString,
+} from '../../../utils/format';
 import { Switch } from '@headlessui/react';
 import { Spinner } from '../../../components';
 import { getAllServices } from '../../../features/services/serviceSlice';
@@ -173,11 +176,18 @@ export const DetailOptionPage = () => {
 
 	const handleTimeChange = (e) => {
 		const { value } = e.target;
-		const min = '06:00:00';
+		const min = getOneHourLaterTimeString();
 		const max = '21:00:00';
 
-		if (value < min || value > max) {
-			toast.error('Vui lòng chọn giờ làm việc từ 6h đến 21h', errorStyle);
+		if (value < '06:00:00') {
+			toast.error('Vui lòng chọn giờ làm việc sau 6h', errorStyle);
+		} else if (value < min) {
+			toast.error(
+				'Vui lòng chọn giờ làm việc sau giờ hiện tại 1 tiếng',
+				errorStyle
+			);
+		} else if (value > max) {
+			toast.error('Vui lòng chọn giờ làm việc trước 21h', errorStyle);
 		} else {
 			setStartingHour(value);
 		}
