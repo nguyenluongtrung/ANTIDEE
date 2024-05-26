@@ -37,6 +37,7 @@ export const DetailOptionPage = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		getValues,
 	} = useForm();
 
 	useEffect(() => {
@@ -178,10 +179,16 @@ export const DetailOptionPage = () => {
 		const { value } = e.target;
 		const min = getOneHourLaterTimeString();
 		const max = '21:00:00';
+		const startingDate = new Date(getValues('startingDate'));
+		const currentDate = new Date();
 
 		if (value < '06:00:00') {
 			toast.error('Vui lòng chọn giờ làm việc sau 6h', errorStyle);
-		} else if (value < min) {
+		} else if (
+			startingDate.toISOString().slice(0, 10) ===
+				currentDate.toISOString().slice(0, 10) &&
+			value < min
+		) {
 			toast.error(
 				'Vui lòng chọn giờ làm việc sau giờ hiện tại 1 tiếng',
 				errorStyle
@@ -219,6 +226,10 @@ export const DetailOptionPage = () => {
 
 	const onSubmit = (data) => {
 		console.log(inputOptions);
+		if (!startingHour.trim()) {
+			toast.error('Vui lòng chọn "Giờ làm việc"', errorStyle);
+			return;
+		}
 		navigate(`/job-posting/time-contact/${serviceId}`, {
 			state: {
 				address: location.state.address,
@@ -408,7 +419,6 @@ export const DetailOptionPage = () => {
 									<td className="pl-32">
 										<input
 											type="time"
-											{...register('startingHour')}
 											onChange={handleTimeChange}
 											step="60"
 											className="focus:outline-none hover:cursor-pointer"
