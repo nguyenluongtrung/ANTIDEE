@@ -31,18 +31,20 @@ export const JobPostingHistory = () => {
 		let newJobHistory;
 		if (filterOption == 'hasNotDomesticHelperYet') {
 			newJobHistory = output.payload.filter(
-				(job) => job.domesticHelperId == null
+				(job) => job.domesticHelperId == null && String(job.customerId) == String(myAccountId)
 			);
 		} else if (filterOption == 'hasAlreadyDomesticHelper') {
 			newJobHistory = output.payload.filter(
 				(job) =>
 					job.domesticHelperId != null &&
+					String(job.customerId) == String(myAccountId) &&
 					job?.hasCompleted?.customerConfirm == false &&
-					job?.hasCompleted?.domesticHelperConfirm == false
+					job?.hasCompleted?.domesticHelperConfirm == false 
 			);
 		} else if (filterOption == 'completed') {
 			newJobHistory = output.payload.filter(
 				(job) =>
+					String(job.customerId) == String(myAccountId) &&
 					job?.hasCompleted?.customerConfirm == true &&
 					job?.hasCompleted?.domesticHelperConfirm == true
 			);
