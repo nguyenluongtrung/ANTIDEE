@@ -3,10 +3,9 @@ import { FiSearch } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { SearchVoucher } from './SearchVoucher/SearchVoucher';
 import { getAllVouchers } from '../../features/vouchers/voucherSlice';
-import { Spinner } from '../../components/Spinner/Spinner';
 
 export const VoucherList = () => {
-  const { vouchers, isLoading: voucherLoad } = useSelector((state) => state.vouchers);
+  const { vouchers } = useSelector((state) => state.vouchers);
   const [searchName, setSearchName] = useState('');
   const [brandName, setBrandName] = useState('Antidee');
   const [selectedCategory, setSelectedCategory] = useState('Tất cả');
@@ -31,6 +30,11 @@ export const VoucherList = () => {
     return matchesSearchName && matchesCategory;
   }) || [];
 
+  const exclusiveVouchers = filteredVouchers.filter(voucher => voucher.brand.toLowerCase() === brandName.toLowerCase());
+  const topVouchers = filteredVouchers.filter(voucher => voucher.brand.toLowerCase() !== brandName.toLowerCase());
+
+  const noVouchersFound = exclusiveVouchers.length === 0 && topVouchers.length === 0;
+
   return (
     <div className="font-sans p-20">
       <header className="bg-gray-100 p-5">
@@ -45,7 +49,7 @@ export const VoucherList = () => {
             </p>
           </div>
         </div>
-      
+
         <div className="flex items-center bg-[#EFEFEF] p-3 rounded-xl w-full max-w-md">
           <FiSearch className="text-gray-500 ml-3" />
           <input
@@ -71,20 +75,38 @@ export const VoucherList = () => {
           ))}
         </div>
       </header>
-      
-      <section className="p-5">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-bold">Ưu đãi độc quyền</h2>
-         
-        </div>
-        
-        <SearchVoucher vouchers={filteredVouchers.filter(voucher => voucher.brand.toLowerCase() === brandName.toLowerCase())} searchName={searchName} brandName={brandName} />
 
-        <div className="flex justify-between items-center mt-6">
-          <h2 className="text-lg font-bold">Ưu đãi hàng đầu</h2>
-      
-        </div>
-        <SearchVoucher vouchers={filteredVouchers.filter(voucher => voucher.brand.toLowerCase() !== brandName.toLowerCase())} searchName={searchName} />
+      <section className="p-5">
+        {noVouchersFound ? (
+          <p className="p-10 text-center text-xl text-gray">Voucher bạn tìm kiếm không tồn tại!!</p>
+        ) : (
+          <>
+            {exclusiveVouchers.length > 0 && (
+              <>
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg font-bold">Ưu đãi độc quyền</h2>
+                </div>
+                <SearchVoucher
+                  vouchers={exclusiveVouchers}
+                  searchName={searchName}
+                  brandName={brandName}
+                />
+              </>
+            )}
+
+            {topVouchers.length > 0 && (
+              <>
+                <div className="flex justify-between items-center mt-6">
+                  <h2 className="text-lg font-bold">Ưu đãi hàng đầu</h2>
+                </div>
+                <SearchVoucher
+                  vouchers={topVouchers}
+                  searchName={searchName}
+                />
+              </>
+            )}
+          </>
+        )}
       </section>
     </div>
   );

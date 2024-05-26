@@ -4,7 +4,8 @@ import { Spinner } from '../../../components/Spinner/Spinner';
 import { getAllVouchers } from '../../../features/vouchers/voucherSlice';
 import { VoucherDetail } from '../VoucherDetail/VoucherDetail';
 import { SlArrowRight, SlArrowLeft } from 'react-icons/sl';
-import React, { useEffect, useState } from 'react';
+
+import  { useEffect, useState } from 'react';
 
 export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }) => {
   const dispatch = useDispatch();
@@ -73,8 +74,9 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
             key={voucher?._id || index}
             className="transition duration-300 ease-in-out transform hover:scale-90 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer m-2 w-full"
           >
-            <img src='/image/highland.png' alt="Offer" className="w-full h-[150px] object-cover rounded-t-lg" />
+            <img src={voucher?.image|| 'https://scontent.fsgn2-4.fna.fbcdn.net/v/t1.15752-9/441383852_1176452586830228_6532755626084556078_n.png?_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEWDG5ykBC2m4DKPH9prDgb5rEFbXOYYPPmsQVtc5hg87OKXE-ibmrgn2z-w977MsaCQjRRdGoBb34mwXN-9dNa&_nc_ohc=5VZSoYoKs7AQ7kNvgG5dT37&_nc_ht=scontent.fsgn2-4.fna&oh=03_Q7cD1QEjM_tZ2zZfVcF2YKAg3glzYDK7UbfyIOBhvzETS6Ccng&oe=667984CA'} alt="Offer" className="w-full h-[180px] object-cover rounded-t-lg" />
             <div className="p-4">
+            
               <p className="text-2xl font-semibold">{voucher.name}</p>
               <p className="text-lg text-[#C0BFBF]">{voucher.brand}</p>
               <div className="flex items-center mt-2">
