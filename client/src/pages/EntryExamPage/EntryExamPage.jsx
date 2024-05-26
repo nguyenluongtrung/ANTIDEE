@@ -143,7 +143,7 @@ export const EntryExamPage = () => {
 				) : (
 					<button
 						className="inline text-center mt-0.5 pb-1 rounded-md bg-white text-primary submit-test-btn hover:bg-primary hover:text-white"
-						onClick={() => navigate('/become-helper')}
+						onClick={() => navigate('/qualifications')}
 					>
 						<span>Quay về</span>
 					</button>
@@ -186,9 +186,9 @@ export const EntryExamPage = () => {
 					);
 				})}
 			</div>
-			<button className="block mx-auto bg-white text-center pb-1 rounded-md next-test-btn hover:bg-green text-green hover:text-white">
+			{/* <button className="block mx-auto bg-white text-center pb-1 rounded-md next-test-btn hover:bg-green text-green hover:text-white">
 				<span className="">Tiếp theo</span>
-			</button>
+			</button> */}
 		</div>
 	);
 };
