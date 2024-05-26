@@ -9,9 +9,11 @@ import { getAccountInformation } from '../../../features/auth/authSlice';
 import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
+import { getAllServices } from '../../../features/services/serviceSlice';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
+	const [services, setServices] = useState([]); 
 	const [isChecked, setIsChecked] = useState(false);
 	const [customerId, setCustomerId] = useState();
 	const location = useLocation();
@@ -30,8 +32,15 @@ export const ConfirmPage = () => {
 		setCustomerId(output.payload._id);
 	}
 
+	async function initiateService() {
+		let output = await dispatch(getAllServices());
+
+		setServices(output.payload);
+	}
+
 	useEffect(() => {
 		initiateAccountInformation();
+		initiateService();
 	}, []);
 
 	const handleSubmitJobPost = async () => {
@@ -77,7 +86,7 @@ export const ConfirmPage = () => {
 				className="confirm-form mx-auto py-7 px-16 rounded-xl border-2 mt-5 border-light_gray"
 				style={{ width: '70%' }}
 			>
-				<p className="font-extrabold text-brown mb-3">DỌN DẸP NHÀ CỬA</p>
+				<p className="font-extrabold text-brown mb-3">{services?.find((service) => String(service?._id) === String(serviceId))?.name?.toUpperCase()}</p>
 				<p className="custom-border-bottom pb-3 mb-3 font-semibold">
 					CHI TIẾT CÔNG VIỆC
 				</p>
