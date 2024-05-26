@@ -34,6 +34,26 @@ export const CreateQuestion = ({
 	}, []);
 
 	const onSubmit = async (data) => {
+		if (!data.content.trim()) {
+			toast.error('Vui lòng nhập "Nội dung"', errorStyle);
+			return;
+		}
+		if (choices.length < 2) {
+			toast.error('Vui lòng nhập hơn 2 lựa chọn', errorStyle);
+			return;
+		}
+		if (!data.correctAnswer.trim()) {
+			toast.error('Vui lòng nhập "Câu trả lời đúng"', errorStyle);
+			return;
+		}
+		if (!choices?.includes(data.correctAnswer.trim())) {
+			toast.error('Câu trả lời đúng phải nằm trong các lựa chọn', errorStyle);
+			return;
+		}
+		if (!data.explanation.trim()) {
+			toast.error('Vui lòng nhập "Giải thích"', errorStyle);
+			return;
+		}
 		const questionData = {
 			...data,
 			choices,
@@ -71,7 +91,7 @@ export const CreateQuestion = ({
 					<tbody>
 						<tr>
 							<td className="w-28">
-								<span className='font-bold'>Dịch vụ</span>
+								<span className="font-bold">Dịch vụ</span>
 							</td>
 							<td>
 								<select
@@ -87,7 +107,7 @@ export const CreateQuestion = ({
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Nội dung</span>
+								<span className="font-bold">Nội dung</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -99,7 +119,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Các lựa chọn</span>
+								<span className="font-bold">Các lựa chọn</span>
 							</td>
 							<td className="pl-6 py-1">
 								{choices.map((choice, index) => (
@@ -108,6 +128,13 @@ export const CreateQuestion = ({
 											type="text"
 											className="create-question-input text-center text-sm w-80 mr-2"
 											value={choice}
+											required
+											onInvalid={(e) => {
+												e.target.setCustomValidity('Vui lòng nhập lựa chọn');
+											}}
+											onInput={(e) => {
+												e.target.setCustomValidity('');
+											}}
 											onChange={(e) => {
 												const updatedChoices = [...choices];
 												updatedChoices[index] = e.target.value;
@@ -129,7 +156,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Câu trả lời đúng</span>
+								<span className="font-bold">Câu trả lời đúng</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -141,7 +168,7 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Giải thích</span>
+								<span className="font-bold">Giải thích</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -153,13 +180,14 @@ export const CreateQuestion = ({
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Độ khó</span>
+								<span className="font-bold">Độ khó</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
 									type="radio"
 									{...register('difficultyLevel')}
 									defaultValue={'Dễ'}
+									defaultChecked
 									value={'Dễ'}
 									className="w-5"
 								/>{' '}

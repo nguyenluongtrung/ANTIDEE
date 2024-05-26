@@ -41,6 +41,26 @@ export const UpdateQuestion = ({
 	}, []);
 
 	const onSubmit = async (data) => {
+		if (!data.content.trim()) {
+			toast.error('Vui lòng nhập "Nội dung"', errorStyle);
+			return;
+		}
+		if (chosenQuestion?.choices.length < 2) {
+			toast.error('Vui lòng nhập hơn 2 lựa chọn', errorStyle);
+			return;
+		}
+		if (!data.correctAnswer.trim()) {
+			toast.error('Vui lòng nhập "Câu trả lời đúng"', errorStyle);
+			return;
+		}
+		if (!chosenQuestion?.choices?.includes(data.correctAnswer.trim())) {
+			toast.error('Câu trả lời đúng phải nằm trong các lựa chọn', errorStyle);
+			return;
+		}
+		if (!data.explanation.trim()) {
+			toast.error('Vui lòng nhập "Giải thích"', errorStyle);
+			return;
+		}
 		const questionData = {
 			...data,
 			choices: chosenQuestion?.choices,
@@ -119,6 +139,13 @@ export const UpdateQuestion = ({
 											type="text"
 											className="create-question-input text-center text-sm w-80 mr-2"
 											value={choice}
+											required
+											onInvalid={(e) => {
+												e.target.setCustomValidity('Vui lòng nhập lựa chọn');
+											}}
+											onInput={(e) => {
+												e.target.setCustomValidity('');
+											}}
 											onChange={(e) => {
 												const updatedChoices = chosenQuestion.choices.map((c, i) =>
 												  i === index ? e.target.value : c
