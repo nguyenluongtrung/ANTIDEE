@@ -34,7 +34,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
 
     const onSubmit = async (data) => {
         const trimmedData = {
-            ...data, 
+            ...data,
         };
         const voucherData = voucherUrl !== '' ? { ...trimmedData, image: voucherUrl } : { ...trimmedData, image: 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg' };
         const result = await dispatch(createVoucher(voucherData));
@@ -60,7 +60,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
     }, [file]);
 
     const handleFileUpload = (file) => {
-        if (file.size > 2 * 1024 * 1024) {  
+        if (file.size > 2 * 1024 * 1024) {
             setFileUploadError('Dung lượng ảnh phải nhỏ hơn 2MB');
             setFilePerc(0);
             return;
@@ -118,8 +118,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Tên voucher</span>
                             </td>
                             <td className='pl-12'>
-                                <input {...register('name', rules.name)} 
-                                className={`text-center w-72 create-voucher-input ${errors.name ? 'error-border' : ''}`}
+                                <input {...register('name', rules.name)}
+                                    className={`text-center w-72 create-voucher-input ${errors.name ? 'error-border' : ''}`}
                                     placeholder='Nhập tên voucher'></input>
                             </td>
                         </tr>
@@ -128,14 +128,14 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Ảnh ưu đãi</span>
                             </td>
                             <td className="pl-[30px] py-2 grid justify-center">
-                                <img 
+                                <img
                                     src={voucherUrl || 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
                                     className="block mx-auto mb-1 w-[210px] h-[210px]"
                                 />
                                 <span
                                     className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
                                     onClick={(e) => {
-                                        e.preventDefault(); 
+                                        e.preventDefault();
                                         fileRef.current.click();
                                     }}
                                 >
@@ -177,10 +177,27 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                         </tr>
                         <tr>
                             <td className='pt-3'>
+                                <span className="font-bold">Thể loại</span>
+                            </td>
+                            <td className='pt-3 pl-12'>
+                                <select {...register('category', rules.category)}
+                                    className={`text-center create-voucher-input w-72 ${errors.category ? 'error-border' : ''}`}
+                                >
+                                    <option value="">Chọn thể loại</option>
+                                    <option value="Mua sắm">Mua sắm</option>
+                                    <option value="Dịch vụ">Dịch vụ</option>
+                                    <option value="Giải trí">Giải trí</option>
+                                    <option value="Du lịch">Du lịch</option>
+                                    <option value="Ẩm thực">Ẩm thực</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className='pt-3'>
                                 <span className="font-bold">Ngày bắt đầu</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                                <input {...register('startDate',rules.startDate)}
+                                <input {...register('startDate', rules.startDate)}
                                     className={`text-center create-voucher-input w-72 ${(errors.startDate) ? 'error-input' : ''}`}
                                     type='date'
                                     min={currentDate}
@@ -192,7 +209,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Ngày kết thúc</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                                <input {...register('endDate',rules.endDate)}
+                                <input {...register('endDate', rules.endDate)}
                                     className={`text-center create-voucher-input w-72 ${(errors.endDate) ? 'error-input' : ''}`}
                                     type='date'
                                     min={currentDate}
@@ -247,7 +264,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                                 <span className="font-bold">Thương hiệu</span>
                             </td>
                             <td className='pt-3 pl-12'>
-                                <input  {...register('brand',rules.brand)}
+                                <input  {...register('brand', rules.brand)}
                                     className={`text-center create-voucher-input w-72 ${errors.brand ? 'error-border' : ''}`}
                                     placeholder='Thương hiệu'></input>
                             </td>

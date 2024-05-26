@@ -105,14 +105,16 @@ const deleteVoucher = async (req, res) => {
 
 const redeemVoucher = async (req, res) => {
   const { userId, voucherId } = req.body
+  const user = await Account.findById(userId);
+  const voucher = await Voucher.findById(voucherId);
 
   try {
-    const user = await Account.findById(userId);
+
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    const voucher = await Voucher.findById(voucherId);
+
     if (!voucher) {
       return res.status(404).json({ message: "Voucher not found." });
     }

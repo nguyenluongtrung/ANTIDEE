@@ -32,19 +32,20 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
     const matchesSearch = searchName === '' || val.name.toLowerCase().includes(searchName.toLowerCase());
     const matchesBrand = brandName === '' || val.brand.toLowerCase() === brandName.toLowerCase();
     const isNotExpired = val.endDate && new Date(val.endDate) >= new Date(); // Chỉ giữ lại các voucher chưa hết hạn
+    const hasQuantity = val.quantity >0;
 
-    return matchesSearch && matchesBrand && isNotExpired;
+    return matchesSearch && matchesBrand && isNotExpired && hasQuantity;
   });
 
   const sortedVouchers = filteredVouchers.sort((a, b) => {
     const aExpiry = new Date(a.endDate);
     const bExpiry = new Date(b.endDate);
-    return aExpiry - bExpiry; 
+    return aExpiry - bExpiry;
   });
 
   const paginatedVouchers = sortedVouchers.length > vouchersPerPage
-  ? Array.from({ length: vouchersPerPage }, (_, i) => sortedVouchers[(currentPage + i) % sortedVouchers.length])
-  : sortedVouchers;
+    ? Array.from({ length: vouchersPerPage }, (_, i) => sortedVouchers[(currentPage + i) % sortedVouchers.length])
+    : sortedVouchers;
 
   if (authLoading) {
     return <Spinner />;
@@ -92,6 +93,7 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
             </button>
           </div>
         ))}
+
       </div>
       {isOpenDetailVoucher && (
         <VoucherDetail

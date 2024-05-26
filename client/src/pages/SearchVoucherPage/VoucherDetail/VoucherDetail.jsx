@@ -5,13 +5,13 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../../../utils/format';
-import { getAllVouchers, redeemVoucher } from '../../../features/vouchers/voucherSlice';
+import { getAllVouchers, redeemVoucher, reset } from '../../../features/vouchers/voucherSlice';
 
 export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleGetAllVouchers }) => {
-    const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
+    const { vouchers, isLoading: voucherLoading, isSuccess } = useSelector((state) => state.vouchers);
     const { account, isLoading: isAuthLoading } = useSelector((state) => state.auth);
     const [chosenVoucher, setChosenVoucher] = useState();
-
+    const dispatch = useDispatch();
 
 
     async function initiateVouchers() {
@@ -26,9 +26,14 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
         initiateVouchers();
     }, []);
 
+    useEffect(() => {
+        if (isSuccess) {
+            initiateVouchers(); // Re-fetch vouchers after a successful redemption
+            dispatch(reset()); // Reset the slice state
+        }
+    }, [isSuccess, dispatch]);
 
-
-    const dispatch = useDispatch();
+  
     const handleRedeemVoucher = async (userId, voucherId) => {
         console.log(userId, voucherId);
         const result = await dispatch(redeemVoucher({ userId, voucherId }));
@@ -47,28 +52,14 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
         return <Spinner />;
     }
 
-    function getStatusColor(status) {
-        let backgroundColor = '';
-        if (status === 'Đang hoạt động') {
-            backgroundColor = 'text-green font-semibold';
-        } else if (status === 'Đã hết hạn') {
-            backgroundColor = 'text-red font-semibold';
-        }
-        return backgroundColor;
-    }
+    
 
-    function TableRow({ status }) {
-        const backgroundColor = getStatusColor(status);
 
-        return (
-            <div className={`p-1 rounded-full ${backgroundColor} flex items-center justify-center`}>
-                <div>{status}</div>
-            </div>
-        );
-    }
 
     const isVoucherActive = new Date(chosenVoucher?.endDate)?.getTime() >= new Date().getTime();
-    const voucherStatus = isVoucherActive ? 'Đang hoạt động' : 'Đã hết hạn';
+   
+    const hashRedeemed = chosenVoucher?.voucherAccounts?.some(voucherAccount => String(voucherAccount.userId) === String(account?._id));
+
 
     return (
         <div className="popup active fixed inset-0 flex items-center justify-center z-50">
@@ -97,6 +88,12 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
                             </td>
                         </tr>
                         <tr>
+                            <td><span className="font-bold">Mô tả</span></td>
+                            <td className="pl-6 py-1 w-80">
+                                <p className="text-center" style={{ width: '100%' }}>{chosenVoucher?.category}</p>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><span className="font-bold">Ngày bắt đầu</span></td>
                             <td className="pl-6 py-1 w-80">
                                 <p className="text-center" style={{ width: '100%' }}>{formatDate(chosenVoucher?.startDate)}</p>
@@ -120,18 +117,11 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
                                 <p className="text-center" style={{ width: '100%' }}>{chosenVoucher?.category}</p>
                             </td>
                         </tr>
+                     
                         <tr>
-                            <td><span className="font-bold">Trạng thái</span></td>
+                            <td><span className="font-bold">Số lượng</span></td>
                             <td className="pl-6 py-1 w-80">
-                                <p className="text-center" style={{ width: '100%' }}>
-                                    <TableRow status={voucherStatus} />
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span className="font-bold">Mã giảm giá</span></td>
-                            <td className="pl-6 py-1 w-80">
-                                <p className="text-center" style={{ width: '100%' }}>{chosenVoucher?.code}</p>
+                                <p className="text-center" style={{ width: '100%' }}>{chosenVoucher?.quantity}</p>
                             </td>
                         </tr>
                         <tr>
@@ -144,14 +134,19 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
                 </table>
                 <div className="mt-2">
                     {isVoucherActive ? (
-                        <button className="bg-primary p-2 rounded-full"
-                            onClick={() => handleRedeemVoucher(account?._id, chosenVoucher?._id)}
-                        >
-                            <p>{account?._id}</p>
-                            <p>{chosenVoucher._id}</p>
-                            {chosenVoucher?.price > 0 ? 'Đổi ngay' : 'Nhận voucher'}
-                        </button>
-                    ) : (
+                        hashRedeemed ? (
+                            <div className="bg-[red] p-2 rounded-full text-[black] text-center cursor-not-allowed">
+                                Bạn đã nhận voucher này
+                            </div>
+                        ) : (
+
+                            <button className="bg-primary p-2 rounded-full"
+                                onClick={() => handleRedeemVoucher(account?._id, chosenVoucher?._id)}
+                            >
+                                {chosenVoucher?.price > 0 ? 'Đổi ngay' : 'Nhận voucher'}
+                            </button>
+                        )
+                        ) : (
                         <div className="bg-[red] p-2 rounded-full text-[black] text-center cursor-not-allowed">
                             Không khả dụng
                         </div>
