@@ -184,6 +184,7 @@ export const DetailOptionPage = () => {
 
 		if (value < '06:00:00') {
 			toast.error('Vui lòng chọn giờ làm việc sau 6h', errorStyle);
+			setStartingHour('');
 		} else if (
 			startingDate.toISOString().slice(0, 10) ===
 				currentDate.toISOString().slice(0, 10) &&
@@ -193,8 +194,10 @@ export const DetailOptionPage = () => {
 				'Vui lòng chọn giờ làm việc sau giờ hiện tại 1 tiếng',
 				errorStyle
 			);
+			setStartingHour('');
 		} else if (value > max) {
 			toast.error('Vui lòng chọn giờ làm việc trước 21h', errorStyle);
+			setStartingHour('');
 		} else {
 			setStartingHour(value);
 		}
