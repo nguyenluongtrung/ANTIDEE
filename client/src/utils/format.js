@@ -92,3 +92,10 @@ export const formatWorkingTime = (time) => {
 	}
 	return time + ' AM';
 };
+
+export const getDetailMinute = (seconds) => {
+	const minutes = Math.floor(seconds / 60);
+	const remainingSeconds = seconds % 60;
+
+	return `${minutes} phút ${remainingSeconds} giây`;
+};

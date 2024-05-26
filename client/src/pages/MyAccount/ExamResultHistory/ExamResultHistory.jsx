@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAccountInformation } from '../../../features/auth/authSlice';
 import { Sidebar } from '../components/Sidebar/Sidebar';
-import { formatDate } from '../../../utils/format';
+import { formatDate, getDetailMinute } from '../../../utils/format';
 import { getAllExams } from '../../../features/exams/examSlice';
 import { VscPass } from 'react-icons/vsc';
 import { VscError } from 'react-icons/vsc';
@@ -88,7 +88,7 @@ export const ExamResultHistory = () => {
 										</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{result?.duration}</span>
+										<span>{getDetailMinute(result?.duration)}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>{formatDate(result?.takingDate)}</span>

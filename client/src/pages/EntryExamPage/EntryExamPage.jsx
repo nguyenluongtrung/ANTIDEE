@@ -15,7 +15,8 @@ export const EntryExamPage = () => {
 	const [answers, setAnswers] = useState([]);
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [isOpenScoreNotification, setIsOpenScoreNotification] = useState(false);
-	const [finishTime, setFinishTime] = useState();
+	const [finishTime, setFinishTime] = useState(0);
+	const [startTime, setStartTime] = useState(null);
 	const questionRefs = useRef([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -28,6 +29,7 @@ export const EntryExamPage = () => {
 				(exam) => exam._id === location.state.id
 			);
 			setChosenExam(chosenExam);
+			setStartTime(new Date().getTime());
 		};
 		asyncFn();
 	}, []);
@@ -76,7 +78,7 @@ export const EntryExamPage = () => {
 		if(!isOpenScoreNotification && isSubmit){
 			const examResult = {
 				totalScore,
-				duration: 18,
+				duration: Math.round((new Date().getTime() - startTime) / 1000),
 				isPassed: totalScore >= chosenExam?.passGrade,
 				takingDate: new Date()
 			}
@@ -109,7 +111,7 @@ export const EntryExamPage = () => {
 				<p className="mb-1">
 					Thời gian còn lại:{' '}
 					<span className="text-primary text-sm font-bold">
-						<TimerCountDown seconds={parseInt(chosenExam?.duration) * 60} handleSubmitExam={handleSubmitExam} setFinishTime={setFinishTime} isSubmit={isSubmit}/>
+						<TimerCountDown seconds={parseInt(chosenExam?.duration) * 60} handleSubmitExam={handleSubmitExam} isSubmit={isSubmit}/>
 					</span>
 				</p>
 				<p className="mb-1">Câu hỏi:</p>
