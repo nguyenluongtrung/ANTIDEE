@@ -44,6 +44,7 @@ export const MyAccount = () => {
 
 	useEffect(() => {
 		if (file) {
+			setFileUploadError(false);
 			handleFileUpload(file);
 		}
 	}, [file]);
@@ -88,6 +89,7 @@ export const MyAccount = () => {
 
 	const onSubmit = async (data) => {
 		setIsUpdateAccountInformation(false);
+		setFilePerc(0);
 		const account =
 			avatarUrl !== '' ? { ...data, avatar: avatarUrl } : { ...data };
 		const result = await dispatch(updateAccountInformation(account));
@@ -120,7 +122,7 @@ export const MyAccount = () => {
 					Quản lí hồ sơ tài khoản của bạn
 				</p>
 				<div className="flex">
-					<div className="pl-5 customized-width">
+					<div className="pl-5 customized-width w-2/3">
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<table className="">
 								<thead></thead>
@@ -234,7 +236,7 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="date"
-													className={`update-input ml-10 w-40 ${
+													className={`update-input ml-5 text-center w-40 ${
 														errors?.dob && 'text-red'
 													}`}
 													{...register('dob', rules.dob)}
@@ -281,45 +283,40 @@ export const MyAccount = () => {
 									</tr>
 								</tbody>
 							</table>
-							{isUpdateAccountInformation ? (
+							{isUpdateAccountInformation && (
 								<div className="flex">
 									<button
 										type="submit"
-										className="cancel-btn block bg-gray text-white text-center rounded-md font-medium mb-1 mt-5 ml-24"
-										onClick={() => setIsUpdateAccountInformation(false)}
+										className={`cancel-btn block bg-gray text-white text-center rounded-md font-medium mb-1 mt-5 ml-24 ${fileUploadError ? 'bg-primary' : 'bg-gray'}`}
+										onClick={() => {setIsUpdateAccountInformation(false); setFileUploadError(false); setFilePerc(0); initiateAccountInformation()}}
 									>
 										<p>Hủy</p>
 									</button>
 									<button
 										type="submit"
-										className="updated-btn block bg-primary text-white text-center rounded-md font-medium mb-1 mt-5 ml-3"
+										disabled={fileUploadError}
+										className={`updated-btn block  text-white text-center rounded-md font-medium mb-1 mt-5 ml-3 ${fileUploadError ? 'bg-gray' : 'bg-primary'}`}
 									>
 										<p>Cập nhật thông tin</p>
 									</button>
 								</div>
-							) : (
-								<button
-									type="submit"
-									className="update-btn block bg-primary text-white text-center rounded-md font-medium mb-1 mt-5 ml-32"
-								>
-									<p>Cập nhật thông tin</p>
-								</button>
 							)}
 						</form>
 					</div>
-					<div className="left-vertical mb-4 px-14 h-60 pt-10 mt-2">
+					<div className="left-vertical mb-4 px-14 h-60 pt-10 mt-2 w-1/3">
 						<img
 							src={`${avatarUrl}` || 'src/assets/img/Ellipse 16.png'}
 							className="block w-16 mr-2 mb-5 ml-10 rounded-full"
 						/>
 						<button
-							className="rounded-md rounded-customized-gray p-1 hover:cursor-pointer"
+							className={`rounded-md rounded-customized-gray p-1 ${!isUpdateAccountInformation ? 'bg-light_gray border-0 text-white' : 'hover:cursor-pointer'}`}
 							onClick={() => fileRef.current.click()}
+							disabled={!isUpdateAccountInformation}
 						>
 							<span>Chọn ảnh đại diện</span>
 						</button>
 						<div className="mt-2">
-							<p className="text-xs">Dung lượng file tối đa 2MB</p>
+							<p className="text-xs ml-3">Dung lượng file tối đa 2MB</p>
 						</div>
 						<input
 							type="file"
@@ -329,13 +326,13 @@ export const MyAccount = () => {
 						/>
 						<p className="text-sm self-center pl-2">
 							{fileUploadError ? (
-								<span className="text-red">
-									Tải ảnh lên thất bại (dung lượng ảnh phải nhỏ hơn 2MB)
+								<span className="text-red text-xs text-center">
+									Tải ảnh thất bại (dung lượng &nbsp; &nbsp; &nbsp;ảnh phải nhỏ hơn 2MB)
 								</span>
 							) : filePerc > 0 && filePerc < 100 ? (
-								<span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
+								<span className="text-gray text-xs ml-8">{`Đang tải lên ${filePerc}%`}</span>
 							) : filePerc === 100 ? (
-								<span className="text-green">Tải ảnh lên thành công!</span>
+								<span className="text-green text-xs ml-3">Tải ảnh lên thành công!</span>
 							) : (
 								''
 							)}
