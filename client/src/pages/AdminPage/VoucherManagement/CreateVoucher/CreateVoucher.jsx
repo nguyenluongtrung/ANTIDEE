@@ -120,7 +120,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className='pl-12'>
                                 <input {...register('name', rules.name)}
                                     className={`text-center w-72 create-voucher-input ${errors.name ? 'error-border' : ''}`}
-                                    placeholder='Nhập tên voucher'></input>
+                                    placeholder='Nhập tên voucher' maxLength={30}></input>
                             </td>
                         </tr>
                         <tr>
@@ -172,7 +172,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className='pt-3 pl-12'>
                                 <input {...register('description', rules.description)}
                                     className={`text-center w-72 create-voucher-input ${errors.description ? 'error-border' : ''}`}
-                                    placeholder='Mô tả'></input>
+                                    placeholder='Mô tả' maxLength={255}></input>
                             </td>
                         </tr>
                         <tr>

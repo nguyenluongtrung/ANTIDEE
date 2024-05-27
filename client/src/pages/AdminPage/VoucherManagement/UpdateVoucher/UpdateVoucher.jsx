@@ -174,6 +174,24 @@ export const UpdateVoucher = ({ setIsOpenUpdateVoucher, chosenVoucherId, handleG
                             </td>
                         </tr>
                         <tr>
+                            <td className='pt-3'>
+                                <span className="font-bold">Thể loại</span>
+                            </td>
+                            <td className='pt-3 pl-12'>
+                                <select {...register('category', rules.category)}
+                                defaultValue={chosenVoucher?.category}
+                                    className={`text-center create-voucher-input w-72 ${errors.category ? 'error-border' : ''}`}
+                                >
+                                    <option value="">Chọn thể loại</option>
+                                    <option value="Mua sắm">Mua sắm</option>
+                                    <option value="Dịch vụ">Dịch vụ</option>
+                                    <option value="Giải trí">Giải trí</option>
+                                    <option value="Du lịch">Du lịch</option>
+                                    <option value="Ẩm thực">Ẩm thực</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <span className="font-bold">Ngày bắt đầu</span>
                             </td>

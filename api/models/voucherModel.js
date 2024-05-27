@@ -4,13 +4,11 @@ const Schema = mongoose.Schema;
 const voucherSchema = new Schema({
     name: {
         type: String,
-        maxLength:30,
         required: true
     },
 
     description: {
         type: String,
-        maxLength:255,
         required: true
     },
 
