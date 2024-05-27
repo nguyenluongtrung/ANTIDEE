@@ -25,7 +25,6 @@ export const VoucherList = () => {
 
   const filteredVouchers = vouchers?.filter(voucher => {
     const matchesSearchName = voucher.name.toLowerCase().includes(searchName.toLowerCase());
-    const matchesBrandName = voucher.brand.toLowerCase() === brandName.toLowerCase();
     const matchesCategory = selectedCategory === 'Tất cả' || voucher.category === selectedCategory;
     return matchesSearchName && matchesCategory;
   }) || [];
@@ -33,7 +32,16 @@ export const VoucherList = () => {
   const exclusiveVouchers = filteredVouchers.filter(voucher => voucher.brand.toLowerCase() === brandName.toLowerCase());
   const topVouchers = filteredVouchers.filter(voucher => voucher.brand.toLowerCase() !== brandName.toLowerCase());
 
-  const noVouchersFound = exclusiveVouchers.length === 0 && topVouchers.length === 0;
+  const isVoucherValid = (voucher) => {
+    const isNotExpired = voucher.endDate && new Date(voucher.endDate) >= new Date();
+    const hasQuantity = voucher.quantity > 0;
+    return isNotExpired && hasQuantity;
+  };
+
+  const validExclusiveVouchers = exclusiveVouchers.filter(isVoucherValid);
+  const validTopVouchers = topVouchers.filter(isVoucherValid);
+
+  const noValidVouchersFound = validExclusiveVouchers.length === 0 && validTopVouchers.length === 0;
 
   return (
     <div className="font-sans p-20">
@@ -43,7 +51,7 @@ export const VoucherList = () => {
             <img src="/image/voucher.png" className="w-[600px] h-[430px] ml-9 mb-[100px]" />
             <p className="mt-40">
               <span className="text-[#fac562] font-bold text-5xl">Vô vàn{' '}</span>
-              <span className="text-[#FB7F0C] text-5xl font-bold">Ưu đãi</span> <br></br>
+              <span className="text-[#FB7F0C] text-5xl font-bold">Ưu đãi</span> <br />
               <span className="text-[#FB7F0C] font-bold text-5xl"> Ngập tràn</span>
               <span className="text-[#fac562] font-bold text-5xl">Niềm vui{' '}</span>
             </p>
@@ -77,30 +85,30 @@ export const VoucherList = () => {
       </header>
 
       <section className="p-5">
-        {noVouchersFound ? (
+        {noValidVouchersFound ? (
           <p className="p-10 text-center text-xl text-gray">Voucher bạn tìm kiếm không tồn tại!!</p>
         ) : (
           <>
-            {exclusiveVouchers.length > 0 && (
+            {validExclusiveVouchers.length > 0 && (
               <>
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-bold">Ưu đãi độc quyền</h2>
                 </div>
                 <SearchVoucher
-                  vouchers={exclusiveVouchers}
+                  vouchers={validExclusiveVouchers}
                   searchName={searchName}
                   brandName={brandName}
                 />
               </>
             )}
 
-            {topVouchers.length > 0 && (
+            {validTopVouchers.length > 0 && (
               <>
                 <div className="flex justify-between items-center mt-6">
                   <h2 className="text-lg font-bold">Ưu đãi hàng đầu</h2>
                 </div>
                 <SearchVoucher
-                  vouchers={topVouchers}
+                  vouchers={validTopVouchers}
                   searchName={searchName}
                 />
               </>
