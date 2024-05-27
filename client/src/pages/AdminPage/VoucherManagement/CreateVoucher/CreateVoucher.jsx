@@ -101,8 +101,8 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
             <div className="overlay"></div>
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="content rounded-md p-5"
-                style={{ width: '35vw' }}
+                className="content rounded-md p-5 w-[35vw] max-h-[80vh] overflow-y-auto  "
+                
             >
                 <AiOutlineClose
                     className="absolute text-sm hover:cursor-pointer"
@@ -130,7 +130,7 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             <td className="pl-[30px] py-2 grid justify-center">
                                 <img
                                     src={voucherUrl || 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
-                                    className="block mx-auto mb-1 w-[210px] h-[210px]"
+                                    className="block mx-auto mb-1 w-[120px] h-[120px]"
                                 />
                                 <span
                                     className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
