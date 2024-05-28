@@ -24,6 +24,7 @@ import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 import { QualificationPage } from './pages/QualificationPage';
 import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
+import { VoucherHistory } from './pages/HistoryVoucher/VoucherHistory';
 import {
 	ConfirmPage,
 	DetailOptionPage,
@@ -77,6 +78,7 @@ const AppContent = () => {
 						<Route path="/exam-result-history" element={<ExamResultHistory />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
+						<Route path ="/Voucher-history" element={<VoucherHistory/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
