@@ -20,21 +20,12 @@ input, button{
 }
 
 .popup .content{
-    position: absolute;
+    position: fixed;
     top: 50vh;
     left: 50%;
     transform: translate(-50%,-50%) scale(0);
     background: #fff;
     z-index: 2;
     box-sizing: border-box;
-}
-
-.popup.active .overlay{
-    display: block;
-}
-
-.popup.active .content{
-    transform: translate(-50%,-50%) scale(1);
-    transition: all 300ms ease-in-out;
 }
 
