@@ -131,19 +131,30 @@ const accountSchema = mongoose.Schema(
 				},
 			},
 		],
-
-		accountVouchers: [{
-			voucherId: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Voucher',
-				required: true
+		accountVouchers: [
+			{
+				voucherId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Voucher',
+					required: true,
+				},
+				receivedAt: {
+					type: Date,
+					default: Date.now,
+				},
 			},
-			receivedAt: {
-				type: Date,
-				default: Date.now
-			}
-		}]
-
+		],
+		receivedJobList: [
+			{
+				jobPostId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'JobPost',
+				},
+				receivedAt: {
+					type: Date,
+				},
+			},
+		],
 	},
 	{
 		timestamps: true,

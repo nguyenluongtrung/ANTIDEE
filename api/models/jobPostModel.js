@@ -75,6 +75,9 @@ const jobPostSchema = mongoose.Schema(
 				default: false,
 			},
 		},
+		receivedAt: {
+			type: Date,
+		},
 	},
 	{
 		timestamps: true,

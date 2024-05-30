@@ -1,12 +1,16 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	formatDate,
 	formatTime,
 	formatWorkingTime,
 } from '../../../utils/format';
+import { getAccountInformation } from '../../../features/auth/authSlice';
+import toast from 'react-hot-toast';
+import { errorStyle, successStyle } from '../../../utils/toast-customize';
+import { getAJob } from '../../../features/jobPosts/jobPostsSlice';
 
 export const JobPostDetail = ({
 	chosenJobPostId,
@@ -18,8 +22,54 @@ export const JobPostDetail = ({
 	const [chosenJobPost, setChosenJobPost] = useState(
 		jobPosts?.find((jobPost) => String(jobPost._id) === String(chosenJobPostId))
 	);
+	const [account, setAccount] = useState();
 
 	const dispatch = useDispatch();
+
+	const handleGetAJob = async (e) => {
+		e.preventDefault();
+		if(account?.address == null){
+			toast.error('Bạn cần bổ sung địa chỉ để đủ điều kiện nhận việc', errorStyle);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+			return;
+		}
+		const addressDetails = chosenJobPost?.contactInfo?.address.split(",");
+		const jobCity = addressDetails[addressDetails.length - 1].trim();
+		const myCity = account?.address.split(",")[account?.address.split(",").length - 1].trim();
+		if(!jobCity.toUpperCase().includes(myCity.toUpperCase())){
+			toast.error('Địa chỉ làm việc của bạn không phù hợp cho công việc này', errorStyle);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+			return;
+		}
+		const requiredQualification = chosenJobPost?.serviceId?.requiredQualification;
+		const myQualifications = account?.resume[0]?.qualifications;
+		if(!myQualifications.includes(requiredQualification)){
+			toast.error('Bạn không có chứng chỉ phù hợp cho công việc này', errorStyle);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+			return;
+		}
+		let result = await dispatch(getAJob({ jobPostId: chosenJobPostId, accountId: account._id, receivedAt: Date.now }));
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Nhận công việc thành công', successStyle);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+	}
+
+	async function initiateAccountInformation() {
+		let output = await dispatch(getAccountInformation());
+
+		setAccount(output.payload);
+	}
+
+	useEffect(() => {
+		initiateAccountInformation();
+	}, []);
 
 	if (isLoading) {
 		return <Spinner />;
@@ -32,7 +82,7 @@ export const JobPostDetail = ({
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={() => {
 						setIsOpenJobPostDetail(false);
-						handleGetAllQuestions();
+						handleGetAllJobPosts();
 					}}
 				/>
 				<p className="grid text-green font-bold text-xl justify-center mb-3">
@@ -122,6 +172,7 @@ export const JobPostDetail = ({
 							}`}
 							style={{ width: '70%' }}
 							disabled={!isChecked}
+							onClick={handleGetAJob}
 						>
 							<p className="text-center">Nhận việc</p>
 						</button>

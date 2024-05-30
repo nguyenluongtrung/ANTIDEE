@@ -56,7 +56,7 @@ export const JobPostListPage = () => {
 				</div>
 			</div>
 			<div className="grid grid-cols-3 gap-28">
-				{jobPosts?.map((post) => {
+				{jobPosts?.filter((jobPost) => jobPost.domesticHelperId == null)?.map((post) => {
 					return (
 						<div className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative" style={{height: '350px'}}>
 							<p className="text-brown font-bold mb-3">

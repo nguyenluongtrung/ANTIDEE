@@ -6,6 +6,7 @@ const {
 	getJobPost,
 	createJobPost,
 	getAllJobPosts,
+	getAJob,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router
 	.get(protect, getJobPost)
 	.delete(protect, deleteJobPost)
 	.patch(protect, updateJobPost);
+router.route('/get-a-job/:jobPostId/:accountId').patch(protect, getAJob);
 
 module.exports = router;

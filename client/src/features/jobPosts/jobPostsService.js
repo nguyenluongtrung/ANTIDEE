@@ -46,11 +46,27 @@ const deleteJobPost = async (token, id) => {
 	return response.data.data.id;
 };
 
+const getAJob = async (token, jobPostId, accountId, receivedAt) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + '/get-a-job/' + `${jobPostId}/${accountId}`,
+		{ receivedAt },
+		config
+	);
+	return response.data.data.jobPost;
+};
+
 const jobPostService = {
 	getAllJobPosts,
 	createJobPost,
 	deleteJobPost,
 	updateJobPost,
+	getAJob,
 };
 
 export default jobPostService;

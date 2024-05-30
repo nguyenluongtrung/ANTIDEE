@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const JobPost = require('../models/jobPostModel');
+const Account = require('../models/accountModel');
 
 const createJobPost = asyncHandler(async (req, res) => {
 	const jobPost = await JobPost.create(req.body);
@@ -60,9 +61,9 @@ const deleteJobPost = asyncHandler(async (req, res) => {
 });
 
 const updateJobPost = asyncHandler(async (req, res) => {
-	const isFountJobPost = await JobPost.findById(req.params.jobPostId);
+	const isFoundJobPost = await JobPost.findById(req.params.jobPostId);
 
-	if (!isFountJobPost) {
+	if (!isFoundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
@@ -81,10 +82,51 @@ const updateJobPost = asyncHandler(async (req, res) => {
 	});
 });
 
+const getAJob = asyncHandler(async (req, res) => {
+	const jobPostId = req.params.jobPostId;
+	const accountId = req.params.accountId;
+
+	const isFoundJobPost = await JobPost.findById(jobPostId);
+
+	if (!isFoundJobPost) {
+		res.status(404);
+		throw new Error('Không tìm thấy bài đăng công việc');
+	}
+
+	const { receivedAt } = req.body;
+
+	const jobPost = await JobPost.findByIdAndUpdate(
+		jobPostId,
+		{
+			domesticHelperId: accountId,
+			receivedAt,
+		},
+		{
+			new: true,
+		}
+	);
+
+	const account = await Account.findById(accountId);
+	account.receivedJobList.push({
+		jobPostId,
+		receivedAt,
+	});
+	await account.save();
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			jobPost,
+			account,
+		},
+	});
+});
+
 module.exports = {
 	updateJobPost,
 	deleteJobPost,
 	getJobPost,
 	getAllJobPosts,
 	createJobPost,
+	getAJob,
 };
