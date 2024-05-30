@@ -51,7 +51,7 @@ export const JobPostDetail = ({
 			handleGetAllJobPosts();
 			return;
 		}
-		let result = await dispatch(getAJob({ jobPostId: chosenJobPostId, accountId: account._id, receivedAt: Date.now }));
+		let result = await dispatch(getAJob({ jobPostId: chosenJobPostId, accountId: account._id, receivedAt: new Date() }));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Nhận công việc thành công', successStyle);
 			setIsOpenJobPostDetail(false);
