@@ -1,9 +1,30 @@
 const asyncHandler = require('express-async-handler');
 const JobPost = require('../models/jobPostModel');
 const Account = require('../models/accountModel');
+const sendMail = require('../config/emailConfig');
 
 const createJobPost = asyncHandler(async (req, res) => {
 	const jobPost = await JobPost.create(req.body);
+	const accounts = await Account.find({});
+	const { isUrgent } = req.body;
+
+	if (isUrgent) {
+		for (let account of accounts) {
+			// check whether qualification is suitable
+			if (account?.role === 'Người giúp việc')
+				await sendMail({
+					email: account.email,
+					subject: 'CÔNG VIỆC CẦN NGƯỜI GẤP',
+					html: `<div class="container">
+					<h1>Kính gửi ${account.name}, </h1>
+					<p>Hiện đang có một công việc cần người giúp việc gấp, và chúng tôi thấy rằng nó phù hợp với chứng chỉ hiện có của bạn.</p>
+					<p>Hãy đăng nhập để nhận công việc ngay nhé!</p>
+					<p>Trân trọng,</p>
+					<p>Antidee Team</p>
+				  </div>`,
+				});
+		}
+	}
 
 	res.status(201).json({
 		status: 'success',

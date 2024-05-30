@@ -10,7 +10,7 @@ export const CongratsPage = () => {
 	const navigateTo = location?.state?.navigateTo;
 
 	return (
-		<div>
+		<div className='select-none'>
 			<img className="m-auto" src={img31} />
 			<h1 className=" grid text-green font-bold text-2xl justify-center pb-3">
 				CHÚC MỪNG!

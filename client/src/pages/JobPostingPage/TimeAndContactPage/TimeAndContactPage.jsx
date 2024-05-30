@@ -14,6 +14,7 @@ export const TimeAndContactPage = () => {
 	const otherInfo = location?.state?.otherInfo;
 	const workingTime = location?.state?.workingTime;
 	const inputOptions = location?.state?.inputOptions;
+	const isUrgent = location?.state?.isUrgent;
 	const {
 		register,
 		handleSubmit,
@@ -48,7 +49,8 @@ export const TimeAndContactPage = () => {
 					paymentMethod: data.paymentMethod,
 				},
 				workingTime,
-				inputOptions
+				inputOptions,
+				isUrgent
 			},
 		});
 	};

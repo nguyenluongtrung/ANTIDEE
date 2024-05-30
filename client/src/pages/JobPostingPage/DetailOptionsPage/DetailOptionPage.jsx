@@ -20,6 +20,7 @@ export const DetailOptionPage = () => {
 	);
 	const [chosenService, setChosenService] = useState(null);
 	const [totalPrice, setTotalPrice] = useState(0);
+	const [isUrgent, setIsUrgent] = useState(false);
 	const [inputOptions, setInputOptions] = useState([
 		{
 			optionName: '',
@@ -242,6 +243,7 @@ export const DetailOptionPage = () => {
 					startingHour: startingHour,
 				},
 				inputOptions,
+				isUrgent
 			},
 		});
 	};
@@ -468,7 +470,7 @@ export const DetailOptionPage = () => {
 										<p className="mr-3 mb-2 mt-3">Cần gấp</p>
 									</td>
 									<td className="pl-32">
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green">
+										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsUrgent(!isUrgent)}>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>

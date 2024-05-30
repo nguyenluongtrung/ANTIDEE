@@ -78,6 +78,9 @@ const jobPostSchema = mongoose.Schema(
 		receivedAt: {
 			type: Date,
 		},
+		isUrgent: {
+			type: Boolean,
+		},
 	},
 	{
 		timestamps: true,
