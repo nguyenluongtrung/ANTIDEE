@@ -38,6 +38,7 @@ import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHel
 import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
+import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
 
 const App = () => {
 	return (
@@ -74,6 +75,7 @@ const AppContent = () => {
 						<Route path="/update-dw" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/job-posting-history" element={<JobPostingHistory />} />
+						<Route path="/my-jobs" element={<MyJobs />} />
 						<Route path="/exam-result-history" element={<ExamResultHistory />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>

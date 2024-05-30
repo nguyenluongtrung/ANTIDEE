@@ -1,7 +1,7 @@
-import { IoIosArrowForward } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { IoIosArrowForward } from 'react-icons/io';
+import { Link, useNavigate } from 'react-router-dom';
 
-export const Sidebar = ({account}) => {
+export const Sidebar = ({ account }) => {
 	const navigate = useNavigate();
 	return (
 		<div>
@@ -19,7 +19,10 @@ export const Sidebar = ({account}) => {
 					</Link>
 				</div>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer" onClick={() => navigate('/my-account')}>
+			<div
+				className="mb-2.5 hover:text-primary hover:cursor-pointer"
+				onClick={() => navigate('/my-account')}
+			>
 				<img
 					src="src/assets/img/clarity_avatar-solid.png"
 					className="inline w-4 mr-2"
@@ -44,6 +47,18 @@ export const Sidebar = ({account}) => {
 				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
 				<span>Công việc đã đăng</span>
 			</div>
+			{account?.role === 'Người giúp việc' && (
+				<div
+					className="mb-2.5 hover:text-primary hover:cursor-pointer"
+					onClick={() => navigate('/my-jobs')}
+				>
+					<img
+						src="src/assets/img/mdi_voucher.png"
+						className="inline w-4 mr-2"
+					/>
+					<span>Công việc đã nhận</span>
+				</div>
+			)}
 			<div
 				className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/exam-result-history')}
@@ -68,24 +83,10 @@ export const Sidebar = ({account}) => {
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
 				<img
-					src="src/assets/img/material-symbols_help.png"
-					className="inline w-4 mr-2"
-				/>
-				<span>Trợ giúp</span>
-			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-				<img
 					src="src/assets/img/vaadin_piggy-bank-coin.png"
 					className="inline w-4 mr-2"
 				/>
 				<span>Điểm tích lũy</span>
-			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-				<img
-					src="src/assets/img/ic_sharp-settings.png"
-					className="inline w-4 mr-2"
-				/>
-				<span>Cài đặt</span>
 			</div>
 		</div>
 	);
