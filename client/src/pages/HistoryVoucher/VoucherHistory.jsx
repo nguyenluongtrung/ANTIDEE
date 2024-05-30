@@ -1,22 +1,34 @@
-import React from 'react';
-
-const voucherHistory = [
-  {
-    id: 1,
-    code: 'ABC123',
-    discount: '10%',
-    dateUsed: '2024-01-01',
-  },
-  {
-    id: 2,
-    code: 'XYZ456',
-    discount: '20%',
-    dateUsed: '2024-02-15',
-  },
-  // Thêm nhiều voucher hơn ở đây...
-];
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const VoucherHistory = () => {
+  const [vouchers, setVouchers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      const token = localStorage.getItem('token'); // Giả định token được lưu trong localStorage
+      try {
+        const response = await axios.get('/api/vouchers/history', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setVouchers(response.data.data);
+      } catch (error) {
+        setError(error.response ? error.response.data.message : error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVouchers();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Lịch Sử Voucher Đã Sử Dụng</h1>
@@ -36,19 +48,28 @@ export const VoucherHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {voucherHistory.map(voucher => (
-              <tr key={voucher.id}>
-                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                  <p className="text-gray-900 whitespace-no-wrap">{voucher.code}</p>
-                </td>
-                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                  <p className="text-gray-900 whitespace-no-wrap">{voucher.discount}</p>
-                </td>
-                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                  <p className="text-gray-900 whitespace-no-wrap">{voucher.dateUsed}</p>
-                </td>
-              </tr>
-            ))}
+          {vouchers && vouchers.length > 0 ? (
+  vouchers.map((voucher) => (
+    <tr key={voucher._id}>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 whitespace-no-wrap">{voucher.voucherId.code}</p>
+      </td>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 whitespace-no-wrap">{voucher.voucherId.discount}</p>
+      </td>
+      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p className="text-gray-900 whitespace-no-wrap">{new Date(voucher.dateUsed).toLocaleDateString()}</p>
+      </td>
+    </tr>
+  ))
+) : (
+  <tr>
+    <td colSpan="3" className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+      No vouchers found.
+    </td>
+  </tr>
+)}
+
           </tbody>
         </table>
       </div>
@@ -56,4 +77,3 @@ export const VoucherHistory = () => {
   );
 };
 
- 

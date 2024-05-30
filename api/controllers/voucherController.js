@@ -1,5 +1,5 @@
 const Voucher = require("../models/voucherModel");
-const Account = require("../models/accountModel")
+const Account = require("../models/accountModel");
 
 const createVoucher = async (req, res) => {
   try {
@@ -104,16 +104,14 @@ const deleteVoucher = async (req, res) => {
 };
 
 const redeemVoucher = async (req, res) => {
-  const { userId, voucherId } = req.body
+  const { userId, voucherId } = req.body;
   const user = await Account.findById(userId);
   const voucher = await Voucher.findById(voucherId);
 
   try {
-
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-
 
     if (!voucher) {
       return res.status(404).json({ message: "Voucher not found." });
@@ -121,7 +119,6 @@ const redeemVoucher = async (req, res) => {
 
     if (user.aPoints < voucher.price) {
       return res.status(400).json({ message: "Bạn không đủ điểm để đổi voucher này!!!" });
-
     }
 
     if (voucher.quantity > 0) {
@@ -133,12 +130,29 @@ const redeemVoucher = async (req, res) => {
 
       await voucher.save();
       await user.save();
-      return res.status(200).
-        json({ message: 'Đổi voucher thành công', data: { voucher, account: user } });
+      return res.status(200).json({ message: 'Đổi voucher thành công', data: { voucher, account: user } });
     } else {
       return res.status(400).json({ message: 'Rất tiếc voucher này đã hết!' });
     }
+  } catch (error) {
+    res.status (500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
 
+const historyVoucher = async (req, res) => {
+  try {
+    const user = req.account; // Lấy thông tin người dùng từ middleware protect
+    const vouchers = await Account.findById(user._id)
+      .populate('accountVouchers.voucherId')
+      .select('accountVouchers');
+
+    res.status(200).json({
+      success: true,
+      data: vouchers.accountVouchers,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -147,12 +161,12 @@ const redeemVoucher = async (req, res) => {
   }
 };
 
-
 module.exports = {
   createVoucher,
   getAllVouchers,
   getVoucherById,
   updateVoucher,
   deleteVoucher,
-  redeemVoucher
+  redeemVoucher,
+  historyVoucher
 };

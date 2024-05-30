@@ -141,6 +141,10 @@ const accountSchema = mongoose.Schema(
 			receivedAt: {
 				type: Date,
 				default: Date.now
+			},
+			isUsed:{
+				type:Boolean,
+				default: false
 			}
 		}]
 
