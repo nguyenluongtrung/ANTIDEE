@@ -33,6 +33,7 @@ export const JobPostListPage = () => {
 		Promise.all([dispatch(getAllJobPosts())]).catch((error) => {
 			console.error('Error during dispatch:', error);
 		});
+		setIsInMyLocation(false);
 	};
 
 	if (isLoading) {
