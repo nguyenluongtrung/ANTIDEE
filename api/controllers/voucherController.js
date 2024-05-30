@@ -1,14 +1,29 @@
 const Voucher = require("../models/voucherModel");
 const Account = require("../models/accountModel")
-
+const sendMail = require('../config/emailConfig');
 const createVoucher = async (req, res) => {
   try {
+    console.log('Creating voucher...');
     const voucher = await Voucher.create(req.body);
+    console.log('Voucher created:', voucher);
+
+    const accounts = await Account.find({});
+    console.log('Accounts found:', accounts.length);
+
+    for (let account of accounts) {
+      console.log('Sending email to:', account.email);
+      await sendMail({
+        email: account.email,
+        subject: "New Voucher Available!",
+        html: `<p>Dear ${account.name},</p><p>A new voucher is available. Click to view it.</p>`
+      });
+    }
     res.status(201).json({
       success: true,
       data: voucher,
     });
   } catch (error) {
+    console.error('Error creating voucher or sending emails:', error);
     res.status(400).json({
       success: false,
       error: error.message,
