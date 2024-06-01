@@ -2,7 +2,8 @@ const DomesticHelperFeedback = require("../models/domesticHelper_FeedbackModel")
 
 const getAllFeedbacks = async (req, res) => {
   try {
-    const feedbacks = await DomesticHelperFeedback.find({});
+    const feedbacks = await DomesticHelperFeedback.find({})
+      .populate('customerId domesticHelperId reply.userId')
     res.status(200).json({
       success: true,
       data: { feedbacks },
@@ -20,7 +21,7 @@ const createFeedback = async (req, res) => {
     const feedback = await DomesticHelperFeedback.create(req.body);
     res.status(201).json({
       success: true,
-      data: {feedback},
+      data: { feedback },
     });
   } catch (error) {
     res.status(400).json({
@@ -72,6 +73,7 @@ const getFeedbackById = async (req, res) => {
   }
 };
 
+
 const deleteFeedback = async (req, res) => {
   try {
     const feedback = await DomesticHelperFeedback.findByIdAndDelete(req.params.feedbackId);
@@ -96,11 +98,60 @@ const deleteFeedback = async (req, res) => {
   }
 }
 
+//delete reply
+
+const deleteReply = async (req, res) => {
+  const feedback = await DomesticHelperFeedback.findById(req.params.feedbackId);
+
+  if (!feedback) {
+    res.status(404);
+    throw new Error('Feedback not found!');
+  }
+  feedback.reply = feedback.reply.filter(
+    (replies) => replies._id.toString() !== req.params.replyId
+  )
+  await feedback.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      feedback,
+    },
+  });
+}
+
+//update reply
+
+const updateReply = async (req, res) => {
+  const feedback = await DomesticHelperFeedback.findById(req.params.feedbackId);
+  if (!feedback) {
+    res.status(404);
+    throw new Error('Feedback not found!');
+  }
+
+  feedback.reply.map((replies) =>
+    replies._id.toString() === req.params.replyId
+      ? (replies.content = req.body.content)
+      : replies
+  );
+  await feedback.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      feedback,
+    },
+  });
+
+}
+
 module.exports = {
   getAllFeedbacks,
   createFeedback,
   deleteFeedback,
   getFeedbackById,
   replyToFeedback,
+  deleteReply,
+  updateReply,
 
 };

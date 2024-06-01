@@ -61,6 +61,48 @@ export const replyFeedback = createAsyncThunk(
 	}
 );
 
+export const deleteReply = createAsyncThunk(
+	'domesticHelperFeedbacks/deleteReply',
+	async ({ feedbackId, replyId }, thunkAPI) => {
+		try {
+			const storedUser = JSON.parse(localStorage.getItem('account'));
+			const token = storedUser.data.token;
+			return await domesticHelperFeedbackService.deleteReply(feedbackId, replyId, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
+export const updateReply = createAsyncThunk(
+	'domesticHelperFeedbacks/updateReply',
+	async ({ feedbackId, replyId, content }, thunkAPI) => {
+		try {
+			console.log(feedbackId, replyId, content)
+			const storedUser = JSON.parse(localStorage.getItem('account'));
+			const token = storedUser.data.token;
+			return await domesticHelperFeedbackService.updateReply(
+				feedbackId, replyId, content, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
 const initialState = {
 	domesticHelperFeedbacks: [],
 	isError: false,
@@ -111,7 +153,7 @@ export const domesticHelperFeedbackSlice = createSlice({
 				state.message = action.payload;
 			})
 
-			.addCase(replyFeedback.pending, (state)=> {
+			.addCase(replyFeedback.pending, (state) => {
 				state.isLoading = true;
 			})
 			.addCase(replyFeedback.fulfilled, (state, action) => {
@@ -125,6 +167,43 @@ export const domesticHelperFeedbackSlice = createSlice({
 				}
 			})
 			.addCase(replyFeedback.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+
+			.addCase(deleteReply.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(deleteReply.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				const feedbackIndex = state.domesticHelperFeedbacks.findIndex(
+					(feedback) => feedback._id === action.payload._id
+				);
+				if (feedbackIndex !== -1) {
+					state.domesticHelperFeedbacks[feedbackIndex] = action.payload;
+				}
+			})
+			.addCase(deleteReply.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(updateReply.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateReply.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				const feedbackIndex = state.domesticHelperFeedbacks.findIndex(
+					(feedback) => feedback._id === action.payload._id
+				);
+				if (feedbackIndex !== -1) {
+					state.domesticHelperFeedbacks[feedbackIndex] = action.payload;
+				}
+			})
+			.addCase(updateReply.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

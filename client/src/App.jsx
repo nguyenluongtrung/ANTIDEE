@@ -35,6 +35,7 @@ import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostin
 import { SignUpPage } from './pages/SignUpPage';
 
 import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHelper';
+import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
 import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
@@ -77,6 +78,7 @@ const AppContent = () => {
 						<Route path="/exam-result-history" element={<ExamResultHistory />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
+						<Route path ="/reply-feedback" element={<ReplyFeedback/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"

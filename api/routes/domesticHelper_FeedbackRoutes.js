@@ -5,7 +5,9 @@ const{
     createFeedback,
     deleteFeedback,
     getFeedbackById,
-    replyToFeedback
+    replyToFeedback,
+    deleteReply,
+    updateReply
 } = require('../controllers/domesticHelper_FeedbackController');
 
 const router = express.Router();
@@ -23,6 +25,11 @@ router
 
 router
 .route("/reply/:feedbackId")
-.patch(protect, replyToFeedback)
-;
+.post(protect, replyToFeedback)
+
+router
+.route("/reply/:feedbackId/:replyId")
+.delete(protect, deleteReply)
+.patch(protect, updateReply)
+
 module.exports = router;
