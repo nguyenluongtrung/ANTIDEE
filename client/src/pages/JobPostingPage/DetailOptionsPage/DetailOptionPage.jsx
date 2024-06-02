@@ -158,6 +158,16 @@ export const DetailOptionPage = () => {
 	}, [inputOptions, chosenService?.priceFormula]);
 
 	useEffect(() => {
+		if(totalPrice){
+			if(isUrgent){
+				setTotalPrice(totalPrice => totalPrice * 1.3)
+			} else{
+				setTotalPrice(totalPrice => totalPrice / 1.3)
+			}
+		} 
+	}, [isUrgent])
+
+	useEffect(() => {
 		if (startingHour) {
 			if (
 				(startingHour < '08:00:00' || startingHour > '17:00:00') &&
