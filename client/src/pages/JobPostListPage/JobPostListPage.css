@@ -1,0 +1,9 @@
+.triangle-down {
+    width: 60px;
+    height: 60px;
+    border-bottom: solid 30px #de3163;
+    border-right: solid 30px #de3163;
+    border-left: solid 30px transparent;
+    border-top: solid 30px transparent;
+    transform: rotate(270deg);
+}

@@ -90,7 +90,7 @@ export const JobPostDetail = ({
 				</p>
 				<div className="">
 					<p className="text-brown font-bold mb-3">
-						{chosenJobPost?.serviceId?.name?.toUpperCase()}
+						{chosenJobPost?.serviceId?.name?.toUpperCase()} {chosenJobPost?.isUrgent && <span className="text-red">(CẦN GẤP)</span>}
 					</p>
 					<p className="text-gray mb-2">
 						Bắt đầu lúc:{' '}

@@ -24,6 +24,7 @@ export const ConfirmPage = () => {
 	const inputOptions = location?.state?.inputOptions;
 	const isUrgent = location?.state?.isUrgent;
 	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
+	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -76,7 +77,7 @@ export const ConfirmPage = () => {
 		}
 	}
 
-	if(authLoading){
+	if(authLoading || jobPostLoading){
 		return <Spinner />
 	}
 

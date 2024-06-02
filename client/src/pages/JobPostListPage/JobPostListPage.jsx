@@ -5,6 +5,7 @@ import { getAllJobPosts } from '../../features/jobPosts/jobPostsSlice';
 import { formatDate, formatTime, formatWorkingTime } from '../../utils/format';
 import { JobPostDetail } from './JobPostDetail/JobPostDetail';
 import { getAccountInformation } from '../../features/auth/authSlice';
+import './JobPostListPage.css'
 
 export const JobPostListPage = () => {
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
@@ -76,12 +77,14 @@ export const JobPostListPage = () => {
 			<div className="grid grid-cols-3 gap-28">
 				{jobPosts
 					?.filter((jobPost) => {
-						if(isInMyLocation){
-							const addressDetails = jobPost?.contactInfo?.address.split(",");
+						if (isInMyLocation) {
+							const addressDetails = jobPost?.contactInfo?.address.split(',');
 							const jobCity = addressDetails[addressDetails.length - 1].trim();
-							const myCity = account?.address.split(",")[account?.address.split(",").length - 1].trim();
-							return jobCity.toUpperCase().includes(myCity.toUpperCase())
-						} else{
+							const myCity = account?.address
+								.split(',')
+								[account?.address.split(',').length - 1].trim();
+							return jobCity.toUpperCase().includes(myCity.toUpperCase());
+						} else {
 							return jobPost;
 						}
 					})
@@ -89,12 +92,15 @@ export const JobPostListPage = () => {
 					?.map((post) => {
 						return (
 							<div
-								className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative"
+								className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
+									post?.isUrgent && 'bg-light_pink'
+								}`}
 								style={{ height: '350px' }}
 							>
 								<p className="text-brown font-bold mb-3">
 									{post?.serviceId?.name?.toUpperCase()}
 								</p>
+								{post?.isUrgent && <div class="triangle-down absolute top-0 right-0"></div>}
 								<p className="text-gray mb-2">
 									Bắt đầu lúc:{' '}
 									<span className="text-brown">
