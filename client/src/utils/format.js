@@ -9,6 +9,22 @@ export const formatDate = (dateString) => {
 	return `${day}/${month}/${year}`;
 };
 
+export const  formatDateTime = (dateString) => {
+    const daysOfWeek = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const date = new Date(dateString);
+    const dayOfWeek = daysOfWeek[date.getUTCDay()];
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    
+
+    const formattedDate = `${dayOfWeek}, ${day}/${month}/${year} ${hours}:${minutes}`;
+    
+    return formattedDate;
+}
+
 export const formatDateInput = (dateString) => {
 	const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
 	const formattedDate = new Date(dateString).toLocaleDateString(
