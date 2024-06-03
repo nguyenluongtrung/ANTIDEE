@@ -51,11 +51,13 @@ export const Sidebar = ({account}) => {
 				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
 				<span>Lịch sử bài kiểm tra</span>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
+			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
+			onClick={() => navigate('/favorite-list')}>
 				<img src="src/assets/img/mdi_heart.png" className="inline w-4 mr-2" />
 				<span>Tasker yêu thích</span>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
+			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
+			onClick={() => navigate('/black-list')}>
 				<img
 					src="src/assets/img/lucide_list-x.png"
 					className="inline w-4 mr-2"

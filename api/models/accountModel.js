@@ -142,7 +142,20 @@ const accountSchema = mongoose.Schema(
 				type: Date,
 				default: Date.now
 			}
-		}]
+		}],
+		blackList: [{
+			domesticHelperId: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Account"
+			},
+		}],
+		favoriteList: [{
+			domesticHelperId: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Account"
+			},
+		}],
+
 
 	},
 	{

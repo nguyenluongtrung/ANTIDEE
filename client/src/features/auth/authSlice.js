@@ -84,7 +84,7 @@ export const updateAccountInformation = createAsyncThunk(
 
 export const updateAccountForgottenPassword = createAsyncThunk(
 	'auth/updateAccountForgottenPassword',
-	async ({password, accountId}, thunkAPI) => {
+	async ({ password, accountId }, thunkAPI) => {
 		try {
 			return await authService.updateAccountForgottenPassword(password, accountId);
 		} catch (error) {
@@ -137,6 +137,92 @@ export const getAccountInformation = createAsyncThunk(
 		}
 	}
 );
+
+//black list
+export const addDomesticHelperToBlackList = createAsyncThunk(
+	'auth/addDomesticHelperToBlackList',
+	async (domesticHelperId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.addDomesticHelperToBlackList(domesticHelperId, token);
+		} catch (error) {
+
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
+export const deleteDomesticHelperFromBlackList = createAsyncThunk(
+	'auth/deleteDomesticHelperFromBlackList',
+	async (domesticHelperId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.deleteDomesticHelperFromBlackList(domesticHelperId, token);
+		} catch (error) {
+
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
+//favorite list
+export const addDomesticHelperToFavoriteList = createAsyncThunk(
+	'auth/addDomesticHelperToFavoriteList',
+	async (domesticHelperId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.addDomesticHelperToFavoriteList(domesticHelperId, token);
+		} catch (error) {
+
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
+export const deleteDomesticHelperFromFavoriteList = createAsyncThunk(
+	'auth/deleteDomesticHelperFromFavoriteList',
+	async (domesticHelperId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.deleteDomesticHelperFromFavoriteList(domesticHelperId, token);
+		} catch (error) {
+
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
 
 const initialState = {
 	account: account || null,
@@ -259,6 +345,59 @@ export const authSlice = createSlice({
 				state.accounts = action.payload;
 			})
 			.addCase(getAllAccounts.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(addDomesticHelperToBlackList.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(addDomesticHelperToBlackList.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(addDomesticHelperToBlackList.rejected, (state, action) => { 
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(deleteDomesticHelperFromBlackList.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(deleteDomesticHelperFromBlackList.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+
+			})
+			.addCase(deleteDomesticHelperFromBlackList.rejected, (state, action) => { 
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(addDomesticHelperToFavoriteList.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(addDomesticHelperToFavoriteList.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(addDomesticHelperToFavoriteList.rejected, (state, action) => { 
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(deleteDomesticHelperFromFavoriteList.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(deleteDomesticHelperFromFavoriteList.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(deleteDomesticHelperFromFavoriteList.rejected, (state, action) => { 
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
