@@ -39,6 +39,7 @@ import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
 import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
+import { JourneyPage } from './pages/JourneyPage';
 
 const App = () => {
 	return (
@@ -53,13 +54,13 @@ const AppContent = () => {
 
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
-		<div className="app-container">
+		<div className="app-container select-none">
 			{!isAdminPage && (
 				<div className="sidebar-container">
 					<Sidebar />
 				</div>
 			)}
-			<div className="content-container">
+			<div className="content-container select-none">
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<HomePage />} />
@@ -95,6 +96,7 @@ const AppContent = () => {
 						<Route path="/vouchers" element={<VoucherList />} />
 						<Route path="/sign-up" element={<SignUpPage />} />
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
+						<Route path="/journey" element={<JourneyPage />} />
 					</Route>
 					{isAdminPage && (
 						<>

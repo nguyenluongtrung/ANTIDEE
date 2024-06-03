@@ -1,0 +1,26 @@
+.custom-background {
+  background-image: url("./../../../public/image/journey.png");
+  background-size: 100% 100%; /* Kích thước ảnh nền bằng với kích thước thẻ cha */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.fea-item {
+  transition: transform 0.3s ease;
+}
+
+.fea-item:hover {
+  transform: translateY(-10px);
+}
+
+.grayscale {
+  filter: grayscale(100%);
+}
+
+.grayscale img {
+  filter: grayscale(100%);
+}
+
+.grayscale * {
+  color: gray !important;
+}
