@@ -7,7 +7,7 @@ const {
   updateVoucher,
   deleteVoucher,
   redeemVoucher,
-  historyVoucher
+  getRedeemedVouchers  // Import the new function
 } = require('../controllers/voucherController');
 const router = express.Router();
 
@@ -27,8 +27,7 @@ router
   .post(redeemVoucher);
 
 router
-  .route('/historyVoucher')
-  .get(protect, historyVoucher);
+  .route('/redeemed/:userId')  // Add this new route
+  .get(getRedeemedVouchers);
 
-  
 module.exports = router;

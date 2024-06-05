@@ -98,7 +98,25 @@ export const redeemVoucher = createAsyncThunk(
 		}
 	}
 )
-
+export const getRedeemedVouchers = createAsyncThunk(
+	'vouchers/getRedeemedVouchers',
+	async (userId, thunkAPI) => {
+		
+	try {
+		const storedAccount = JSON.parse(localStorage.getItem('account'));
+		const token = storedAccount?.data?.token;
+		return await voucherService.getRedeemedVouchers(token, userId);
+		
+	} catch (error) {
+		const message =
+		(error.response && error.response.data && error.response.data.message) ||
+		error.message ||
+		error.toString();
+		
+		return thunkAPI.rejectWithValue(message);
+	}
+	}
+  );
 
 const initialState = {
 	vouchers: null,
@@ -196,6 +214,24 @@ export const voucherSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.vouchers = null;
+			})
+			.addCase(getRedeemedVouchers.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getRedeemedVouchers.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				if (Array.isArray(action.payload)) { // Kiểm tra xem action.payload có phải là một mảng không
+					state.vouchers = action.payload; // Gán action.payload vào state.vouchers nếu nó là một mảng
+				} else {
+					console.error('Received payload is not an array:', action.payload); // Log lỗi nếu action.payload không phải là một mảng
+				}
+			})
+			.addCase(getRedeemedVouchers.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.vouchers = [];
 			});
 			
 
