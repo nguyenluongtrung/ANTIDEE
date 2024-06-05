@@ -2,15 +2,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
 import { useEffect, useState } from 'react';
-import {
-	formatDate,
-	formatTime,
-	formatWorkingTime,
-} from '../../../utils/format';
+import { formatDate, formatWorkingTime } from '../../../utils/format';
 import { getAccountInformation } from '../../../features/auth/authSlice';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
-import { getAJob } from '../../../features/jobPosts/jobPostsSlice';
+import { applyAJob, getAJob } from '../../../features/jobPosts/jobPostsSlice';
 
 export const JobPostDetail = ({
 	chosenJobPostId,
@@ -63,15 +59,30 @@ export const JobPostDetail = ({
 			handleGetAllJobPosts();
 			return;
 		}
-		let result = await dispatch(
-			getAJob({
-				jobPostId: chosenJobPostId,
-				accountId: account._id,
-				receivedAt: new Date(),
-			})
-		);
+		let result;
+		if (chosenJobPost?.isChosenYourself) {
+			result = await dispatch(
+				applyAJob({
+					jobPostId: chosenJobPostId,
+					accountId: account._id,
+				})
+			);
+		} else {
+			result = await dispatch(
+				getAJob({
+					jobPostId: chosenJobPostId,
+					accountId: account._id,
+					receivedAt: new Date(),
+				})
+			);
+		}
 		if (result.type.endsWith('fulfilled')) {
-			toast.success('Nhận công việc thành công', successStyle);
+			toast.success(
+				chosenJobPost?.isChosenYourself
+					? 'Ứng tuyển công việc thành công'
+					: 'Nhận công việc thành công',
+				successStyle
+			);
 			setIsOpenJobPostDetail(false);
 			handleGetAllJobPosts();
 		} else if (result?.error?.message === 'Rejected') {
@@ -174,18 +185,38 @@ export const JobPostDetail = ({
 							{chosenJobPost?.note ? chosenJobPost?.note : 'Không có'}
 						</span>
 					</p>
-					<div className="flex mb-3">
-						<input
-							type="checkbox"
-							className="w-3 mr-2"
-							onChange={() => setIsChecked(!isChecked)}
-						/>
-						<p className="text-red">
-							Bạn đã đọc kỹ thông tin và muốn {chosenJobPost?.isChosenYourself ? 'ứng tuyển' : 'nhận việc'}?
-						</p>
-					</div>
+					{chosenJobPost?.applicants?.findIndex(
+						(applicant) => String(applicant) === String(account?._id)
+					) == -1 && (
+						<div className="flex mb-3">
+							<input
+								type="checkbox"
+								className="w-3 mr-2"
+								onChange={() => setIsChecked(!isChecked)}
+							/>
+							<p className="text-red">
+								Bạn đã đọc kỹ thông tin và muốn{' '}
+								{chosenJobPost?.isChosenYourself ? 'ứng tuyển' : 'nhận việc'}?
+							</p>
+						</div>
+					)}
+
 					<div className="flex justify-center">
-						{chosenJobPost?.isChosenYourself ? (
+						{chosenJobPost?.applicants?.findIndex(
+							(applicant) => String(applicant) === String(account?._id)
+						) != -1 ? (
+							<button
+								className={
+									'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+								}
+								style={{ width: '70%' }}
+								disabled
+							>
+								<p className="text-center">
+									Bạn đã ứng tuyển cho công việc này
+								</p>
+							</button>
+						) : chosenJobPost?.isChosenYourself ? (
 							<button
 								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
 									!isChecked
@@ -194,6 +225,7 @@ export const JobPostDetail = ({
 								}`}
 								style={{ width: '70%' }}
 								disabled={!isChecked}
+								onClick={handleGetAJob}
 							>
 								<p className="text-center">Ứng tuyển</p>
 							</button>

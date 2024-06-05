@@ -235,6 +235,28 @@ const getAJob = asyncHandler(async (req, res) => {
 	});
 });
 
+const applyAJob = asyncHandler(async (req, res) => {
+	const jobPostId = req.params.jobPostId;
+	const accountId = req.params.accountId;
+
+	const isFoundJobPost = await JobPost.findById(jobPostId);
+
+	if (!isFoundJobPost) {
+		res.status(404);
+		throw new Error('Không tìm thấy bài đăng công việc');
+	}
+
+	isFoundJobPost?.applicants?.push(accountId);
+	await isFoundJobPost.save();
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			jobPost: isFoundJobPost,
+		},
+	});
+});
+
 module.exports = {
 	updateJobPost,
 	deleteJobPost,
@@ -242,4 +264,5 @@ module.exports = {
 	getAllJobPosts,
 	createJobPost,
 	getAJob,
+	applyAJob,
 };

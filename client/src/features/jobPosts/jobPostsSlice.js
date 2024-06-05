@@ -106,6 +106,27 @@ export const getAJob = createAsyncThunk(
 	}
 );
 
+export const applyAJob = createAsyncThunk(
+	'jobPosts/applyAJob',
+	async ({ jobPostId, accountId }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			console.log(token);
+			return await jobPostsService.applyAJob(token, jobPostId, accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	jobPosts: [],
 	isError: false,
@@ -199,6 +220,23 @@ export const jobPostSlice = createSlice({
 				] = action.payload;
 			})
 			.addCase(getAJob.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(applyAJob.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(applyAJob.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.jobPosts[
+					state.jobPosts.findIndex(
+						(jobPost) => jobPost._id == action.payload._id
+					)
+				] = action.payload;
+			})
+			.addCase(applyAJob.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

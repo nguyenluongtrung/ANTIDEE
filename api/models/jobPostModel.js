@@ -86,7 +86,7 @@ const jobPostSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		yourApplicants: [
+		applicants: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Account',

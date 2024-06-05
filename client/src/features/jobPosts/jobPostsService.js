@@ -61,12 +61,28 @@ const getAJob = async (token, jobPostId, accountId, receivedAt) => {
 	return response.data.data.jobPost;
 };
 
+const applyAJob = async (token, jobPostId, accountId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + '/apply-a-job/' + `${jobPostId}/${accountId}`,
+		{},
+		config
+	);
+	return response.data.data.jobPost;
+};
+
 const jobPostService = {
 	getAllJobPosts,
 	createJobPost,
 	deleteJobPost,
 	updateJobPost,
 	getAJob,
+	applyAJob,
 };
 
 export default jobPostService;
