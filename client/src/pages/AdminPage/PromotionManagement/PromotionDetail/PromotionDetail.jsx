@@ -72,7 +72,7 @@ export const PromotionDetail = ({ chosenPromotionId, setIsOpenDetailPromotion, h
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Giá trị khuyến mãi</span>
+								<span className='font-bold'>Giá trị</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
                             <p className="text-center" style={{ width: '100%' }}>
@@ -93,7 +93,7 @@ export const PromotionDetail = ({ chosenPromotionId, setIsOpenDetailPromotion, h
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Số lượng mã khuyến mãi</span>
+								<span className='font-bold'>Số lượng mã</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -104,10 +104,11 @@ export const PromotionDetail = ({ chosenPromotionId, setIsOpenDetailPromotion, h
 						<tr>
 							<td>
 								<span className='font-bold'>Dịch vụ áp dụng</span>
-							</td>
+							</td> 
 							<td className="pl-6 py-1 w-80">
-							{chosenPromotion?.serviceIds.map((service) => <p>{service?.name}</p>)}
-
+								<p className="text-center" style={{ width: '100%' }}>
+								{chosenPromotion?.serviceIds.map((service) => <p>{service?.name}</p>)}
+								</p>
 							</td>
 						</tr>
 					</tbody>

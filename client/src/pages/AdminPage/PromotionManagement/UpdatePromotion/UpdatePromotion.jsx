@@ -31,6 +31,8 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError,
+        clearErrors,
 	} = useForm();
 
 	const dispatch = useDispatch();
@@ -40,6 +42,8 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 	}, []);
 
 	const onSubmit = async (data) => {
+		const isNameValid = validatePromotionName(data.promotionName);
+        if (!isNameValid) return;
 		const promotionData = {
 			...data,
 			serviceIds:selectedServices,
@@ -53,7 +57,23 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 		setIsOpenUpdatePromotion(false);
 		handleGetAllPromotions();
 	};
-
+	const validatePromotionName = (name) => {
+        const trimmedName = name.trim().toLowerCase();
+        const existingPromotion = promotions.find(
+            (promo) =>
+                promo.promotionName.trim().toLowerCase() === trimmedName &&
+                new Date(promo.endDate) >= new Date()
+        );
+        if (existingPromotion) {
+            setError('promotionName', {
+                type: 'manual',
+                message: 'Tên mã giảm giá đã tồn tại và còn hạn sử dụng',
+            });
+            return false;
+        }
+        clearErrors('promotionName');
+        return true;
+    };
 	if (promotionLoading || serviceLoading) {
 		return <Spinner />;
 	}
@@ -86,6 +106,7 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
                                     placeholder="Nhập tên của khuyến mãi"
 									required
 								/>
+								{errors.promotionName && <p className="text-red text-center">{errors.promotionName.message}</p>}
 							</td>
 						</tr>
 						<tr>
@@ -102,6 +123,7 @@ const [existingServices, setExistingServices] = useState(chosenPromotion?.servic
 									required
 									className='create-question-input text-center ml-[60px] text-sm w-[300px]'
 								/>{' '}
+								
                                 </td>
                                 </tr>
                                 <tr>
