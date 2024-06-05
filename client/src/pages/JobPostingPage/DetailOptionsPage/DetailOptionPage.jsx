@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
+import { RepeatitiveForm } from './RepeatitiveForm/RepeatitiveForm';
 
 export const DetailOptionPage = () => {
 	const { serviceId } = useParams();
@@ -21,6 +22,10 @@ export const DetailOptionPage = () => {
 	const [chosenService, setChosenService] = useState(null);
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [isUrgent, setIsUrgent] = useState(false);
+	const [isRepeatitive, setIsRepeatitive] = useState(false);
+	const [isChosenYourself, setIsChosenYourself] = useState(false);
+	const [times, setTimes] = useState(0);
+	const [isOpenRepeatitiveForm, setIsOpenRepeatitiveForm] = useState(false);
 	const [inputOptions, setInputOptions] = useState([
 		{
 			optionName: '',
@@ -238,6 +243,13 @@ export const DetailOptionPage = () => {
 		));
 	};
 
+	const handleOpenRepeatitiveForm = () => {
+		setIsRepeatitive((state) => !state); 
+		if(isRepeatitive){
+			setIsOpenRepeatitiveForm(true);
+		}
+	}
+
 	const onSubmit = (data) => {
 		console.log(inputOptions);
 		if (!startingHour.trim()) {
@@ -253,7 +265,8 @@ export const DetailOptionPage = () => {
 					startingHour: startingHour,
 				},
 				inputOptions,
-				isUrgent
+				isUrgent,
+				isChosenYourself
 			},
 		});
 	};
@@ -265,6 +278,7 @@ export const DetailOptionPage = () => {
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
+			{isRepeatitive && isOpenRepeatitiveForm && <RepeatitiveForm setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm} setIsRepeatitive={setIsRepeatitive} setTimes={setTimes}/>}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div
 					className="mx-auto shadow-xl py-10 px-10 hover:shadow-2xl hover:cursor-pointer"
@@ -458,7 +472,7 @@ export const DetailOptionPage = () => {
 										<p className="mr-3 mb-6 mt-3">Bạn tự chọn người làm</p>
 									</td>
 									<td className="pl-32">
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green">
+										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsChosenYourself(!isChosenYourself)}>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>
@@ -470,7 +484,7 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										{' '}
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green">
+										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={handleOpenRepeatitiveForm}>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>

@@ -23,6 +23,7 @@ export const ConfirmPage = () => {
 	const otherInfo = location?.state?.otherInfo;
 	const inputOptions = location?.state?.inputOptions;
 	const isUrgent = location?.state?.isUrgent;
+	const isChosenYourself = location?.state?.isChosenYourself;
 	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
@@ -60,7 +61,8 @@ export const ConfirmPage = () => {
 			customerId,
 			paymentMethod: otherInfo?.paymentMethod,
 			totalPrice: otherInfo?.totalPrice,
-			isUrgent
+			isUrgent,
+			isChosenYourself
 		}
 		const result = await dispatch(createJobPost(jobPostData));
 

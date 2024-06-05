@@ -80,7 +80,18 @@ const jobPostSchema = mongoose.Schema(
 		},
 		isUrgent: {
 			type: Boolean,
+			default: false,
 		},
+		isChosenYourself: {
+			type: Boolean,
+			default: false,
+		},
+		yourApplicants: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			},
+		],
 	},
 	{
 		timestamps: true,

@@ -28,30 +28,48 @@ export const JobPostDetail = ({
 
 	const handleGetAJob = async (e) => {
 		e.preventDefault();
-		if(account?.address == null){
-			toast.error('Bạn cần bổ sung địa chỉ để đủ điều kiện nhận việc', errorStyle);
+		if (account?.address == null) {
+			toast.error(
+				'Bạn cần bổ sung địa chỉ để đủ điều kiện nhận việc',
+				errorStyle
+			);
 			setIsOpenJobPostDetail(false);
 			handleGetAllJobPosts();
 			return;
 		}
-		const addressDetails = chosenJobPost?.contactInfo?.address.split(",");
+		const addressDetails = chosenJobPost?.contactInfo?.address.split(',');
 		const jobCity = addressDetails[addressDetails.length - 1].trim();
-		const myCity = account?.address.split(",")[account?.address.split(",").length - 1].trim();
-		if(!jobCity.toUpperCase().includes(myCity.toUpperCase())){
-			toast.error('Địa chỉ làm việc của bạn không phù hợp cho công việc này', errorStyle);
+		const myCity = account?.address
+			.split(',')
+			[account?.address.split(',').length - 1].trim();
+		if (!jobCity.toUpperCase().includes(myCity.toUpperCase())) {
+			toast.error(
+				'Địa chỉ làm việc của bạn không phù hợp cho công việc này',
+				errorStyle
+			);
 			setIsOpenJobPostDetail(false);
 			handleGetAllJobPosts();
 			return;
 		}
-		const requiredQualification = chosenJobPost?.serviceId?.requiredQualification;
+		const requiredQualification =
+			chosenJobPost?.serviceId?.requiredQualification;
 		const myQualifications = account?.resume[0]?.qualifications;
-		if(!myQualifications.includes(requiredQualification)){
-			toast.error('Bạn không có chứng chỉ phù hợp cho công việc này', errorStyle);
+		if (!myQualifications.includes(requiredQualification)) {
+			toast.error(
+				'Bạn không có chứng chỉ phù hợp cho công việc này',
+				errorStyle
+			);
 			setIsOpenJobPostDetail(false);
 			handleGetAllJobPosts();
 			return;
 		}
-		let result = await dispatch(getAJob({ jobPostId: chosenJobPostId, accountId: account._id, receivedAt: new Date() }));
+		let result = await dispatch(
+			getAJob({
+				jobPostId: chosenJobPostId,
+				accountId: account._id,
+				receivedAt: new Date(),
+			})
+		);
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Nhận công việc thành công', successStyle);
 			setIsOpenJobPostDetail(false);
@@ -59,7 +77,7 @@ export const JobPostDetail = ({
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-	}
+	};
 
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
@@ -90,7 +108,10 @@ export const JobPostDetail = ({
 				</p>
 				<div className="">
 					<p className="text-brown font-bold mb-3">
-						{chosenJobPost?.serviceId?.name?.toUpperCase()} {chosenJobPost?.isUrgent && <span className="text-red">(CẦN GẤP)</span>}
+						{chosenJobPost?.serviceId?.name?.toUpperCase()}{' '}
+						{chosenJobPost?.isUrgent && (
+							<span className="text-red">(CẦN GẤP)</span>
+						)}
 					</p>
 					<p className="text-gray mb-2">
 						Bắt đầu lúc:{' '}
@@ -160,22 +181,36 @@ export const JobPostDetail = ({
 							onChange={() => setIsChecked(!isChecked)}
 						/>
 						<p className="text-red">
-							Bạn đã đọc kỹ thông tin và muốn nhận việc?
+							Bạn đã đọc kỹ thông tin và muốn {chosenJobPost?.isChosenYourself ? 'ứng tuyển' : 'nhận việc'}?
 						</p>
 					</div>
 					<div className="flex justify-center">
-						<button
-							className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
-								!isChecked
-									? 'bg-gray'
-									: 'bg-brown hover:bg-light_yellow hover:text-brown'
-							}`}
-							style={{ width: '70%' }}
-							disabled={!isChecked}
-							onClick={handleGetAJob}
-						>
-							<p className="text-center">Nhận việc</p>
-						</button>
+						{chosenJobPost?.isChosenYourself ? (
+							<button
+								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
+									!isChecked
+										? 'bg-gray'
+										: 'bg-brown hover:bg-light_yellow hover:text-brown'
+								}`}
+								style={{ width: '70%' }}
+								disabled={!isChecked}
+							>
+								<p className="text-center">Ứng tuyển</p>
+							</button>
+						) : (
+							<button
+								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
+									!isChecked
+										? 'bg-gray'
+										: 'bg-brown hover:bg-light_yellow hover:text-brown'
+								}`}
+								style={{ width: '70%' }}
+								disabled={!isChecked}
+								onClick={handleGetAJob}
+							>
+								<p className="text-center">Nhận việc</p>
+							</button>
+						)}
 					</div>
 				</div>
 			</form>

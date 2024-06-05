@@ -15,6 +15,7 @@ export const TimeAndContactPage = () => {
 	const workingTime = location?.state?.workingTime;
 	const inputOptions = location?.state?.inputOptions;
 	const isUrgent = location?.state?.isUrgent;
+	const isChosenYourself = location?.state?.isChosenYourself;
 	const {
 		register,
 		handleSubmit,
@@ -50,7 +51,8 @@ export const TimeAndContactPage = () => {
 				},
 				workingTime,
 				inputOptions,
-				isUrgent
+				isUrgent,
+				isChosenYourself
 			},
 		});
 	};
