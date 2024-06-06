@@ -257,6 +257,41 @@ const applyAJob = asyncHandler(async (req, res) => {
 	});
 });
 
+const selectATasker = asyncHandler(async (req, res) => {
+	const jobPostId = req.params.jobPostId;
+	const taskerId = req.params.taskerId;
+
+	const isFoundJobPost = await JobPost.findById(jobPostId);
+	const tasker = await Account.findById(taskerId);
+
+	if (!isFoundJobPost) {
+		res.status(404);
+		throw new Error('Không tìm thấy bài đăng công việc');
+	}
+
+	const updatedJobPost = await JobPost.findByIdAndUpdate(
+		jobPostId,
+		{
+			domesticHelperId: taskerId,
+		},
+		{ new: true }
+	);
+
+	tasker?.receivedJobList?.push({
+		jobPostId,
+		receivedAt: new Date(),
+	});
+
+	await tasker.save();
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			jobPost: updatedJobPost,
+		},
+	});
+});
+
 module.exports = {
 	updateJobPost,
 	deleteJobPost,
@@ -265,4 +300,5 @@ module.exports = {
 	createJobPost,
 	getAJob,
 	applyAJob,
+	selectATasker,
 };

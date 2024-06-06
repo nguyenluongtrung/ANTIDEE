@@ -8,17 +8,21 @@ const {
 	getAllJobPosts,
 	getAJob,
 	applyAJob,
+	selectATasker,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
 
 router.route('/').post(protect, createJobPost).get(protect, getAllJobPosts);
+router.route('/get-a-job/:jobPostId/:accountId').patch(protect, getAJob);
+router.route('/apply-a-job/:jobPostId/:accountId').patch(protect, applyAJob);
+router
+	.route('/select-a-job/:jobPostId/:taskerId')
+	.patch(protect, selectATasker);
 router
 	.route('/:jobPostId')
 	.get(protect, getJobPost)
 	.delete(protect, deleteJobPost)
 	.patch(protect, updateJobPost);
-router.route('/get-a-job/:jobPostId/:accountId').patch(protect, getAJob);
-router.route('/apply-a-job/:jobPostId/:accountId').patch(protect, applyAJob);
 
 module.exports = router;

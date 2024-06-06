@@ -7,8 +7,10 @@ import {
 	formatTime,
 	formatWorkingTime,
 } from '../../../../utils/format';
-import { getAllAccounts } from '../../../../features/auth/authSlice';
+import toast from 'react-hot-toast';
 import { IoMdCheckboxOutline } from 'react-icons/io';
+import { selectATasker } from '../../../../features/jobPosts/jobPostsSlice';
+import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 
 export const HistoryJobPostDetail = ({
 	chosenJobPostId,
@@ -22,6 +24,16 @@ export const HistoryJobPostDetail = ({
 	);
 
 	const dispatch = useDispatch();
+
+	const handleSelectTasker = async (id) => {
+		const result = await dispatch(selectATasker({chosenJobPostId,taskerId:id}));
+
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Cập nhật thông tin tài khoản thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+	}
 
 	if (isLoading) {
 		return <Spinner />;
@@ -147,7 +159,7 @@ export const HistoryJobPostDetail = ({
 						</p>
 						<div>
 							{chosenJobPost?.applicants?.map((applicant, index) => (
-								<div className="flex bg-light_gray rounded-2xl p-5">
+								<div className="flex rounded-2xl p-5 mb-5" style={{backgroundColor: 'rgba(100,100,100,0.1)'}}>
 									<div className="mr-10 flex flex-col justify-center">
 										<img
 											src={
@@ -176,7 +188,7 @@ export const HistoryJobPostDetail = ({
 										</p>
 									</div>
 									<div className="flex flex-col justify-center">
-										<IoMdCheckboxOutline size={25} className='text-brown hover:cursor-pointer hover:text-green'/>
+										<IoMdCheckboxOutline size={25} className='text-brown hover:cursor-pointer hover:text-green' onClick={() => handleSelectTasker(applicant)}/>
 									</div>
 								</div>
 							))}
