@@ -157,6 +157,9 @@
         name: voucher.voucherId.name,
         description: voucher.voucherId.description,
         discountValue: voucher.voucherId.discountValue,
+        brand:voucher.voucherId.brand,
+        code:voucher.voucherId.code,
+        endDate:voucher.voucherId.endDate,
         receivedAt: voucher.receivedAt,
         isUsed: voucher.isUsed
       }));

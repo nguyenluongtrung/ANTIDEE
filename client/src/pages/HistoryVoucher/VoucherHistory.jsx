@@ -22,6 +22,7 @@ export const VoucherHistory = () => {
     if (account) {
       dispatch(getRedeemedVouchers(account._id))
         .then((response) => {
+          console.log(response.payload);
           const used = response.payload.filter(voucher => voucher.isUsed);
           const unused = response.payload.filter(voucher => !voucher.isUsed);
           setUsedVouchers(used);
