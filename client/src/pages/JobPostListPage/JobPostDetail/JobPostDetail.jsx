@@ -50,7 +50,7 @@ export const JobPostDetail = ({
 		const requiredQualification =
 			chosenJobPost?.serviceId?.requiredQualification;
 		const myQualifications = account?.resume[0]?.qualifications;
-		if (!myQualifications.includes(requiredQualification)) {
+		if (!myQualifications?.includes(requiredQualification)) {
 			toast.error(
 				'Bạn không có chứng chỉ phù hợp cho công việc này',
 				errorStyle

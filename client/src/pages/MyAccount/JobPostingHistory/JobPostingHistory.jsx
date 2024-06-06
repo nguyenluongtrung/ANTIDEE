@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
 import { getAllJobPosts } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation } from '../../../features/auth/authSlice';
+import { getAccountInformation, getAllAccounts } from '../../../features/auth/authSlice';
 import {
 	formatDate,
 	formatTime,
@@ -12,6 +12,7 @@ import { HistoryJobPostDetail } from './HistoryJobPostDetail/HistoryJobPostDetai
 
 export const JobPostingHistory = () => {
 	const [myAccountId, setMyAccountId] = useState();
+	const [accounts, setAccounts] = useState([]);
 	const [myJobHistory, setMyJobHistory] = useState([]);
 	const [chosenJobPostId, setChosenJobPostId] = useState();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
@@ -54,6 +55,16 @@ export const JobPostingHistory = () => {
 		setMyJobHistory(newJobHistory);
 	}
 
+	async function initialAccountList() {
+		let output = await dispatch(getAllAccounts());
+
+		setAccounts(output.payload);
+	}
+
+	useEffect(() => {
+		initialAccountList();
+	}, []);
+
 	useEffect(() => {
 		initiateAccountInformation();
 	}, []);
@@ -73,6 +84,7 @@ export const JobPostingHistory = () => {
 					<HistoryJobPostDetail
 						chosenJobPostId={chosenJobPostId}
 						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
+						accounts={accounts}
 					/>
 				)}
 				<div
