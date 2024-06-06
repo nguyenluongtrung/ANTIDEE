@@ -26,14 +26,16 @@ export const HistoryJobPostDetail = ({
 	const dispatch = useDispatch();
 
 	const handleSelectTasker = async (id) => {
-		const result = await dispatch(selectATasker({chosenJobPostId,taskerId:id}));
+		const result = await dispatch(
+			selectATasker({ chosenJobPostId, taskerId: id })
+		);
 
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Cập nhật thông tin tài khoản thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-	}
+	};
 
 	if (isLoading) {
 		return <Spinner />;
@@ -125,31 +127,48 @@ export const HistoryJobPostDetail = ({
 									);
 								})}
 							</p>
+							{chosenJobPost?.isChosenYourself &&
+								chosenJobPost?.domesticHelperId && (
+									<p className="text-gray mb-3">
+										Người giúp việc:{' '}
+										<span className="text-black">
+											{
+												accounts?.find(
+													(acc) =>
+														String(acc._id) ==
+														String(chosenJobPost?.domesticHelperId)
+												)?.name
+											}
+										</span>
+									</p>
+								)}
 							<p className="text-gray mb-3">
 								Ghi chú:{' '}
 								<span className="text-black">
 									{chosenJobPost?.note ? chosenJobPost?.note : 'Không có'}
 								</span>
 							</p>
-							{chosenJobPost?.isChosenYourself && (
-								<p
-									className="text-gray mb-3 hover:text-brown hover:cursor-pointer"
-									onClick={() => setIsOpenApplicantsDetails(true)}
-								>
-									Xem danh sách người ứng tuyển{' '}
-								</p>
+							{chosenJobPost?.isChosenYourself &&
+								!chosenJobPost?.domesticHelperId && (
+									<p
+										className="text-gray mb-3 hover:text-brown hover:cursor-pointer"
+										onClick={() => setIsOpenApplicantsDetails(true)}
+									>
+										Xem danh sách người ứng tuyển{' '}
+									</p>
+								)}
+							{!chosenJobPost?.domesticHelperId && (
+								<div className="flex justify-center">
+									<button
+										className={
+											'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+										}
+										style={{ width: '70%' }}
+									>
+										<p className="text-center">Hủy việc</p>
+									</button>
+								</div>
 							)}
-
-							<div className="flex justify-center">
-								<button
-									className={
-										'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
-									}
-									style={{ width: '70%' }}
-								>
-									<p className="text-center">Hủy việc</p>
-								</button>
-							</div>
 						</div>
 					</>
 				) : (
@@ -159,7 +178,10 @@ export const HistoryJobPostDetail = ({
 						</p>
 						<div>
 							{chosenJobPost?.applicants?.map((applicant, index) => (
-								<div className="flex rounded-2xl p-5 mb-5" style={{backgroundColor: 'rgba(100,100,100,0.1)'}}>
+								<div
+									className="flex rounded-2xl p-5 mb-5"
+									style={{ backgroundColor: 'rgba(100,100,100,0.1)' }}
+								>
 									<div className="mr-10 flex flex-col justify-center">
 										<img
 											src={
@@ -188,7 +210,11 @@ export const HistoryJobPostDetail = ({
 										</p>
 									</div>
 									<div className="flex flex-col justify-center">
-										<IoMdCheckboxOutline size={25} className='text-brown hover:cursor-pointer hover:text-green' onClick={() => handleSelectTasker(applicant)}/>
+										<IoMdCheckboxOutline
+											size={25}
+											className="text-brown hover:cursor-pointer hover:text-green"
+											onClick={() => handleSelectTasker(applicant)}
+										/>
 									</div>
 								</div>
 							))}
