@@ -66,6 +66,64 @@ const getAccountInformation = async (token) => {
 	return response.data.data.account;
 };
 
+//black list
+const addDomesticHelperToBlackList = async (domesticHelperId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.post(
+		API_URL + 'blackList/' + domesticHelperId,
+		null,
+		config
+	);
+	return response.data.data.account;
+};
+
+const deleteDomesticHelperFromBlackList = async (domesticHelperId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.delete(
+		API_URL + 'blackList/' + domesticHelperId,
+		config
+	);
+	return response.data.data.account;
+};
+
+//favorite list
+const addDomesticHelperToFavoriteList = async (domesticHelperId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.post(
+		API_URL + 'favoriteList/' + domesticHelperId,
+		null,
+		config
+	);
+	return response.data.data.account;
+};
+
+const deleteDomesticHelperFromFavoriteList = async (
+	domesticHelperId,
+	token
+) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.delete(
+		API_URL + 'favoriteList/' + domesticHelperId,
+		config
+	);
+	return response.data.data.account;
+};
 const authService = {
 	login,
 	logout,
@@ -75,6 +133,10 @@ const authService = {
 	getAccountInformation,
 	updateAccountForgottenPassword,
 	getAccountForgottenPassword,
+	addDomesticHelperToBlackList,
+	deleteDomesticHelperFromBlackList,
+	addDomesticHelperToFavoriteList,
+	deleteDomesticHelperFromFavoriteList,
 };
 
 export default authService;

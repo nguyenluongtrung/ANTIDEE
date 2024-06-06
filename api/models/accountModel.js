@@ -155,6 +155,22 @@ const accountSchema = mongoose.Schema(
 				},
 			},
 		],
+		blackList: [
+			{
+				domesticHelperId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Account',
+				},
+			},
+		],
+		favoriteList: [
+			{
+				domesticHelperId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Account',
+				},
+			},
+		],
 	},
 	{
 		timestamps: true,

@@ -40,6 +40,8 @@ import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
 import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
+import { BlackList } from './pages/MyAccount/BlackList/BlackList';
+import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 
 const App = () => {
 	return (
@@ -81,6 +83,8 @@ const AppContent = () => {
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
 						<Route path ="/reply-feedback" element={<ReplyFeedback/>}/>
+						<Route path ="/black-list" element={<BlackList/>}/>
+						<Route path ="/favorite-list" element={<FavoriteList/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
