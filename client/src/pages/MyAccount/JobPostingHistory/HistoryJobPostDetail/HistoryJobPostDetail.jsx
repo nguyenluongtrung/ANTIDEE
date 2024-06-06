@@ -157,7 +157,7 @@ export const HistoryJobPostDetail = ({
 										Xem danh sách người ứng tuyển{' '}
 									</p>
 								)}
-							{!chosenJobPost?.domesticHelperId && (
+							{!chosenJobPost?.domesticHelperId && !chosenJobPost?.hasCompleted?.customerConfirm && !chosenJobPost?.hasCompleted?.domesticHelperConfirm && (
 								<div className="flex justify-center">
 									<button
 										className={
