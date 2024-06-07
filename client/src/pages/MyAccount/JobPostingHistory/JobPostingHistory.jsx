@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
 import { getAllJobPosts } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation, getAllAccounts } from '../../../features/auth/authSlice';
+import {
+	getAccountInformation,
+	getAllAccounts,
+} from '../../../features/auth/authSlice';
 import {
 	formatDate,
 	formatTime,
@@ -32,7 +35,9 @@ export const JobPostingHistory = () => {
 		let newJobHistory;
 		if (filterOption == 'hasNotDomesticHelperYet') {
 			newJobHistory = output.payload.filter(
-				(job) => job.domesticHelperId == null && String(job.customerId) == String(myAccountId)
+				(job) =>
+					job.domesticHelperId == null &&
+					String(job.customerId) == String(myAccountId)
 			);
 		} else if (filterOption == 'hasAlreadyDomesticHelper') {
 			newJobHistory = output.payload.filter(
@@ -40,7 +45,7 @@ export const JobPostingHistory = () => {
 					job.domesticHelperId != null &&
 					String(job.customerId) == String(myAccountId) &&
 					job?.hasCompleted?.customerConfirm == false &&
-					job?.hasCompleted?.domesticHelperConfirm == false 
+					job?.hasCompleted?.domesticHelperConfirm == false
 			);
 		} else if (filterOption == 'completed') {
 			newJobHistory = output.payload.filter(
@@ -140,10 +145,17 @@ export const JobPostingHistory = () => {
 							?.filter((job) => String(job.customerId) === myAccountId)
 							?.map((post) => {
 								return (
-									<div className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer">
+									<div
+										className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
+											post?.isUrgent && 'bg-light_pink'
+										}`}
+									>
 										<p className="text-brown font-bold mb-3">
 											{post?.serviceId?.name?.toUpperCase()}
 										</p>
+										{post?.isUrgent && (
+											<div class="triangle-down absolute top-0 right-0"></div>
+										)}
 										<p className="text-gray mb-2">
 											Bắt đầu lúc:{' '}
 											<span className="text-brown">
@@ -171,7 +183,7 @@ export const JobPostingHistory = () => {
 													</p>
 												</div>
 											) : (
-												<div className='grid grid-cols-2'>
+												<div className="grid grid-cols-2">
 													<div className="border-r-2 border-gray">
 														<p className="text-gray mb-2 text-center mt-3">
 															Làm trong:{' '}

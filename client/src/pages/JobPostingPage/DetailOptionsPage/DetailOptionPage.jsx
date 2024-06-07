@@ -173,6 +173,16 @@ export const DetailOptionPage = () => {
 	}, [isUrgent])
 
 	useEffect(() => {
+		if(totalPrice){
+			if(isChosenYourself){
+				setTotalPrice(totalPrice => totalPrice * 1.3)
+			} else{
+				setTotalPrice(totalPrice => totalPrice / 1.3)
+			}
+		} 
+	}, [isChosenYourself])
+
+	useEffect(() => {
 		if (startingHour) {
 			if (
 				(startingHour < '08:00:00' || startingHour > '17:00:00') &&
