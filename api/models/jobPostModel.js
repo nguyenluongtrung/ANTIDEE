@@ -86,6 +86,10 @@ const jobPostSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		isChosenYourFav: {
+			type: Boolean,
+			default: false,
+		},
 		applicants: [
 			{
 				type: mongoose.Schema.Types.ObjectId,

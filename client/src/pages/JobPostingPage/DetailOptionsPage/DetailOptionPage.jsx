@@ -23,6 +23,7 @@ export const DetailOptionPage = () => {
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [isUrgent, setIsUrgent] = useState(false);
 	const [isRepeatitive, setIsRepeatitive] = useState(false);
+	const [isChosenYourFav, setIsChosenYourFav] = useState(false);
 	const [isChosenYourself, setIsChosenYourself] = useState(false);
 	const [times, setTimes] = useState(0);
 	const [isOpenRepeatitiveForm, setIsOpenRepeatitiveForm] = useState(false);
@@ -183,6 +184,16 @@ export const DetailOptionPage = () => {
 	}, [isChosenYourself])
 
 	useEffect(() => {
+		if(totalPrice){
+			if(isChosenYourFav){
+				setTotalPrice(totalPrice => totalPrice * 1.3)
+			} else{
+				setTotalPrice(totalPrice => totalPrice / 1.3)
+			}
+		} 
+	}, [isChosenYourFav])
+
+	useEffect(() => {
 		if (startingHour) {
 			if (
 				(startingHour < '08:00:00' || startingHour > '17:00:00') &&
@@ -276,7 +287,8 @@ export const DetailOptionPage = () => {
 				},
 				inputOptions,
 				isUrgent,
-				isChosenYourself
+				isChosenYourself,
+				isChosenYourFav
 			},
 		});
 	};
@@ -472,7 +484,7 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										{' '}
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green">
+										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsChosenYourFav(!isChosenYourFav)}>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>
