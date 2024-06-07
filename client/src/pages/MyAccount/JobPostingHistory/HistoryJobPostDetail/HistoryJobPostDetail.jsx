@@ -128,6 +128,21 @@ export const HistoryJobPostDetail = ({
 								})}
 							</p>
 							{chosenJobPost?.isChosenYourself &&
+								chosenJobPost?.domesticHelperId && !chosenJobPost?.hasCompleted?.customerConfirm && !chosenJobPost?.hasCompleted?.domesticHelperConfirm (
+									<p className="text-gray mb-3">
+										Người giúp việc:{' '}
+										<span className="text-black">
+											{
+												accounts?.find(
+													(acc) =>
+														String(acc._id) ==
+														String(chosenJobPost?.domesticHelperId)
+												)?.name
+											}
+										</span>
+									</p>
+								)}
+							{chosenJobPost?.hasCompleted?.customerConfirm && chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
 								chosenJobPost?.domesticHelperId && (
 									<p className="text-gray mb-3">
 										Người giúp việc:{' '}
@@ -139,6 +154,9 @@ export const HistoryJobPostDetail = ({
 														String(chosenJobPost?.domesticHelperId)
 												)?.name
 											}
+										</span> &nbsp;
+										<span className="text-black italic hover:underline hover:text-brown hover:cursor-pointer">
+											(Đánh giá)
 										</span>
 									</p>
 								)}
