@@ -12,6 +12,7 @@ import {
     addDomesticHelperToBlackList,
     addDomesticHelperToFavoriteList,
     getAccountInformation,
+    updateRatingDomesticHelper,
 } from "../../../features/auth/authSlice";
 import { Spinner } from "../../../components";
 import { errorStyle, successStyle } from "../../../utils/toast-customize";
@@ -79,8 +80,14 @@ export const DomesticHelper = () => {
         } else if (result?.error?.message === "Rejected") {
             toast.error(result?.payload, errorStyle);
         }
-        await dispatch(getAccountInformation());
-        await dispatch(getAllFeedbacks());
+         if(rating!=0){
+            const ratingData = {
+                rating: Number(rating),
+            };
+            await dispatch(updateRatingDomesticHelper({ratingData, domesticHelperId:"662f4c88f79695826c12043e"}));
+         }
+         await dispatch(getAccountInformation());
+         await dispatch(getAllFeedbacks());
     };
 
     if (isAuthLoading) {

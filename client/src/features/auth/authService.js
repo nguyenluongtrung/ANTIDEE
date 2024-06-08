@@ -124,6 +124,19 @@ const deleteDomesticHelperFromFavoriteList = async (
 	);
 	return response.data.data.account;
 };
+
+const updateRatingDomesticHelper = async(ratingData, domesticHelperId, token)=>{
+	const config ={
+		headers:{
+			Authorization:`Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL+'rating/'+domesticHelperId,ratingData,config);
+	return response.data.data.account;
+
+}
 const authService = {
 	login,
 	logout,
@@ -137,6 +150,7 @@ const authService = {
 	deleteDomesticHelperFromBlackList,
 	addDomesticHelperToFavoriteList,
 	deleteDomesticHelperFromFavoriteList,
+	updateRatingDomesticHelper
 };
 
 export default authService;

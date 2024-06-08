@@ -12,6 +12,7 @@ const {
   deleteDomesticHelperFromBlackList,
   deleteDomesticHelperFromFavoriteList,
   getAccountProfile,
+  updateRatingDomesticHelper,
 } = require("../controllers/accountController");
 const { protect } = require("../middleware/accountMiddleware");
 const router = express.Router();
@@ -35,5 +36,9 @@ router
 .route('/favoriteList/:domesticHelperId')
 .post(protect, addDomesticHelperToFavoriteList)
 .delete(protect, deleteDomesticHelperFromFavoriteList);
+
+router
+.route('/rating/:domesticHelperId')
+.patch(protect, updateRatingDomesticHelper);
 
 module.exports = router;

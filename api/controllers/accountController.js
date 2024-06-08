@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Account = require("./../models/accountModel");
+const DomesticHelperFeedback = require("./../models/domesticHelper_FeedbackModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -143,12 +144,12 @@ const getAccountForgottenPassword = asyncHandler(async (req, res) => {
 
 const getAccountInformation = asyncHandler(async (req, res) => {
   const account = await Account.findById(req.account._id)
-  .populate('blackList.domesticHelperId')
-  .populate('favoriteList.domesticHelperId');
+    .populate("blackList.domesticHelperId")
+    .populate("favoriteList.domesticHelperId");
 
-  if(!account){
+  if (!account) {
     res.status(404);
-    throw new Error('Account not found');
+    throw new Error("Account not found");
   }
   res.status(200).json({
     status: "success",
@@ -239,8 +240,6 @@ const deleteDomesticHelperFromBlackList = asyncHandler(async (req, res) => {
   });
 });
 
-
-
 //Favorite list
 const addDomesticHelperToFavoriteList = asyncHandler(async (req, res) => {
   const accountId = req.account._id;
@@ -320,6 +319,74 @@ const deleteDomesticHelperFromFavoriteList = asyncHandler(async (req, res) => {
   });
 });
 
+// const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
+
+//   const { userId } = req.params;
+//   const { rating } = req.body;
+//   const account = await Account.findById(req.params.domesticHelperId);
+
+//   if (!account) {
+//     res.status(404);
+//     throw new Error('Account not found!');
+//   }
+
+//     const feedbacks = await DomesticHelperFeedback.find({ domesticHelperId: userId });
+//     const numberOfRating = feedbacks.length;
+//     if (numberOfRating === 0) {
+//       account.rating.domesticHelperRating = rating;
+//     } else {
+//       account.rating.domesticHelperRating = parseFloat(
+//         (account.rating.domesticHelperRating * numberOfRating + rating)/
+//         (numberOfRating)+1
+//       ).toFixed(1)
+//     }
+
+//     await account.save();
+
+//     res.status(200).json({
+//       status: 'success',
+//       data: {
+//         account,
+//       },
+//     });
+// })
+
+const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
+  const { domesticHelperId } = req.params;
+  const { rating } = req.body;
+
+  const account = await Account.findById(domesticHelperId);
+
+  if (!account) {
+    res.status(404);
+    throw new Error("Account not found!");
+  }
+
+  const feedbacks = await DomesticHelperFeedback.find({ domesticHelperId });
+  const numberOfRatings = feedbacks.length;
+
+  if (numberOfRatings === 0) {
+    account.rating.domesticHelperRating = rating;
+  } else {
+    const totalRating = feedbacks.reduce(
+      (sum, feedback) => sum + feedback.rating,
+      0
+    );
+    account.rating.domesticHelperRating = (
+      totalRating / numberOfRatings
+    ).toFixed(1);
+  }
+
+  await account.save();
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      account,
+    },
+  });
+});
+
 module.exports = {
   register,
   login,
@@ -332,4 +399,5 @@ module.exports = {
   addDomesticHelperToFavoriteList,
   deleteDomesticHelperFromBlackList,
   deleteDomesticHelperFromFavoriteList,
+  updateRatingDomesticHelper,
 };
