@@ -9,21 +9,28 @@ export const formatDate = (dateString) => {
 	return `${day}/${month}/${year}`;
 };
 
-export const  formatDateTime = (dateString) => {
-    const daysOfWeek = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-    const date = new Date(dateString);
-    const dayOfWeek = daysOfWeek[date.getUTCDay()];
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const year = date.getUTCFullYear();
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    
+export const formatDateTime = (dateString) => {
+	const daysOfWeek = [
+		'Chủ nhật',
+		'Thứ 2',
+		'Thứ 3',
+		'Thứ 4',
+		'Thứ 5',
+		'Thứ 6',
+		'Thứ 7',
+	];
+	const date = new Date(dateString);
+	const dayOfWeek = daysOfWeek[date.getUTCDay()];
+	const day = String(date.getUTCDate()).padStart(2, '0');
+	const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+	const year = date.getUTCFullYear();
+	const hours = String(date.getUTCHours()).padStart(2, '0');
+	const minutes = String(date.getUTCMinutes()).padStart(2, '0');
 
-    const formattedDate = `${dayOfWeek}, ${day}/${month}/${year} ${hours}:${minutes}`;
-    
-    return formattedDate;
-}
+	const formattedDate = `${dayOfWeek}, ${day}/${month}/${year} ${hours}:${minutes}`;
+
+	return formattedDate;
+};
 
 export const formatDateInput = (dateString) => {
 	const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -57,11 +64,20 @@ export const getCurrentTime = () => {
 
 export const getOneHourLaterTimeString = () => {
 	const now = new Date();
-	const oneHourLater = new Date(now.getTime() + 3600000); // Add 1 hour in milliseconds
+	const oneHourLater = new Date(now.getTime() + 3600000);
 	const hours = String(oneHourLater.getHours()).padStart(2, '0');
 	const minutes = String(oneHourLater.getMinutes()).padStart(2, '0');
 	const seconds = String(oneHourLater.getSeconds()).padStart(2, '0');
 	return `${hours}:${minutes}:${seconds}`;
+};
+
+export const getCurrentTimeString = () => {
+	const now = new Date();
+	const currentHour = now.getHours();
+	const currentMinute = now.getMinutes();
+	return `${currentHour.toString().padStart(2, '0')}:${currentMinute
+		.toString()
+		.padStart(2, '0')}`;
 };
 
 export const formatTimerCountDown = (time) => {

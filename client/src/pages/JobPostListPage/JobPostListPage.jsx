@@ -1,20 +1,35 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../components';
 import { getAllJobPosts } from '../../features/jobPosts/jobPostsSlice';
-import { formatDate, formatTime, formatWorkingTime } from '../../utils/format';
+import {
+	formatDate,
+	formatWorkingTime,
+	getCurrentTimeString,
+} from '../../utils/format';
 import { JobPostDetail } from './JobPostDetail/JobPostDetail';
 import { getAccountInformation } from '../../features/auth/authSlice';
-import './JobPostListPage.css'
+import './JobPostListPage.css';
+import Select from "react-select";
+import { getAllServices } from '../../features/services/serviceSlice';
 
 export const JobPostListPage = () => {
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const [chosenJobPostId, setChosenJobPostId] = useState(null);
 	const [isInMyLocation, setIsInMyLocation] = useState(false);
 	const [account, setAccount] = useState();
+	const [serviceOptions, setServiceOptions] = useState([]);
+	const [chosenServiceOptions, setChosenServiceOptions] = useState([]);
+	const [jobPosts, setJobPosts] = useState([]);
+	const [allJobPosts, setAllJobPosts] = useState([]);
+	const { isLoading: serviceLoading } = useSelector(
+		(state) => state.services
+	);
 
 	const dispatch = useDispatch();
-	const { jobPosts, isLoading } = useSelector((state) => state.jobPosts);
+	const { isLoading: jobPostLoading } = useSelector(
+		(state) => state.jobPosts
+	);
 
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
@@ -22,13 +37,41 @@ export const JobPostListPage = () => {
 		setAccount(output.payload);
 	}
 
+	async function initiateJobPosts() {
+		let output = await dispatch(getAllJobPosts());
+
+		setJobPosts(output.payload);
+		setAllJobPosts(output.payload);
+	}
+
 	useEffect(() => {
 		initiateAccountInformation();
 	}, []);
 
 	useEffect(() => {
-		dispatch(getAllJobPosts());
+		initiateJobPosts();
 	}, []);
+
+	useEffect(() => {
+		initiateAllServices();
+	}, []);
+
+	useEffect(() => {
+		if(chosenServiceOptions.length > 0){
+			setJobPosts(allJobPosts.filter((jobPost) => chosenServiceOptions.findIndex((service) => String(service.value) === String(jobPost.serviceId._id)) !== -1))
+		} else if(chosenServiceOptions.length == 0){
+			setJobPosts(allJobPosts)
+		}
+	}, [chosenServiceOptions])
+
+	const initiateAllServices = async () => {
+		const output = await dispatch(getAllServices());
+		const options = [];
+		output.payload.forEach((service) => {
+			options.push({ value: service._id, label: service.name });
+		});
+		setServiceOptions(options);
+	};
 
 	const handleGetAllJobPosts = () => {
 		Promise.all([dispatch(getAllJobPosts())]).catch((error) => {
@@ -37,7 +80,11 @@ export const JobPostListPage = () => {
 		setIsInMyLocation(false);
 	};
 
-	if (isLoading) {
+	const handleChange = (selectedOption) => {
+		setChosenServiceOptions(selectedOption)
+	}
+
+	if (jobPostLoading || serviceLoading) {
 		return <Spinner />;
 	}
 
@@ -51,27 +98,25 @@ export const JobPostListPage = () => {
 				/>
 			)}
 			<div className="filter-jobs bg-light py-7 px-32 mb-8">
+				<div className="mb-5">
+					<Select
+						isMulti
+						options={serviceOptions}
+						className="basic-multi-select"
+						classNamePrefix="select"
+						onChange={handleChange}
+						placeholder={<div>Chọn dịch vụ bạn muốn tìm</div>}
+					/>
+				</div>
 				<div className="flex mb-4 justify-between">
 					<div className="flex mr-5">
-						<input type="radio" className="w-3 mr-2" />
-						<p className="font-bold">Việc mới</p>
+						<input
+							type="checkbox"
+							className="w-3 mr-2"
+							onClick={() => setIsInMyLocation(!isInMyLocation)}
+						/>
+						<p className="font-bold">Lọc công việc trong khu vực đã đăng ký</p>
 					</div>
-					<div className="flex mr-5">
-						<input type="radio" className="w-3 mr-2" />
-						<p className="font-bold">Chờ xác nhận</p>
-					</div>
-					<div className="flex mr-5">
-						<input type="radio" className="w-3 mr-2" />
-						<p className="font-bold">Xác nhận</p>
-					</div>
-				</div>
-				<div className="flex">
-					<input
-						type="checkbox"
-						className="w-3 mr-2"
-						onClick={() => setIsInMyLocation(!isInMyLocation)}
-					/>
-					<p className="font-bold">Lọc công việc trong khu vực đã đăng ký</p>
 				</div>
 			</div>
 			<div className="grid grid-cols-3 gap-28">
@@ -89,6 +134,28 @@ export const JobPostListPage = () => {
 						}
 					})
 					?.filter((jobPost) => jobPost.domesticHelperId == null)
+					?.filter((jobPost) => {
+						const startingDate = new Date(jobPost.workingTime.startingDate);
+						startingDate.setMinutes(
+							startingDate.getMinutes() - startingDate.getTimezoneOffset()
+						);
+						const startingHour = parseInt(
+							jobPost.workingTime.startingHour.split(':')[0]
+						);
+						const startingMinute = parseInt(
+							jobPost.workingTime.startingHour.split(':')[1]
+						);
+						const startingTime = `${startingHour
+							.toString()
+							.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
+						if (startingDate > new Date()) return true;
+						else if (
+							startingDate.toDateString() == new Date().toDateString() &&
+							startingTime >= getCurrentTimeString()
+						)
+							return true;
+						else return false;
+					})
 					?.map((post) => {
 						return (
 							<div
@@ -100,7 +167,9 @@ export const JobPostListPage = () => {
 								<p className="text-brown font-bold mb-3">
 									{post?.serviceId?.name?.toUpperCase()}
 								</p>
-								{post?.isUrgent && <div class="triangle-down absolute top-0 right-0"></div>}
+								{post?.isUrgent && (
+									<div class="triangle-down absolute top-0 right-0"></div>
+								)}
 								<p className="text-gray mb-2">
 									Bắt đầu lúc:{' '}
 									<span className="text-brown">
