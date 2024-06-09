@@ -90,77 +90,86 @@ const initialState = {
 };
 
 export const promotionSlice = createSlice({
-	name: 'promotions',
-	initialState,
-	reducers: {
-		reset: (state) => {
-			state.isError = false;
-			state.isLoading = false;
-			state.isSuccess = false;
-			state.message = '';
-		},
-	},
-	extraReducers: (builder) => {
-		builder
-			.addCase(getAllPromotions.pending, (state) => {
-				state.isLoading = true;
-			})
-			.addCase(getAllPromotions.fulfilled, (state, action) => {
-				state.isLoading = false;
-				state.isSuccess = true;
-				state.promotions = action.payload;
-			})
-			.addCase(getAllPromotions.rejected, (state, action) => {
-				state.isLoading = false;
-				state.isError = true;
-				state.message = action.payload;
-				state.promotions = null;
-			})
-			.addCase(createPromotion.pending, (state) => {
-				state.isLoading = true;
-			})
-			.addCase(createPromotion.fulfilled, (state, action) => {
-				state.isLoading = false;
-				state.isSuccess = true;
-				state.promotions.push(action.payload);
-			})
-			.addCase(createPromotion.rejected, (state, action) => {
-				state.isLoading = false;
-				state.isError = true;
-				state.message = action.payload;
-			})
-			.addCase(deletePromotion.pending, (state) => {
-				state.isLoading = true;
-			})
-			.addCase(deletePromotion.fulfilled, (state, action) => {
-				state.isLoading = false;
-				state.isSuccess = true;
-				state.promotions = state.promotions.filter(
-					(promotion) => String(promotion._id) !== String(action.payload._id)
-				);
-			})
-			.addCase(deletePromotion.rejected, (state, action) => {
-				state.isLoading = false;
-				state.isError = true;
-				state.message = action.payload;
-			})
-			.addCase(updatePromotion.pending, (state) => {
-				state.isLoading = true;
-			})
-			.addCase(updatePromotion.fulfilled, (state, action) => {
-				state.isLoading = false;
-				state.isSuccess = true;
-				state.promotions[
-					state.promotions.findIndex((promotion) => promotion._id == action.payload._id)
-				] = action.payload;
-			})
-			.addCase(updatePromotion.rejected, (state, action) => {
-				state.isLoading = false;
-				state.isError = true;
-				state.message = action.payload;
-			});
-	},
+    name: 'promotions',
+    initialState,
+    reducers: {
+        reset: (state) => {
+            state.isError = false;
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.message = '';
+            state.selectedPromotions = [];
+        },
+        selectPromotion: (state, action) => {
+            state.selectedPromotions.push(action.payload);
+        },
+        deselectPromotion: (state, action) => {
+            state.selectedPromotions = state.selectedPromotions.filter(
+                (promotion) => promotion._id !== action.payload._id
+            );
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getAllPromotions.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllPromotions.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions = action.payload;
+            })
+            .addCase(getAllPromotions.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                state.promotions = null;
+            })
+            .addCase(createPromotion.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createPromotion.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions.push(action.payload);
+            })
+            .addCase(createPromotion.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(deletePromotion.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deletePromotion.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions = state.promotions.filter(
+                    (promotion) => String(promotion._id) !== String(action.payload._id)
+                );
+            })
+            .addCase(deletePromotion.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updatePromotion.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updatePromotion.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions[
+                    state.promotions.findIndex((promotion) => promotion._id === action.payload._id)
+                ] = action.payload;
+            })
+            .addCase(updatePromotion.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            });
+    },
 });
 
-export const { reset } = promotionSlice.actions;
+export const { reset, selectPromotion, deselectPromotion } = promotionSlice.actions;
 export default promotionSlice.reducer;

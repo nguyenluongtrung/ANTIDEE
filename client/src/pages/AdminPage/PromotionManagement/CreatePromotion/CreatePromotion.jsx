@@ -25,16 +25,16 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!services.length) {
+        if (!services || services.length === 0) {
             dispatch(getAllServices());
         }
-    }, [dispatch, services.length]);
+    }, [dispatch, services]);
 
     useEffect(() => {
-        if (!promotions.length) {
+        if (!promotions || promotions.length === 0) {
             dispatch(getAllPromotions());
         }
-    }, [dispatch, promotions.length]);
+    }, [dispatch, promotions]);
 
     const handleServiceDeselect = (serviceId) => {
         const updatedSelectedServices = selectedServices.filter(
@@ -233,10 +233,10 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
                                                 ].name
                                             }
                                             <button
-                                                className="w-1"
+                                                className="w-1 ml-1"
                                                 onClick={() => handleServiceDeselect(selectedId)}
                                             >
-                                                <FaTimes />
+                                                <FaTimes className="w-3 text-red ml-1" />
                                             </button>
                                         </li>
                                     );
@@ -245,6 +245,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
                         </tr>
                     </tbody>
                 </table>
+
                 <button
                     type="submit"
                     className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
