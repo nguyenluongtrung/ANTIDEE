@@ -40,10 +40,11 @@ import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
 import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
+import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
 
 const App = () => {
 	return (
-		<Router>
+		<Router>	
 			<AppContent />
 		</Router>
 	);
@@ -81,6 +82,7 @@ const AppContent = () => {
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
 						<Route path ="/reply-feedback" element={<ReplyFeedback/>}/>
+						<Route path ="/demo-video" element={<DemoViewVideoYoutube/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
