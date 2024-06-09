@@ -8,9 +8,12 @@ import {
 	getCurrentTimeString,
 } from '../../utils/format';
 import { JobPostDetail } from './JobPostDetail/JobPostDetail';
-import { getAccountInformation } from '../../features/auth/authSlice';
+import {
+	getAccountInformation,
+	getAllAccounts,
+} from '../../features/auth/authSlice';
 import './JobPostListPage.css';
-import Select from "react-select";
+import Select from 'react-select';
 import { getAllServices } from '../../features/services/serviceSlice';
 
 export const JobPostListPage = () => {
@@ -18,23 +21,26 @@ export const JobPostListPage = () => {
 	const [chosenJobPostId, setChosenJobPostId] = useState(null);
 	const [isInMyLocation, setIsInMyLocation] = useState(false);
 	const [account, setAccount] = useState();
+	const [accounts, setAccounts] = useState();
 	const [serviceOptions, setServiceOptions] = useState([]);
 	const [chosenServiceOptions, setChosenServiceOptions] = useState([]);
 	const [jobPosts, setJobPosts] = useState([]);
 	const [allJobPosts, setAllJobPosts] = useState([]);
-	const { isLoading: serviceLoading } = useSelector(
-		(state) => state.services
-	);
+	const { isLoading: serviceLoading } = useSelector((state) => state.services);
 
 	const dispatch = useDispatch();
-	const { isLoading: jobPostLoading } = useSelector(
-		(state) => state.jobPosts
-	);
+	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
 
 		setAccount(output.payload);
+	}
+
+	async function initiateAllAccounts() {
+		let output = await dispatch(getAllAccounts());
+
+		setAccounts(output.payload);
 	}
 
 	async function initiateJobPosts() {
@@ -49,6 +55,10 @@ export const JobPostListPage = () => {
 	}, []);
 
 	useEffect(() => {
+		initiateAllAccounts();
+	}, []);
+
+	useEffect(() => {
 		initiateJobPosts();
 	}, []);
 
@@ -57,12 +67,20 @@ export const JobPostListPage = () => {
 	}, []);
 
 	useEffect(() => {
-		if(chosenServiceOptions.length > 0){
-			setJobPosts(allJobPosts.filter((jobPost) => chosenServiceOptions.findIndex((service) => String(service.value) === String(jobPost.serviceId._id)) !== -1))
-		} else if(chosenServiceOptions.length == 0){
-			setJobPosts(allJobPosts)
+		if (chosenServiceOptions.length > 0) {
+			setJobPosts(
+				allJobPosts.filter(
+					(jobPost) =>
+						chosenServiceOptions.findIndex(
+							(service) =>
+								String(service.value) === String(jobPost.serviceId._id)
+						) !== -1
+				)
+			);
+		} else if (chosenServiceOptions.length == 0) {
+			setJobPosts(allJobPosts);
 		}
-	}, [chosenServiceOptions])
+	}, [chosenServiceOptions]);
 
 	const initiateAllServices = async () => {
 		const output = await dispatch(getAllServices());
@@ -81,8 +99,8 @@ export const JobPostListPage = () => {
 	};
 
 	const handleChange = (selectedOption) => {
-		setChosenServiceOptions(selectedOption)
-	}
+		setChosenServiceOptions(selectedOption);
+	};
 
 	if (jobPostLoading || serviceLoading) {
 		return <Spinner />;
@@ -155,6 +173,32 @@ export const JobPostListPage = () => {
 						)
 							return true;
 						else return false;
+					})
+					?.filter((jobPost) => {
+						const createdDate = new Date(jobPost.createdAt);
+						const currentDate = new Date();
+
+						const thirtyMinutesInMs = 30 * 60 * 1000;
+						const createdDatePlus30Minutes = new Date(
+							createdDate.getTime() + thirtyMinutesInMs
+						);
+						if (
+							jobPost.isChosenYourFav == true &&
+							currentDate <= createdDatePlus30Minutes
+						) {
+							if (
+								accounts
+									.find((acc) => String(acc._id) === String(jobPost.customerId))
+									.favoriteList.find(
+										(fav) =>
+											String(fav.domesticHelperId) === String(account._id)
+									)
+							){
+								return true;
+							}
+						} else {
+							return true;
+						}
 					})
 					?.map((post) => {
 						return (
