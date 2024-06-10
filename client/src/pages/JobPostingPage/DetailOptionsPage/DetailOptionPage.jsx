@@ -26,6 +26,7 @@ export const DetailOptionPage = () => {
 	const [isChosenYourFav, setIsChosenYourFav] = useState(false);
 	const [isChosenYourself, setIsChosenYourself] = useState(false);
 	const [times, setTimes] = useState(0);
+	const [finalTimes, setFinalTimes] = useState(0);
 	const [isOpenRepeatitiveForm, setIsOpenRepeatitiveForm] = useState(false);
 	const [inputOptions, setInputOptions] = useState([
 		{
@@ -194,6 +195,18 @@ export const DetailOptionPage = () => {
 	}, [isChosenYourFav])
 
 	useEffect(() => {
+		if(totalPrice){
+			if(finalTimes && isRepeatitive){
+				setTotalPrice(totalPrice => totalPrice * finalTimes)
+			} else if(finalTimes != 0 && !isRepeatitive){
+				setTotalPrice(totalPrice => totalPrice / finalTimes)
+				setFinalTimes(0);
+				setTimes(0);
+			}
+		} 
+	}, [finalTimes, isRepeatitive])
+
+	useEffect(() => {
 		if (startingHour) {
 			if (
 				(startingHour < '08:00:00' || startingHour > '17:00:00') &&
@@ -264,12 +277,11 @@ export const DetailOptionPage = () => {
 		));
 	};
 
-	const handleOpenRepeatitiveForm = () => {
-		setIsRepeatitive((state) => !state); 
+	useEffect(() => {
 		if(isRepeatitive){
 			setIsOpenRepeatitiveForm(true);
 		}
-	}
+	}, [isRepeatitive])
 
 	const onSubmit = (data) => {
 		console.log(inputOptions);
@@ -300,7 +312,7 @@ export const DetailOptionPage = () => {
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
-			{isRepeatitive && isOpenRepeatitiveForm && <RepeatitiveForm setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm} setIsRepeatitive={setIsRepeatitive} setTimes={setTimes}/>}
+			{isOpenRepeatitiveForm && <RepeatitiveForm setFinalTimes={setFinalTimes} times={times} setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm} setIsRepeatitive={setIsRepeatitive} setTimes={setTimes}/>}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div
 					className="mx-auto shadow-xl py-10 px-10 hover:shadow-2xl hover:cursor-pointer"
@@ -506,7 +518,7 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										{' '}
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={handleOpenRepeatitiveForm}>
+										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsRepeatitive(!isRepeatitive)}>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>

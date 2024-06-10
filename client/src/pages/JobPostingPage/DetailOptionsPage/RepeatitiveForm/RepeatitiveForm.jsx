@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 export const RepeatitiveForm = ({
+	setFinalTimes,
+	times,
 	setIsOpenRepeatitiveForm,
 	setIsRepeatitive,
 	setTimes,
@@ -9,17 +11,31 @@ export const RepeatitiveForm = ({
 	const [every, setEvery] = useState(0);
 	const [option, setOption] = useState('day');
 	const [endDate, setEndDate] = useState('');
+	const [chosenDays, setChosenDays] = useState([]);
+
+	useEffect(() => {
+		if (every && option && endDate) {
+			let end = new Date(endDate);
+			let start = new Date();
+
+			let difference_In_Time = end.getTime() - start.getTime();
+
+			let difference_In_Days = Math.round(
+				difference_In_Time / (1000 * 3600 * 24)
+			);
+
+			if (option === 'day') {
+				setTimes(Math.floor(difference_In_Days / every));
+			} else if (option === 'week') {
+				setTimes(Math.floor(difference_In_Days / (every * chosenDays.length)));
+			} else if (option === 'month') {
+				setTimes(Math.floor(difference_In_Days / (every * 30)));
+			}
+		}
+	}, [every, option, endDate]);
+
 	const handleSubmit = () => {
-		let end = new Date(endDate);
-		let start = new Date();
-
-		let difference_In_Time = end.getTime() - start.getTime();
-
-		let difference_In_Days = Math.round(
-			difference_In_Time / (1000 * 3600 * 24)
-		);
-		
-		setTimes(5);
+		setFinalTimes(times)
 		setIsOpenRepeatitiveForm(false);
 	};
 
@@ -32,7 +48,6 @@ export const RepeatitiveForm = ({
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={() => {
 							setIsOpenRepeatitiveForm(false);
-							setIsRepeatitive(false);
 						}}
 					/>
 					<p className="text-center font-bold text-md mb-3">
@@ -69,6 +84,146 @@ export const RepeatitiveForm = ({
 							</option>
 						</select>
 					</div>
+					{option === 'week' && (
+						<div className="mb-3 text-gray flex">
+							<p className="mr-3">Lặp lại vào:</p>{' '}
+							<div>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Thứ 2')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Thứ 2'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Thứ 2']);
+										}
+									}}
+								>
+									T2
+								</span>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Thứ 3')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Thứ 3'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Thứ 3']);
+										}
+									}}
+								>
+									T3
+								</span>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Thứ 4')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Thứ 4'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Thứ 4']);
+										}
+									}}
+								>
+									T4
+								</span>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Thứ 5')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Thứ 5'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Thứ 5']);
+										}
+									}}
+								>
+									T5
+								</span>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Thứ 6')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Thứ 6'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Thứ 6']);
+										}
+									}}
+								>
+									T6
+								</span>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Thứ 7')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Thứ 7'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Thứ 7']);
+										}
+									}}
+								>
+									T7
+								</span>
+								<span
+									className={`mr-1 rounded-full text-xs p-1.5 opacity-70 hover:cursor-pointer ${
+										chosenDays.find((day) => day === 'Chủ nhật')
+											? 'bg-yellow text-brown'
+											: 'bg-light_gray '
+									}`}
+									onClick={() => {
+										const newChosenDays = chosenDays.filter(
+											(day) => day !== 'Chủ nhật'
+										);
+										if (newChosenDays.length !== chosenDays.length) {
+											setChosenDays(newChosenDays);
+										} else {
+											setChosenDays([...chosenDays, 'Chủ nhật']);
+										}
+									}}
+								>
+									CN
+								</span>
+							</div>
+						</div>
+					)}
 					<div className="mb-3 text-gray flex">
 						<p className="mr-3">Kết thúc vào:</p>{' '}
 						<input
@@ -79,7 +234,7 @@ export const RepeatitiveForm = ({
 							style={{ width: '35%', marginTop: '-2px', marginRight: '5px' }}
 						/>
 					</div>
-					<p className="italic">(Gói dịch vụ bao gồm 0 lần thực hiện)</p>
+					<p className="italic">(Gói dịch vụ bao gồm {times} lần thực hiện)</p>
 					<div className="flex w-36 ml-48">
 						<button
 							className="text-gray py-1 mr-2"
