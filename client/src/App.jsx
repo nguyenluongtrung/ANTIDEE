@@ -41,6 +41,7 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
 import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
 import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
+import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 
 const App = () => {
 	return (
@@ -111,6 +112,7 @@ const AppContent = () => {
 								element={<QualificationManagement />}
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
+							<Route path="/admin-video" element={<VideoManagement />} />
 						</>
 					)}
 				</Routes>

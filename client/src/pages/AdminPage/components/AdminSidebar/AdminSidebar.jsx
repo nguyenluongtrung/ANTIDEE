@@ -7,6 +7,7 @@ import {
   BiNotification,
   BiMessage,
   BiSupport,
+  BiVideo
 } from "react-icons/bi";
 import { BsTicket } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -28,6 +29,7 @@ export default function AdminSidebar() {
     { name: "Dịch vụ", icon: <MdOutlineMedicalServices />, to: '/admin-service' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '' },
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
+    { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
   ];
 
   const menuBottom = [
