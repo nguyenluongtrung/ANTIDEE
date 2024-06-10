@@ -86,7 +86,7 @@ const getAllJobPosts = asyncHandler(async (req, res) => {
 			['isUrgent', 'desc'],
 			['createdAt', 'desc'],
 		])
-		.populate('serviceId');
+		.populate('serviceId')
 
 	res.status(200).json({
 		status: 'success',

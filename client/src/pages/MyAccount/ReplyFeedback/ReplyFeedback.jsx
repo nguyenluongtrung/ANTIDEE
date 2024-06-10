@@ -36,15 +36,6 @@ export const ReplyFeedback = () => {
     dispatch(getAllFeedbacks());
   }, [dispatch]);
 
-//   const handleReplyClick = (feedbackId) => {
-//     setReplyInputs((prevState) => ({
-//       ...prevState,
-//       [feedbackId]: !prevState[feedbackId],
-//     }));
-//     setVisibleUpdateReply(null);
-//     setShowUpdateReply(null);
-
-//   };
 const handleReplyClick = (feedbackId) => {
     setReplyInputs((prevState) => (prevState === feedbackId?null:feedbackId));
 

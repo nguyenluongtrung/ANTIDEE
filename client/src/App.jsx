@@ -34,7 +34,7 @@ import {
 import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
 import { SignUpPage } from './pages/SignUpPage';
 
-import { DomesticHelper } from './pages/MyAccount/DomesticHelperPage/DomesticHelper';
+import { DomesticHelper } from './pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
 import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -81,7 +81,7 @@ const AppContent = () => {
 						<Route path="/my-jobs" element={<MyJobs />} />
 						<Route path="/exam-result-history" element={<ExamResultHistory />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
-						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
+						{/* <Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/> */}
 						<Route path ="/reply-feedback" element={<ReplyFeedback/>}/>
 						<Route path ="/black-list" element={<BlackList/>}/>
 						<Route path ="/favorite-list" element={<FavoriteList/>}/>
