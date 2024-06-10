@@ -27,12 +27,12 @@ export const RepeatitiveForm = ({
 			if (option === 'day') {
 				setTimes(Math.floor(difference_In_Days / every));
 			} else if (option === 'week') {
-				setTimes(Math.floor(difference_In_Days / (every * chosenDays.length)));
+				setTimes(Math.floor(difference_In_Days * chosenDays.length / (every * 7)));
 			} else if (option === 'month') {
 				setTimes(Math.floor(difference_In_Days / (every * 30)));
 			}
 		}
-	}, [every, option, endDate]);
+	}, [every, option, endDate, chosenDays]);
 
 	const handleSubmit = () => {
 		setFinalTimes(times)
