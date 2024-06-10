@@ -23,6 +23,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
     formState: { errors },
     setError,
     clearErrors,
+    reset
   } = useForm();
 
   const dispatch = useDispatch();
@@ -32,12 +33,25 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
   }, [dispatch]);
 
   useEffect(() => {
-    const foundPromotion = promotions.find(promotion => promotion._id === chosenPromotionId);
-    if (foundPromotion) {
-      setChosenPromotion(foundPromotion);
-      setSelectedServices(foundPromotion.serviceIds || []);
+    if (!promotionLoading && promotions.length > 0) {
+      const foundPromotion = promotions.find(promotion => promotion._id === chosenPromotionId);
+      if (foundPromotion) {
+        setChosenPromotion(foundPromotion);
+        setSelectedServices(foundPromotion.serviceIds || []);
+        reset({
+          promotionName: foundPromotion.promotionName,
+          startDate: formatDateInput(foundPromotion.startDate),
+          endDate: formatDateInput(foundPromotion.endDate),
+          promotionCode: foundPromotion.promotionCode,
+          promotionValue: foundPromotion.promotionValue,
+          promotionQuantity: foundPromotion.promotionQuantity,
+        });
+      }
     }
-  }, [promotions, chosenPromotionId]);
+  }, [promotions, promotionLoading, chosenPromotionId, reset]);
+
+
+
 
   const onSubmit = async (data) => {
     const isNameValid = validatePromotionName(data.promotionName);
@@ -84,8 +98,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
   const handleServiceSelect = (event) => {
     const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
     setSelectedServices((prevSelectedServices) => [
-      ...prevSelectedServices,
-      ...selectedOptions.filter((id) => !prevSelectedServices.includes(id)),
+      ...new Set([...prevSelectedServices, ...selectedOptions]),
     ]);
   };
 
@@ -121,7 +134,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="text"
                   {...register('promotionName')}
                   className="create-question-input text-center ml-[60px] text-sm w-[300px]"
-                  defaultValue={chosenPromotion?.promotionName}
                   placeholder="Nhập tên của khuyến mãi"
                   required
                 />
@@ -138,7 +150,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="date"
                   {...register('startDate')}
                   min={new Date().toISOString().split('T')[0]}
-                  defaultValue={formatDateInput(chosenPromotion?.startDate)}
                   required
                   className='create-question-input text-center ml-[60px] text-sm w-[300px]'
                 />{' '}
@@ -153,7 +164,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="date"
                   {...register('endDate')}
                   min={new Date().toISOString().split('T')[0]}
-                  defaultValue={formatDateInput(chosenPromotion?.endDate)}
                   required
                   className='create-question-input text-center ml-[60px] text-sm w-[300px]'
                 />{' '}
@@ -168,7 +178,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="text"
                   {...register('promotionCode')}
                   placeholder="Nhập mã giảm giá"
-                  defaultValue={chosenPromotion?.promotionCode}
                   required
                   className='create-question-input text-center ml-[60px] text-sm w-[300px]'
                 />
@@ -183,7 +192,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="text"
                   {...register('promotionValue', { required: 'Giá trị mã là bắt buộc', min: { value: 0, message: 'Giá trị mã phải lớn hơn 0' }, max: { value: 1, message: 'Giá trị mã phải nhỏ hơn hoặc bằng 1' } })}
                   placeholder="Nhập giá trị giảm giá"
-                  defaultValue={chosenPromotion?.promotionValue}
                   className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionValue ? 'border-red' : ''}`}
                 />
                 {errors.promotionValue && <p className="text-red text-center">{errors.promotionValue.message}</p>}
@@ -199,7 +207,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   {...register('promotionQuantity', { required: 'Số lượng mã là bắt buộc', min: { value: 1, message: 'Số lượng mã phải lớn hơn 0' }, pattern: { value: /^[1-9]\d*$/, message: 'Số lượng mã phải là số nguyên dương' } })}
                   placeholder="Nhập số lượng mã"
                   className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionQuantity ? 'border-red' : ''}`}
-                  defaultValue={chosenPromotion.promotionQuantity}
                 />
                 {errors.promotionQuantity && <p className="text-red text-center">{errors.promotionQuantity.message}</p>}
               </td>
@@ -217,17 +224,16 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                     multiple
                     onChange={handleServiceSelect}
                   >
-                    {services?.map(service => {
-                      if (!selectedServices.includes(service._id)) {
-                        
-                        return (
-                          <option key={service._id} value={service._id}>
-                            {service.name}
-                          </option>
-                        );
-                      }
-                      return null;
-                    })}
+                    {services
+                    
+                      ?.filter(service => !selectedServices.includes(service._id)) // Loại bỏ các dịch vụ đã chọn
+                      
+                      .map(service => (
+                        <option key={service._id} value={service._id}>
+                          {service.name}
+                        </option>
+                      ))}
+                      
                   </select>
                 </div>
               </td>
@@ -239,11 +245,11 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
               <td className="">
                 <ul>
                   {selectedServices.map(selectedId => {
-                    const service = services.find(service => service._id === selectedId); //bug khúc này nè, chưa tìm ra cách fix
-                    
+                    const service = services.find(service =>(String)(service._id) === (String)(selectedId)); 
+                    console.log(service)
                     return (
                       <li className='flex items-center' key={selectedId}>
-                        {service ? service.name : 'Loading...'}
+                        {service && service.name ? service.name : (selectedId ? selectedId.name : 'Loading...')}
                         <button
                           type="button"
                           className="ml-2 text-red"
