@@ -28,6 +28,7 @@ export const DetailOptionPage = () => {
 	const [times, setTimes] = useState(0);
 	const [finalTimes, setFinalTimes] = useState(0);
 	const [isOpenRepeatitiveForm, setIsOpenRepeatitiveForm] = useState(false);
+	const [details, setDetails] = useState({});
 	const [inputOptions, setInputOptions] = useState([
 		{
 			optionName: '',
@@ -284,7 +285,6 @@ export const DetailOptionPage = () => {
 	}, [isRepeatitive])
 
 	const onSubmit = (data) => {
-		console.log(inputOptions);
 		if (!startingHour.trim()) {
 			toast.error('Vui lòng chọn "Giờ làm việc"', errorStyle);
 			return;
@@ -300,7 +300,11 @@ export const DetailOptionPage = () => {
 				inputOptions,
 				isUrgent,
 				isChosenYourself,
-				isChosenYourFav
+				isChosenYourFav,
+				repeatitiveDetails: {
+					isRepeatitive,
+					details
+				}
 			},
 		});
 	};
@@ -312,7 +316,7 @@ export const DetailOptionPage = () => {
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
-			{isOpenRepeatitiveForm && <RepeatitiveForm setFinalTimes={setFinalTimes} times={times} setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm} setIsRepeatitive={setIsRepeatitive} setTimes={setTimes}/>}
+			{isOpenRepeatitiveForm && <RepeatitiveForm setDetails={setDetails} setFinalTimes={setFinalTimes} times={times} setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm} setIsRepeatitive={setIsRepeatitive} setTimes={setTimes}/>}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div
 					className="mx-auto shadow-xl py-10 px-10 hover:shadow-2xl hover:cursor-pointer"

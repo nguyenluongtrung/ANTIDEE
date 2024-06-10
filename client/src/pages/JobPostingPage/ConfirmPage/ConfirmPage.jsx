@@ -25,6 +25,7 @@ export const ConfirmPage = () => {
 	const isUrgent = location?.state?.isUrgent;
 	const isChosenYourself = location?.state?.isChosenYourself;
 	const isChosenYourFav = location?.state?.isChosenYourFav;
+	const repeatitiveDetails = location?.state?.repeatitiveDetails;
 	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
@@ -64,7 +65,8 @@ export const ConfirmPage = () => {
 			totalPrice: otherInfo?.totalPrice,
 			isUrgent,
 			isChosenYourself,
-			isChosenYourFav
+			isChosenYourFav,
+			repeatitiveDetails
 		}
 		const result = await dispatch(createJobPost(jobPostData));
 

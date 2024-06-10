@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { AiOutlineClose } from 'react-icons/ai';
+import { errorStyle } from '../../../../utils/toast-customize';
 
 export const RepeatitiveForm = ({
+	setDetails,
 	setFinalTimes,
 	times,
 	setIsOpenRepeatitiveForm,
@@ -9,7 +12,7 @@ export const RepeatitiveForm = ({
 	setTimes,
 }) => {
 	const [every, setEvery] = useState(0);
-	const [option, setOption] = useState('day');
+	const [option, setOption] = useState('ngày');
 	const [endDate, setEndDate] = useState('');
 	const [chosenDays, setChosenDays] = useState([]);
 
@@ -24,11 +27,11 @@ export const RepeatitiveForm = ({
 				difference_In_Time / (1000 * 3600 * 24)
 			);
 
-			if (option === 'day') {
+			if (option === 'ngày') {
 				setTimes(Math.floor(difference_In_Days / every));
-			} else if (option === 'week') {
+			} else if (option === 'tuần') {
 				setTimes(Math.floor(difference_In_Days * chosenDays.length / (every * 7)));
-			} else if (option === 'month') {
+			} else if (option === 'tháng') {
 				setTimes(Math.floor(difference_In_Days / (every * 30)));
 			}
 		}
@@ -36,8 +39,24 @@ export const RepeatitiveForm = ({
 
 	const handleSubmit = () => {
 		setFinalTimes(times)
+		setDetails({
+			finalTimes: times,
+			every,
+			option,
+			endDate,
+			chosenDays,
+		})
 		setIsOpenRepeatitiveForm(false);
 	};
+
+	const handleChangeEvery = (e) => {
+		const everyField = e.target.value;
+		if(isNaN(everyField)){
+			toast.error('Bạn phải nhập số vào trường này', errorStyle)
+		} else{
+			setEvery(e.target.value)
+		}
+	}
 
 	return (
 		<div className="popup active">
@@ -59,9 +78,7 @@ export const RepeatitiveForm = ({
 							type="text"
 							className="w-10 py-1 ml-3 mr-2 focus:outline-none"
 							name="every"
-							onChange={(e) => setEvery(e.target.value)}
-							min={1}
-							max={30}
+							onChange={handleChangeEvery}
 							style={{
 								borderBottom: '1px solid black',
 								marginTop: '-20px',

@@ -2,7 +2,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
 import { useEffect, useState } from 'react';
-import { formatDate, formatWorkingTime } from '../../../utils/format';
+import {
+	formatDate,
+	formatDateInput,
+	formatWorkingTime,
+} from '../../../utils/format';
 import { getAccountInformation } from '../../../features/auth/authSlice';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
@@ -178,6 +182,40 @@ export const JobPostDetail = ({
 								</p>
 							);
 						})}
+						{chosenJobPost?.repeatitiveDetails?.isRepeatitive && (
+							<div>
+								<p className="text-black ml-10">
+									+ Lặp lại mỗi{' '}
+									{chosenJobPost?.repeatitiveDetails?.details?.every}{' '}
+									{chosenJobPost?.repeatitiveDetails?.details?.option}
+								</p>
+								<p className="text-black ml-10">
+									+ Kết thúc vào:{' '}
+									{formatDateInput(
+										chosenJobPost?.repeatitiveDetails?.details?.endDate
+									)}
+								</p>
+								<p className="text-black ml-10">
+									+ Gói làm việc bao gồm{' '}
+									{chosenJobPost?.repeatitiveDetails?.details?.finalTimes} lần
+									làm việc
+								</p>
+								{chosenJobPost?.repeatitiveDetails?.details?.chosenDays.length >
+									0 && (
+									<p className="text-black ml-10">
+										+ Làm việc vào các ngày:{' '}
+										{chosenJobPost?.repeatitiveDetails?.details?.chosenDays.map(
+											(day, index) =>
+												index + 1 !==
+												chosenJobPost?.repeatitiveDetails?.details?.chosenDays
+													.length
+													? day + ', '
+													: day + ''
+										)}
+									</p>
+								)}
+							</div>
+						)}
 					</p>
 					<p className="text-gray mb-3">
 						Ghi chú:{' '}
