@@ -9,7 +9,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
 
     useEffect(() => {
         if (vouchers.length > 0) {
-            const selectedVoucher = vouchers.find((voucher) => String(voucher._id) === String(chosenVoucherId));
+            const selectedVoucher = vouchers.find((voucher) => String(voucher.voucherId) === String(chosenVoucherId));
             setChosenVoucher(selectedVoucher);
         }
     }, [chosenVoucherId, vouchers]);

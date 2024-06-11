@@ -119,7 +119,7 @@ export const VoucherHistory = () => {
                           className="ml-4 w-20 py-1 px-2 text-sm bg-[#FB7F0C] text-white rounded-lg"
                           onClick={() => {
                             setIsOpenDetailVoucher(true);
-                            setChosenVoucherId(voucher._id);
+                            setChosenVoucherId(voucher.voucherId);
                           }}
                         >
                           Dùng
@@ -133,10 +133,10 @@ export const VoucherHistory = () => {
               )}
               <div className="flex justify-center mt-4">
                 {currentPage > 1 && (
-                  <button onClick={() => setCurrentPage(currentPage - 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Previous</button>
+                  <button onClick={() => setCurrentPage(currentPage - 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Trang trước</button>
                 )}
                 {currentPage < totalPages && (
-                  <button onClick={() => setCurrentPage(currentPage + 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Next</button>
+                  <button onClick={() => setCurrentPage(currentPage + 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Trang sau</button>
                 )}
               </div>
             </div>
