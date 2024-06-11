@@ -149,12 +149,12 @@ export const DomesticHelperReview = ({
             "Làm cẩn thận hơn",
           ].includes(chosenfeedback?.content) && (
               <>
-                <div className=" flex justify-center mt-10 pb-10">
+                <div className="focus:outline-none flex justify-center mt-10 pb-10">
                   <textarea
                     rows={5}
                     cols={60}
                     defaultValue={chosenfeedback?.content}
-                    className=" rounded-md shadow-2xl shadow-gray p-5"
+                    className=" rounded-md shadow-2xl shadow-gray p-5 focus:outline-none "
                     readOnly
                   />
                 </div>
