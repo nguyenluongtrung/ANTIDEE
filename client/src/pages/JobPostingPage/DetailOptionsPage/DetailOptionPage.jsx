@@ -19,6 +19,7 @@ export const DetailOptionPage = () => {
 	const { services, isLoading: serviceLoading } = useSelector(
 		(state) => state.services
 	);
+	const [anotherOptions, setAnotherOptions] = useState([]);
 	const [chosenService, setChosenService] = useState(null);
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [isUrgent, setIsUrgent] = useState(false);
@@ -166,46 +167,46 @@ export const DetailOptionPage = () => {
 	}, [inputOptions, chosenService?.priceFormula]);
 
 	useEffect(() => {
-		if(totalPrice){
-			if(isUrgent){
-				setTotalPrice(totalPrice => totalPrice * 1.3)
-			} else{
-				setTotalPrice(totalPrice => totalPrice / 1.3)
+		if (totalPrice) {
+			if (isUrgent) {
+				setTotalPrice((totalPrice) => totalPrice * 1.3);
+			} else {
+				setTotalPrice((totalPrice) => totalPrice / 1.3);
 			}
-		} 
-	}, [isUrgent])
+		}
+	}, [isUrgent]);
 
 	useEffect(() => {
-		if(totalPrice){
-			if(isChosenYourself){
-				setTotalPrice(totalPrice => totalPrice * 1.3)
-			} else{
-				setTotalPrice(totalPrice => totalPrice / 1.3)
+		if (totalPrice) {
+			if (isChosenYourself) {
+				setTotalPrice((totalPrice) => totalPrice * 1.3);
+			} else {
+				setTotalPrice((totalPrice) => totalPrice / 1.3);
 			}
-		} 
-	}, [isChosenYourself])
+		}
+	}, [isChosenYourself]);
 
 	useEffect(() => {
-		if(totalPrice){
-			if(isChosenYourFav){
-				setTotalPrice(totalPrice => totalPrice * 1.3)
-			} else{
-				setTotalPrice(totalPrice => totalPrice / 1.3)
+		if (totalPrice) {
+			if (isChosenYourFav) {
+				setTotalPrice((totalPrice) => totalPrice * 1.3);
+			} else {
+				setTotalPrice((totalPrice) => totalPrice / 1.3);
 			}
-		} 
-	}, [isChosenYourFav])
+		}
+	}, [isChosenYourFav]);
 
 	useEffect(() => {
-		if(totalPrice){
-			if(finalTimes && isRepeatitive){
-				setTotalPrice(totalPrice => totalPrice * finalTimes)
-			} else if(finalTimes != 0 && !isRepeatitive){
-				setTotalPrice(totalPrice => totalPrice / finalTimes)
+		if (totalPrice) {
+			if (finalTimes && isRepeatitive) {
+				setTotalPrice((totalPrice) => totalPrice * finalTimes);
+			} else if (finalTimes != 0 && !isRepeatitive) {
+				setTotalPrice((totalPrice) => totalPrice / finalTimes);
 				setFinalTimes(0);
 				setTimes(0);
 			}
-		} 
-	}, [finalTimes, isRepeatitive])
+		}
+	}, [finalTimes, isRepeatitive]);
 
 	useEffect(() => {
 		if (startingHour) {
@@ -278,11 +279,55 @@ export const DetailOptionPage = () => {
 		));
 	};
 
+	const handleToggleUrgentButton = () => {
+		if(!anotherOptions.includes('isUrgent')){
+			const tempOptions = [...anotherOptions, 'isUrgent'];
+			setAnotherOptions(tempOptions);
+		} else{
+			let tempOptions = anotherOptions.filter((option) => option !== 'isUrgent')
+			setAnotherOptions(tempOptions);
+		}
+		setIsUrgent(!isUrgent);
+	};
+
+	const handleToggleFavButton = () => {
+		if(!anotherOptions.includes('isChosenYourFav')){
+			const tempOptions = [...anotherOptions, 'isChosenYourFav'];
+			setAnotherOptions(tempOptions);
+		} else{
+			let tempOptions = anotherOptions.filter((option) => option !== 'isChosenYourFav')
+			setAnotherOptions(tempOptions);
+		}
+		setIsChosenYourFav(!isChosenYourFav);
+	};
+
+	const handleToggleChosenYourselfButton = () => {
+		if(!anotherOptions.includes('isChosenYourself')){
+			const tempOptions = [...anotherOptions, 'isChosenYourself'];
+			setAnotherOptions(tempOptions);
+		} else{
+			let tempOptions = anotherOptions.filter((option) => option !== 'isChosenYourself')
+			setAnotherOptions(tempOptions);
+		}
+		setIsChosenYourself(!isChosenYourself)
+	};
+
+	const handleToggleRepeatitiveButton = () => {
+		if(!anotherOptions.includes('isRepeatitive')){
+			const tempOptions = [...anotherOptions, 'isRepeatitive'];
+			setAnotherOptions(tempOptions);
+		} else{
+			let tempOptions = anotherOptions.filter((option) => option !== 'isRepeatitive')
+			setAnotherOptions(tempOptions);
+		}
+		setIsRepeatitive(!isRepeatitive)
+	};
+
 	useEffect(() => {
-		if(isRepeatitive){
+		if (isRepeatitive) {
 			setIsOpenRepeatitiveForm(true);
 		}
-	}, [isRepeatitive])
+	}, [isRepeatitive]);
 
 	const onSubmit = (data) => {
 		if (!startingHour.trim()) {
@@ -303,8 +348,8 @@ export const DetailOptionPage = () => {
 				isChosenYourFav,
 				repeatitiveDetails: {
 					isRepeatitive,
-					details
-				}
+					details,
+				},
 			},
 		});
 	};
@@ -316,7 +361,16 @@ export const DetailOptionPage = () => {
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
-			{isOpenRepeatitiveForm && <RepeatitiveForm setDetails={setDetails} setFinalTimes={setFinalTimes} times={times} setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm} setIsRepeatitive={setIsRepeatitive} setTimes={setTimes}/>}
+			{isOpenRepeatitiveForm && (
+				<RepeatitiveForm
+					setDetails={setDetails}
+					setFinalTimes={setFinalTimes}
+					times={times}
+					setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm}
+					setIsRepeatitive={setIsRepeatitive}
+					setTimes={setTimes}
+				/>
+			)}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div
 					className="mx-auto shadow-xl py-10 px-10 hover:shadow-2xl hover:cursor-pointer"
@@ -500,7 +554,11 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										{' '}
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsChosenYourFav(!isChosenYourFav)}>
+										<Switch
+											className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
+											onChange={handleToggleFavButton}
+											disabled={totalPrice == 0 || anotherOptions.includes('isUrgent') || anotherOptions.includes('isChosenYourself')}
+										>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>
@@ -510,7 +568,11 @@ export const DetailOptionPage = () => {
 										<p className="mr-3 mb-6 mt-3">Bạn tự chọn người làm</p>
 									</td>
 									<td className="pl-32">
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsChosenYourself(!isChosenYourself)}>
+										<Switch
+											className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
+											onChange={handleToggleChosenYourselfButton}
+											disabled={totalPrice == 0 || anotherOptions.includes('isUrgent') || anotherOptions.includes('isChosenYourFav')}
+										>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>
@@ -522,7 +584,12 @@ export const DetailOptionPage = () => {
 									</td>
 									<td className="pl-32">
 										{' '}
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsRepeatitive(!isRepeatitive)}>
+										<Switch
+											className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
+											onChange={handleToggleRepeatitiveButton}
+											checked={isRepeatitive ? true : false}
+											disabled={totalPrice == 0 || anotherOptions.includes('isUrgent')}
+										>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>
@@ -532,7 +599,11 @@ export const DetailOptionPage = () => {
 										<p className="mr-3 mb-2 mt-3">Cần gấp</p>
 									</td>
 									<td className="pl-32">
-										<Switch className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green" onChange={() => setIsUrgent(!isUrgent)}>
+										<Switch
+											className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
+											onChange={handleToggleUrgentButton}
+											disabled={anotherOptions.includes('isChosenYourFav') || anotherOptions.includes('isRepeatitive') || anotherOptions.includes('isChosenYourself') || totalPrice == 0}
+										>
 											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
 										</Switch>
 									</td>

@@ -27,6 +27,8 @@ export const RepeatitiveForm = ({
 				difference_In_Time / (1000 * 3600 * 24)
 			);
 
+			console.log(difference_In_Days)
+
 			if (option === 'ngày') {
 				setTimes(Math.floor(difference_In_Days / every));
 			} else if (option === 'tuần') {
@@ -38,14 +40,19 @@ export const RepeatitiveForm = ({
 	}, [every, option, endDate, chosenDays]);
 
 	const handleSubmit = () => {
-		setFinalTimes(times)
-		setDetails({
-			finalTimes: times,
-			every,
-			option,
-			endDate,
-			chosenDays,
-		})
+		if(isNaN(every) || every == 0 || endDate == '' || (option === 'tuần' && chosenDays.length == 0)){
+			toast.error('Vui lòng nhập đầy đủ thông tin', errorStyle);
+			setIsRepeatitive(false);
+		} else{
+			setFinalTimes(times)
+			setDetails({
+				finalTimes: times,
+				every,
+				option,
+				endDate,
+				chosenDays,
+			})
+		}
 		setIsOpenRepeatitiveForm(false);
 	};
 
@@ -90,18 +97,18 @@ export const RepeatitiveForm = ({
 							name="option"
 							onChange={(e) => setOption(e.target.value)}
 						>
-							<option value={'day'}>
+							<option value={'ngày'}>
 								<span className="text-xs">ngày</span>
 							</option>
-							<option value={'week'}>
+							<option value={'tuần'}>
 								<span className="text-xs">tuần</span>
 							</option>
-							<option value={'month'}>
+							<option value={'tháng'}>
 								<span className="text-xs">tháng</span>
 							</option>
 						</select>
 					</div>
-					{option === 'week' && (
+					{option === 'tuần' && (
 						<div className="mb-3 text-gray flex">
 							<p className="mr-3">Lặp lại vào:</p>{' '}
 							<div>
