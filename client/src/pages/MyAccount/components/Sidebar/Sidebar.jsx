@@ -1,5 +1,7 @@
 import { IoIosArrowForward } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
+import { BsFillSendArrowUpFill } from 'react-icons/bs';
+import { BsFillSendArrowDownFill } from 'react-icons/bs';
 
 export const Sidebar = ({ account }) => {
 	const navigate = useNavigate();
@@ -44,7 +46,7 @@ export const Sidebar = ({ account }) => {
 				className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/job-posting-history')}
 			>
-				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
+				<BsFillSendArrowUpFill className="inline w-4 mr-2" />
 				<span>Công việc đã đăng</span>
 			</div>
 			{account?.role === 'Người giúp việc' && (
@@ -52,10 +54,7 @@ export const Sidebar = ({ account }) => {
 					className="mb-2.5 hover:text-primary hover:cursor-pointer"
 					onClick={() => navigate('/my-jobs')}
 				>
-					<img
-						src="src/assets/img/mdi_voucher.png"
-						className="inline w-4 mr-2"
-					/>
+					<BsFillSendArrowDownFill className="inline w-4 mr-2" />
 					<span>Công việc đã nhận</span>
 				</div>
 			)}
@@ -66,13 +65,17 @@ export const Sidebar = ({ account }) => {
 				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
 				<span>Lịch sử bài kiểm tra</span>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
-			onClick={() => navigate('/favorite-list')}>
+			<div
+				className="mb-2.5 hover:text-primary hover:cursor-pointer"
+				onClick={() => navigate('/favorite-list')}
+			>
 				<img src="src/assets/img/mdi_heart.png" className="inline w-4 mr-2" />
 				<span>Tasker yêu thích</span>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
-			onClick={() => navigate('/black-list')}>
+			<div
+				className="mb-2.5 hover:text-primary hover:cursor-pointer"
+				onClick={() => navigate('/black-list')}
+			>
 				<img
 					src="src/assets/img/lucide_list-x.png"
 					className="inline w-4 mr-2"
