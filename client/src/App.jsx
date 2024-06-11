@@ -44,6 +44,7 @@ import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
+import { JourneyPage } from './pages/JourneyPage';
 
 import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 const App = () => {
@@ -59,13 +60,13 @@ const AppContent = () => {
 
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
-		<div className="app-container">
+		<div className="app-container select-none">
 			{!isAdminPage && (
 				<div className="sidebar-container">
 					<Sidebar />
 				</div>
 			)}
-			<div className="content-container">
+			<div className="content-container select-none">
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<HomePage />} />
@@ -105,6 +106,7 @@ const AppContent = () => {
 						<Route path="/vouchers" element={<VoucherList />} />
 						<Route path="/sign-up" element={<SignUpPage />} />
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
+						<Route path="/journey" element={<JourneyPage />} />
 					</Route>
 					{isAdminPage && (
 						<>
