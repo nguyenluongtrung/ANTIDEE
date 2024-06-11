@@ -42,11 +42,13 @@ import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResul
 import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
 import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
+import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
+import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 
 import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 const App = () => {
 	return (
-		<Router>
+		<Router>	
 			<AppContent />
 		</Router>
 	);
@@ -86,6 +88,7 @@ const AppContent = () => {
 						<Route path ="/reply-feedback" element={<ReplyFeedback/>}/>
 						<Route path ="/black-list" element={<BlackList/>}/>
 						<Route path ="/favorite-list" element={<FavoriteList/>}/>
+						<Route path ="/demo-video" element={<DemoViewVideoYoutube/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
@@ -115,6 +118,7 @@ const AppContent = () => {
 								element={<QualificationManagement />}
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
+							<Route path="/admin-video" element={<VideoManagement />} />
 						</>
 					)}
 				</Routes>

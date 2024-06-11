@@ -8,6 +8,7 @@ import qualificationReducer from './../features/qualifications/qualificationSlic
 import jobPostsReducer from './../features/jobPosts/jobPostsSlice';
 import domesticHelperFeedbackReducer from './../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
 import promotionReducer from './../features/promotions/promotionSlice';
+import videoReducer from './../features/videos/videoSlice';
 export const store = configureStore({
 	reducer: {
 		auth: authReducer,
@@ -19,5 +20,6 @@ export const store = configureStore({
 		jobPosts: jobPostsReducer,
 		domesticHelperFeedbacks: domesticHelperFeedbackReducer,
 		promotions: promotionReducer,
+		videos: videoReducer,
 	},
 });
