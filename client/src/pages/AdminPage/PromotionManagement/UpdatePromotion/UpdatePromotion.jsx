@@ -50,16 +50,31 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
     }
   }, [promotions, promotionLoading, chosenPromotionId, reset]);
 
+  const checkForDuplicateIds = (selectedServices) => {
+    const idCount = selectedServices.reduce((acc, id) => {
+      acc[id] = (acc[id] || 0) + 1;
+      return acc;
+    }, {});
 
-
+    return Object.values(idCount).some(count => count > 1);
+  };
 
   const onSubmit = async (data) => {
     const isNameValid = validatePromotionName(data.promotionName);
     if (!isNameValid) return;
+
+    if (checkForDuplicateIds(selectedServices)) {
+      toast.error('Có dịch vụ bị trùng lặp trong danh sách đã chọn', errorStyle);
+      return;
+    }
+
+    const uniqueServiceIds = Array.from(new Set(selectedServices));
+
     const promotionData = {
       ...data,
-      serviceIds: selectedServices,
+      serviceIds: uniqueServiceIds,
     };
+
     const result = await dispatch(updatePromotion({ promotionData, id: chosenPromotionId }));
     if (result.type.endsWith('fulfilled')) {
       toast.success('Cập nhật mã khuyến mãi thành công', successStyle);
@@ -97,9 +112,8 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
 
   const handleServiceSelect = (event) => {
     const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    setSelectedServices((prevSelectedServices) => [
-      ...new Set([...prevSelectedServices, ...selectedOptions]),
-    ]);
+    const uniqueNewSelectedServices = [...new Set([...selectedServices, ...selectedOptions])];
+    setSelectedServices(uniqueNewSelectedServices);
   };
 
   if (promotionLoading || serviceLoading) {
@@ -225,15 +239,12 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                     onChange={handleServiceSelect}
                   >
                     {services
-                    
-                      ?.filter(service => !selectedServices.includes(service._id)) // Loại bỏ các dịch vụ đã chọn
-                      
+                      ?.filter(service => !selectedServices.includes(service._id))
                       .map(service => (
                         <option key={service._id} value={service._id}>
                           {service.name}
                         </option>
                       ))}
-                      
                   </select>
                 </div>
               </td>
@@ -245,8 +256,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
               <td className="">
                 <ul>
                   {selectedServices.map(selectedId => {
-                    const service = services.find(service =>(String)(service._id) === (String)(selectedId)); 
-                    console.log(service)
+                    const service = services.find(service => String(service._id) === String(selectedId)); 
                     return (
                       <li className='flex items-center' key={selectedId}>
                         {service && service.name ? service.name : (selectedId ? selectedId.name : 'Loading...')}
