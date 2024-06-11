@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const Promotion = require('./../models/promotionModel');
 const Service = require('./../models/serviceModel');
+const Account = require('../models/accountModel');
+const sendMail = require('../config/emailConfig');
 
 const getAllPromotions = asyncHandler(async (req, res) => {
 	const promotions = await Promotion.find({
@@ -95,8 +97,26 @@ const deletePromotion = asyncHandler(async (req, res) => {
 	});
 });
 
+// const createPromotion = asyncHandler(async (req, res) => {
+// 	const { serviceIds } = req.body;
+// 	const newPromotion = await Promotion.create(req.body);
+
+// 	await Service.updateMany(
+// 		{ _id: { $in: serviceIds } },
+// 		{ $addToSet: { promotionIds: newPromotion._id } }
+// 	);
+
+// 	res.status(201).json({
+// 		status: 'success',
+// 		data: {
+// 			newPromotion,
+// 		},
+// 	});
+// });
+
 const createPromotion = asyncHandler(async (req, res) => {
-	const { serviceIds } = req.body;
+	try {
+		const { serviceIds } = req.body;
 	const newPromotion = await Promotion.create(req.body);
 
 	await Service.updateMany(
@@ -104,12 +124,26 @@ const createPromotion = asyncHandler(async (req, res) => {
 		{ $addToSet: { promotionIds: newPromotion._id } }
 	);
 
-	res.status(201).json({
-		status: 'success',
-		data: {
-			newPromotion,
-		},
-	});
+		const accounts = await Account.find({});
+
+		for (let account of accounts) {
+			await sendMail({
+				email: account.email,
+				subject: 'New Promotion Available!',
+				html: `<p>Dear ${account.name},</p><p>A new promotion is available. Click to view it.</p>`,
+			});
+		}
+		res.status(201).json({
+			success: true,
+			data: voucher,
+		});
+	} catch (error) {
+		console.error('Error creating voucher or sending emails:', error);
+		res.status(400).json({
+			success: false,
+			error: error.message,
+		});
+	}
 });
 
 module.exports = {
