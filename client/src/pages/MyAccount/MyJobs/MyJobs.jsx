@@ -27,7 +27,7 @@ export const MyJobs = () => {
 	}
 
 	async function getInitialMyJobList(filterOption) {
-        let output = await dispatch(getAllJobPosts());
+		let output = await dispatch(getAllJobPosts());
 		let newJobHistory;
 		if (filterOption == 'readyToWork') {
 			newJobHistory = output.payload.filter(
@@ -113,10 +113,22 @@ export const MyJobs = () => {
 							?.filter((job) => String(job.domesticHelperId) === myAccountId)
 							?.map((post) => {
 								return (
-									<div className="shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer">
+									<div
+										className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
+											post?.isUrgent && 'bg-light_pink'
+										}`}
+									>
 										<p className="text-brown font-bold mb-3">
 											{post?.serviceId?.name?.toUpperCase()}
 										</p>
+										{post?.repeatitiveDetails?.isRepeatitive && (
+											<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
+												Lặp lại
+											</button>
+										)}
+										{post?.isUrgent && (
+											<div className="triangle-down absolute top-0 right-0"></div>
+										)}
 										<p className="text-gray mb-2">
 											Bắt đầu lúc:{' '}
 											<span className="text-brown">

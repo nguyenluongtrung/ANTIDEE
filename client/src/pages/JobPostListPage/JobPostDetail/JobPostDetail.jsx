@@ -87,8 +87,8 @@ export const JobPostDetail = ({
 					: 'Nhận công việc thành công',
 				successStyle
 			);
-			setIsOpenJobPostDetail(false);
 			handleGetAllJobPosts();
+			setIsOpenJobPostDetail(false);
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}

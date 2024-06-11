@@ -153,6 +153,11 @@ export const JobPostingHistory = () => {
 										<p className="text-brown font-bold mb-3">
 											{post?.serviceId?.name?.toUpperCase()}
 										</p>
+										{post?.repeatitiveDetails?.isRepeatitive && (
+											<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
+												Lặp lại
+											</button>
+										)}
 										{post?.isUrgent && (
 											<div class="triangle-down absolute top-0 right-0"></div>
 										)}

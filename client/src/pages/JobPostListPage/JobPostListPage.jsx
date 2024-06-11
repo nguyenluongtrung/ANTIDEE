@@ -91,10 +91,11 @@ export const JobPostListPage = () => {
 		setServiceOptions(options);
 	};
 
-	const handleGetAllJobPosts = () => {
-		Promise.all([dispatch(getAllJobPosts())]).catch((error) => {
-			console.error('Error during dispatch:', error);
-		});
+	const handleGetAllJobPosts = async() => {
+		let output = await dispatch(getAllJobPosts());
+		let newJobPosts = output.payload?.filter((jobPost) => jobPost.domesticHelperId == null);
+
+		setJobPosts(newJobPosts);
 		setIsInMyLocation(false);
 	};
 
