@@ -77,6 +77,7 @@ const applyAJob = async (token, jobPostId, accountId) => {
 };
 
 const selectATasker = async (token, jobPostId, taskerId) => {
+	console.log(jobPostId, taskerId);
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -88,7 +89,7 @@ const selectATasker = async (token, jobPostId, taskerId) => {
 		{},
 		config
 	);
-	console.log(response.data.data);
+	console.log(response.data);
 	return response.data.data.jobPost;
 };
 

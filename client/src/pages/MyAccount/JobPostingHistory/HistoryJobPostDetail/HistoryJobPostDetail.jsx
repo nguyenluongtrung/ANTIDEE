@@ -34,11 +34,11 @@ export const HistoryJobPostDetail = ({
 
 	const handleSelectTasker = async (id) => {
 		const result = await dispatch(
-			selectATasker({ chosenJobPostId, taskerId: id })
+			selectATasker({ jobPostId: chosenJobPostId, taskerId: id })
 		);
 
 		if (result.type.endsWith("fulfilled")) {
-			toast.success("Cập nhật thông tin tài khoản thành công", successStyle);
+			toast.success("Chọn người giúp việc thành công", successStyle);
 		} else if (result?.error?.message === "Rejected") {
 			toast.error(result?.payload, errorStyle);
 		}
@@ -148,7 +148,7 @@ export const HistoryJobPostDetail = ({
 							{chosenJobPost?.isChosenYourself &&
 								chosenJobPost?.domesticHelperId &&
 								!chosenJobPost?.hasCompleted?.customerConfirm &&
-								!chosenJobPost?.hasCompleted?.domesticHelperConfirm(
+								!chosenJobPost?.hasCompleted?.domesticHelperConfirm && (
 									<p className="text-gray mb-3">
 										Người giúp việc:{" "}
 										<span className="text-black">
