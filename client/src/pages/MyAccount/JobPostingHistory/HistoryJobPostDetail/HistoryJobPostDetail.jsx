@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Spinner } from '../../../../components';
-import { AiOutlineClose } from 'react-icons/ai';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Spinner } from "../../../../components";
+import { AiOutlineClose } from "react-icons/ai";
 import {
 	formatDate,
 	formatTime,
 	formatWorkingTime,
-} from '../../../../utils/format';
-import toast from 'react-hot-toast';
-import { IoMdCheckboxOutline } from 'react-icons/io';
-import { selectATasker } from '../../../../features/jobPosts/jobPostsSlice';
-import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+} from "../../../../utils/format";
+import toast from "react-hot-toast";
+import { IoMdCheckboxOutline } from "react-icons/io";
+import { selectATasker } from "../../../../features/jobPosts/jobPostsSlice";
+import { errorStyle, successStyle } from "../../../../utils/toast-customize";
+import { DomesticHelper } from "../../../MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper";
+import { getAllFeedbacks } from "../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice";
+import { DomesticHelperReview } from "../DomesticHelperPage/DomesticHelperReview";
 
 export const HistoryJobPostDetail = ({
 	chosenJobPostId,
@@ -18,10 +21,14 @@ export const HistoryJobPostDetail = ({
 	accounts,
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
+	const [feedbacks, setFeedbacks] = useState([]);
 	const { jobPosts, isLoading } = useSelector((state) => state.jobPosts);
+	const [isOpenFeedbackPopup, setIsOpenFeedbackPopup] = useState(false);
+	const [isOpenReviewPopup, setIsOpenReviewPopup] = useState(false);
 	const [chosenJobPost, setChosenJobPost] = useState(
 		jobPosts?.find((jobPost) => String(jobPost._id) === String(chosenJobPostId))
 	);
+
 
 	const dispatch = useDispatch();
 
@@ -30,12 +37,22 @@ export const HistoryJobPostDetail = ({
 			selectATasker({ chosenJobPostId, taskerId: id })
 		);
 
-		if (result.type.endsWith('fulfilled')) {
-			toast.success('Cập nhật thông tin tài khoản thành công', successStyle);
-		} else if (result?.error?.message === 'Rejected') {
+		if (result.type.endsWith("fulfilled")) {
+			toast.success("Cập nhật thông tin tài khoản thành công", successStyle);
+		} else if (result?.error?.message === "Rejected") {
 			toast.error(result?.payload, errorStyle);
 		}
 	};
+
+	const handleGetAllInitialFeedbacks = async (id) => {
+		const result = await dispatch(getAllFeedbacks());
+
+		setFeedbacks(result.payload);
+	};
+
+	useEffect(() => {
+		handleGetAllInitialFeedbacks();
+	}, []);
 
 	if (isLoading) {
 		return <Spinner />;
@@ -43,7 +60,7 @@ export const HistoryJobPostDetail = ({
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
+			<form className="content rounded-md p-5" style={{ width: "35vw" }}>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={() => {
@@ -51,6 +68,7 @@ export const HistoryJobPostDetail = ({
 						handleGetAllQuestions();
 					}}
 				/>
+
 				{!isOpenApplicantsDetails ? (
 					<>
 						<p className="grid text-green font-bold text-xl justify-center mb-3">
@@ -61,22 +79,22 @@ export const HistoryJobPostDetail = ({
 								{chosenJobPost?.serviceId?.name?.toUpperCase()}
 							</p>
 							<p className="text-gray mb-2">
-								Bắt đầu lúc:{' '}
+								Bắt đầu lúc:{" "}
 								<span className="text-brown">
-									{formatDate(chosenJobPost?.workingTime?.startingDate)}{' '}
+									{formatDate(chosenJobPost?.workingTime?.startingDate)}{" "}
 									{formatWorkingTime(chosenJobPost?.workingTime?.startingHour)}
 								</span>
 							</p>
 							<p className="text-gray mb-2">
-								Đã đăng lúc: {''}
+								Đã đăng lúc: {""}
 								<span className="text-brown">
-									{formatDate(chosenJobPost?.createdAt)}{' '}
+									{formatDate(chosenJobPost?.createdAt)}{" "}
 									{formatTime(Date.parse(chosenJobPost?.createdAt))}
 								</span>
 							</p>
 							<div className="border-2 border-gray  my-3">
 								{chosenJobPost?.workload?.find(
-									(option) => String(option?.optionName) === 'Thời gian'
+									(option) => String(option?.optionName) === "Thời gian"
 								)?.optionValue == undefined ? (
 									<div>
 										<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
@@ -88,21 +106,21 @@ export const HistoryJobPostDetail = ({
 									<div className="grid grid-cols-2">
 										<div className="border-r-2 border-gray">
 											<p className="text-gray mb-2 text-center mt-3">
-												Làm trong:{' '}
+												Làm trong:{" "}
 											</p>
 											<p className="text-center text-brown font-bold mb-3">
 												{
 													chosenJobPost?.workload?.find(
 														(option) =>
-															String(option?.optionName) === 'Thời gian'
+															String(option?.optionName) === "Thời gian"
 													)?.optionValue
-												}{' '}
+												}{" "}
 												giờ
 											</p>
 										</div>
 										<div>
 											<p className="text-gray mb-2 text-center mt-3">
-												Số tiền:{' '}
+												Số tiền:{" "}
 											</p>
 											<p className="text-center text-brown font-bold mb-3">
 												{chosenJobPost?.totalPrice} VND
@@ -112,7 +130,7 @@ export const HistoryJobPostDetail = ({
 								)}
 							</div>
 							<p className="text-gray mb-2 ">
-								Tại:{' '}
+								Tại:{" "}
 								<span className="text-black">
 									{chosenJobPost?.contactInfo?.address}
 								</span>
@@ -128,9 +146,11 @@ export const HistoryJobPostDetail = ({
 								})}
 							</p>
 							{chosenJobPost?.isChosenYourself &&
-								chosenJobPost?.domesticHelperId && !chosenJobPost?.hasCompleted?.customerConfirm && !chosenJobPost?.hasCompleted?.domesticHelperConfirm (
+								chosenJobPost?.domesticHelperId &&
+								!chosenJobPost?.hasCompleted?.customerConfirm &&
+								!chosenJobPost?.hasCompleted?.domesticHelperConfirm(
 									<p className="text-gray mb-3">
-										Người giúp việc:{' '}
+										Người giúp việc:{" "}
 										<span className="text-black">
 											{
 												accounts?.find(
@@ -142,10 +162,11 @@ export const HistoryJobPostDetail = ({
 										</span>
 									</p>
 								)}
-							{chosenJobPost?.hasCompleted?.customerConfirm && chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
+							{chosenJobPost?.hasCompleted?.customerConfirm &&
+								chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
 								chosenJobPost?.domesticHelperId && (
 									<p className="text-gray mb-3">
-										Người giúp việc:{' '}
+										Người giúp việc:{" "}
 										<span className="text-black">
 											{
 												accounts?.find(
@@ -154,16 +175,40 @@ export const HistoryJobPostDetail = ({
 														String(chosenJobPost?.domesticHelperId)
 												)?.name
 											}
-										</span> &nbsp;
-										<span className="text-black italic hover:underline hover:text-brown hover:cursor-pointer">
-											(Đánh giá)
-										</span>
+										</span>{" "}
+										&nbsp;
+										{feedbacks?.findIndex(
+											(feedback) =>
+												String(feedback.jobPostId) === String(chosenJobPostId)
+										) !== -1 ? (
+											<span
+												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
+												onClick={() => {
+													setIsOpenReviewPopup(true);
+												}}
+											>
+												(Review)
+
+											</span>
+
+
+										) : (
+											<span
+												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
+												onClick={() => {
+													setIsOpenFeedbackPopup(true);
+												}}
+											>
+												(Đánh giá)
+											</span>
+										)}
 									</p>
 								)}
+
 							<p className="text-gray mb-3">
-								Ghi chú:{' '}
+								Ghi chú:{" "}
 								<span className="text-black">
-									{chosenJobPost?.note ? chosenJobPost?.note : 'Không có'}
+									{chosenJobPost?.note ? chosenJobPost?.note : "Không có"}
 								</span>
 							</p>
 							{chosenJobPost?.isChosenYourself &&
@@ -172,21 +217,23 @@ export const HistoryJobPostDetail = ({
 										className="text-gray mb-3 hover:text-brown hover:cursor-pointer"
 										onClick={() => setIsOpenApplicantsDetails(true)}
 									>
-										Xem danh sách người ứng tuyển{' '}
+										Xem danh sách người ứng tuyển{" "}
 									</p>
 								)}
-							{!chosenJobPost?.domesticHelperId && !chosenJobPost?.hasCompleted?.customerConfirm && !chosenJobPost?.hasCompleted?.domesticHelperConfirm && (
-								<div className="flex justify-center">
-									<button
-										className={
-											'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
-										}
-										style={{ width: '70%' }}
-									>
-										<p className="text-center">Hủy việc</p>
-									</button>
-								</div>
-							)}
+							{!chosenJobPost?.domesticHelperId &&
+								!chosenJobPost?.hasCompleted?.customerConfirm &&
+								!chosenJobPost?.hasCompleted?.domesticHelperConfirm && (
+									<div className="flex justify-center">
+										<button
+											className={
+												"text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown"
+											}
+											style={{ width: "70%" }}
+										>
+											<p className="text-center">Hủy việc</p>
+										</button>
+									</div>
+								)}
 						</div>
 					</>
 				) : (
@@ -198,7 +245,7 @@ export const HistoryJobPostDetail = ({
 							{chosenJobPost?.applicants?.map((applicant, index) => (
 								<div
 									className="flex rounded-2xl p-5 mb-5"
-									style={{ backgroundColor: 'rgba(100,100,100,0.1)' }}
+									style={{ backgroundColor: "rgba(100,100,100,0.1)" }}
 								>
 									<div className="mr-10 flex flex-col justify-center">
 										<img
@@ -240,9 +287,9 @@ export const HistoryJobPostDetail = ({
 						<div className="flex justify-center mt-5">
 							<button
 								className={
-									'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+									"text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown"
 								}
-								style={{ width: '70%' }}
+								style={{ width: "70%" }}
 								onClick={() => setIsOpenApplicantsDetails(false)}
 							>
 								<p className="text-center">Quay về</p>
@@ -251,6 +298,66 @@ export const HistoryJobPostDetail = ({
 					</>
 				)}
 			</form>
+
+			{isOpenFeedbackPopup && (
+				<div className="popup active">
+					<div
+						className="overlay"
+						onClick={() => setIsOpenFeedbackPopup(false)}
+					></div>
+					<div className="content rounded-md">
+						<AiOutlineClose
+							className="absolute text-sm hover:cursor-pointer m-5"
+							onClick={() => setIsOpenFeedbackPopup(false)}
+						/>
+						<DomesticHelper
+							serviceName={chosenJobPost?.serviceId?.name}
+							serviceAddress={chosenJobPost?.contactInfo?.address}
+							domesticHelperId={chosenJobPost?.domesticHelperId}
+							avatar={
+								accounts?.find(
+									(acc) =>
+										String(acc._id) == String(chosenJobPost?.domesticHelperId)
+								)?.avatar
+							}
+							jobPostId={chosenJobPost?._id}
+						/>
+					</div>
+				</div>
+			)}
+			{isOpenReviewPopup && (
+				<div className="popup active">
+					<div
+						className="overlay"
+						onClick={() => setIsOpenReviewPopup(false)}
+					></div>
+					<div className="content rounded-md">
+						<AiOutlineClose
+							className="absolute text-sm hover:cursor-pointer m-5"
+							onClick={() => setIsOpenReviewPopup(false)}
+						/>
+						<DomesticHelperReview
+							serviceName={chosenJobPost?.serviceId?.name}
+							serviceAddress={chosenJobPost?.contactInfo?.address}
+							domesticHelperId={chosenJobPost?.domesticHelperId}
+							avatar={
+								accounts?.find(
+									(acc) =>
+										String(acc._id) == String(chosenJobPost?.domesticHelperId)
+								)?.avatar
+							}
+							jobPostId={chosenJobPost?._id}
+							chosenfeedback={
+								feedbacks.find(
+									(feedback) =>
+										String(feedback.jobPostId) === String(chosenJobPostId)
+								)
+							}
+							
+						/>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
