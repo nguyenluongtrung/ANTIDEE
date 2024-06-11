@@ -39,7 +39,9 @@ export const Sidebar = ({ account }) => {
 				/>
 				<span>aPay</span>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
+			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
+				onClick={() => navigate('/voucher-history')}
+			>
 				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
 				<span>Kho Voucher</span>
 			</div>

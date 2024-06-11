@@ -64,6 +64,10 @@ const voucherSchema = new Schema({
         receivedAt: {
             type: Date,
             default: Date.now
+        },
+        isUsed:{
+            type:Boolean,
+            default: false
         }
     }]
 
@@ -72,5 +76,5 @@ const voucherSchema = new Schema({
 });
 
 
-const Voucher = mongoose.model('voucher', voucherSchema);
+const Voucher = mongoose.model('Voucher', voucherSchema);
 module.exports = Voucher;

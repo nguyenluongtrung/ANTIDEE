@@ -140,6 +140,10 @@ const accountSchema = mongoose.Schema(
 					type: Date,
 					default: Date.now,
 				},
+				isUsed: {
+					type: Boolean,
+					default: false,
+				},
 			},
 		],
 		receivedJobList: [

@@ -227,6 +227,36 @@ const redeemVoucher = async (req, res) => {
 	}
 };
 
+const getRedeemedVouchers = async (req, res) => {
+	const { userId } = req.params;
+
+	try {
+		const user = await Account.findById(userId).populate(
+			'accountVouchers.voucherId'
+		);
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found.' });
+		}
+
+		const redeemedVouchers = user.accountVouchers.map((voucher) => ({
+			voucherId: voucher.voucherId._id,
+			name: voucher.voucherId.name,
+			description: voucher.voucherId.description,
+			discountValue: voucher.voucherId.discountValue,
+			brand: voucher.voucherId.brand,
+			code: voucher.voucherId.code,
+			endDate: voucher.voucherId.endDate,
+			receivedAt: voucher.receivedAt,
+			isUsed: voucher.isUsed,
+		}));
+
+		return res.status(200).json({ success: true, data: redeemedVouchers });
+	} catch (error) {
+		res.status(500).json({ success: false, error: error.message });
+	}
+};
+
 module.exports = {
 	createVoucher,
 	getAllVouchers,
@@ -234,4 +264,5 @@ module.exports = {
 	updateVoucher,
 	deleteVoucher,
 	redeemVoucher,
+	getRedeemedVouchers,
 };
