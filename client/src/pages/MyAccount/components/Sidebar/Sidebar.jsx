@@ -2,6 +2,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
 import { BsFillSendArrowUpFill } from 'react-icons/bs';
 import { BsFillSendArrowDownFill } from 'react-icons/bs';
+import { FaHistory } from "react-icons/fa";
 
 export const Sidebar = ({ account }) => {
 	const navigate = useNavigate();
@@ -62,7 +63,7 @@ export const Sidebar = ({ account }) => {
 				className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/exam-result-history')}
 			>
-				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
+				<FaHistory className="inline w-4 mr-2" />
 				<span>Lịch sử bài kiểm tra</span>
 			</div>
 			<div
