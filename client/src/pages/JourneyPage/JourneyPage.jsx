@@ -22,31 +22,31 @@ export const JourneyPage = () => {
       level: "Kiến con",
       leveltitle: "Cấp 1",
       imagelevel: "./../../../public/image/kien_con.jpg",
-      reward: "- Nhập thêm 100 Apoint",
+      reward: "- Nhận thêm 100 Apoint",
     },
     {
       level: "Kiến trưởng thành",
       leveltitle: "Cấp 2",
       imagelevel: "./../../../public/image/kien_truong_thanh.jpg",
-      reward: "- Nhập thêm 100 Apoint và 200 vpoints",
+      reward: "- Nhận thêm 100 Apoint và 200 vpoints",
     },
     {
       level: "Kiến thợ",
       leveltitle: "Cấp 3",
       imagelevel: "./../../../public/image/kien_tho.jpg",
-      reward: "- Nhập thêm 100 Apoint và 200 vpoints và ...",
+      reward: "- Nhận thêm 100 Apoint và 200 vpoints và ...",
     },
     {
       level: "Kiến chiến binh",
       leveltitle: "Cấp 4",
       imagelevel: "./../../../public/image/kien_chien_binh.jpg",
-      reward: "- Nhập thêm 1000 Apoint và 200 vpoints và ...",
+      reward: "- Nhận thêm 1000 Apoint và 200 vpoints và ...",
     },
     {
       level: "Kiến chúa",
       leveltitle: "Cấp 5",
       imagelevel: "./../../../public/image/kien_chua.png",
-      reward: "- Nhập thêm 1000 Apoint và 200 vpoints và ...",
+      reward: "- Nhận thêm 1000 Apoint và 200 vpoints và ...",
     },
   ];
 
