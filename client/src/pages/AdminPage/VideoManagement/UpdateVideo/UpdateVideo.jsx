@@ -51,7 +51,7 @@ export const UpdateVideo = ({
       return;
     }
     if (!description.trim()) {
-      toast.error('Vui lòng nhập "Mô tả" chứng chỉ', errorStyle);
+      toast.error('Vui lòng nhập "Mô tả" video', errorStyle);
       return;
     }
     if (/ {2,}/.test(description)) {
