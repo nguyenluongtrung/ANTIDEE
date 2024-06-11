@@ -6,8 +6,8 @@ import questionReducer from './../features/questions/questionSlice';
 import voucherReducer from './../features/vouchers/voucherSlice';
 import qualificationReducer from './../features/qualifications/qualificationSlice';
 import jobPostsReducer from './../features/jobPosts/jobPostsSlice';
-import domesticHelperFeedbackReducer from './../features/domesticHelperFeedback/domesticHelperFeedbackSlice'
-
+import domesticHelperFeedbackReducer from './../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
+import promotionReducer from './../features/promotions/promotionSlice';
 export const store = configureStore({
 	reducer: {
 		auth: authReducer,
@@ -18,5 +18,6 @@ export const store = configureStore({
 		qualifications: qualificationReducer,
 		jobPosts: jobPostsReducer,
 		domesticHelperFeedbacks: domesticHelperFeedbackReducer,
+		promotions: promotionReducer,
 	},
 });

@@ -43,6 +43,7 @@ import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
 import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 
+import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 const App = () => {
 	return (
 		<Router>
@@ -108,6 +109,7 @@ const AppContent = () => {
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
 							<Route path="/admin-voucher" element={<VoucherManagement />} />
+							<Route path="/admin-promotion" element={<PromotionManagement />} />
 							<Route
 								path="/admin-qualification"
 								element={<QualificationManagement />}
