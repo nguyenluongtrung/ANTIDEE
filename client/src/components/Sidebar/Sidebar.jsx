@@ -131,6 +131,7 @@ export const Sidebar = () => {
 								className="sidebar-item flex items-center p-4 cursor-pointer hover:text-primary"
 								onMouseEnter={() => handleMouseEnter('Hành trình')}
 								onMouseLeave={handleMouseLeave}
+								onClick={() => navigate('/journey')}
 							>
 								<RiMapPinFill className="mr-4" />
 								{activeItem === 'Hành trình' && (
