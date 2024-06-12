@@ -4,6 +4,7 @@ import {
 	Routes,
 	useLocation,
 } from 'react-router-dom';
+import 'aos/dist/aos.css';
 import { Layout } from './layout';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';

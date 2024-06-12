@@ -1,21 +1,23 @@
 .container .blob {
-    border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
-    width: 500px;
-    height: 500px;
-    background: rgb(0, 255, 98);
-    background-image: linear-gradient(45deg, #dba629 0%, rgb(241, 108, 20) 100%);
-    box-shadow: -10vmin 10vmin 0 rgba(255,255,255,0.07);
-    animation: blob-animation 3s linear infinite alternate;
+  border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+  width: 500px;
+  height: 500px;
+  background: rgb(0, 255, 98);
+  background-image: linear-gradient(45deg, #dba629 0%, rgb(241, 108, 20) 100%);
+  box-shadow: -10vmin 10vmin 0 rgba(255, 255, 255, 0.07);
+  animation: blob-animation 3s linear infinite alternate;
+  overflow: hidden;
+  position: relative;
 }
 
 @keyframes blob-animation {
-    0% {
-        border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
-    }
-    50% {
-        border-radius: 30% 70% 70% 30% / 60% 40% 60% 40%;
-    }
-    100% {
-        border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
-    }
+  0% {
+    border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+  }
+  50% {
+    border-radius: 30% 70% 70% 30% / 60% 40% 60% 40%;
+  }
+  100% {
+    border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+  }
 }
