@@ -97,12 +97,15 @@ export const HomePage = () => {
 
 	return (
 		<div className="">
-			<div className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80" onClick={scrolLWithUseRef}>
+			<div
+				className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80"
+				onClick={scrolLWithUseRef}
+			>
 				<FaArrowUp className="text-pink" />
 			</div>
 			<div>
 				<div
-					className="bg-primary p-8 text-white  mx-auto rounded-[20px] mt-20 relative"
+					className="p-8 text-white  mx-auto rounded-[20px] mt-20 relative bg-gradient-to-tr from-yellow  to-primary"
 					style={{ maxWidth: '1255px', height: '292px' }}
 					ref={topRef}
 				>
