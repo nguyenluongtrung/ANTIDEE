@@ -3,13 +3,15 @@ import { Spinner } from '../../../components/Spinner/Spinner';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 
+import { formatDate } from '../../../utils/format';
+
 export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleGetAllVouchers }) => {
     const { vouchers, isLoading: voucherLoading } = useSelector((state) => state.vouchers);
     const [chosenVoucher, setChosenVoucher] = useState(null);
 
     useEffect(() => {
         if (vouchers.length > 0) {
-            const selectedVoucher = vouchers.find((voucher) => String(voucher._id) === String(chosenVoucherId));
+            const selectedVoucher = vouchers.find((voucher) => String(voucher.voucherId) === String(chosenVoucherId));
             setChosenVoucher(selectedVoucher);
         }
     }, [chosenVoucherId, vouchers]);
@@ -42,7 +44,7 @@ export const VoucherDetail = ({ chosenVoucherId, setIsOpenDetailVoucher, handleG
                             <div className="voucher-code" style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <p className="font-bold" style={{ color: '#ff0000' }}>{chosenVoucher?.code}</p>
                             </div>
-                            <p className="mb-2 font-bold">Hạn sử dụng: <span className="text-red">{new Date(chosenVoucher.endDate).toLocaleDateString()}</span></p>
+                            <p className="mb-2 font-bold">Hạn sử dụng: <span className="text-red">{formatDate(chosenVoucher.endDate)}</span></p>
                         </>
                     ) : (
                         <p>Loading voucher details...</p>

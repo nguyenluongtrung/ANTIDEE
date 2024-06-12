@@ -113,16 +113,19 @@ export const VoucherHistory = () => {
                         <img src={voucher?.image || 'https://scontent.fsgn2-4.fna.fbcdn.net/v/t1.15752-9/441383852_1176452586830228_6532755626084556078_n.png?_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEWDG5ykBC2m4DKPH9prDgb5rEFbXOYYPPmsQVtc5hg87OKXE-ibmrgn2z-w977MsaCQjRRdGoBb34mwXN-9dNa&_nc_ohc=5VZSoYoKs7AQ7kNvgG5dT37&_nc_ht=scontent.fsgn2-4.fna&oh=03_Q7cD1QEjM_tZ2zZfVcF2YKAg3glzYDK7UbfyIOBhvzETS6Ccng&oe=667984CA'} alt="Offer" className="w-36 h-36 object-cover rounded-lg mr-4" />
                         <div className="flex-1">
                           <p className="text-xl font-semibold">{voucher.name}</p>
-                          <p className="text-gray">Còn lại: {calculateDaysLeft(voucher?.endDate)} ngày</p>
+                          {!voucher.isUsed && <p className="text-gray">Còn lại: {calculateDaysLeft(voucher?.endDate)} ngày</p>}
                         </div>
                         <button
-                          className="ml-4 w-20 py-1 px-2 text-sm bg-[#FB7F0C] text-white rounded-lg"
+                          className={`ml-4 w-20 py-1 px-2 text-sm rounded-lg ${voucher.isUsed ? 'bg-[#da9452] text-white cursor-not-allowed' : 'bg-[#FB7F0C] text-white'}`}
                           onClick={() => {
-                            setIsOpenDetailVoucher(true);
-                            setChosenVoucherId(voucher._id);
+                            if (!voucher.isUsed) {
+                              setIsOpenDetailVoucher(true);
+                              setChosenVoucherId(voucher.voucherId);
+                            }
                           }}
+                          disabled={voucher.isUsed}
                         >
-                          Dùng
+                          {voucher.isUsed ? 'Đã Dùng' : 'Dùng'}
                         </button>
                       </div>
                     </div>
@@ -133,10 +136,10 @@ export const VoucherHistory = () => {
               )}
               <div className="flex justify-center mt-4">
                 {currentPage > 1 && (
-                  <button onClick={() => setCurrentPage(currentPage - 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Previous</button>
+                  <button onClick={() => setCurrentPage(currentPage - 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Trang trước</button>
                 )}
                 {currentPage < totalPages && (
-                  <button onClick={() => setCurrentPage(currentPage + 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Next</button>
+                  <button onClick={() => setCurrentPage(currentPage + 1)} className="mx-2 px-4 py-2 bg-gray-300 rounded-lg">Trang sau</button>
                 )}
               </div>
             </div>
