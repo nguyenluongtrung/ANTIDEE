@@ -142,36 +142,33 @@ export const WorkingLocationPage = () => {
 					</div>
 					<div className="">
 						<p className="font-bold">Loại nhà</p>
-						<input
-							type="text"
-							value={'Nhà / nhà phố'}
-							onClick={(e) => setHouseType(e.target.value)}
-							className={`p-2 my-4 border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
+						<p
+							onClick={() => setHouseType('Nhà / nhà phố')}
+							className={`pl-3 py-2 my-4 border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
 								houseType === 'Nhà / nhà phố'
 									? 'text-primary border-primary'
 									: 'border-light_gray'
 							}`}
-						/>
-						<input
-							type="text"
-							value={'Căn hộ'}
-							onClick={(e) => setHouseType(e.target.value)}
-							className={`p-2 my-4  border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
+							style={{fontSize: '16px'}}
+						>Nhà / nhà phố</p>
+						<p
+							onClick={() => setHouseType('Căn hộ')}
+							className={`pl-3 py-2 my-4  border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
 								houseType === 'Căn hộ'
 									? 'text-primary border-primary'
 									: 'border-light_gray'
 							}`}
-						/>
-						<input
-							type="text"
-							value={'Biệt thự'}
-							onClick={(e) => setHouseType(e.target.value)}
-							className={`p-2 my-4 border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
+							style={{fontSize: '16px'}}
+						>Căn hộ</p>
+						<p
+							onClick={() => setHouseType('Biệt thự')}
+							className={`pl-3 py-2 my-4 border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
 								houseType === 'Biệt thự'
 									? 'text-primary border-primary'
 									: 'border-light_gray'
 							}`}
-						/>
+							style={{fontSize: '16px'}}
+						>Biệt thự</p>
 					</div>
 					<p className="italic text-gray">
 						*Vui lòng chọn loại nhà, số nhà phù hợp để người giúp việc dễ dàng

@@ -86,7 +86,7 @@ const getAllJobPosts = asyncHandler(async (req, res) => {
 			['isUrgent', 'desc'],
 			['createdAt', 'desc'],
 		])
-		.populate('serviceId')
+		.populate('serviceId');
 
 	res.status(200).json({
 		status: 'success',
@@ -129,6 +129,13 @@ const deleteJobPost = asyncHandler(async (req, res) => {
 		data: {
 			id: req.params.jobPostId,
 		},
+	});
+});
+
+const deleteAllJobPost = asyncHandler(async (req, res) => {
+	await JobPost.deleteMany({});
+	res.status(200).json({
+		status: 'success',
 	});
 });
 
@@ -260,4 +267,5 @@ module.exports = {
 	getAJob,
 	applyAJob,
 	selectATasker,
+	deleteAllJobPost,
 };

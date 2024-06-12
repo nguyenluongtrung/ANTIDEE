@@ -91,9 +91,11 @@ export const JobPostListPage = () => {
 		setServiceOptions(options);
 	};
 
-	const handleGetAllJobPosts = async() => {
+	const handleGetAllJobPosts = async () => {
 		let output = await dispatch(getAllJobPosts());
-		let newJobPosts = output.payload?.filter((jobPost) => jobPost.domesticHelperId == null);
+		let newJobPosts = output.payload?.filter(
+			(jobPost) => jobPost.domesticHelperId == null
+		);
 
 		setJobPosts(newJobPosts);
 		setIsInMyLocation(false);
@@ -167,13 +169,14 @@ export const JobPostListPage = () => {
 						const startingTime = `${startingHour
 							.toString()
 							.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
-						if (startingDate > new Date()) return true;
-						else if (
+						if (startingDate.toDateString() > new Date().toDateString()) {
+							return true;
+						} else if (
 							startingDate.toDateString() == new Date().toDateString() &&
 							startingTime >= getCurrentTimeString()
-						)
+						) {
 							return true;
-						else return false;
+						} else return false;
 					})
 					?.filter((jobPost) => {
 						const createdDate = new Date(jobPost.createdAt);
@@ -194,7 +197,7 @@ export const JobPostListPage = () => {
 										(fav) =>
 											String(fav.domesticHelperId) === String(account._id)
 									)
-							){
+							) {
 								return true;
 							}
 						} else {
@@ -213,7 +216,9 @@ export const JobPostListPage = () => {
 									{post?.serviceId?.name?.toUpperCase()}
 								</p>
 								{post?.repeatitiveDetails?.isRepeatitive && (
-									<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">Lặp lại</button>
+									<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
+										Lặp lại
+									</button>
 								)}
 								{post?.isUrgent && (
 									<div className="triangle-down absolute top-0 right-0"></div>

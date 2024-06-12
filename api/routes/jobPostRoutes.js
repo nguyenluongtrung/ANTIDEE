@@ -1,5 +1,5 @@
 const express = require('express');
-const { protect } = require('../middleware/accountMiddleware');
+const { protect, restrict } = require('../middleware/accountMiddleware');
 const {
 	updateJobPost,
 	deleteJobPost,
@@ -9,11 +9,16 @@ const {
 	getAJob,
 	applyAJob,
 	selectATasker,
+	deleteAllJobPost,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
 
-router.route('/').post(protect, createJobPost).get(protect, getAllJobPosts);
+router
+	.route('/')
+	.post(protect, createJobPost)
+	.get(protect, getAllJobPosts)
+	.delete(protect, restrict('Admin'), deleteAllJobPost);
 router.route('/get-a-job/:jobPostId/:accountId').patch(protect, getAJob);
 router.route('/apply-a-job/:jobPostId/:accountId').patch(protect, applyAJob);
 router
