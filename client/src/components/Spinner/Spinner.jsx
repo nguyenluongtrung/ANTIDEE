@@ -1,9 +1,12 @@
-import './Spinner.css'
+import React from 'react';
+import './Spinner.css';
 
 export const Spinner = () => {
   return (
-    <div className='loadingSpinnerContainer'>
-        <div className='loadingSpinner'></div>
+    <div className="loadingSpinnerContainer">
+      <img src="/image/ant.gif" alt="loading" className="loadingAnt" />
     </div>
-  )
-}
+  );
+};
+
+

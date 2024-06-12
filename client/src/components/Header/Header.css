@@ -1,3 +1,5 @@
+/* Header.css */
+
 .normal-text {
 	font-size: 14px;
 }
@@ -43,14 +45,34 @@
 
 .dropdown:hover {
 	display: block;
-
-    .dropdown-content{
-        display: flex;
-    }
 }
 
-.hr-header{
-    color: rgb(225, 221, 221);
+.dropdown:hover .dropdown-content {
+	display: flex;
 }
 
+.hr-header {
+	color: rgb(225, 221, 221);
+}
 
+.header-visible {
+	transition: top 0.3s, background-color 0.3s;
+	top: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+	background-color: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-hidden {
+	transition: top 0.3s, background-color 0.3s;
+	top: -100px;
+	position: fixed;
+	width: 100%;
+	z-index: 1000;
+}
+
+.header-background {
+	background-color: white;
+}
