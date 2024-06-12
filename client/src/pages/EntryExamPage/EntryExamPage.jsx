@@ -91,7 +91,7 @@ export const EntryExamPage = () => {
 	}
 
 	return (
-		<div className="mx-16">
+		<div className="mx-16 mt-10">
 			<h1 className=" grid text-green font-bold text-2xl justify-center mb-5">
 				{chosenExam?.category}
 			</h1>

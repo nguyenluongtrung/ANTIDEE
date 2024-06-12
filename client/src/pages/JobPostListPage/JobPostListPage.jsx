@@ -110,7 +110,7 @@ export const JobPostListPage = () => {
 	}
 
 	return (
-		<div className="px-16">
+		<div className="px-16 mt-10">
 			{isOpenJobPostDetail && (
 				<JobPostDetail
 					chosenJobPostId={chosenJobPostId}

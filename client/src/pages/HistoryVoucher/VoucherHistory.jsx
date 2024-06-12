@@ -86,13 +86,13 @@ export const VoucherHistory = () => {
   };
 
   return (
-    <div className="flex px-16">
+    <div className="flex px-16 mt-10">
       <div className="left-container pr-24 pt-3 w-1/3">
         <Sidebar account={account} />
       </div>
       <div className="w-full">
-        <h1 className="text-2xl font-bold">Kho voucher</h1>
-        <p className='mb-3'>Quản lý voucher</p>
+        <h1 className="text-2xl font-bold text-center">Kho voucher</h1>
+        <p className='mb-3 text-center'>Quản lý voucher</p>
         {account ? (
           <div>
             <div className='flex border-t border-b border-gray-400 p-5'>

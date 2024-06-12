@@ -107,7 +107,7 @@ export const MyAccount = () => {
 	}
 
 	return (
-		<div className="flex px-16">
+		<div className="flex px-16 mt-10">
 			<div className="left-container pr-24 pt-3">
 				<Sidebar account={account}/>
 			</div>

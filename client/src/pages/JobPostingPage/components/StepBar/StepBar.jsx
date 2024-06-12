@@ -13,7 +13,7 @@ export const StepBar = ({serviceId}) => {
   ];
 
   return (
-    <div className="mb-10 mx-auto">
+    <div className="mb-10 mx-auto mt-10">
       <ul className="relative flex flex-row gap-x-2 px-10">
         {viewInfo.map((info, index) => {
           const isCurrentPath = location.pathname === info.to;

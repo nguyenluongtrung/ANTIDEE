@@ -5,11 +5,18 @@ import { LoginPage } from '../../pages/LoginPage/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAccountInformation, logout, reset } from '../../features/auth/authSlice';
+import {
+	getAccountInformation,
+	logout,
+	reset,
+} from '../../features/auth/authSlice';
+import { getAllServices } from '../../features/services/serviceSlice';
+import { FaArrowRight } from 'react-icons/fa';
 
 export const Header = () => {
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 	const [isOpenRegisterForm, setIsOpenRegisterForm] = useState(false);
+	const [services, setServices] = useState([]);
 
 	const { account } = useSelector((state) => state.auth);
 
@@ -19,6 +26,20 @@ export const Header = () => {
 	useEffect(() => {
 		dispatch(getAccountInformation());
 	}, [dispatch]);
+
+	async function initiateServices() {
+		let output = await dispatch(getAllServices());
+
+		setServices(output.payload);
+	}
+
+	const navigateToServicePage = (id) => {
+		navigate(`/job-posting/view-service-detail/${id}`);
+	};
+
+	useEffect(() => {
+		initiateServices();
+	}, []);
 
 	const onLogout = () => {
 		navigate('/home');
@@ -47,43 +68,28 @@ export const Header = () => {
 							</span>
 						</Link>
 						<div className="dropdown-content">
-							<div className="mr-3">
-								<Link to={''} className="block">
-									<span className="text-xs">Dọn dẹp văn phòng</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Vệ sinh máy lạnh</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Giúp việc nhà theo giờ</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Trông trẻ tại nhà</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Chăm sóc người bệnh</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Chăm sóc người cao tuổi</span>
-								</Link>
-							</div>
-							<div>
-								<Link to={''} className="block">
-									<span className="text-xs">Tổng vệ sinh</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Vệ sinh sofa, rèm, nệm</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Đi chợ</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Nấu ăn gia đình</span>
-								</Link>
-								<Link to={''} className="block">
-									<span className="text-xs">Giặt ủi</span>
-								</Link>
-							</div>
+							{services.map((service) => {
+								return (
+									<div className="shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden service-section" onClick={() => navigateToServicePage(service?._id)}>
+										<div className="relative grid gap-6 bg-white px-5 py-3 sm:gap-8 sm:p-8 hover:bg-light_primary hover:text-white">
+											<a
+												href="#"
+												className="-m-3 p-0.5 flex items-start rounded-lg hover:bg-gray-50"
+											>
+												<div className="ml-4 flex">
+													<p className="text-base font-medium text-gray-900">
+														{service.name}
+														<FaArrowRight
+															className="ml-3 custom-icon inline-block"
+															size={13}
+														/>
+													</p>
+												</div>
+											</a>
+										</div>
+									</div>
+								);
+							})}
 						</div>
 					</li>
 					<li className="mr-5">

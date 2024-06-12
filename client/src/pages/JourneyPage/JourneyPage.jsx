@@ -65,7 +65,7 @@ export const JourneyPage = () => {
   };
 
   return (
-    <div className="px-32 flex flex-col">
+    <div className="px-32 flex flex-col mt-10">
       <div className="font-bold text-green text-2xl text-center mb-6">
         HÀNH TRÌNH
       </div>

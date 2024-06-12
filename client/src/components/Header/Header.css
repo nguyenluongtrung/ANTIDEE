@@ -46,8 +46,24 @@
 
     .dropdown-content{
         display: flex;
+		flex-direction: column;
     }
 }
+
+.service-section{
+	border-bottom: 1px solid rgb(250, 249, 249);
+}
+
+.service-section .custom-icon {
+	opacity: 0;
+	transform: translateX(-10px);
+	transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  .service-section:hover .custom-icon {
+	opacity: 1;
+	transform: translateX(0);
+  }
 
 .hr-header{
     color: rgb(225, 221, 221);
