@@ -9,6 +9,10 @@ import { getAllServices } from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
 import { useTypewriter } from 'react-simple-typewriter';
 import { FaArrowUp } from 'react-icons/fa';
+
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
 	const topRef = useRef();
@@ -57,6 +61,12 @@ export const HomePage = () => {
 	useEffect(() => {
 		initiateServices();
 	}, []);
+
+	useEffect(() => {
+		AOS.init({
+		  duration: 600, // Thời gian hiệu ứng (ms)
+		});
+	  }, []);
 
 	const [typeEffect] = useTypewriter({
 		words: ['Việc gì khó có Antidee lo'],
@@ -189,7 +199,7 @@ export const HomePage = () => {
 				>
 					An tâm với lựa chọn của bạn
 				</p>
-				<div className="flex justify-center mt-4 ml-10 grid grid-cols-4">
+				<div data-aos="fade-down" className="justify-center mt-4 ml-10 grid grid-cols-4">
 					{benefit.map((benefit, index) => (
 						<div
 							key={index}
