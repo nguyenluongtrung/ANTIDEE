@@ -20,6 +20,7 @@ export default {
 			pink: '#FA3694',
 			primary_dark: '#CE6B0F',
 			info: '#ffc107',
+			hero: '#efa37f',
 		},
 	},
 	plugins: [],

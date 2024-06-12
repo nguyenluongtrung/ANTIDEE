@@ -27,7 +27,7 @@ export const Header = () => {
 	};
 
 	return (
-		<div className="mb-7">
+		<div className="">
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 			{isOpenRegisterForm && (
 				<RegisterPage
