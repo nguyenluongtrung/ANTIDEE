@@ -4,6 +4,7 @@ import { getRedeemedVouchers } from '../../features/vouchers/voucherSlice';
 import { Sidebar } from '../MyAccount/components/Sidebar/Sidebar';
 import { VoucherDetail } from './VoucherDetail/VoucherDetail';
 import { formatDate } from '../../utils/format';
+import { Spinner } from '../../components/Spinner/Spinner';
 
 export const VoucherHistory = () => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ export const VoucherHistory = () => {
   }, [dispatch, account]);
 
   if (authLoading || vouchersLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   const handleShowUsed = () => {
