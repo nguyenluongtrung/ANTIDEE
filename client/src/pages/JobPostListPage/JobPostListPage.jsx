@@ -166,17 +166,20 @@ export const JobPostListPage = () => {
 						const startingMinute = parseInt(
 							jobPost.workingTime.startingHour.split(':')[1]
 						);
+
 						const startingTime = `${startingHour
 							.toString()
 							.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
-						if (startingDate.toDateString() > new Date().toDateString()) {
+						if (startingDate.toDateString() < new Date().toDateString()) {
 							return true;
 						} else if (
 							startingDate.toDateString() == new Date().toDateString() &&
 							startingTime >= getCurrentTimeString()
 						) {
 							return true;
-						} else return false;
+						} else {
+							return false;
+						}
 					})
 					?.filter((jobPost) => {
 						const createdDate = new Date(jobPost.createdAt);
