@@ -26,7 +26,7 @@ export default function AdminSidebar() {
     { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },
     { name: "Thông Báo", icon: <BiNotification />, to: '' },
     { name: "Dịch vụ", icon: <BiNotification />, to: '/admin-service' },
-    { name: "Tin Nhắn", icon: <BiMessage />, to: '' },
+    { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
   ];
 

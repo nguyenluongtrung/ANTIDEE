@@ -19,6 +19,7 @@ import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
 import { WeatherForecastPage } from './pages/WeatherForecastPage';
 import { VoucherManagement } from './pages/AdminPage/VoucherManagement/VoucherManagement';
+import { AppFeedbackManagement } from './pages/AdminPage/AppFeedbackManagement/AppFeedbackManagement';
 import { ServiceManagement } from './pages/AdminPage/ServiceManagement/ServiceManagement';
 import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
@@ -87,6 +88,7 @@ const AppContent = () => {
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
 							<Route path="/admin-voucher" element={<VoucherManagement />} />
+							<Route path="/admin-appFeedback" element={<AppFeedbackManagement />}/>
 							<Route
 								path="/admin-qualification"
 								element={<QualificationManagement />}

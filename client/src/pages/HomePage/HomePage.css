@@ -1,0 +1,48 @@
+.swiper-slide-shadow-left,
+.swiper-slide-shadow-right {
+  display: none;
+}
+.swiper-slide .swiper-slide-visible{
+  width: 10px;
+}
+
+
+/* .swiper-slide {
+  width: 50% !important;
+  height: 200px !important;
+  position: relative;
+} */
+  
+.img-action  {
+  animation: nudge 5s linear infinite alternate;
+}
+
+@keyframes nudge{
+  0%, 100% {
+    transform: translate(0,0);
+  }
+
+  50% {
+     transform: translate(50px, 0);
+  }
+
+  80% {
+    transform: translate(-50px, 0);
+  }
+}
+
+.arow {
+  animation: nud 1s linear infinite alternate;
+}
+
+@keyframes nud{
+  
+
+  50% {
+     transform: translate(5px, 0);
+  }
+
+  100% {
+    transform: translate(-5px, 0);
+  }
+}
