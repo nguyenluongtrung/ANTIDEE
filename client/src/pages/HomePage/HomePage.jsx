@@ -4,14 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../components";
 import { getAllServices } from "../../features/services/serviceSlice";
 import { useNavigate } from "react-router-dom";
-import { FaAngleRight, FaArrowUp } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa";
 import Marquee from "react-fast-marquee";
 import AOS from "aos";
 import { PiArrowBendDownRightBold } from "react-icons/pi";
 
 export const HomePage = () => {
   const [services, setServices] = useState([]);
-  const topRef = useRef();
   const serviceRef = useRef();
   const { isLoading } = useSelector((state) => state.services);
   const dispatch = useDispatch();
@@ -69,10 +68,6 @@ export const HomePage = () => {
     });
   }, []);
 
-  const scrolLWithUseRef = () => {
-    topRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
-  };
-
   const scrolLWithServiceRef = () => {
     serviceRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
   };
@@ -87,15 +82,8 @@ export const HomePage = () => {
 
   return (
     <div className="">
-      <div
-        className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80"
-        onClick={scrolLWithUseRef}
-      >
-        <FaArrowUp className="text-pink" />
-      </div>
       <main
         className="w-full h-full relative px-20 py-9 bg-hero text-white"
-        ref={topRef}
       >
         <div className="flex flex-col-reverse lg:flex-row mt-16 ">
           <img
