@@ -17,6 +17,8 @@ export const Header = () => {
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 	const [isOpenRegisterForm, setIsOpenRegisterForm] = useState(false);
 	const [services, setServices] = useState([]);
+	const [showHeader, setShowHeader] = useState(true);
+	const [lastScrollY, setLastScrollY] = useState(0);
 
 	const { account } = useSelector((state) => state.auth);
 
@@ -47,8 +49,27 @@ export const Header = () => {
 		dispatch(reset());
 	};
 
+	const handleScroll = () => {
+		if (window.scrollY > lastScrollY) {
+			// Scrolling down
+			setShowHeader(false);
+		} else {
+			// Scrolling up
+			setShowHeader(true);
+		}
+		setLastScrollY(window.scrollY);
+	};
+
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll);
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, [lastScrollY]);
+
 	return (
-		<div className="">
+		<div className={`mb-7 ${showHeader ? 'header-visible' : 'header-hidden'}`}>
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 			{isOpenRegisterForm && (
 				<RegisterPage
@@ -56,7 +77,7 @@ export const Header = () => {
 					setIsOpenLoginForm={setIsOpenLoginForm}
 				/>
 			)}
-			<div className="navbar-container flex justify-between px-16 py-3">
+			<div className={`navbar-container flex justify-between px-16 py-3 ${showHeader ? 'header-background' : ''}`}>
 				<Link to="/home">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>

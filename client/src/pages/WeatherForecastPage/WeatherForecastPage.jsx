@@ -131,7 +131,7 @@ export const WeatherForecastPage = () => {
 	}
 
 	return (
-		<div className="flex px-16 mt-10">
+		<div className="flex px-16 pt-20">
 			<div className="weather-sidebar">
 				<div>
 					<form

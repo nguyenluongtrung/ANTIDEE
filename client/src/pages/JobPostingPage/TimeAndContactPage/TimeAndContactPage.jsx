@@ -62,7 +62,7 @@ export const TimeAndContactPage = () => {
 	};
 
 	return (
-		<div className="w-full px-20">
+		<div className="w-full px-20 pt-20">
 			<StepBar serviceId={serviceId} />
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="schedule-form px-20 flex justify-center">
