@@ -359,7 +359,7 @@ export const DetailOptionPage = () => {
 	}
 
 	return (
-		<div className="w-full px-20">
+		<div className="w-full pt-10 px-20">
 			<StepBar serviceId={serviceId} />
 			{isOpenRepeatitiveForm && (
 				<RepeatitiveForm

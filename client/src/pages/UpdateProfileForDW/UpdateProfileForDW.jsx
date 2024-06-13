@@ -138,7 +138,7 @@ export const UpdateProfileForDW = () => {
 	}
 
 	return (
-		<div className="grid mx-12">
+		<div className="grid mx-12 pt-20">
 			<div className="">
 				<h1 className=" grid text-green font-bold text-2xl justify-center ">
 					BỔ SUNG HỒ SƠ

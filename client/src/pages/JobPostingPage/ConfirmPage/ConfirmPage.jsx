@@ -88,7 +88,7 @@ export const ConfirmPage = () => {
 	}
 
 	return (
-		<div className="w-full px-20">
+		<div className="w-full px-20 pt-20">
 			<StepBar serviceId={serviceId} />
 
 			<div

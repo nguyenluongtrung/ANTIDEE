@@ -57,7 +57,7 @@ export const SearchVoucher = ({ vouchers = [], searchName = '', brandName = '' }
   };
 
   return (
-    <div className="flex justify-between items-center mt-6">
+    <div className="flex justify-between items-center mt-6 pt-20">
       {sortedVouchers.length > vouchersPerPage && (
         <div className="flex items-center mt-4">
           <button

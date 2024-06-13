@@ -241,7 +241,7 @@ export const ForgotPasswordPage = () => {
   }, [nameViewInInputPhoneNumber]);
 
   return (
-    <section className="flex items-center justify-center mt-20">
+    <section className="flex items-center justify-center mt-20 pt-20">
       <div>
         <Toaster toastOptions={{ duration: 4000 }} />
         <div id="sign-in-button"></div>
