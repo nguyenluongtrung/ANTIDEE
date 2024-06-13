@@ -86,22 +86,6 @@ export const HomePage = () => {
         className="w-full h-full relative px-20 py-9 bg-hero text-white"
       >
         <div className="flex flex-col-reverse lg:flex-row mt-16 ">
-          <img
-            className="absolute size-20 animate-bounce top-16 right-16"
-            src="src/assets/img/icon2-bg-homepage.png"
-          />
-          <img
-            className="absolute size-20 animate-bounce top-40 left-[800px]"
-            src="src/assets/img/icon1-bg-homepage.png"
-          />
-          <img
-            className="absolute size-20 animate-bounce top-[550px] left-[700px]"
-            src="src/assets/img/icon3-bg-homepage.png"
-          />
-          <img
-            className="absolute size-20 animate-bounce top-20"
-            src="src/assets/img/icon4-bg-homepage.png"
-          />
           <section className="w-full lg:w-[50%] flex flex-col lg:translate-x-10 @md:px-2 lg:px-0 p-5 lg:p-10 lg:p-0">
             <div className="w-full h-auto  lg:pt-7  ">
               <h1 className="text-6xl mb-4 text-yellow font-extrabold">
