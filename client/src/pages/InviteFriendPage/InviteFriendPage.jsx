@@ -6,7 +6,7 @@ import '../../pages/InviteFriendPage/InviteFriendPage.css';
 export const InviteFriendPage = () => {
     return (
         <div>
-            <div className='grid mt-10'>
+            <div className='grid mt-10 pt-16'>
                 <div className='col-start-3 col-end-3'>
                     <h2 className='mt-28 ml-20 text-5xl font-semibold text-yellow'>
                         <span class="text-primary text-6xl"> Chia sẻ</span> liền tay <br />
