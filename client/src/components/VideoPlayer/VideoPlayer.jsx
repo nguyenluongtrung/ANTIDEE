@@ -74,7 +74,7 @@ const VideoPlayer = ({ videoId }) => {
   };
 
   return (
-    <div>
+    <div className="">
       <YouTube
         videoId={videoId}
         opts={opts}

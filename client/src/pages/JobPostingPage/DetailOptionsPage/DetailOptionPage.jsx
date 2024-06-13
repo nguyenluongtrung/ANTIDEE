@@ -499,9 +499,9 @@ export const DetailOptionPage = () => {
 																value={`${op?.optionValue}-${op?.optionIndex}`}
 															>
 																{op?.optionValue}{' '}
-																{op?.optionIndex &&
+																{/* {op?.optionIndex &&
 																	String(op?.optionIndex).trim() &&
-																	`- ${op?.optionIndex}`}
+																	`- ${op?.optionIndex}`} */}
 															</option>
 														))}
 													</select>

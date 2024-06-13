@@ -42,7 +42,7 @@ export const DemoViewVideoYoutube = () => {
   };
 
   return (
-    <div className="">
+    <div className="mt-10">
       {nowVideo ? (
         <>
           <h1 className="text-center text-xl font-bold pb-6 text-primary">
