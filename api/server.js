@@ -26,6 +26,7 @@ app.use(
 	require('./routes/domesticHelper_FeedbackRoutes')
 );
 app.use('/antidee/api/promotions', require('./routes/promotionRoutes'));
+app.use('/antidee/api/appFeedback', require('./routes/appFeedbackRouters'));
 
 app.use(errorHandler);
 
