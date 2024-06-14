@@ -123,7 +123,7 @@ export const HomePage = () => {
 						<div className="container relative left-32">
 							<div className="blob">
 								<img
-									src="public/image/chi_dep.png"
+									src="image/chi_dep.png"
 									alt="Hero Image"
 									className="absolute h-[90%] w-full object-cover bottom-0"
 								/>
