@@ -305,7 +305,7 @@ export const MyAccount = () => {
 					</div>
 					<div className="left-vertical mb-4 px-14 h-60 pt-10 mt-2 w-1/3">
 						<img
-							src={`${avatarUrl}` || 'src/assets/img/Ellipse 16.png'}
+							src={`${avatarUrl}` || '../../assets/img/Ellipse 16.png'}
 							className="block w-16 mr-2 mb-5 ml-10 rounded-full"
 						/>
 						<button

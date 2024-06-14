@@ -22,7 +22,7 @@ export const ScoreNotification = ({
 				{totalScore >= passGrade ? (
 					<div>
 						<img
-							src="./public/image/medal.png"
+							src="image/medal.png"
 							className="block w-48 mx-auto my-3"
 						/>
 						<p className="text-center font-medium">

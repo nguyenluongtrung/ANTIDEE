@@ -100,7 +100,7 @@ export const MyJobs = () => {
 				{myJobs.length == 0 ? (
 					<div className="mx-auto">
 						<img
-							src="public/image/sad-icon.png"
+							src="image/sad-icon.png"
 							className="block m-auto w-52"
 						/>
 						<p className="text-gray text-center">
