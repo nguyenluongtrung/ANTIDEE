@@ -63,7 +63,6 @@ export const HomePage = () => {
 
 	useEffect(() => {
 		AOS.init({
-			//   offset: 400,
 			duration: 600,
 			easing: 'ease-in-out', // Loại easing cho hiệu ứng
 			delay: 50, // Độ trễ trước khi hiệu ứng bắt đầu (ms)
@@ -88,7 +87,7 @@ export const HomePage = () => {
 	}
 
 	return (
-		<div className="">
+		<div className="body-homepage pb-10">
 			<div
 				className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80"
 				onClick={scrolLWithUseRef}
@@ -153,7 +152,7 @@ export const HomePage = () => {
 
 				<div className="flex justify-center">
 					<div className=" w-[80%] " data-aos="slide-up" data-aos-offset="200">
-						<Marquee autoFill pauseOnHover className="h-64">
+						<Marquee autoFill pauseOnHover className="h-64 rounded-lg bg-white">
 							{services.map((service, index) => (
 								<div
 									key={index}
@@ -180,9 +179,9 @@ export const HomePage = () => {
 				</div>
 			</div>
 
-			<div className="mt-20 flex flex-col gap-y-28">
+			<div className="mt-20 flex flex-col bg-white gap-y-28">
 				<div
-					className="ml-[120px] mt-7 text-4xl font-bold text-center"
+					className="ml-[120px] mt-16 text-4xl font-bold text-center"
 					data-aos="fade-down"
 					data-aos-offset="200"
 				>
@@ -190,7 +189,7 @@ export const HomePage = () => {
 				</div>
 
 				<div
-					className="relative flex py-8 px-32 items-center justify-between bg-white rounded-lg w-full"
+					className="relative flex py-8 px-32 items-center ml-10 mr-10 justify-between rounded-lg"
 					data-aos="fade-up-right"
 					data-aos-offset="400"
 				>
@@ -199,7 +198,7 @@ export const HomePage = () => {
 						<div className="text-4xl font-bold absolute top-20 left-20 text-black">
 							{benefit[0].name}
 						</div>
-						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray">
+						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray text-justify">
 							{benefit[0].text}
 						</div>
 					</div>
@@ -213,7 +212,7 @@ export const HomePage = () => {
 				</div>
 
 				<div
-					className="relative flex py-8 px-32 items-center justify-around bg-white rounded-lg w-full"
+					className="relative flex py-8 px-32 items-center justify-around ml-10 mr-10 bg-white rounded-lg"
 					data-aos="fade-up-left"
 					data-aos-offset="400"
 				>
@@ -229,14 +228,14 @@ export const HomePage = () => {
 						<div className="text-4xl font-bold absolute top-20 left-20 text-black">
 							{benefit[1].name}
 						</div>
-						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray">
+						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray text-justify">
 							{benefit[1].text}
 						</div>
 					</div>
 				</div>
 
 				<div
-					className="relative flex py-8 px-32 items-center justify-between bg-white rounded-lg w-full"
+					className="relative flex py-8 px-32 items-center justify-between ml-10 mr-10  bg-white rounded-lg"
 					data-aos="fade-up-right"
 					data-aos-offset="400"
 				>
@@ -245,7 +244,7 @@ export const HomePage = () => {
 						<div className="text-4xl font-bold absolute top-20 left-20 text-black">
 							{benefit[2].name}
 						</div>
-						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray">
+						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray text-justify">
 							{benefit[2].text}
 						</div>
 					</div>
@@ -259,7 +258,7 @@ export const HomePage = () => {
 				</div>
 
 				<div
-					className="relative flex py-8 px-32 items-center justify-around bg-white rounded-lg w-full"
+					className="relative flex py-8 px-32 items-center justify-around ml-10 mr-10  bg-white rounded-lg"
 					data-aos="fade-up-left"
 					data-aos-offset="400"
 				>
@@ -275,7 +274,7 @@ export const HomePage = () => {
 						<div className="text-4xl font-bold absolute top-20 left-20 text-black">
 							{benefit[3].name}
 						</div>
-						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray">
+						<div className="mt-12 ml-20 text-base font-normal w-[100%] text-gray text-justify">
 							{benefit[3].text}
 						</div>
 					</div>
@@ -296,7 +295,7 @@ export const HomePage = () => {
 					{achievement.map((item, index) => {
 						return (
 							<div
-								className="container flex flex-col justify-center items-center gap-y-2 bg-slate-50 max-w-[292px] h-[220px] m-3 rounded-md shadow-md"
+								className="container bg-white flex flex-col justify-center items-center gap-y-2 bg-slate-50 max-w-[292px] h-[220px] m-3 rounded-md shadow-md"
 								data-aos="fade-left"
 								data-aos-offset="400"
 								data-aos-delay={300 + index * 200}
@@ -338,7 +337,7 @@ export const HomePage = () => {
 							<h2 className="text-xl text-start font-secondary font-medium text-four">
 								Luôn sẵn sàng hỗ trợ khách hàng
 							</h2>
-							<span className="text-lg">
+							<span className="text-lg text-justify">
 								Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
 								hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
 								để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào
@@ -359,7 +358,7 @@ export const HomePage = () => {
 							<h2 className="text-xl font-secondary font-medium">
 								Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
 							</h2>
-							<span className="text-lg ">
+							<span className="text-lg text-justify">
 								Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
 								cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
 								hảo từ đầu đến cuối. Trang web của chúng tôi được thiết kế thân

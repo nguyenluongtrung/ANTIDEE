@@ -4,7 +4,7 @@ import email from '../../assets/img/email.png';
 
 export const Footer = () => {
   return (
-		<div className='bg-primary mt-10 p-5'>
+		<div className='bg-primary p-5'>
 			<div className=' max-w-6xl m-auto grid grid-cols-3 gap-x-4'>
 
 <div className='p-5' >
