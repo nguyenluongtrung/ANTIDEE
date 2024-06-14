@@ -65,7 +65,7 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
           <div className="mb-3 mt-5">
             <p className="small-text">Số điện thoại</p>
             <input
-              type="number"
+              type="text"
               className="border border-gray-500 rounded-md p-1 text-sm focus:outline-none"
               {...register("phoneNumber", rules.phoneNumber)}
             />
