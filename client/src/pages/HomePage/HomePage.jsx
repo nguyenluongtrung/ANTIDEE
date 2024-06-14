@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../components';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
-import { FaAngleRight } from 'react-icons/fa';
+import { FaAngleRight, FaArrowUp } from 'react-icons/fa';
 import Marquee from 'react-fast-marquee';
 import AOS from 'aos';
 import { PiArrowBendDownRightBold } from 'react-icons/pi';
@@ -13,6 +13,7 @@ import features3 from '../../assets/img/features3.jpg';
 
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
+	const topRef = useRef();
 	const serviceRef = useRef();
 	const { isLoading } = useSelector((state) => state.services);
 	const dispatch = useDispatch();
@@ -70,6 +71,10 @@ export const HomePage = () => {
 		});
 	}, []);
 
+	const scrolLWithUseRef = () => {
+		topRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+	};
+
 	const scrolLWithServiceRef = () => {
 		serviceRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
 	};
@@ -84,26 +89,26 @@ export const HomePage = () => {
 
 	return (
 		<div className="">
-			<main className="w-full h-full relative px-20 py-9 bg-hero text-white">
+			<div
+				className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80"
+				onClick={scrolLWithUseRef}
+			>
+				<FaArrowUp className="text-pink" />
+			</div>
+			<main
+				className="w-full h-full relative px-20 py-9 bg-hero text-white"
+				ref={topRef}
+			>
 				<div className="flex flex-col-reverse lg:flex-row mt-16 ">
 					<section className="w-full lg:w-[50%] flex flex-col lg:translate-x-10 @md:px-2 lg:px-0 p-5 lg:p-10 lg:p-0">
 						<div className="w-full h-auto  lg:pt-7  ">
-							<h1
-								className="text-6xl mb-4 font-extrabold"
-								style={{ color: '#593E67' }}
-							>
+							<h1 className="text-6xl mb-4 text-yellow font-extrabold">
 								Cùng Antidee{' '}
 							</h1>
-							<h1
-								className="text-6xl mb-4 font-extrabold "
-								style={{ color: '#84495F' }}
-							>
+							<h1 className="text-6xl mb-4 text-primary font-extrabold">
 								nâng tầm{' '}
 							</h1>
-							<h1
-								className="__classNameName_e826f1 text-6xl font-extrabold "
-								style={{ color: '#B85B56' }}
-							>
+							<h1 className="__classNameName_e826f1 text-6xl  text-primary_dark font-extrabold  ">
 								chất lượng cuộc sống{' '}
 							</h1>
 							<p className="max-w-sm py-5 text-gray-400 lg:text-lg">
@@ -309,7 +314,7 @@ export const HomePage = () => {
 			</div>
 
 			<div className="mt-16">
-				<div className=" container relative px-36 flex mx-auto">
+				<div className="relative px-60 flex">
 					<div
 						className="w-1/2"
 						data-aos="fade-right"
@@ -318,16 +323,17 @@ export const HomePage = () => {
 					>
 						<img className="" src={features2} alt="" />
 					</div>
-					<div className="absolute flex flex-col gap-y-4 bottom-1 right-14 w-1/2 mx-12">
+
+					<div className=" flex flex-col gap-y-4 bottom-1 w-1/2 mx-12">
 						<h1
-							className="text-[62px] text-primary leading-[62px] font-extrabold"
+							className="absolute text-[62px] text-primary leading-[62px] font-extrabold top-0 left-[600px] w-[600px]"
 							data-aos="fade-up"
 							data-aos-delay="700"
 							data-aos-offset="400"
 						>
 							Xin chào chúng tôi là Antidee
 						</h1>
-						<div className="flex flex-col ml-36 pr-5 gap-y-4">
+						<div className="flex flex-col gap-y-4 pt-32">
 							<h2 className="text-xl text-start font-secondary font-medium text-four">
 								Luôn sẵn sàng hỗ trợ khách hàng
 							</h2>
@@ -346,10 +352,10 @@ export const HomePage = () => {
 						</div>
 					</div>
 				</div>
-				<div className=" container relative px-36 mt-16 flex mx-auto">
-					<div className=" flex flex-col gap-y-4 justify-center w-1/2 mx-12">
-						<div className="flex flex-col pr-5 gap-y-4 justify-center">
-							<h2 className="text-xl text-start font-secondary font-medium text-four">
+				<div className="relative px-60 mt-16 flex">
+					<div className=" flex flex-col justify-center w-1/2">
+						<div className="flex flex-col gap-y-4 justify-center">
+							<h2 className="text-xl font-secondary font-medium">
 								Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
 							</h2>
 							<span className="text-lg ">
@@ -365,17 +371,17 @@ export const HomePage = () => {
 								nhiều thời gian hơn để tận hưởng cuộc sống.
 							</span>
 
-							<div className="animate-bounce cursor-pointer">
-								<p className='hover:text-primary text-xl font-bold '>Liên hệ với chúng tôi nếu bạn cần hỗ trợ !!!</p>
+							<div className="text-xl font-bold hover:text-primary animate-bounce cursor-pointer">
 								<PiArrowBendDownRightBold
 									size={60}
-									className="absolute -left-16 -top-5 animate-bounce"
+									className="absolute -bottom-3 -left-20 animate-bounce"
 								/>
+								Liên Hệ với chúng tôi nếu bạn cần hỗ trợ !!!
 							</div>
 						</div>
 					</div>
 					<div
-						className="w-1/2 mr-0"
+						className="w-1/2 ml-10"
 						data-aos="fade-left"
 						data-aos-offset="400"
 					>
