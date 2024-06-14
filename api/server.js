@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
@@ -7,6 +8,7 @@ const connectDB = require('./config/dbConnect');
 const port = process.env.PORT || 5000;
 
 connectDB();
+const __dir = path.resolve();
 
 const app = express();
 app.use(cors());
@@ -27,6 +29,12 @@ app.use(
 );
 app.use('/antidee/api/promotions', require('./routes/promotionRoutes'));
 app.use('/antidee/api/appFeedback', require('./routes/appFeedbackRouters'));
+
+app.use(express.static(path.join(__dir, '/client/dist')));
+
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dir, 'client', 'dist', 'index.html'));
+});
 
 app.use(errorHandler);
 
