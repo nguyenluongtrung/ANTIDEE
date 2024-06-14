@@ -113,7 +113,7 @@ export const MyAccount = () => {
 			</div>
 			<div className="right-container rounded-xl p-5 relative">
 				<img
-					src="src/assets/img/material-symbols_edit-outline.png"
+					src="../../assets/img/material-symbols_edit-outline.png"
 					className="w-6 absolute top-5 right-5 hover:cursor-pointer"
 					onClick={handleClickPencilIcon}
 				/>

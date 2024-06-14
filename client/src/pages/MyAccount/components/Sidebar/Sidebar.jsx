@@ -10,7 +10,7 @@ export const Sidebar = ({ account }) => {
 		<div>
 			<div className="flex mb-4">
 				<img
-					src={`${account?.avatar}` || 'src/assets/img/Ellipse 16.png'}
+					src={`${account?.avatar}` || '../../../../assets/img/Ellipse 16.png'}
 					className="block w-12 mr-2 rounded-full"
 				/>
 				<div className="mt-2">
@@ -27,14 +27,14 @@ export const Sidebar = ({ account }) => {
 				onClick={() => navigate('/my-account')}
 			>
 				<img
-					src="src/assets/img/clarity_avatar-solid.png"
+					src="../../../../assets/img/clarity_avatar-solid.png"
 					className="inline w-4 mr-2"
 				/>
 				<span>Tài khoản của tôi</span>
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
 				<img
-					src="src/assets/img/mingcute_card-pay-fill.png"
+					src="../../../../assets/img/mingcute_card-pay-fill.png"
 					className="inline w-4 mr-2"
 				/>
 				<span>aPay</span>
@@ -42,7 +42,7 @@ export const Sidebar = ({ account }) => {
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/voucher-history')}
 			>
-				<img src="src/assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
+				<img src="../../../../assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
 				<span>Kho Voucher</span>
 			</div>
 			<div
@@ -72,7 +72,7 @@ export const Sidebar = ({ account }) => {
 				className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/favorite-list')}
 			>
-				<img src="src/assets/img/mdi_heart.png" className="inline w-4 mr-2" />
+				<img src="../../../../assets/img/mdi_heart.png" className="inline w-4 mr-2" />
 				<span>Tasker yêu thích</span>
 			</div>
 			<div
@@ -80,18 +80,18 @@ export const Sidebar = ({ account }) => {
 				onClick={() => navigate('/black-list')}
 			>
 				<img
-					src="src/assets/img/lucide_list-x.png"
+					src="../../../../assets/img/lucide_list-x.png"
 					className="inline w-4 mr-2"
 				/>
 				<span>Danh sách chặn</span>
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-				<img src="src/assets/img/mdi_gift.png" className="inline w-4 mr-2" />
+				<img src="../../../../assets/img/mdi_gift.png" className="inline w-4 mr-2" />
 				<span>Săn quà giới thiệu</span>
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
 				<img
-					src="src/assets/img/vaadin_piggy-bank-coin.png"
+					src="../../../../assets/img/vaadin_piggy-bank-coin.png"
 					className="inline w-4 mr-2"
 				/>
 				<span>Điểm tích lũy</span>
