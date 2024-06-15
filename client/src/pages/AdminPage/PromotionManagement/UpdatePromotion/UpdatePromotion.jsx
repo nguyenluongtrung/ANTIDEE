@@ -23,7 +23,6 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
     formState: { errors },
     setError,
     clearErrors,
-    reset
   } = useForm();
 
   const dispatch = useDispatch();
@@ -33,46 +32,20 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
   }, [dispatch]);
 
   useEffect(() => {
-    if (!promotionLoading && promotions.length > 0) {
-      const foundPromotion = promotions.find(promotion => promotion._id === chosenPromotionId);
-      if (foundPromotion) {
-        setChosenPromotion(foundPromotion);
-        setSelectedServices(foundPromotion.serviceIds || []);
-        reset({
-          promotionName: foundPromotion.promotionName,
-          startDate: formatDateInput(foundPromotion.startDate),
-          endDate: formatDateInput(foundPromotion.endDate),
-          promotionCode: foundPromotion.promotionCode,
-          promotionValue: foundPromotion.promotionValue,
-          promotionQuantity: foundPromotion.promotionQuantity,
-        });
-      }
+    const foundPromotion = promotions.find(promotion => promotion._id === chosenPromotionId);
+    if (foundPromotion) {
+      setChosenPromotion(foundPromotion);
+      setSelectedServices(foundPromotion.serviceIds || []);
     }
-  }, [promotions, promotionLoading, chosenPromotionId, reset]);
-
-  const checkForDuplicateIds = (selectedServices) => {
-    const idCount = selectedServices.reduce((acc, id) => {
-      acc[id] = (acc[id] || 0) + 1;
-      return acc;
-    }, {});
-
-    return Object.values(idCount).some(count => count > 1);
-  };
+  }, [promotions, chosenPromotionId]);
 
   const onSubmit = async (data) => {
-    const isNameValid = validatePromotionName(data.promotionName);
-    if (!isNameValid) return;
-
-    if (checkForDuplicateIds(selectedServices)) {
-      toast.error('Có dịch vụ bị trùng lặp trong danh sách đã chọn', errorStyle);
-      return;
-    }
-
-    const uniqueServiceIds = Array.from(new Set(selectedServices));
+    if (!validatePromotionName(data.promotionName)) return;
+    if (!validateSelectedServices()) return;
 
     const promotionData = {
       ...data,
-      serviceIds: uniqueServiceIds,
+      serviceIds: selectedServices.map(service => service._id),
     };
 
     const result = await dispatch(updatePromotion({ promotionData, id: chosenPromotionId }));
@@ -104,16 +77,31 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
     return true;
   };
 
+  const validateSelectedServices = () => {
+    const serviceNames = selectedServices.map(service => service.name);
+    const uniqueServiceNames = new Set(serviceNames);
+    if (uniqueServiceNames.size !== selectedServices.length) {
+      toast.error('Dịch vụ đã chọn có sự trùng lặp. Vui lòng chọn lại.', errorStyle);
+      return false;
+    }
+    return true;
+  };
+
   const handleServiceDeselect = (serviceId) => {
     setSelectedServices((prevSelectedServices) =>
-      prevSelectedServices.filter((service) => service !== serviceId)
+      prevSelectedServices.filter((service) => service._id !== serviceId)
     );
   };
 
   const handleServiceSelect = (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    const uniqueNewSelectedServices = [...new Set([...selectedServices, ...selectedOptions])];
-    setSelectedServices(uniqueNewSelectedServices);
+    const selectedOptions = Array.from(event.target.selectedOptions, (option) => {
+      const service = services.find(service => service._id === option.value);
+      return { _id: service._id, name: service.name };
+    });
+    setSelectedServices((prevSelectedServices) => [
+      ...prevSelectedServices,
+      ...selectedOptions.filter((newService) => !prevSelectedServices.some(service => service._id === newService._id)),
+    ]);
   };
 
   if (promotionLoading || serviceLoading) {
@@ -133,7 +121,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
         style={{ width: '35vw' }}
       >
         <AiOutlineClose
-          className="absolute text-sm hover:cursor-pointer"
+          className="absolute text-sm hover"
           onClick={() => setIsOpenUpdatePromotion(false)}
         />
         <p className="grid text-green font-bold text-xl justify-center">
@@ -148,6 +136,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="text"
                   {...register('promotionName')}
                   className="create-question-input text-center ml-[60px] text-sm w-[300px]"
+                  defaultValue={chosenPromotion?.promotionName}
                   placeholder="Nhập tên của khuyến mãi"
                   required
                 />
@@ -164,6 +153,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="date"
                   {...register('startDate')}
                   min={new Date().toISOString().split('T')[0]}
+                  defaultValue={formatDateInput(chosenPromotion?.startDate)}
                   required
                   className='create-question-input text-center ml-[60px] text-sm w-[300px]'
                 />{' '}
@@ -178,6 +168,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="date"
                   {...register('endDate')}
                   min={new Date().toISOString().split('T')[0]}
+                  defaultValue={formatDateInput(chosenPromotion?.endDate)}
                   required
                   className='create-question-input text-center ml-[60px] text-sm w-[300px]'
                 />{' '}
@@ -192,6 +183,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="text"
                   {...register('promotionCode')}
                   placeholder="Nhập mã giảm giá"
+                  defaultValue={chosenPromotion?.promotionCode}
                   required
                   className='create-question-input text-center ml-[60px] text-sm w-[300px]'
                 />
@@ -206,6 +198,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   type="text"
                   {...register('promotionValue', { required: 'Giá trị mã là bắt buộc', min: { value: 0, message: 'Giá trị mã phải lớn hơn 0' }, max: { value: 1, message: 'Giá trị mã phải nhỏ hơn hoặc bằng 1' } })}
                   placeholder="Nhập giá trị giảm giá"
+                  defaultValue={chosenPromotion?.promotionValue}
                   className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionValue ? 'border-red' : ''}`}
                 />
                 {errors.promotionValue && <p className="text-red text-center">{errors.promotionValue.message}</p>}
@@ -221,6 +214,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                   {...register('promotionQuantity', { required: 'Số lượng mã là bắt buộc', min: { value: 1, message: 'Số lượng mã phải lớn hơn 0' }, pattern: { value: /^[1-9]\d*$/, message: 'Số lượng mã phải là số nguyên dương' } })}
                   placeholder="Nhập số lượng mã"
                   className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${errors.promotionQuantity ? 'border-red' : ''}`}
+                  defaultValue={chosenPromotion.promotionQuantity}
                 />
                 {errors.promotionQuantity && <p className="text-red text-center">{errors.promotionQuantity.message}</p>}
               </td>
@@ -238,13 +232,16 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
                     multiple
                     onChange={handleServiceSelect}
                   >
-                    {services
-                      ?.filter(service => !selectedServices.includes(service._id))
-                      .map(service => (
-                        <option key={service._id} value={service._id}>
-                          {service.name}
-                        </option>
-                      ))}
+                    {services?.map(service => {
+                      if (!selectedServices.some(selected => selected._id === service._id)) {
+                        return (
+                          <option key={service._id} value={service._id}>
+                            {service.name}
+                          </option>
+                        );
+                      }
+                      return null;
+                    })}
                   </select>
                 </div>
               </td>
@@ -255,15 +252,14 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
               </td>
               <td className="">
                 <ul>
-                  {selectedServices.map(selectedId => {
-                    const service = services.find(service => String(service._id) === String(selectedId)); 
+                  {selectedServices.map(selected => {
                     return (
-                      <li className='flex items-center' key={selectedId}>
-                        {service && service.name ? service.name : (selectedId ? selectedId.name : 'Loading...')}
+                      <li className='flex items-center' key={selected._id}>
+                        {selected.name}
                         <button
                           type="button"
                           className="ml-2 text-red"
-                          onClick={() => handleServiceDeselect(selectedId)}
+                          onClick={() => handleServiceDeselect(selected._id)}
                         >
                           <FaTimes />
                         </button>
