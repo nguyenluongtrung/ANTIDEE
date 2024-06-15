@@ -28,7 +28,7 @@ export const ExamResultHistory = () => {
 	}, []);
 
 	return (
-		<div className="flex px-16 pt-20">
+		<div className="flex px-16 pt-20 mb-10">
 			<div className="left-container pr-24 pt-3 w-1/3">
 				<Sidebar account={account} />
 			</div>

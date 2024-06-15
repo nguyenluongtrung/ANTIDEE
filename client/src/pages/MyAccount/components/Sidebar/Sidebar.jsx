@@ -3,6 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BsFillSendArrowUpFill } from 'react-icons/bs';
 import { BsFillSendArrowDownFill } from 'react-icons/bs';
 import { FaHistory } from "react-icons/fa";
+import Ellipse_16 from '../../../../assets/img/Ellipse 16.png'
+import clarity_avatar_solid from '../../../../assets/img/clarity_avatar-solid.png'
+import mdi_voucher from '../../../../assets/img/mdi_voucher.png'
+import mingcute_card from '../../../../assets/img/mingcute_card-pay-fill.png'
+import mdi_heart from '../../../../assets/img/mdi_heart.png'
+import lucide_list from '../../../../assets/img/lucide_list-x.png'
+import mdi_gift from '../../../../assets/img/mdi_gift.png'
+import vaadin_piggy from '../../../../assets/img/vaadin_piggy-bank-coin.png'
 
 export const Sidebar = ({ account }) => {
 	const navigate = useNavigate();
@@ -10,7 +18,7 @@ export const Sidebar = ({ account }) => {
 		<div>
 			<div className="flex mb-4">
 				<img
-					src={`${account?.avatar}` || '../../../../assets/img/Ellipse 16.png'}
+					src={`${account?.avatar}` || Ellipse_16}
 					className="block w-12 mr-2 rounded-full"
 				/>
 				<div className="mt-2">
@@ -27,14 +35,14 @@ export const Sidebar = ({ account }) => {
 				onClick={() => navigate('/my-account')}
 			>
 				<img
-					src="../../../../assets/img/clarity_avatar-solid.png"
+					src={clarity_avatar_solid}
 					className="inline w-4 mr-2"
 				/>
 				<span>Tài khoản của tôi</span>
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
 				<img
-					src="../../../../assets/img/mingcute_card-pay-fill.png"
+					src={mingcute_card}
 					className="inline w-4 mr-2"
 				/>
 				<span>aPay</span>
@@ -42,7 +50,7 @@ export const Sidebar = ({ account }) => {
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/voucher-history')}
 			>
-				<img src="../../../../assets/img/mdi_voucher.png" className="inline w-4 mr-2" />
+				<img src={mdi_voucher} className="inline w-4 mr-2" />
 				<span>Kho Voucher</span>
 			</div>
 			<div
@@ -72,7 +80,7 @@ export const Sidebar = ({ account }) => {
 				className="mb-2.5 hover:text-primary hover:cursor-pointer"
 				onClick={() => navigate('/favorite-list')}
 			>
-				<img src="../../../../assets/img/mdi_heart.png" className="inline w-4 mr-2" />
+				<img src={mdi_heart} className="inline w-4 mr-2" />
 				<span>Tasker yêu thích</span>
 			</div>
 			<div
@@ -80,18 +88,18 @@ export const Sidebar = ({ account }) => {
 				onClick={() => navigate('/black-list')}
 			>
 				<img
-					src="../../../../assets/img/lucide_list-x.png"
+					src={lucide_list}
 					className="inline w-4 mr-2"
 				/>
 				<span>Danh sách chặn</span>
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
-				<img src="../../../../assets/img/mdi_gift.png" className="inline w-4 mr-2" />
+				<img src={mdi_gift} className="inline w-4 mr-2" />
 				<span>Săn quà giới thiệu</span>
 			</div>
 			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
 				<img
-					src="../../../../assets/img/vaadin_piggy-bank-coin.png"
+					src={vaadin_piggy}
 					className="inline w-4 mr-2"
 				/>
 				<span>Điểm tích lũy</span>

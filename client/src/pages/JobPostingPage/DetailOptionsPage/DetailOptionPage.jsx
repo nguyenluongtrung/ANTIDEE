@@ -359,7 +359,7 @@ export const DetailOptionPage = () => {
 	}
 
 	return (
-		<div className="w-full pt-10 px-20">
+		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
 			{isOpenRepeatitiveForm && (
 				<RepeatitiveForm
@@ -644,7 +644,7 @@ export const DetailOptionPage = () => {
 
 				<div className="flex items-center justify-center">
 					<button
-						className="mt-10 w-[500px] py-3 bg-primary rounded-full text-white hover:opacity-70"
+						className="mt-10 mb-10 w-[500px] py-3 bg-primary rounded-full text-white hover:opacity-70"
 						type="submit"
 					>
 						Tiếp theo

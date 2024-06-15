@@ -31,7 +31,7 @@ export const ViewServiceDetail = () => {
 	}
 
 	return (
-		<div className="w-full pt-20 px-20">
+		<div className="w-full px-20">
 			<StepBar serviceId={serviceId}/>
 
 			<div className="flex relative gap-x-10 mt-10 mx-40">
@@ -54,7 +54,7 @@ export const ViewServiceDetail = () => {
 
 			<div className="flex items-center justify-center">
 				<button
-					className="mt-10 w-[500px] py-3 bg-primary rounded-full text-white hover:opacity-70"
+					className="mt-10 w-[500px] py-3 mb-10 bg-primary rounded-full text-white hover:opacity-70"
 					onClick={handleNextStep}
 				>
 					Tiếp theo

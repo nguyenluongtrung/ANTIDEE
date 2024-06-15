@@ -88,7 +88,7 @@ export const ConfirmPage = () => {
 	}
 
 	return (
-		<div className="w-full px-20 pt-20">
+		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
 
 			<div
@@ -220,7 +220,7 @@ export const ConfirmPage = () => {
 
 			<div className="flex items-center justify-center">
 				<button
-					className={`mt-10 w-[200px] py-3 rounded-full text-white hover:opacity-70 ${
+					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${
 						!isChecked ? 'bg-gray' : 'bg-green'
 					}`}
 					disabled={!isChecked}

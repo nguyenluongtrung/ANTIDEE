@@ -62,7 +62,7 @@ export const TimeAndContactPage = () => {
 	};
 
 	return (
-		<div className="w-full px-20 pt-20">
+		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="schedule-form px-20 flex justify-center">
@@ -124,7 +124,7 @@ export const TimeAndContactPage = () => {
 
 				<div className="flex items-center justify-center">
 					<button
-						className="mt-10 w-[500px] py-3 bg-primary rounded-full text-white hover:opacity-70"
+						className="mt-10 w-[500px] mb-10 py-3 bg-primary rounded-full text-white hover:opacity-70"
 						type="submit"
 					>
 						Tiếp theo

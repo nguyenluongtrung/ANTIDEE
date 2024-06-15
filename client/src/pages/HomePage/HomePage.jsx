@@ -153,7 +153,7 @@ export const HomePage = () => {
 				<div className="flex justify-center">
 					<div className=" w-[80%] " data-aos="slide-up" data-aos-offset="200">
 						<Marquee autoFill pauseOnHover className="h-64 rounded-lg bg-white">
-							{services.map((service, index) => (
+							{services?.map((service, index) => (
 								<div
 									key={index}
 									className="mx-4 transition duration-300 ease-in-out transform hover:scale-110 border-gray-300 shadow-2xl rounded-[15px] hover:cursor-pointer"

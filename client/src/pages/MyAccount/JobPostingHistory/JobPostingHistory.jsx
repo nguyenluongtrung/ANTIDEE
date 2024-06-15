@@ -84,7 +84,7 @@ export const JobPostingHistory = () => {
 
 	return (
 		<div>
-			<div className="px-16 pt-20">
+			<div className="px-16 pt-20 mb-10">
 				{isOpenJobPostDetail && (
 					<HistoryJobPostDetail
 						chosenJobPostId={chosenJobPostId}
