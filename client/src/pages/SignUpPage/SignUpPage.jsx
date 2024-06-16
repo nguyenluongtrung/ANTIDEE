@@ -280,7 +280,7 @@ export const SignUpPage = () => {
               />
               <button
                 type="submit"
-                className="w-full bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
+                className="w-full bg-primary mb-10 text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
               >
                 <span>Xác nhận</span>
                 {loading && <CgSpinner size={20} className="animate-spin" />}
@@ -318,8 +318,7 @@ export const SignUpPage = () => {
                       <div className="flex items-center justify-center mt-20">
                         <button
                           type="submit"
-                          className="w-[500px] bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
-                          // onClick={handleVerifyOTP}
+                          className="w-[500px] bg-primary mb-10 text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
                         >
                           <span>Xác nhận</span>
                           {loading && (
@@ -349,7 +348,7 @@ export const SignUpPage = () => {
                 <div className="flex items-center justify-center mt-20">
                   <button
                     type="submit"
-                    className="w-[500px] bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
+                    className="w-[500px] mb-10 bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
                     onClick={handleSendOTP}
                   >
                     <span>Xác nhận</span>

@@ -16,7 +16,7 @@ import "./Sidebar.css"
 
 export const Sidebar = () => {
 	const [activeItem, setActiveItem] = useState(null);
-	const [sidebarVisible, setSidebarVisible] = useState(false); // State for sidebar visibility
+	const [sidebarVisible, setSidebarVisible] = useState(false); 
 	const { account } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();

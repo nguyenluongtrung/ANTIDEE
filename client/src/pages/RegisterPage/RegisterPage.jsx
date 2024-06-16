@@ -36,39 +36,6 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
           <p className="font-bold mt-3 mb-4">
             Chào mừng đến với <span className="text-primary">Antidee</span>
           </p>
-          {/* <div className="mb-3 mt-5">
-						<p className="small-text">Số điện thoại</p>
-						<input
-							type='number'
-							className="border border-gray-500 rounded-md p-1"
-							{...register('phoneNumber', rules.phoneNumber)}
-						/>
-						{errors.phoneNumber && (
-							<p className="text-red-500 small-text">
-								{errors.phoneNumber.message}
-							</p>
-						)}
-					</div>
-					<div className="mb-4">
-						<p className="small-text">Mật khẩu</p>
-						<input
-							type='password'
-							className="border border-gray-500 rounded-md p-1"
-							{...register('password', rules.password)}
-						/>
-						{errors.password && (
-							<p className="text-red-500 small-text">
-								{errors.password.message}
-							</p>
-						)}
-					</div> */}
-          {/* <button
-            type="submit"
-            className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1"
-          >
-            <p>Đăng ký</p>
-          </button> */}
-
           <Link>
             <Link to={"/sign-up"}>
               <button

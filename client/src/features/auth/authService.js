@@ -66,7 +66,6 @@ const getAccountInformation = async (token) => {
 	return response.data.data.account;
 };
 
-//black list
 const addDomesticHelperToBlackList = async (domesticHelperId, token) => {
 	const config = {
 		headers: {
@@ -94,7 +93,6 @@ const deleteDomesticHelperFromBlackList = async (domesticHelperId, token) => {
 	return response.data.data.account;
 };
 
-//favorite list
 const addDomesticHelperToFavoriteList = async (domesticHelperId, token) => {
 	const config = {
 		headers: {
@@ -124,6 +122,24 @@ const deleteDomesticHelperFromFavoriteList = async (
 	);
 	return response.data.data.account;
 };
+
+const inviteFriend = async (
+	invitedEmail,
+	invitationCode,
+	accountName,
+	token
+) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	await axios.patch(
+		API_URL + 'invite-friend/',
+		{ invitedEmail, invitationCode, accountName },
+		config
+	);
+};
 const authService = {
 	login,
 	logout,
@@ -137,6 +153,7 @@ const authService = {
 	deleteDomesticHelperFromBlackList,
 	addDomesticHelperToFavoriteList,
 	deleteDomesticHelperFromFavoriteList,
+	inviteFriend,
 };
 
 export default authService;

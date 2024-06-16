@@ -6,7 +6,9 @@ export const Layout = () => {
 	return (
 		<>
 			<Header />
-			<Outlet><Sidebar /></Outlet>
+			<Outlet>
+				<Sidebar />
+			</Outlet>
 			<Footer />
 			<Toaster>
 				{(t) => (
