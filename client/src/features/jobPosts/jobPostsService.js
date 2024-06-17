@@ -35,6 +35,25 @@ const updateJobPost = async (token, jobPostData, id) => {
 	return response.data.data.jobPost;
 };
 
+const cancelJobPost = async (token, isCanceled, reason, account, jobPostId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + 'cancel-a-job/' + `${jobPostId}`,
+		{
+			isCanceled,
+			reason,
+			account,
+		},
+		config
+	);
+	return response.data.data.jobPost;
+};
+
 const deleteJobPost = async (token, id) => {
 	const config = {
 		headers: {
@@ -98,6 +117,7 @@ const jobPostService = {
 	createJobPost,
 	deleteJobPost,
 	updateJobPost,
+	cancelJobPost,
 	getAJob,
 	applyAJob,
 	selectATasker,

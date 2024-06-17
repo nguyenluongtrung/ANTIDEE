@@ -37,7 +37,8 @@ export const JobPostingHistory = () => {
 			newJobHistory = output.payload.filter(
 				(job) =>
 					job.domesticHelperId == null &&
-					String(job.customerId) == String(myAccountId)
+					String(job.customerId) == String(myAccountId) &&
+					job?.cancelDetails?.isCanceled === false
 			);
 		} else if (filterOption == 'hasAlreadyDomesticHelper') {
 			newJobHistory = output.payload.filter(
@@ -45,14 +46,22 @@ export const JobPostingHistory = () => {
 					job.domesticHelperId != null &&
 					String(job.customerId) == String(myAccountId) &&
 					job?.hasCompleted?.customerConfirm == false &&
-					job?.hasCompleted?.domesticHelperConfirm == false
+					job?.hasCompleted?.domesticHelperConfirm == false &&
+					job?.cancelDetails?.isCanceled === false
 			);
 		} else if (filterOption == 'completed') {
 			newJobHistory = output.payload.filter(
 				(job) =>
 					String(job.customerId) == String(myAccountId) &&
 					job?.hasCompleted?.customerConfirm == true &&
-					job?.hasCompleted?.domesticHelperConfirm == true
+					job?.hasCompleted?.domesticHelperConfirm == true &&
+					job?.cancelDetails?.isCanceled === false
+			);
+		} else if (filterOption == 'cancelled') {
+			newJobHistory = output.payload.filter(
+				(job) =>
+					String(job.customerId) == String(myAccountId) &&
+					job?.cancelDetails?.isCanceled === true
 			);
 		} else {
 			newJobHistory = output.payload;
@@ -84,12 +93,13 @@ export const JobPostingHistory = () => {
 
 	return (
 		<div>
-			<div className="px-16 pt-20">
+			<div className="px-16 pt-20 mb-10">
 				{isOpenJobPostDetail && (
 					<HistoryJobPostDetail
 						chosenJobPostId={chosenJobPostId}
 						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
 						accounts={accounts}
+						myAccountId={myAccountId}
 					/>
 				)}
 				<div
@@ -127,6 +137,16 @@ export const JobPostingHistory = () => {
 							/>
 							<p className="font-bold">Đã hoàn thành</p>
 						</div>
+						<div className="flex mr-5">
+							<input
+								type="radio"
+								className="w-3 mr-2"
+								name="filterOption"
+								checked={filterOption === 'cancelled'}
+								onChange={() => setFilterOption('cancelled')}
+							/>
+							<p className="font-bold">Đã hủy</p>
+						</div>
 					</div>
 				</div>
 				{myJobHistory.length == 0 ? (
@@ -142,7 +162,6 @@ export const JobPostingHistory = () => {
 				) : (
 					<div className="grid grid-cols-3 gap-28">
 						{myJobHistory
-							?.filter((job) => String(job.customerId) === myAccountId)
 							?.map((post) => {
 								return (
 									<div

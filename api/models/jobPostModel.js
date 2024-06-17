@@ -118,6 +118,19 @@ const jobPostSchema = mongoose.Schema(
 				],
 			},
 		},
+		cancelDetails: {
+			isCanceled: {
+				type: Boolean,
+				default: false,
+			},
+			reason: {
+				type: String,
+			},
+			account: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			},
+		},
 		applicants: [
 			{
 				type: mongoose.Schema.Types.ObjectId,

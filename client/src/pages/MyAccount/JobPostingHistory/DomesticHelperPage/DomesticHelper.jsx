@@ -37,14 +37,6 @@ export const DomesticHelper = ({
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //     dispatch(getAccountInformation());
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //     dispatch(getAllFeedbacks());
-  // }, []);
-
   const {
     register,
     handleSubmit,
@@ -96,11 +88,9 @@ export const DomesticHelper = ({
   if (isAuthLoading) {
     return <Spinner />;
   }
-  //mở to avatar
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  /////////////////////
 
   return (
     <div className="popup active">
