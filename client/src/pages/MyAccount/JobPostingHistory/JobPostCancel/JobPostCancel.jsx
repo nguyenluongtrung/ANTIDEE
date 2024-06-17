@@ -19,7 +19,7 @@ export const JobPostCancel = ({ jobPostId, setIsOpenCancelForm, myAccountId }) =
 	}
 
 	return (
-		<form className="px-8 py-4" style={{ width: '600px' }} onSubmit={handleSubmit(onSubmit)}>
+		<form className="px-8 py-5" style={{ width: '600px', height: '518px' }} onSubmit={handleSubmit(onSubmit)}>
 			<p className="grid text-green font-bold text-xl justify-center mb-3">
 				LÍ DO HỦY VIỆC
 			</p>

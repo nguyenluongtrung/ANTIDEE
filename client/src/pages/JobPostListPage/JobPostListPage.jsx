@@ -154,7 +154,11 @@ export const JobPostListPage = () => {
 							return jobPost;
 						}
 					})
-					?.filter((jobPost) => jobPost.domesticHelperId == null)
+					?.filter(
+						(jobPost) =>
+							jobPost.domesticHelperId == null &&
+							jobPost?.cancelDetails?.isCanceled === false
+					)
 					?.filter((jobPost) => {
 						const startingDate = new Date(jobPost.workingTime.startingDate);
 						startingDate.setMinutes(
@@ -170,10 +174,15 @@ export const JobPostListPage = () => {
 						const startingTime = `${startingHour
 							.toString()
 							.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
-						if (startingDate.toDateString() < new Date().toDateString()) {
+						console.log(
+							startingDate.toDateString(),
+							new Date().toDateString(),
+							startingDate.getTime() > new Date().getTime()
+						);
+						if (startingDate.getTime() > new Date().getTime()) {
 							return true;
 						} else if (
-							startingDate.toDateString() == new Date().toDateString() &&
+							startingDate.getTime() == new Date().getTime() &&
 							startingTime >= getCurrentTimeString()
 						) {
 							return true;
