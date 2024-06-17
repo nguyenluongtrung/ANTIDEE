@@ -76,7 +76,7 @@ export const JobPostCancel = ({ jobPostId, setIsOpenCancelForm, myAccountId }) =
 				<p className="pl-10">1. Hủy khi chưa có ai nhận việc</p>
 				<p className="pl-10">2. Hủy trước giờ làm việc 2 tiếng</p>
 				<p>
-					Ngoài 2 trường hợp trên, chúng tôi sẽ tính phí 30% giá trị công việc.
+					Ngoài 2 trường hợp trên, chúng tôi sẽ tính phí <span className='font-bold'>30%</span> giá trị công việc.
 				</p>
 				<p>Độ tin cậy của bạn sẽ giảm sau mỗi lần hủy việc.</p>
 				<p>Bạn chắc chắn hủy công việc này?</p>

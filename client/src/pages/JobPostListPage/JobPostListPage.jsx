@@ -174,15 +174,11 @@ export const JobPostListPage = () => {
 						const startingTime = `${startingHour
 							.toString()
 							.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
-						console.log(
-							startingDate.toDateString(),
-							new Date().toDateString(),
-							startingDate.getTime() > new Date().getTime()
-						);
-						if (startingDate.getTime() > new Date().getTime()) {
+
+						if (startingDate.toDateString() > new Date().toDateString()) {
 							return true;
 						} else if (
-							startingDate.getTime() == new Date().getTime() &&
+							startingDate.toDateString() == new Date().toDateString() &&
 							startingTime >= getCurrentTimeString()
 						) {
 							return true;
