@@ -1,5 +1,4 @@
 import imgInviteFriend from '../../assets/img/image 19.png';
-import copyIcon from '../../assets/img/intersect-square.png';
 import logoFacebook from '../../assets/img/logo-Facebook.png';
 import img20 from '../../assets/img/image 20.png';
 import '../../pages/InviteFriendPage/InviteFriendPage.css';
@@ -11,6 +10,8 @@ import {
 } from '../../features/auth/authSlice';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../utils/toast-customize';
+import { LuCopy } from "react-icons/lu";
+import { LuCopyCheck } from "react-icons/lu";
 
 export const InviteFriendPage = () => {
 	const [account, setAccount] = useState();
@@ -79,7 +80,7 @@ export const InviteFriendPage = () => {
 						<span className="text-primary text-5xl font-medium mr-3">
 							{account?.invitationCode}{' '}
 						</span>
-						<img src={copyIcon} className='hover:cursor-pointer' onClick={copyToClipboard} />
+						{!isCopied ? <LuCopy onClick={copyToClipboard} size={40} className='text-yellow hover:cursor-pointer'/> : <LuCopyCheck size={40} className='text-yellow hover:cursor-pointer'/>}
 					</div>
 				</div>
 			</div>
