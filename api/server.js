@@ -29,6 +29,8 @@ app.use(
 );
 app.use('/antidee/api/promotions', require('./routes/promotionRoutes'));
 app.use('/antidee/api/appFeedback', require('./routes/appFeedbackRouters'));
+app.use('/antidee/api/chat', require('./routes/chatRoutes'));
+app.use('/antidee/api/message', require('./routes/messageRoutes'));
 
 app.use(express.static(path.join(__dir, '/client/dist')));
 
