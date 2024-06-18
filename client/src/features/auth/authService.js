@@ -140,6 +140,25 @@ const inviteFriend = async (
 		config
 	);
 };
+
+const updateRatingDomesticHelper = async (
+	ratingData,
+	domesticHelperId,
+	token
+) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + 'rating/' + domesticHelperId,
+		ratingData,
+		config
+	);
+	return response.data.data.account;
+};
 const authService = {
 	login,
 	logout,
@@ -154,6 +173,7 @@ const authService = {
 	addDomesticHelperToFavoriteList,
 	deleteDomesticHelperFromFavoriteList,
 	inviteFriend,
+	updateRatingDomesticHelper,
 };
 
 export default authService;

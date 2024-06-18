@@ -5,7 +5,7 @@ import img28 from '../../assets/img/image 28.png';
 import img29 from '../../assets/img/image 29.png';
 export const WannaBecomeHelperPage = () => {
     return (
-        <div>
+        <div className='pb-10'>
             <h1 className=' grid text-green font-bold text-2xl justify-center pt-20'>BẠN MUỐN TRỞ THÀNH NGƯỜI GIÚP VIỆC?</h1>
             <img className='m-auto mt-10' src={img29} />
             <span className='grid justify-center mt-10 mb-10 text-sm text-gray font-medium'>Để trở thành một người giúp việc chuyên nghiệp,

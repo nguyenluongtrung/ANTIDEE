@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Account = require('./../models/accountModel');
+const DomesticHelperFeedback = require('./../models/domesticHelper_FeedbackModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -349,6 +350,42 @@ const inviteFriend = asyncHandler(async (req, res) => {
 	await sendMail(emailTemplate(email));
 });
 
+const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
+	const { domesticHelperId } = req.params;
+	const { rating } = req.body;
+
+	const account = await Account.findById(domesticHelperId);
+
+	if (!account) {
+		res.status(404);
+		throw new Error('Account not found!');
+	}
+
+	const feedbacks = await DomesticHelperFeedback.find({ domesticHelperId });
+	const numberOfRatings = feedbacks.length;
+
+	if (numberOfRatings === 0) {
+		account.rating.domesticHelperRating = rating;
+	} else {
+		const totalRating = feedbacks.reduce(
+			(sum, feedback) => sum + feedback.rating,
+			0
+		);
+		account.rating.domesticHelperRating = (
+			totalRating / numberOfRatings
+		).toFixed(1);
+	}
+
+	await account.save();
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			account,
+		},
+	});
+});
+
 module.exports = {
 	register,
 	login,
@@ -362,4 +399,5 @@ module.exports = {
 	deleteDomesticHelperFromBlackList,
 	deleteDomesticHelperFromFavoriteList,
 	inviteFriend,
+	updateRatingDomesticHelper,
 };

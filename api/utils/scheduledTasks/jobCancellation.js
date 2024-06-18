@@ -17,7 +17,8 @@ cron.schedule('*/1 * * * *', async () => {
 		if (
 			jobPost?.cancelDetails?.isCanceled === false &&
 			jobPost?.hasCompleted?.customerConfirm === false &&
-			jobPost?.hasCompleted?.domesticHelperConfirm === false
+			jobPost?.hasCompleted?.domesticHelperConfirm === false &&
+			jobPost?.domesticHelperId == null
 		) {
 			const startingDate = new Date(jobPost.workingTime.startingDate);
 			startingDate.setMinutes(

@@ -263,10 +263,13 @@ const cancelAJob = asyncHandler(async (req, res) => {
 	const jobPostId = req.params.jobPostId;
 
 	const isFoundJobPost = await JobPost.findById(jobPostId);
+	const foundAcc = await Account.findById(account);
 	if (!isFoundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
+
+	console.log(reason);
 
 	const updatedJobPost = await JobPost.findByIdAndUpdate(
 		jobPostId,
@@ -280,13 +283,60 @@ const cancelAJob = asyncHandler(async (req, res) => {
 		{ new: true }
 	);
 
+	const startingDate = new Date(isFoundJobPost.workingTime.startingDate);
+	startingDate.setMinutes(
+		startingDate.getMinutes() - startingDate.getTimezoneOffset()
+	);
+	const startingHour = parseInt(
+		isFoundJobPost.workingTime.startingHour.split(':')[0]
+	);
+	const startingMinute = parseInt(
+		isFoundJobPost.workingTime.startingHour.split(':')[1]
+	);
+
+	const startingTime = `${startingHour
+		.toString()
+		.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
+
+	let msg;
+
+	if (
+		isFoundJobPost?.domesticHelperId === null ||
+		startingDate.toDateString() > new Date().toDateString() ||
+		(startingDate.toDateString() == new Date().toDateString() &&
+			startingTime >= getCurrentTimeStringPlus1Hour())
+	) {
+		msg = 'Bạn đã hủy việc thành công';
+	} else {
+		foundAcc.accountBalance =
+			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
+		foundAcc.rating.customerRating = foundAcc.rating.customerRating - 0.1;
+		await foundAcc.save();
+		msg =
+			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
+	}
 	res.status(200).json({
 		status: 'success',
 		data: {
 			jobPost: updatedJobPost,
+			message: msg,
 		},
 	});
 });
+
+const getCurrentTimeStringPlus1Hour = () => {
+	const now = new Date();
+	let currentHour = now.getHours() + 1;
+	const currentMinute = now.getMinutes();
+
+	if (currentHour >= 24) {
+		currentHour -= 24;
+	}
+
+	return `${currentHour.toString().padStart(2, '0')}:${currentMinute
+		.toString()
+		.padStart(2, '0')}`;
+};
 
 module.exports = {
 	updateJobPost,

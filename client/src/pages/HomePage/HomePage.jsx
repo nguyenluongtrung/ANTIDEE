@@ -87,7 +87,7 @@ export const HomePage = () => {
 	}
 
 	return (
-		<div className="body-homepage">
+		<div className="body-homepage pb-10">
 			<div
 				className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80"
 				onClick={scrolLWithUseRef}

@@ -260,6 +260,29 @@ export const inviteFriend = createAsyncThunk(
 	}
 );
 
+export const updateRatingDomesticHelper = createAsyncThunk(
+	'auth/updateRatingDomesticHelper',
+	async ({ ratingData, domesticHelperId }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.updateRatingDomesticHelper(
+				ratingData,
+				domesticHelperId,
+				token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	account: account || null,
 	accounts: [],
@@ -445,6 +468,19 @@ export const authSlice = createSlice({
 			)
 			.addCase(inviteFriend.pending, (state) => {
 				state.isLoading = true;
+			})
+			.addCase(updateRatingDomesticHelper.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateRatingDomesticHelper.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(updateRatingDomesticHelper.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
 			});
 	},
 });

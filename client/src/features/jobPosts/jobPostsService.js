@@ -51,7 +51,10 @@ const cancelJobPost = async (token, isCanceled, reason, account, jobPostId) => {
 		},
 		config
 	);
-	return response.data.data.jobPost;
+	return {
+		jobPost: response.data.data.jobPost,
+		msg: response.data.data.message,
+	};
 };
 
 const deleteJobPost = async (token, id) => {

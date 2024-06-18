@@ -34,6 +34,16 @@ const accountSchema = mongoose.Schema(
 			type: String,
 			default: '',
 		},
+		rating: {
+			customerRating: {
+				type: Number,
+				default: 5.0,
+			},
+			domesticHelperRating: {
+				type: Number,
+				default: 5.0,
+			},
+		},
 		accountLevel: {
 			customerLevel: {
 				name: {

@@ -82,7 +82,7 @@ export const QualificationPage = () => {
 
 	return (
 		<>
-			<div className="w-full pt-20">
+			<div className="w-full pt-20 pb-10">
 				<h1 className="grid text-green font-bold text-2xl justify-center mb-3">
 					DANH SÁCH CÁC CHỨNG CHỈ
 				</h1>

@@ -11,8 +11,8 @@ const {
 	addDomesticHelperToFavoriteList,
 	deleteDomesticHelperFromBlackList,
 	deleteDomesticHelperFromFavoriteList,
-	getAccountProfile,
 	inviteFriend,
+	updateRatingDomesticHelper,
 } = require('../controllers/accountController');
 const { protect } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -28,6 +28,9 @@ router.route('/').get(getAllAccounts);
 router.route('/lost-account/:phoneNumber').get(getAccountForgottenPassword);
 router.route('/lost-account/:accountId').patch(updateAccountForgottenPassword);
 router.route('/invite-friend').patch(inviteFriend);
+router
+	.route('/rating/:domesticHelperId')
+	.patch(protect, updateRatingDomesticHelper);
 
 router
 	.route('/blackList/:domesticHelperId')

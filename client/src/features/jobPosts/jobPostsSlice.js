@@ -312,9 +312,9 @@ export const jobPostSlice = createSlice({
 				state.isSuccess = true;
 				state.jobPosts[
 					state.jobPosts.findIndex(
-						(jobPost) => jobPost._id == action.payload._id
+						(jobPost) => jobPost._id == action.payload.jobPost._id
 					)
-				] = action.payload;
+				] = action.payload.jobPost;
 			})
 			.addCase(cancelJobPost.rejected, (state, action) => {
 				state.isLoading = false;
