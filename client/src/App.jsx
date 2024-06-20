@@ -5,6 +5,7 @@ import {
 	useLocation,
 } from 'react-router-dom';
 import 'aos/dist/aos.css';
+import 'react-tooltip/dist/react-tooltip.css'
 import { Layout } from './layout';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -35,7 +36,6 @@ import {
 } from './pages/JobPostingPage';
 import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
 import { SignUpPage } from './pages/SignUpPage';
-
 import { DomesticHelper } from './pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
 import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
@@ -47,7 +47,6 @@ import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 import { JourneyPage } from './pages/JourneyPage';
-
 import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 const App = () => {
 	return (
@@ -64,7 +63,7 @@ const AppContent = () => {
 	return (
 		<div className="app-container select-none">
 			{!isAdminPage && (
-				<div className="sidebar-container">
+				<div className="sidebar-container z-50">
 					<Sidebar />
 				</div>
 			)}
