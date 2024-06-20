@@ -313,82 +313,82 @@ export const HomePage = () => {
 				</div>
 			</div>
 
-			<div className="mt-16">
-				<div className="relative px-60 flex">
-					<div
-						className="w-1/2"
-						data-aos="fade-right"
-						data-aos-delay="100"
-						data-aos-offset="400"
-					>
-						<img className="" src={features2} alt="" />
-					</div>
+      <div className="mt-16">
+        <div className="relative px-60 flex">
+          <div
+            className="w-1/2"
+            data-aos="fade-right"
+            data-aos-delay="100"
+            data-aos-offset="400"
+          >
+            <img className="" src="src/assets/img/features2.jpg" alt="" />
+          </div>
 
-					<div className=" flex flex-col gap-y-4 bottom-1 w-1/2 mx-12">
-						<h1
-							className="absolute text-[62px] text-primary leading-[62px] font-extrabold top-0 left-[600px] w-[600px]"
-							data-aos="fade-up"
-							data-aos-delay="700"
-							data-aos-offset="400"
-						>
-							Xin chào chúng tôi là Antidee
-						</h1>
-						<div className="flex flex-col gap-y-4 pt-32">
-							<h2 className="text-xl text-start font-secondary font-medium text-four">
-								Luôn sẵn sàng hỗ trợ khách hàng
-							</h2>
-							<span className="text-lg text-justify">
-								Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
-								hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
-								để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào
-								mang đến dịch vụ dọn dẹp nhà chuyên nghiệp và tận tâm nhất. Đội
-								ngũ nhân viên của chúng tôi đều được đào tạo kỹ lưỡng, có lý
-								lịch rõ ràng và luôn cam kết mang lại không gian sống sạch sẽ,
-								thoáng mát cho bạn và gia đình. Dù bạn cần dọn dẹp nhà cửa hàng
-								tuần, vệ sinh tổng thể hay chỉ là một số công việc nhỏ lẻ, chúng
-								tôi luôn sẵn sàng hỗ trợ bạn một cách nhanh chóng và hiệu quả
-								nhất.
-							</span>
-						</div>
-					</div>
-				</div>
-				<div className="relative px-60 mt-16 flex">
-					<div className=" flex flex-col justify-center w-1/2">
-						<div className="flex flex-col gap-y-4 justify-center">
-							<h2 className="text-xl font-secondary font-medium">
-								Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
-							</h2>
-							<span className="text-lg text-justify">
-								Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
-								cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
-								hảo từ đầu đến cuối. Trang web của chúng tôi được thiết kế thân
-								thiện và dễ sử dụng, giúp bạn dễ dàng đặt lịch, quản lý các yêu
-								cầu dịch vụ và theo dõi tiến độ công việc chỉ trong vài bước đơn
-								giản. Với sự đa dạng trong các gói dịch vụ, từ dọn dẹp thường
-								xuyên đến vệ sinh công nghiệp, chúng tôi luôn sẵn sàng đáp ứng
-								mọi nhu cầu của bạn. Hãy để chúng tôi trở thành người bạn đồng
-								hành tin cậy trong việc chăm sóc tổ ấm của bạn, mang lại cho bạn
-								nhiều thời gian hơn để tận hưởng cuộc sống.
-							</span>
+          <div className=" flex flex-col gap-y-4 bottom-1 w-1/2 mx-12">
+            <h1
+              className="absolute text-[62px] text-primary leading-[62px] font-extrabold top-0 left-[600px] w-[600px]"
+              data-aos="fade-up"
+              data-aos-delay="700"
+              data-aos-offset="400"
+            >
+              Xin chào chúng tôi là Antidee
+            </h1>
+            <div className="flex flex-col gap-y-4 pt-32">
+              <h2 className="text-xl text-start font-secondary font-medium text-four">
+                Luôn sẵn sàng hỗ trợ khách hàng
+              </h2>
+              <span className="text-lg">
+                Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
+                hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
+                để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào
+                mang đến dịch vụ dọn dẹp nhà chuyên nghiệp và tận tâm nhất. Đội
+                ngũ nhân viên của chúng tôi đều được đào tạo kỹ lưỡng, có lý
+                lịch rõ ràng và luôn cam kết mang lại không gian sống sạch sẽ,
+                thoáng mát cho bạn và gia đình. Dù bạn cần dọn dẹp nhà cửa hàng
+                tuần, vệ sinh tổng thể hay chỉ là một số công việc nhỏ lẻ, chúng
+                tôi luôn sẵn sàng hỗ trợ bạn một cách nhanh chóng và hiệu quả
+                nhất.
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="relative px-60 mt-16 flex">
+          <div className=" flex flex-col justify-center w-1/2">
+            <div className="flex flex-col gap-y-4 justify-center">
+              <h2 className="text-xl font-secondary font-medium">
+                Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
+              </h2>
+              <span className="text-lg ">
+                Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
+                cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
+                hảo từ đầu đến cuối. Trang web của chúng tôi được thiết kế thân
+                thiện và dễ sử dụng, giúp bạn dễ dàng đặt lịch, quản lý các yêu
+                cầu dịch vụ và theo dõi tiến độ công việc chỉ trong vài bước đơn
+                giản. Với sự đa dạng trong các gói dịch vụ, từ dọn dẹp thường
+                xuyên đến vệ sinh công nghiệp, chúng tôi luôn sẵn sàng đáp ứng
+                mọi nhu cầu của bạn. Hãy để chúng tôi trở thành người bạn đồng
+                hành tin cậy trong việc chăm sóc tổ ấm của bạn, mang lại cho bạn
+                nhiều thời gian hơn để tận hưởng cuộc sống.
+              </span>
 
-							<div className="text-xl font-bold hover:text-primary animate-bounce cursor-pointer">
-								<PiArrowBendDownRightBold
-									size={60}
-									className="absolute -bottom-3 -left-20 animate-bounce"
-								/>
-								Liên Hệ với chúng tôi nếu bạn cần hỗ trợ !!!
-							</div>
-						</div>
-					</div>
-					<div
-						className="w-1/2 ml-10"
-						data-aos="fade-left"
-						data-aos-offset="400"
-					>
-						<img className="" src={features3} alt="" />
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+              <div className="text-xl font-bold hover:text-primary animate-bounce cursor-pointer">
+                <PiArrowBendDownRightBold
+                  size={60}
+                  className="absolute -bottom-3 -left-20 animate-bounce"
+                />
+                Liên Hệ với chúng tôi nếu bạn cần hỗ trợ !!!
+              </div>
+            </div>
+          </div>
+          <div
+            className="w-1/2 ml-10"
+            data-aos="fade-left"
+            data-aos-offset="400"
+          >
+            <img className="" src="src/assets/img/features3.jpg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
