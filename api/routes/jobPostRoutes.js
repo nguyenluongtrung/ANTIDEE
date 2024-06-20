@@ -11,6 +11,7 @@ const {
 	selectATasker,
 	deleteAllJobPost,
 	cancelAJob,
+	cancelAJobDomesticHelper,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
@@ -26,6 +27,9 @@ router
 	.route('/select-a-job/:jobPostId/:taskerId')
 	.patch(protect, selectATasker);
 router.route('/cancel-a-job/:jobPostId').patch(protect, cancelAJob);
+router
+	.route('/cancel-a-job-domesticHelper/:jobPostId')
+	.patch(protect, cancelAJobDomesticHelper);
 router
 	.route('/:jobPostId')
 	.get(protect, getJobPost)

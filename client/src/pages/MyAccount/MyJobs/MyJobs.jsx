@@ -68,6 +68,7 @@ export const MyJobs = () => {
 					<MyJobDetail
 						chosenJobPostId={chosenJobPostId}
 						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
+						myAccountId={myAccountId}
 					/>
 				)}
 				<div
@@ -111,6 +112,7 @@ export const MyJobs = () => {
 					<div className="grid grid-cols-3 gap-28">
 						{myJobs
 							?.filter((job) => String(job.domesticHelperId) === myAccountId)
+							?.filter((job) => job?.cancelDetails?.isCanceled === false)
 							?.map((post) => {
 								return (
 									<div
