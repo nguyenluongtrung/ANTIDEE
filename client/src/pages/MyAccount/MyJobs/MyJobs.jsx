@@ -26,6 +26,19 @@ export const MyJobs = () => {
 		setMyAccountId(output.payload._id);
 	}
 
+	const getAllJobList = async () => {
+		let output = await dispatch(getAllJobPosts());
+		let newJobHistory = output.payload.filter(
+			(job) =>
+				job.domesticHelperId == String(myAccountId) &&
+				job?.hasCompleted?.customerConfirm == false &&
+				job?.hasCompleted?.domesticHelperConfirm == false &&
+				job?.cancelDetails?.isCanceled == false
+		);
+
+		setMyJobs(newJobHistory);
+	};
+
 	async function getInitialMyJobList(filterOption) {
 		let output = await dispatch(getAllJobPosts());
 		let newJobHistory;
@@ -34,7 +47,8 @@ export const MyJobs = () => {
 				(job) =>
 					job.domesticHelperId == String(myAccountId) &&
 					job?.hasCompleted?.customerConfirm == false &&
-					job?.hasCompleted?.domesticHelperConfirm == false
+					job?.hasCompleted?.domesticHelperConfirm == false &&
+					job?.cancelDetails?.isCanceled == false
 			);
 		} else if (filterOption == 'completed') {
 			newJobHistory = output.payload.filter(
@@ -69,6 +83,7 @@ export const MyJobs = () => {
 						chosenJobPostId={chosenJobPostId}
 						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
 						myAccountId={myAccountId}
+						getAllJobList={getAllJobList}
 					/>
 				)}
 				<div
@@ -100,10 +115,7 @@ export const MyJobs = () => {
 				</div>
 				{myJobs.length == 0 ? (
 					<div className="mx-auto">
-						<img
-							src="image/sad-icon.png"
-							className="block m-auto w-52"
-						/>
+						<img src="image/sad-icon.png" className="block m-auto w-52" />
 						<p className="text-gray text-center">
 							Rất tiếc, bạn hiện tại chưa có công việc nào
 						</p>

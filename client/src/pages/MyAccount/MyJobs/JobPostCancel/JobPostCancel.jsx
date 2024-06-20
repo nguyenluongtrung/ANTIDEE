@@ -8,6 +8,8 @@ export const JobPostCancel = ({
 	jobPostId,
 	setIsOpenCancelForm,
 	myAccountId,
+	getAllJobList,
+	setIsOpenJobPostDetail
 }) => {
 	const [showOtherFeedback, setShowOtherFeedback] = useState(false);
 	const [reason, setReason] = useState("");
@@ -21,6 +23,9 @@ export const JobPostCancel = ({
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+		setIsOpenCancelForm(false);
+		setIsOpenJobPostDetail(false);
+		getAllJobList();
 	};
 
 	return (

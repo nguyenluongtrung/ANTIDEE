@@ -21,6 +21,7 @@ export const HistoryJobPostDetail = ({
 	setIsOpenJobPostDetail,
 	accounts,
 	myAccountId,
+	getAllInitialJobList
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
 	const [feedbacks, setFeedbacks] = useState([]);
@@ -325,6 +326,8 @@ export const HistoryJobPostDetail = ({
 							jobPostId={chosenJobPost?._id}
 							setIsOpenCancelForm={setIsOpenCancelForm}
 							myAccountId={myAccountId}
+							getAllInitialJobList={getAllInitialJobList}
+							setIsOpenJobPostDetail={setIsOpenJobPostDetail}
 						/>
 					</div>
 				</div>

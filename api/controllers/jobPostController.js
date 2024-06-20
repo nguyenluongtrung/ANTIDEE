@@ -308,7 +308,8 @@ const cancelAJob = asyncHandler(async (req, res) => {
 	} else {
 		foundAcc.accountBalance =
 			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
-		foundAcc.rating.customerRating = foundAcc.rating.customerRating - 0.1;
+		foundAcc.rating.customerRating =
+			Math.round(foundAcc.rating.customerRating) - 0.1;
 		await foundAcc.save();
 		msg =
 			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
@@ -376,7 +377,7 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 	}
 
 	foundAcc.rating.domesticHelperRating =
-		foundAcc.rating.domesticHelperRating - 0.1;
+		Math.round(foundAcc.rating.domesticHelperRating) - 0.1;
 	await foundAcc.save();
 
 	res.status(200).json({

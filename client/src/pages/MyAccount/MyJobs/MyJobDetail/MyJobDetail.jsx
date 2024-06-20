@@ -9,6 +9,7 @@ export const MyJobDetail = ({
 	chosenJobPostId,
 	setIsOpenJobPostDetail,
 	myAccountId,
+	getAllJobList
 }) => {
 	const [isOpenCancelForm, setIsOpenCancelForm] = useState(false);
 	const { jobPosts, isLoading: jobPostLoading } = useSelector(
@@ -35,12 +36,15 @@ export const MyJobDetail = ({
 					<div className="content rounded-md">
 						<AiOutlineClose
 							className="absolute text-sm hover:cursor-pointer m-5"
-							onClick={() => setIsOpenCancelForm(false)}
+							getAllJobList={getAllJobList}
+							onClick={() => {getAllJobList(); setIsOpenCancelForm(false)}}
 						/>
 						<JobPostCancel
 							jobPostId={chosenJobPostId}
 							setIsOpenCancelForm={setIsOpenCancelForm}
 							myAccountId={myAccountId}
+							getAllJobList={getAllJobList}
+							setIsOpenJobPostDetail={setIsOpenJobPostDetail}
 						/>
 					</div>
 				</div>
@@ -50,7 +54,7 @@ export const MyJobDetail = ({
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={() => {
 							setIsOpenJobPostDetail(false);
-							handleGetAllQuestions();
+							getAllJobList();
 						}}
 					/>
 					<p className="grid text-green font-bold text-xl justify-center mb-3">

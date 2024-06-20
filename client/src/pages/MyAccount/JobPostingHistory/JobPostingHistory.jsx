@@ -69,6 +69,17 @@ export const JobPostingHistory = () => {
 		setMyJobHistory(newJobHistory);
 	}
 
+	const getAllInitialJobList = async () => {
+		let output = await dispatch(getAllJobPosts());
+		let newJobHistory = output.payload.filter(
+				(job) =>
+					job.domesticHelperId == null &&
+					String(job.customerId) == String(myAccountId) &&
+					job?.cancelDetails?.isCanceled === false
+			);
+		setMyJobHistory(newJobHistory);
+	}
+
 	async function initialAccountList() {
 		let output = await dispatch(getAllAccounts());
 
@@ -100,6 +111,7 @@ export const JobPostingHistory = () => {
 						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
 						accounts={accounts}
 						myAccountId={myAccountId}
+						getAllInitialJobList={getAllInitialJobList}
 					/>
 				)}
 				<div
