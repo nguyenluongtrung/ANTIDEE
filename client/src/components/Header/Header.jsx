@@ -89,7 +89,7 @@ export const Header = () => {
 							</span>
 						</Link>
 						<div className="dropdown-content">
-							{services.map((service) => {
+							{services?.map((service) => {
 								return (
 									<div className="shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden service-section" onClick={() => navigateToServicePage(service?._id)}>
 										<div className="relative grid gap-6 bg-white px-5 py-3 sm:gap-8 sm:p-8 hover:bg-light_primary hover:text-white">
