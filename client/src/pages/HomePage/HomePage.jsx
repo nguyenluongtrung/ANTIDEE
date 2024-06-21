@@ -321,7 +321,7 @@ export const HomePage = () => {
             data-aos-delay="100"
             data-aos-offset="400"
           >
-            <img className="" src="src/assets/img/features2.jpg" alt="" />
+            <img className="" src={features2} alt="" />
           </div>
 
           <div className=" flex flex-col gap-y-4 bottom-1 w-1/2 mx-12">
@@ -385,7 +385,7 @@ export const HomePage = () => {
             data-aos="fade-left"
             data-aos-offset="400"
           >
-            <img className="" src="src/assets/img/features3.jpg" alt="" />
+            <img className="" src={features3} alt="" />
           </div>
         </div>
       </div>
