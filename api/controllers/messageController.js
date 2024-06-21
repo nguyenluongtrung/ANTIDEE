@@ -1,22 +1,39 @@
-const messageModel = require('../models/messageModel');
+const MessageModel = require('../models/messageModel');
+const { io } = require('../server'); // Make sure io is imported
+
 
 //createMessage
+const getAllMessage = async (req, res) => {
+    const messages = await MessageModel.find({});
 
-const createMessage = async (req, res) => {
-    const { chatId, senderId, text } = req.body;
-
-    const message = new messageModel({
-        chatId, senderId, text
+    res.status(200).json({
+        status: "success",
+        data: {
+            messages,
+        }
     })
-
+}
+const createMessage = async (req, res) => {
     try {
-        const response = await message.save();
+        const { chatId, senderId, text, file } = req.body;
 
-        res.status(200).json(response)
+        const messages = await MessageModel.create(req.body);
+
+        if (chatId && io) {
+            io.to(chatId).emit('receiveMessage', message);
+        }
+
+        res.status(201).json({
+            success: true,
+            data: { messages },
+        });
     } catch (error) {
-        console.log(error)
-        res.status(500).json(error)
+        res.status(400).json({
+            success: false,
+            error: error.message,
+        })
     }
+
 };
 
 //getMessages
@@ -24,14 +41,18 @@ const getMessages = async (req, res) => {
     const { chatId } = req.params;
 
     try {
-        const messages = await messageModel.find({ chatId })
+        const messages = await MessageModel.find({ chatId })
         res.status(200).json(messages)
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
     }
-}
+};
+
+
+
 module.exports = {
     createMessage,
     getMessages,
+    getAllMessage
 }

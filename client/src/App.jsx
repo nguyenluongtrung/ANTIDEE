@@ -39,7 +39,7 @@ import { SignUpPage } from './pages/SignUpPage';
 
 import { DomesticHelper } from './pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
-import {VoucherList} from './pages/SearchVoucherPage/VoucherList'
+import { VoucherList } from './pages/SearchVoucherPage/VoucherList'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
 import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
@@ -49,10 +49,11 @@ import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 import { JourneyPage } from './pages/JourneyPage';
 
-import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
+import { ChatForm } from './pages/Chatting/ChatForm';
+import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 const App = () => {
 	return (
-		<Router>	
+		<Router>
 			<AppContent />
 		</Router>
 	);
@@ -89,12 +90,13 @@ const AppContent = () => {
 						<Route path="/exam-result-history" element={<ExamResultHistory />} />
 						<Route path="/job-posts" element={<JobPostListPage />} />
 						{/* <Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/> */}
-						<Route path ="/reply-feedback" element={<ReplyFeedback/>}/>
-						<Route path ="/black-list" element={<BlackList/>}/>
-						<Route path ="/favorite-list" element={<FavoriteList/>}/>
-						<Route path ="/demo-video" element={<DemoViewVideoYoutube/>}/>
-						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
-						<Route path ="/voucher-history" element={<VoucherHistory/>}/>
+						<Route path="/reply-feedback" element={<ReplyFeedback />} />
+						<Route path="/black-list" element={<BlackList />} />
+						<Route path="/favorite-list" element={<FavoriteList />} />
+						<Route path="/demo-video" element={<DemoViewVideoYoutube />} />
+						<Route path="/domestic-helper-feedback" element={<DomesticHelper />} />
+						<Route path="/voucher-history" element={<VoucherHistory />} />
+						<Route path="/chat" element={<ChatForm />} />
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"
@@ -120,7 +122,7 @@ const AppContent = () => {
 							<Route path="/admin-question" element={<QuestionManagement />} />
 							<Route path="/admin-voucher" element={<VoucherManagement />} />
 							<Route path="/admin-promotion" element={<PromotionManagement />} />
-							<Route path="/admin-appFeedback" element={<AppFeedbackManagement />}/>
+							<Route path="/admin-appFeedback" element={<AppFeedbackManagement />} />
 							<Route
 								path="/admin-qualification"
 								element={<QualificationManagement />}

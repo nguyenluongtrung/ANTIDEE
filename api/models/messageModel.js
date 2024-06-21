@@ -9,11 +9,14 @@ const messageSchema = new mongoose.Schema({
     senderId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'User'
+        ref: 'Account'
     },
     text: {
         type: String,
-        required: true
+        
+    },
+    file:{
+        type:String,
     }
 }, { 
     timestamps: true 

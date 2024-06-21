@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAccountInformation } from '../../features/auth/authSlice';
 import "./Sidebar.css"
+import { BsChat } from 'react-icons/bs';
 
 export const Sidebar = () => {
 	const [activeItem, setActiveItem] = useState(null);
@@ -111,6 +112,7 @@ export const Sidebar = () => {
 									<div className="description">Diễn đàn</div>
 								)}
 							</div>
+							
 						</>
 					)}
 
@@ -159,6 +161,7 @@ export const Sidebar = () => {
 									<div className="description">Thời tiết</div>
 								)}
 							</div>
+							
 						</>
 					)}
 				</div>

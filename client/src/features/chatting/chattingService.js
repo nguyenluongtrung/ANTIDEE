@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const API_URL_CHAT = '/antidee/api/chat';
-const API_URL_MESSAGE = '/antidee/api/message/';
 
 const createChat = async (token, chatData) => {
     const config = {
@@ -11,7 +10,7 @@ const createChat = async (token, chatData) => {
     };
     const response = await axios.post(API_URL_CHAT, chatData, config);
 
-    return response.data;
+    return response.data.chat;
 };
 
 
