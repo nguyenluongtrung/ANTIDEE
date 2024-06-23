@@ -68,6 +68,10 @@ export const Header = () => {
 		};
 	}, [lastScrollY]);
 
+	if (!Array.isArray(services)) {
+		return <Spinner />;
+	}
+
 	return (
 		<div className={`mb-7 ${showHeader ? 'header-visible' : 'header-hidden'}`}>
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
