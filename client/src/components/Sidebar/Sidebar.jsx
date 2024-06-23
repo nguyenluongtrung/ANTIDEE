@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAccountInformation } from "../../features/auth/authSlice";
 import "./Sidebar.css";
 import { BiHomeAlt, BiGridAlt, BiCreditCardAlt, BiUser } from "react-icons/bi";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import { GiJourney } from "react-icons/gi";
 import { MdPostAdd } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
-// import { PiRanking } from "react-icons/pi";
+import { FaRankingStar } from "react-icons/fa6";
 
 export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState(null);
@@ -60,7 +60,7 @@ export const Sidebar = () => {
   const menuDomestic = [
     { name: "Công Việc", icon: <MdPostAdd />, to: "/job-posts" },
     { name: "Hành Trình", icon: <GiJourney />, to: "/journey" },
-    { name: "Xếp Hạng", icon: <TiWeatherPartlySunny />, to: "/ranking" },
+    { name: "Xếp Hạng", icon: <FaRankingStar />, to: "/ranking" },
     {
       name: "Thời Tiết",
       icon: <TiWeatherPartlySunny />,

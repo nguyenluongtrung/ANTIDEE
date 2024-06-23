@@ -359,12 +359,12 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 		workingStartMinute
 	);
 	const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
-	const workingEndMs = workingStartMs + twoHoursInMilliseconds;
+	const workingEndMs = workingStartMs - twoHoursInMilliseconds;
 	const workingEndTime = new Date(workingEndMs);
 
 	let msg;
 
-	if (currentTime < workingEndTime) {
+	if (currentTime <= workingEndTime) {
 		msg =
 			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
 		foundAcc.accountBalance =
@@ -376,8 +376,10 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 			foundAcc.accountBalance - Math.round(0.8 * isFoundJobPost?.totalPrice);
 	}
 
+	console.log(foundAcc.rating.domesticHelperRating);
 	foundAcc.rating.domesticHelperRating =
-		Math.round(foundAcc.rating.domesticHelperRating) - 0.1;
+		foundAcc.rating.domesticHelperRating - 0.1;
+
 	await foundAcc.save();
 
 	res.status(200).json({
