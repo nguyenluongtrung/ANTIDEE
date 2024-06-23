@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Account = require('./../models/accountModel');
 const DomesticHelperFeedback = require('./../models/domesticHelper_FeedbackModel');
+const JobPost = require('./../models/jobPostModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -350,6 +351,42 @@ const inviteFriend = asyncHandler(async (req, res) => {
 	await sendMail(emailTemplate(email));
 });
 
+const checkInvitationCode = asyncHandler(async (req, res) => {
+	const invitationCode = req.params.invitationCode;
+	const account = await Account.findOne({ invitationCode });
+	const jobPosts = await JobPost.find({ customerId: req.account._id });
+	if (!account) {
+		res.status(404);
+		throw new Error('Mã mời không tồn tại!');
+	} else if (String(account._id) === String(req.account._id)) {
+		res.status(400);
+		throw new Error('Mã mời không hợp lệ!');
+	} else if (jobPosts.length > 0) {
+		res.status(400);
+		throw new Error('Tài khoản đã mua dịch vụ!');
+	} else {
+		res.status(200).json({
+			status: 'success',
+			data: {
+				accountId: account._id,
+			},
+		});
+	}
+});
+
+const loadMoneyAfterUsingInvitationCode = asyncHandler(async (req, res) => {
+	const myAccount = await Account.findById(req.account._id);
+	myAccount.accountBalance = myAccount.accountBalance + 10000;
+	await myAccount.save();
+
+	const ownerAccount = await Account.findById(req.params.ownerId);
+	ownerAccount.accountBalance = ownerAccount.accountBalance + 10000;
+	await ownerAccount.save();
+	res.status(200).json({
+		status: 'success',
+	});
+});
+
 const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 	const { domesticHelperId } = req.params;
 	const { rating } = req.body;
@@ -400,4 +437,6 @@ module.exports = {
 	deleteDomesticHelperFromFavoriteList,
 	inviteFriend,
 	updateRatingDomesticHelper,
+	checkInvitationCode,
+	loadMoneyAfterUsingInvitationCode,
 };

@@ -13,6 +13,8 @@ const {
 	deleteDomesticHelperFromFavoriteList,
 	inviteFriend,
 	updateRatingDomesticHelper,
+	checkInvitationCode,
+	loadMoneyAfterUsingInvitationCode,
 } = require('../controllers/accountController');
 const { protect } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -24,10 +26,16 @@ router
 	.route('/information')
 	.patch(protect, updateAccountInformation)
 	.get(protect, getAccountInformation);
+router
+	.route('/check-invite-friend/:invitationCode')
+	.get(protect, checkInvitationCode);
 router.route('/').get(getAllAccounts);
 router.route('/lost-account/:phoneNumber').get(getAccountForgottenPassword);
 router.route('/lost-account/:accountId').patch(updateAccountForgottenPassword);
-router.route('/invite-friend').patch(inviteFriend);
+router.route('/invite-friend').patch(protect, inviteFriend);
+router
+	.route('/load-money/:ownerId')
+	.patch(protect, loadMoneyAfterUsingInvitationCode);
 router
 	.route('/rating/:domesticHelperId')
 	.patch(protect, updateRatingDomesticHelper);

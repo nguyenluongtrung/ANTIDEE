@@ -11,8 +11,9 @@ import { getAllServices } from '../../../features/services/serviceSlice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { errorStyle } from '../../../utils/toast-customize';
+import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { RepeatitiveForm } from './RepeatitiveForm/RepeatitiveForm';
+import { checkInvitationCode } from '../../../features/auth/authSlice';
 
 export const DetailOptionPage = () => {
 	const { serviceId } = useParams();
@@ -21,6 +22,7 @@ export const DetailOptionPage = () => {
 	);
 	const [anotherOptions, setAnotherOptions] = useState([]);
 	const [chosenService, setChosenService] = useState(null);
+	const [invitationCode, setInvitationCode] = useState('');
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [isUrgent, setIsUrgent] = useState(false);
 	const [isRepeatitive, setIsRepeatitive] = useState(false);
@@ -323,17 +325,35 @@ export const DetailOptionPage = () => {
 		setIsRepeatitive(!isRepeatitive)
 	};
 
+	const handleInvitationCode = (e) => {
+		setInvitationCode(e.target.value)
+	}
+
 	useEffect(() => {
 		if (isRepeatitive) {
 			setIsOpenRepeatitiveForm(true);
 		}
 	}, [isRepeatitive]);
 
-	const onSubmit = (data) => {
+	const onSubmit = async (data) => {
 		if (!startingHour.trim()) {
 			toast.error('Vui lòng chọn "Giờ làm việc"', errorStyle);
 			return;
 		}
+
+		let invitationCodeOwnerId = null;
+
+		if(invitationCode){
+			const result = await dispatch(checkInvitationCode(invitationCode))
+			console.log(result.payload)
+			if (result.type.endsWith('fulfilled')) {
+				invitationCodeOwnerId = result.payload;
+				toast.success('Mã mời hợp lệ, bạn sẽ được cộng 10000 đồng vào tài khoản khi mua dịch vụ thành công', successStyle);
+			} else if (result?.error?.message === 'Rejected') {
+				toast.error(result?.payload, errorStyle);
+			}
+		}
+
 		navigate(`/job-posting/time-contact/${serviceId}`, {
 			state: {
 				address: location.state.address,
@@ -350,6 +370,7 @@ export const DetailOptionPage = () => {
 					isRepeatitive,
 					details,
 				},
+				invitationCodeOwnerId
 			},
 		});
 	};
@@ -616,6 +637,19 @@ export const DetailOptionPage = () => {
 										<input
 											type="text"
 											className="border-2 rounded-md w-72 p-1.5 border-light_gray text-center focus:outline-none mb-5"
+										/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p className="mr-3">Nhập mã mời của bạn bè</p>
+									</td>
+									<td className="pl-32">
+										<input
+											type="text"
+											className="border-2 rounded-md w-72 p-1.5 border-light_gray text-center focus:outline-none mb-5"
+											onChange={handleInvitationCode}
+											value={invitationCode.toUpperCase()}
 										/>
 									</td>
 								</tr>

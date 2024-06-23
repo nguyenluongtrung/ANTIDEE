@@ -159,6 +159,30 @@ const updateRatingDomesticHelper = async (
 	);
 	return response.data.data.account;
 };
+
+const checkInvitationCode = async (invitationCode, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(
+		API_URL + `check-invite-friend/${invitationCode}`,
+		config
+	);
+	return response.data.data.accountId;
+};
+
+const loadMoneyAfterUsingInvitationCode = async (ownerId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	await axios.patch(API_URL + `load-money/${ownerId}`, {}, config);
+};
 const authService = {
 	login,
 	logout,
@@ -174,6 +198,8 @@ const authService = {
 	deleteDomesticHelperFromFavoriteList,
 	inviteFriend,
 	updateRatingDomesticHelper,
+	checkInvitationCode,
+	loadMoneyAfterUsingInvitationCode,
 };
 
 export default authService;

@@ -18,6 +18,7 @@ export const TimeAndContactPage = () => {
 	const isChosenYourself = location?.state?.isChosenYourself;
 	const isChosenYourFav = location?.state?.isChosenYourFav;
 	const repeatitiveDetails = location?.state?.repeatitiveDetails;
+	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
 	const {
 		register,
 		handleSubmit,
@@ -56,7 +57,8 @@ export const TimeAndContactPage = () => {
 				isUrgent,
 				isChosenYourself,
 				isChosenYourFav,
-				repeatitiveDetails
+				repeatitiveDetails,
+				invitationCodeOwnerId
 			},
 		});
 	};

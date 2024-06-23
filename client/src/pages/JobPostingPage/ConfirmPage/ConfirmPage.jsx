@@ -5,7 +5,7 @@ import { formatDate, formatWorkingTime } from '../../../utils/format';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createJobPost } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation } from '../../../features/auth/authSlice';
+import { getAccountInformation, loadMoneyAfterUsingInvitationCode } from '../../../features/auth/authSlice';
 import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
@@ -26,6 +26,7 @@ export const ConfirmPage = () => {
 	const isChosenYourself = location?.state?.isChosenYourself;
 	const isChosenYourFav = location?.state?.isChosenYourFav;
 	const repeatitiveDetails = location?.state?.repeatitiveDetails;
+	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
 	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
@@ -66,7 +67,11 @@ export const ConfirmPage = () => {
 			isUrgent,
 			isChosenYourself,
 			isChosenYourFav,
-			repeatitiveDetails
+			repeatitiveDetails,
+		}
+		if(invitationCodeOwnerId){
+			let ownerId = invitationCodeOwnerId;
+			await dispatch(loadMoneyAfterUsingInvitationCode(ownerId))
 		}
 		const result = await dispatch(createJobPost(jobPostData));
 
@@ -97,7 +102,7 @@ export const ConfirmPage = () => {
 			>
 				<p className="font-extrabold text-brown mb-3">{services?.find((service) => String(service?._id) === String(serviceId))?.name?.toUpperCase()}</p>
 				<p className="custom-border-bottom pb-3 mb-3 font-semibold">
-					CHI TIẾT CÔNG VIỆC
+					CHI TIẾT CÔNG VIỆC 
 				</p>
 				<table>
 					<tbody>

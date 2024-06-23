@@ -283,6 +283,48 @@ export const updateRatingDomesticHelper = createAsyncThunk(
 	}
 );
 
+export const checkInvitationCode = createAsyncThunk(
+	'auth/checkInvitationCode',
+	async (invitationCode, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.checkInvitationCode(invitationCode, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const loadMoneyAfterUsingInvitationCode = createAsyncThunk(
+	'auth/loadMoneyAfterUsingInvitationCode',
+	async (ownerId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			console.log('id: ', ownerId, 'token: ', token);
+			return await authService.loadMoneyAfterUsingInvitationCode(
+				ownerId,
+				token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	account: account || null,
 	accounts: [],
@@ -388,7 +430,6 @@ export const authSlice = createSlice({
 			.addCase(register.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				// state.account.push(action.payload);
 			})
 			.addCase(register.rejected, (state, action) => {
 				state.isLoading = false;
@@ -481,6 +522,21 @@ export const authSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
+			})
+			.addCase(checkInvitationCode.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(checkInvitationCode.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(checkInvitationCode.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(loadMoneyAfterUsingInvitationCode.pending, (state) => {
+				state.isLoading = true;
 			});
 	},
 });

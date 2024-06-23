@@ -95,6 +95,9 @@ const accountSchema = mongoose.Schema(
 		invitationCode: {
 			type: String,
 		},
+		usedInvitationCode: {
+			type: String,
+		},
 		password: {
 			type: String,
 			minLength: [8, 'Account password contains more than 8 characters'],
