@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { cancelJobPost } from '../../../../features/jobPosts/jobPostsSlice';
+import { cancelAJobDomesticHelper } from '../../../../features/jobPosts/jobPostsSlice';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 
@@ -8,7 +8,7 @@ export const JobPostCancel = ({
 	jobPostId,
 	setIsOpenCancelForm,
 	myAccountId,
-	getAllInitialJobList,
+	getAllJobList,
 	setIsOpenJobPostDetail
 }) => {
 	const [showOtherFeedback, setShowOtherFeedback] = useState(false);
@@ -17,14 +17,15 @@ export const JobPostCancel = ({
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const result = await dispatch(cancelJobPost({ isCanceled: true, reason, account: myAccountId, jobPostId }));
+		const result = await dispatch(cancelAJobDomesticHelper({ isCanceled: true, reason, account: myAccountId, jobPostId }));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success(result?.payload?.msg, successStyle);
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-		getAllInitialJobList();
-		setIsOpenJobPostDetail(false)
+		setIsOpenCancelForm(false);
+		setIsOpenJobPostDetail(false);
+		getAllJobList();
 	};
 
 	return (
@@ -63,7 +64,7 @@ export const JobPostCancel = ({
 					className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
 				>
-					Đăng nhầm ngày
+					Việc không phù hợp nữa
 				</label>
 				<input
 					type="radio"
@@ -107,13 +108,9 @@ export const JobPostCancel = ({
 				</div>
 			)}
 			<div className="mt-5">
-				<p>(*) Quý khách được hủy miễn phí trong 2 trường hợp sau:</p>
-				<p className="pl-10">1. Hủy khi chưa có ai nhận việc</p>
-				<p className="pl-10">2. Hủy trước giờ làm việc 1 tiếng</p>
-				<p>
-					Ngoài 2 trường hợp trên, chúng tôi sẽ tính phí{' '}
-					<span className="font-bold">30%</span> giá trị công việc.
-				</p>
+				<p>(*) Quy định hủy công việc như sau:</p>
+				<p className="pl-10">1. Hủy trước giờ làm việc trên 2 tiếng: Phạt <span className="font-bold">30%</span> giá trị công việc</p>
+				<p className="pl-10">2. Hủy trước giờ làm việc dưới 2 tiếng: Phạt <span className="font-bold">80%</span> giá trị công việc</p>
 				<p>Độ tin cậy của bạn sẽ giảm sau mỗi lần hủy việc.</p>
 				<p>Bạn chắc chắn hủy công việc này?</p>
 			</div>

@@ -57,6 +57,34 @@ const cancelJobPost = async (token, isCanceled, reason, account, jobPostId) => {
 	};
 };
 
+const cancelAJobDomesticHelper = async (
+	token,
+	isCanceled,
+	reason,
+	account,
+	jobPostId
+) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + 'cancel-a-job-domesticHelper/' + `${jobPostId}`,
+		{
+			isCanceled,
+			reason,
+			account,
+		},
+		config
+	);
+	return {
+		jobPost: response.data.data.jobPost,
+		msg: response.data.data.message,
+	};
+};
+
 const deleteJobPost = async (token, id) => {
 	const config = {
 		headers: {
@@ -121,6 +149,7 @@ const jobPostService = {
 	deleteJobPost,
 	updateJobPost,
 	cancelJobPost,
+	cancelAJobDomesticHelper,
 	getAJob,
 	applyAJob,
 	selectATasker,

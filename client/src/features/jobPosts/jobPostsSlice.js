@@ -87,6 +87,32 @@ export const cancelJobPost = createAsyncThunk(
 	}
 );
 
+export const cancelAJobDomesticHelper = createAsyncThunk(
+	'jobPosts/cancelAJobDomesticHelper',
+	async ({ isCanceled, reason, account, jobPostId }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await jobPostsService.cancelAJobDomesticHelper(
+				token,
+				isCanceled,
+				reason,
+				account,
+				jobPostId
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const deleteJobPost = createAsyncThunk(
 	'jobPosts/deleteJobPost',
 	async (id, thunkAPI) => {
@@ -317,6 +343,23 @@ export const jobPostSlice = createSlice({
 				] = action.payload.jobPost;
 			})
 			.addCase(cancelJobPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(cancelAJobDomesticHelper.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(cancelAJobDomesticHelper.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.jobPosts[
+					state.jobPosts.findIndex(
+						(jobPost) => jobPost._id == action.payload.jobPost._id
+					)
+				] = action.payload.jobPost;
+			})
+			.addCase(cancelAJobDomesticHelper.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
