@@ -19,6 +19,7 @@ import { formatDate, formatDateInput } from '../../utils/format';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../utils/toast-customize';
 import { Sidebar } from './components/Sidebar/Sidebar';
+import { GoPencil } from "react-icons/go";
 
 export const MyAccount = () => {
 	const fileRef = useRef(null);
@@ -112,9 +113,9 @@ export const MyAccount = () => {
 				<Sidebar account={account}/>
 			</div>
 			<div className="right-container rounded-xl p-5 relative">
-				<img
-					src="../../assets/img/material-symbols_edit-outline.png"
-					className="w-6 absolute top-5 right-5 hover:cursor-pointer"
+				<GoPencil
+					className="absolute top-5 right-5 hover:cursor-pointer"
+					size={23}
 					onClick={handleClickPencilIcon}
 				/>
 				<h5 className="font-bold">Hồ sơ của tôi</h5>
