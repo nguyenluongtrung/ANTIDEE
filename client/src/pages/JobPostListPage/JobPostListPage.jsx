@@ -175,7 +175,7 @@ export const JobPostListPage = () => {
 							.toString()
 							.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
 
-						if (startingDate.toDateString() > new Date().toDateString()) {
+						if (startingDate.toISOString() > new Date().toISOString()) {
 							return true;
 						} else if (
 							startingDate.toDateString() == new Date().toDateString() &&

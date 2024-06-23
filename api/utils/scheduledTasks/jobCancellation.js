@@ -35,8 +35,14 @@ cron.schedule('*/1 * * * *', async () => {
 				.toString()
 				.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
 
+			console.log(
+				startingDate.toISOString(),
+				new Date().toISOString(),
+				startingDate.toISOString() < new Date().toISOString()
+			);
+
 			if (
-				startingDate.toDateString() < new Date().toDateString() ||
+				startingDate.toISOString() < new Date().toISOString() ||
 				(startingDate.toDateString() == new Date().toDateString() &&
 					startingTime <= getCurrentTimeString())
 			) {
