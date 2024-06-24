@@ -12,6 +12,7 @@ import {
 } from '../../features/auth/authSlice';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { FaArrowRight } from 'react-icons/fa';
+import { Spinner } from '../Spinner/Spinner';
 
 export const Header = () => {
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);

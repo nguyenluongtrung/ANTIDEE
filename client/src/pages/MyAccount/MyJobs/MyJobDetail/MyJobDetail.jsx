@@ -1,17 +1,21 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
 import { AiOutlineClose } from 'react-icons/ai';
 import { formatDate, formatWorkingTime } from '../../../../utils/format';
 import { JobPostCancel } from '../JobPostCancel/JobPostCancel';
+import { updateJobPost } from '../../../../features/jobPosts/jobPostsSlice';
+import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+import toast from 'react-hot-toast';
 
 export const MyJobDetail = ({
 	chosenJobPostId,
 	setIsOpenJobPostDetail,
 	myAccountId,
-	getAllJobList
+	getAllJobList,
 }) => {
 	const [isOpenCancelForm, setIsOpenCancelForm] = useState(false);
+	const [isCompletedForm, setIsCompletedForm] = useState(false);
 	const { jobPosts, isLoading: jobPostLoading } = useSelector(
 		(state) => state.jobPosts
 	);
@@ -19,6 +23,43 @@ export const MyJobDetail = ({
 	const [chosenJobPost, setChosenJobPost] = useState(
 		jobPosts?.find((jobPost) => String(jobPost._id) === String(chosenJobPostId))
 	);
+
+	const dispatch = useDispatch();
+
+	const checkIsCompleted = () => {
+		const startingDate = new Date(chosenJobPost.workingTime.startingDate);
+		startingDate.setMinutes(
+			startingDate.getMinutes() - startingDate.getTimezoneOffset()
+		);
+		const startingHour = parseInt(
+			chosenJobPost.workingTime.startingHour.split(':')[0]
+		);
+		const startingMinute = parseInt(
+			chosenJobPost.workingTime.startingHour.split(':')[1]
+		);
+
+		const startingTime = `${startingHour
+			.toString()
+			.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
+
+		return (
+			startingDate.toISOString() < new Date().toISOString() ||
+			(startingDate.toDateString() == new Date().toDateString() &&
+				startingTime <= getCurrentTimeString())
+		);
+	};
+
+	const handleCompleteJobPost = async (e) => {
+		e.preventDefault();
+		const jobPostData = {...chosenJobPost, hasCompleted: {...chosenJobPost.hasCompleted, domesticHelperConfirm: true}}
+		const result = await dispatch(updateJobPost({jobPostData, id: chosenJobPostId}));
+
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+	}
 
 	if (jobPostLoading || accountLoading) {
 		return <Spinner />;
@@ -37,7 +78,10 @@ export const MyJobDetail = ({
 						<AiOutlineClose
 							className="absolute text-sm hover:cursor-pointer m-5"
 							getAllJobList={getAllJobList}
-							onClick={() => {getAllJobList(); setIsOpenCancelForm(false)}}
+							onClick={() => {
+								getAllJobList();
+								setIsOpenCancelForm(false);
+							}}
 						/>
 						<JobPostCancel
 							jobPostId={chosenJobPostId}
@@ -134,18 +178,30 @@ export const MyJobDetail = ({
 							</p>
 						</p>
 						<div className="flex justify-center">
-							<button
-								className={
-									'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
-								}
-								style={{ width: '70%' }}
-								onClick={(e) => {
-									e.preventDefault();
-									setIsOpenCancelForm(true);
-								}}
-							>
-								<p className="text-center">Hủy việc</p>
-							</button>
+							{checkIsCompleted() ? (
+								<button
+									className={
+										'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+									}
+									style={{ width: '70%' }}
+									onClick={handleCompleteJobPost}
+								>
+									<p className="text-center">Hoàn thành công việc</p>
+								</button>
+							) : (
+								<button
+									className={
+										'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+									}
+									style={{ width: '70%' }}
+									onClick={(e) => {
+										e.preventDefault();
+										setIsOpenCancelForm(true);
+									}}
+								>
+									<p className="text-center">Hủy việc</p>
+								</button>
+							)}
 						</div>
 					</div>
 				</form>

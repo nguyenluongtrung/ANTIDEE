@@ -63,6 +63,14 @@ export const JobPostingHistory = () => {
 					String(job.customerId) == String(myAccountId) &&
 					job?.cancelDetails?.isCanceled === true
 			);
+		} else if (filterOption == 'needToBeConfirmed') {
+			newJobHistory = output.payload.filter(
+				(job) =>
+					String(job.customerId) == String(myAccountId) &&
+					job?.cancelDetails?.isCanceled === false && 
+					job?.hasCompleted?.customerConfirm == false &&
+					job?.hasCompleted?.domesticHelperConfirm == true
+			);
 		} else {
 			newJobHistory = output.payload;
 		}
@@ -158,6 +166,16 @@ export const JobPostingHistory = () => {
 								onChange={() => setFilterOption('cancelled')}
 							/>
 							<p className="font-bold">Đã hủy</p>
+						</div>
+						<div className="flex mr-5">
+							<input
+								type="radio"
+								className="w-3 mr-2"
+								name="filterOption"
+								checked={filterOption === 'needToBeConfirmed'}
+								onChange={() => setFilterOption('needToBeConfirmed')}
+							/>
+							<p className="font-bold">Chờ xác nhận</p>
 						</div>
 					</div>
 				</div>

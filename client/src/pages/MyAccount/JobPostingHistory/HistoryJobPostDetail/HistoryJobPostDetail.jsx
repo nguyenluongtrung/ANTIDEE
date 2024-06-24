@@ -9,7 +9,7 @@ import {
 } from '../../../../utils/format';
 import toast from 'react-hot-toast';
 import { IoMdCheckboxOutline } from 'react-icons/io';
-import { selectATasker } from '../../../../features/jobPosts/jobPostsSlice';
+import { selectATasker, updateJobPost } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { DomesticHelper } from '../../../MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { getAllFeedbacks } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
@@ -21,7 +21,7 @@ export const HistoryJobPostDetail = ({
 	setIsOpenJobPostDetail,
 	accounts,
 	myAccountId,
-	getAllInitialJobList
+	getAllInitialJobList,
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
 	const [feedbacks, setFeedbacks] = useState([]);
@@ -52,6 +52,20 @@ export const HistoryJobPostDetail = ({
 
 		setFeedbacks(result.payload);
 	};
+
+	const handleCompleteJobPost = async (e) => {
+		e.preventDefault();
+		const jobPostData = {...chosenJobPost, hasCompleted: {...chosenJobPost.hasCompleted, customerConfirm: true}}
+		const result = await dispatch(updateJobPost({jobPostData, id: chosenJobPostId}));
+
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+		setIsOpenJobPostDetail(false);
+		getAllInitialJobList();
+	}
 
 	useEffect(() => {
 		handleGetAllInitialFeedbacks();
@@ -228,8 +242,7 @@ export const HistoryJobPostDetail = ({
 										Xem danh sách người ứng tuyển{' '}
 									</p>
 								)}
-							{
-								!chosenJobPost?.hasCompleted?.customerConfirm &&
+							{!chosenJobPost?.hasCompleted?.customerConfirm &&
 								!chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
 								!chosenJobPost?.cancelDetails?.isCanceled && (
 									<div className="flex justify-center">
@@ -246,7 +259,22 @@ export const HistoryJobPostDetail = ({
 											<p className="text-center">Hủy việc</p>
 										</button>
 									</div>
-								)}
+							)}
+							{!chosenJobPost?.hasCompleted?.customerConfirm &&
+								chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
+								!chosenJobPost?.cancelDetails?.isCanceled && (
+									<div className="flex justify-center">
+										<button
+											className={
+												'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+											}
+											style={{ width: '70%' }}
+											onClick={handleCompleteJobPost}
+										>
+											<p className="text-center">Xác nhận hoàn thành công việc</p>
+										</button>
+									</div>
+							)}
 						</div>
 					</>
 				) : (
