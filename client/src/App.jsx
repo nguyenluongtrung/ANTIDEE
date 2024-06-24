@@ -27,6 +27,7 @@ import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForD
 import { QualificationPage } from './pages/QualificationPage';
 import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
 import { VoucherHistory } from './pages/HistoryVoucher/VoucherHistory';
+import { DepositPage } from './pages/Deposit/DepositPage';
 import {
 	ConfirmPage,
 	DetailOptionPage,
@@ -95,6 +96,7 @@ const AppContent = () => {
 						<Route path ="/demo-video" element={<DemoViewVideoYoutube/>}/>
 						<Route path ="/domestic-helper-feedback" element={<DomesticHelper/>}/>
 						<Route path ="/voucher-history" element={<VoucherHistory/>}/>
+						<Route path ="/deposit" element={<DepositPage/>}/>
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"

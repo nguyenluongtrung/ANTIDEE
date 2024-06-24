@@ -134,6 +134,11 @@ export const Header = () => {
 				<div className="flex">
 					{account ? (
 						<>
+						<Link to={'/deposit'}>
+							<span className="text-primary text-center mt-10 font-medium w-28">
+								Balance: {account.accountBalance} VND
+							</span>
+						</Link>
 							<button
 								className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 border-primary border-2"
 								onClick={onLogout}

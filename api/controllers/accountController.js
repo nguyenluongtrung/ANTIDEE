@@ -385,7 +385,7 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 		},
 	});
 });
-
+ 
 module.exports = {
 	register,
 	login,
@@ -399,5 +399,5 @@ module.exports = {
 	deleteDomesticHelperFromBlackList,
 	deleteDomesticHelperFromFavoriteList,
 	inviteFriend,
-	updateRatingDomesticHelper,
+	updateRatingDomesticHelper, 
 };
