@@ -59,6 +59,8 @@ export const MyJobDetail = ({
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+		setIsOpenJobPostDetail(false);
+		getAllJobList();
 	}
 
 	if (jobPostLoading || accountLoading) {

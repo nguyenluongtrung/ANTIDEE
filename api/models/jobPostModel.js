@@ -74,6 +74,9 @@ const jobPostSchema = mongoose.Schema(
 				type: Boolean,
 				default: false,
 			},
+			completedAt: {
+				type: Date,
+			},
 		},
 		receivedAt: {
 			type: Date,

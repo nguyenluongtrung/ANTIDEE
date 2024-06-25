@@ -55,7 +55,7 @@ export const HistoryJobPostDetail = ({
 
 	const handleCompleteJobPost = async (e) => {
 		e.preventDefault();
-		const jobPostData = {...chosenJobPost, hasCompleted: {...chosenJobPost.hasCompleted, customerConfirm: true}}
+		const jobPostData = {...chosenJobPost, hasCompleted: {...chosenJobPost.hasCompleted, customerConfirm: true, completedAt: new Date()}}
 		const result = await dispatch(updateJobPost({jobPostData, id: chosenJobPostId}));
 
 		if (result.type.endsWith('fulfilled')) {

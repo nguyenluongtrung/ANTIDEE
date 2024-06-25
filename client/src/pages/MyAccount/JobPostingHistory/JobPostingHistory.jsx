@@ -67,7 +67,7 @@ export const JobPostingHistory = () => {
 			newJobHistory = output.payload.filter(
 				(job) =>
 					String(job.customerId) == String(myAccountId) &&
-					job?.cancelDetails?.isCanceled === false && 
+					job?.cancelDetails?.isCanceled === false &&
 					job?.hasCompleted?.customerConfirm == false &&
 					job?.hasCompleted?.domesticHelperConfirm == true
 			);
@@ -80,13 +80,13 @@ export const JobPostingHistory = () => {
 	const getAllInitialJobList = async () => {
 		let output = await dispatch(getAllJobPosts());
 		let newJobHistory = output.payload.filter(
-				(job) =>
-					job.domesticHelperId == null &&
-					String(job.customerId) == String(myAccountId) &&
-					job?.cancelDetails?.isCanceled === false
-			);
+			(job) =>
+				job.domesticHelperId == null &&
+				String(job.customerId) == String(myAccountId) &&
+				job?.cancelDetails?.isCanceled === false
+		);
 		setMyJobHistory(newJobHistory);
-	}
+	};
 
 	async function initialAccountList() {
 		let output = await dispatch(getAllAccounts());
@@ -181,42 +181,48 @@ export const JobPostingHistory = () => {
 				</div>
 				{myJobHistory.length == 0 ? (
 					<div className="mx-auto">
-						<img
-							src="image/sad-icon.png"
-							className="block m-auto w-52"
-						/>
+						<img src="image/sad-icon.png" className="block m-auto w-52" />
 						<p className="text-gray text-center">
 							Rất tiếc, bạn hiện tại chưa có công việc nào
 						</p>
 					</div>
 				) : (
 					<div className="grid grid-cols-3 gap-28">
-						{myJobHistory
-							?.map((post) => {
-								return (
-									<div
-										className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
-											post?.isUrgent && 'bg-light_pink'
-										}`}
-									>
-										<p className="text-brown font-bold mb-3">
-											{post?.serviceId?.name?.toUpperCase()}
-										</p>
-										{post?.repeatitiveDetails?.isRepeatitive && (
-											<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
-												Lặp lại
-											</button>
-										)}
-										{post?.isUrgent && (
-											<div class="triangle-down absolute top-0 right-0"></div>
-										)}
+						{myJobHistory?.map((post) => {
+							return (
+								<div
+									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
+										post?.isUrgent && 'bg-light_pink'
+									}`}
+								>
+									<p className="text-brown font-bold mb-3">
+										{post?.serviceId?.name?.toUpperCase()}
+									</p>
+									{post?.repeatitiveDetails?.isRepeatitive && (
+										<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
+											Lặp lại
+										</button>
+									)}
+									{post?.isUrgent && (
+										<div class="triangle-down absolute top-0 right-0"></div>
+									)}
+									<p className="text-gray mb-2">
+										Bắt đầu lúc:{' '}
+										<span className="text-brown">
+											{formatDate(post?.workingTime?.startingDate)}{' '}
+											{formatWorkingTime(post?.workingTime?.startingHour)}
+										</span>
+									</p>
+									{post?.hasCompleted?.customerConfirm &&
+									post?.hasCompleted?.domesticHelperConfirm ? (
 										<p className="text-gray mb-2">
-											Bắt đầu lúc:{' '}
+											Hoàn thành lúc: {''}
 											<span className="text-brown">
-												{formatDate(post?.workingTime?.startingDate)}{' '}
-												{formatWorkingTime(post?.workingTime?.startingHour)}
+												{formatDate(post?.hasCompleted?.completedAt)}{' '}
+												{formatTime(Date.parse(post?.hasCompleted?.completedAt))}
 											</span>
 										</p>
+									) : (
 										<p className="text-gray mb-2">
 											Đã đăng lúc: {''}
 											<span className="text-brown">
@@ -224,10 +230,36 @@ export const JobPostingHistory = () => {
 												{formatTime(Date.parse(post?.createdAt))}
 											</span>
 										</p>
-										<div className="border-2 border-gray  my-3">
-											{post?.workload?.find(
-												(option) => String(option?.optionName) === 'Thời gian'
-											)?.optionValue == undefined ? (
+									)}
+
+									<div className="border-2 border-gray  my-3">
+										{post?.workload?.find(
+											(option) => String(option?.optionName) === 'Thời gian'
+										)?.optionValue == undefined ? (
+											<div>
+												<p className="text-gray mb-2 text-center mt-3">
+													Số tiền:{' '}
+												</p>
+												<p className="text-center text-brown font-bold mb-3">
+													{post?.totalPrice} VND
+												</p>
+											</div>
+										) : (
+											<div className="grid grid-cols-2">
+												<div className="border-r-2 border-gray">
+													<p className="text-gray mb-2 text-center mt-3">
+														Làm trong:{' '}
+													</p>
+													<p className="text-center text-brown font-bold mb-3">
+														{
+															post?.workload?.find(
+																(option) =>
+																	String(option?.optionName) === 'Thời gian'
+															)?.optionValue
+														}{' '}
+														giờ
+													</p>
+												</div>
 												<div>
 													<p className="text-gray mb-2 text-center mt-3">
 														Số tiền:{' '}
@@ -236,60 +268,36 @@ export const JobPostingHistory = () => {
 														{post?.totalPrice} VND
 													</p>
 												</div>
-											) : (
-												<div className="grid grid-cols-2">
-													<div className="border-r-2 border-gray">
-														<p className="text-gray mb-2 text-center mt-3">
-															Làm trong:{' '}
-														</p>
-														<p className="text-center text-brown font-bold mb-3">
-															{
-																post?.workload?.find(
-																	(option) =>
-																		String(option?.optionName) === 'Thời gian'
-																)?.optionValue
-															}{' '}
-															giờ
-														</p>
-													</div>
-													<div>
-														<p className="text-gray mb-2 text-center mt-3">
-															Số tiền:{' '}
-														</p>
-														<p className="text-center text-brown font-bold mb-3">
-															{post?.totalPrice} VND
-														</p>
-													</div>
-												</div>
-											)}
-										</div>
-										<p className="text-gray mb-2 ">
-											Tại:{' '}
-											<span className="text-black">
-												{post?.contactInfo?.address}
-											</span>
-										</p>
-										<p className="text-gray mb-3">
-											Ghi chú:{' '}
-											<span className="text-black">
-												{post?.note ? post?.note : 'Không có'}
-											</span>
-										</p>
-										<div className="flex justify-center">
-											<button
-												className="text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
-												style={{ width: '70%' }}
-												onClick={() => {
-													setIsOpenJobPostDetail(true);
-													setChosenJobPostId(post?._id);
-												}}
-											>
-												<p className="text-center">Xem chi tiết công việc</p>
-											</button>
-										</div>
+											</div>
+										)}
 									</div>
-								);
-							})}
+									<p className="text-gray mb-2 ">
+										Tại:{' '}
+										<span className="text-black">
+											{post?.contactInfo?.address}
+										</span>
+									</p>
+									<p className="text-gray mb-3">
+										Ghi chú:{' '}
+										<span className="text-black">
+											{post?.note ? post?.note : 'Không có'}
+										</span>
+									</p>
+									<div className="flex justify-center">
+										<button
+											className="text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
+											style={{ width: '70%' }}
+											onClick={() => {
+												setIsOpenJobPostDetail(true);
+												setChosenJobPostId(post?._id);
+											}}
+										>
+											<p className="text-center">Xem chi tiết công việc</p>
+										</button>
+									</div>
+								</div>
+							);
+						})}
 					</div>
 				)}
 			</div>
