@@ -51,6 +51,7 @@ import { JourneyPage } from './pages/JourneyPage';
 
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
+import { Chat } from './components/Chat/Chat';
 const App = () => {
 	return (
 		<Router>
@@ -69,7 +70,9 @@ const AppContent = () => {
 				<div className="sidebar-container">
 					<Sidebar />
 				</div>
+				
 			)}
+			<ChatForm/>
 			<div className="content-container select-none">
 				<Routes>
 					<Route path="/" element={<Layout />}>
@@ -96,7 +99,7 @@ const AppContent = () => {
 						<Route path="/demo-video" element={<DemoViewVideoYoutube />} />
 						<Route path="/domestic-helper-feedback" element={<DomesticHelper />} />
 						<Route path="/voucher-history" element={<VoucherHistory />} />
-						<Route path="/chat" element={<ChatForm />} />
+						{/* <Route path="/chat" element={<ChatForm />} /> */}
 						<Route path="/job-posting">
 							<Route
 								path="view-service-detail/:serviceId"

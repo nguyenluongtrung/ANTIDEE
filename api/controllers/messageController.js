@@ -20,7 +20,11 @@ const createMessage = async (req, res) => {
         const messages = await MessageModel.create(req.body);
 
         if (chatId && io) {
-            io.to(chatId).emit('receiveMessage', message);
+            io.to(chatId).emit('receiveMessage', messages);
+
+            // Emit notification for new message
+            io.emit('notification', messages);
+
         }
 
         res.status(201).json({

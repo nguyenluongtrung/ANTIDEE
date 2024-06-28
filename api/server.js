@@ -68,6 +68,9 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (messageData) => {
         io.to(messageData.chatId).emit('receiveMessage', messageData);
+    
+         // Notify all connected clients about the new message
+         io.emit('notification', messageData);
     });
 
     socket.on('joinChat', (chatId) => {
