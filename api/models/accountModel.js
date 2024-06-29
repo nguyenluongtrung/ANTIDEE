@@ -208,4 +208,13 @@ accountSchema.methods.comparePasswordInDb = async function (pswd, pswdDB) {
 	return await bcrypt.compare(pswd, pswdDB);
 };
 
+accountSchema.virtual('domesticHelperRankingCriteria').get(function () {
+	// Số giờ làm việc * 1 + Điểm rating * 10 + Thu nhập / 1tr * 5
+	return Number(
+		60 +
+			Number(this.rating.domesticHelperRating) * 10 +
+			Number(((this.accountBalance * 5) / 1000000).toFixed(1))
+	).toFixed(1);
+});
+
 module.exports = mongoose.model('Account', accountSchema);

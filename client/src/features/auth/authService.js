@@ -183,6 +183,19 @@ const loadMoneyAfterUsingInvitationCode = async (ownerId, token) => {
 
 	await axios.patch(API_URL + `load-money/${ownerId}`, {}, config);
 };
+
+const getDomesticHelpersRanking = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(API_URL + 'ranking-domestic-helper', config);
+	console.log(response.data);
+	return response.data.data.accountsWithRankingCriteria;
+};
+
 const authService = {
 	login,
 	logout,
@@ -200,6 +213,7 @@ const authService = {
 	updateRatingDomesticHelper,
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
+	getDomesticHelpersRanking,
 };
 
 export default authService;

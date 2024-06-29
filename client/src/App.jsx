@@ -49,6 +49,7 @@ import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 import { JourneyPage } from './pages/JourneyPage';
 import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
+import { RankingPage } from './pages/RankingPage/RankingPage';
 const App = () => {
 	return (
 		<Router>	
@@ -111,6 +112,7 @@ const AppContent = () => {
 						<Route path="/sign-up" element={<SignUpPage />} />
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
 						<Route path="/journey" element={<JourneyPage />} />
+						<Route path="/ranking" element={<RankingPage />} />
 					</Route>
 					{isAdminPage && (
 						<>

@@ -15,8 +15,9 @@ const {
 	updateRatingDomesticHelper,
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
+	getDomesticHelpersRanking,
 } = require('../controllers/accountController');
-const { protect } = require('../middleware/accountMiddleware');
+const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
 
 router.route('/login').post(login);
@@ -39,7 +40,13 @@ router
 router
 	.route('/rating/:domesticHelperId')
 	.patch(protect, updateRatingDomesticHelper);
-
+router
+	.route('/ranking-domestic-helper')
+	.get(
+		protect,
+		restrict('Admin', 'Người giúp việc'),
+		getDomesticHelpersRanking
+	);
 router
 	.route('/blackList/:domesticHelperId')
 	.post(protect, addDomesticHelperToBlackList)

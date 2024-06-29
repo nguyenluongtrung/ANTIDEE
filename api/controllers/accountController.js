@@ -423,6 +423,19 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 	});
 });
 
+const getDomesticHelpersRanking = asyncHandler(async (req, res) => {
+	const accounts = await Account.find({ role: 'Người giúp việc' });
+	const accountsWithRankingCriteria = accounts
+		.map((account) => account.toObject({ virtuals: true }))
+		.sort((a, b) => {
+			return b.domesticHelperRankingCriteria - a.domesticHelperRankingCriteria;
+		});
+	res.status(200).json({
+		status: 'success',
+		data: { accountsWithRankingCriteria },
+	});
+});
+
 module.exports = {
 	register,
 	login,
@@ -439,4 +452,5 @@ module.exports = {
 	updateRatingDomesticHelper,
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
+	getDomesticHelpersRanking,
 };
