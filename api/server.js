@@ -5,16 +5,31 @@ const dotenv = require('dotenv').config();
 const { errorHandler } = require('./middleware/errorMiddleware');
 require('./utils/scheduledTasks/jobCancellation');
 
+const http = require('http');
+const { Server } = require('socket.io');
+
+
 const connectDB = require('./config/dbConnect');
 const port = process.env.PORT || 5000;
 
+
 connectDB();
 const __dir = path.resolve();
-
 const app = express();
-app.use(cors());
 
+
+app.use(cors());
 app.use(express.json());
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+    },
+});
+
+
 
 app.use('/antidee/api/accounts', require('./routes/accountRoutes'));
 app.use('/antidee/api/questions', require('./routes/questionRoutes'));
@@ -30,6 +45,9 @@ app.use(
 );
 app.use('/antidee/api/promotions', require('./routes/promotionRoutes'));
 app.use('/antidee/api/appFeedback', require('./routes/appFeedbackRouters'));
+app.use('/antidee/api/chat', require('./routes/chatRoutes'));
+app.use('/antidee/api/message', require('./routes/messageRoutes'));
+
 
 app.use(express.static(path.join(__dir, '/client/dist')));
 
@@ -39,4 +57,28 @@ app.get('*', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+
+module.exports = { app, server, io };
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+
+    socket.on('sendMessage', (messageData) => {
+        io.to(messageData.chatId).emit('receiveMessage', messageData);
+    
+         // Notify all connected clients about the new message
+         io.emit('notification', messageData);
+    });
+
+    socket.on('joinChat', (chatId) => {
+        socket.join(chatId);
+    });
+});
+
+//app.listen(port, () => console.log(`Server started on port ${port}`));
+
+server.listen(port, () => console.log(`Server started on port ${port}`));

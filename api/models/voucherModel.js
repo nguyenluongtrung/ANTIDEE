@@ -58,7 +58,7 @@ const voucherSchema = new Schema({
     voucherAccounts: [{
         userId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Account',
             required: true
         },
         receivedAt: {

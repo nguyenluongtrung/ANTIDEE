@@ -10,6 +10,8 @@ import domesticHelperFeedbackReducer from './../features/domesticHelperFeedback/
 import promotionReducer from './../features/promotions/promotionSlice';
 import videoReducer from './../features/videos/videoSlice';
 import appFeedbackReducer from './../features/appFeedbacks/appFeedbackSlice';
+import chatReducer from './../features/chatting/chattingSlice';
+import messageReducer from './../features/message/messageSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -24,5 +26,7 @@ export const store = configureStore({
 		promotions: promotionReducer,
 		videos: videoReducer,
 		appFeedbacks: appFeedbackReducer,
+		chatting: chatReducer,
+		messages: messageReducer,
 	},
 });
