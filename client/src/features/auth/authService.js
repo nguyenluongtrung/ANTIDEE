@@ -183,6 +183,15 @@ const loadMoneyAfterUsingInvitationCode = async (ownerId, token) => {
 
 	await axios.patch(API_URL + `load-money/${ownerId}`, {}, config);
 };
+
+const blockAccountChange = async (accountId) => {
+	const response = await axios.patch(
+		API_URL + '/block/' + accountId,
+		accountId,
+	);
+	return response.data.data.accountId;
+};
+
 const authService = {
 	login,
 	logout,
@@ -200,6 +209,7 @@ const authService = {
 	updateRatingDomesticHelper,
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
+	blockAccountChange
 };
 
 export default authService;

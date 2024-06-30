@@ -82,6 +82,24 @@ export const updateAccountInformation = createAsyncThunk(
 	}
 );
 
+export const blockAccountChange = createAsyncThunk(
+	'auth/blockAccountChange',
+	async (accountId, thunkAPI) => {
+		try {
+			return await authService.blockAccountChange(accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const updateAccountForgottenPassword = createAsyncThunk(
 	'auth/updateAccountForgottenPassword',
 	async ({ password, accountId }, thunkAPI) => {
@@ -378,6 +396,19 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.account = null;
+			})
+			.addCase(blockAccountChange.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(blockAccountChange.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(blockAccountChange.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
 			})
 			.addCase(updateAccountForgottenPassword.pending, (state) => {
 				state.isLoading = true;

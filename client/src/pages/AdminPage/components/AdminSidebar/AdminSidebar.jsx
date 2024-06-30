@@ -11,7 +11,6 @@ import {
 } from "react-icons/bi";
 import { BsTicket } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
-import { MdOutlineMedicalServices } from "react-icons/md";
 import { Link, useLocation } from 'react-router-dom'
 
 export default function AdminSidebar() {
@@ -30,6 +29,7 @@ export default function AdminSidebar() {
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
+    { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
   ];
 
   const menuBottom = [

@@ -189,6 +189,10 @@ const accountSchema = mongoose.Schema(
 				},
 			},
 		],
+		isBlocked: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,

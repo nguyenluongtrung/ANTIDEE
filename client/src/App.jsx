@@ -49,6 +49,7 @@ import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 import { JourneyPage } from './pages/JourneyPage';
 import {PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
+import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
 const App = () => {
 	return (
 		<Router>	
@@ -126,6 +127,7 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
+							<Route path="/admin-account" element={<AccountManagement />} />
 						</>
 					)}
 				</Routes>

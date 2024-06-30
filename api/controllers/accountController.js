@@ -143,6 +143,32 @@ const updateAccountForgottenPassword = asyncHandler(async (req, res) => {
 	});
 });
 
+const blockAccount = asyncHandler(async (req, res) => {
+	const accountId = req.params.accountId;
+
+	// Tìm tài khoản trước để lấy giá trị hiện tại của isBlocked
+	const account = await Account.findById(accountId);
+
+	// if (!account) {
+	// 	return res.status(404).json({ message: 'Account not found' });
+	// }
+
+	const updatedAccount = await Account.findByIdAndUpdate(
+		accountId,
+		{ isBlocked: !account.isBlocked },
+		{
+			new: true,
+		}
+	);
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			updatedAccount,
+		},
+	});
+});
+
 const getAccountForgottenPassword = asyncHandler(async (req, res) => {
 	const account = await Account.find({ phoneNumber: req.params.phoneNumber });
 
@@ -439,4 +465,5 @@ module.exports = {
 	updateRatingDomesticHelper,
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
+	blockAccount
 };
