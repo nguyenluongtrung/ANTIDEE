@@ -424,12 +424,22 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 });
 
 const getDomesticHelpersRanking = asyncHandler(async (req, res) => {
-	const accounts = await Account.find({ role: 'Người giúp việc' });
-	const accountsWithRankingCriteria = accounts
-		.map((account) => account.toObject({ virtuals: true }))
-		.sort((a, b) => {
-			return b.domesticHelperRankingCriteria - a.domesticHelperRankingCriteria;
-		});
+	const accounts = await Account.find({ role: 'Người giúp việc' }).lean();
+
+	const accountsWithRankingCriteria = await Promise.all(
+		accounts.map(async (account) => {
+			const accountModel = await Account.findById(account._id);
+			const totalWorkingHours = await accountModel.getTotalWorkingHours();
+			const domesticHelperRankingCriteria =
+				await accountModel.calculateDomesticHelperRankingCriteria();
+			return { ...account, domesticHelperRankingCriteria, totalWorkingHours };
+		})
+	);
+
+	accountsWithRankingCriteria.sort((a, b) => {
+		return b.domesticHelperRankingCriteria - a.domesticHelperRankingCriteria;
+	});
+
 	res.status(200).json({
 		status: 'success',
 		data: { accountsWithRankingCriteria },

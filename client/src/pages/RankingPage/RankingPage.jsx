@@ -7,6 +7,7 @@ import { IoSearchOutline } from 'react-icons/io5';
 
 export const RankingPage = () => {
 	const [ranking, setRanking] = useState([]);
+	const [searchName, setSearchName] = useState('');
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -40,6 +41,7 @@ export const RankingPage = () => {
 							<input
 								placeholder="Nhập tên bạn muốn tìm"
 								className="custom-input-border rounded-lg py-1 px-8 ml-5 text-sm focus:outline-none"
+								onChange={(e) => setSearchName(e.target.value)}
 							/>
 						</div>
 					</div>
@@ -54,61 +56,81 @@ export const RankingPage = () => {
 					</div>
 				</button>
 			</div>
-			<table>
-				<thead>
-					<th className="py-3">Thứ hạng</th>
-					<th>Tên</th>
-					<th>Số giờ làm việc</th>
-					<th>Điểm phục vụ</th>
-					<th>Thu nhập</th>
-					<th>Cấp độ hiện tại</th>
-					<th>Điểm xếp hạng</th>
-				</thead>
-				<tbody>
-					{ranking?.map((domesticHelper, index) => {
-						return (
-							<tr
-								key={domesticHelper._id}
-								className={`${index == 0 && 'bg-primary'} ${
-									index == 1 && 'bg-another_primary'
-								} ${index == 2 && 'bg-yellow'} ${
-									index > 2 && 'odd:bg-super_light_purple'
-								} text-center `}
-							>
-								<td className="py-5">
-									<span>#{index + 1}</span>
-								</td>
-								<td>
-									<span>{domesticHelper.name}</span>
-								</td>
-								<td>
-									<span>{60}</span>
-								</td>
-								<td>
-									<span>{domesticHelper.rating.domesticHelperRating}</span>
-								</td>
-								<td>
-									<span>{domesticHelper.accountBalance} VND</span>
-								</td>
-								<td>
-									<span className="bg-light_green text-green rounded-2xl px-7 py-2">
-										{domesticHelper.accountLevel.domesticHelperLevel.name}
-									</span>
-								</td>
-								<td>
-									<span
-										className={`${
-											index <= 2 ? 'text-white' : 'text-anotherRed'
-										} `}
+			{ranking.length == 0 ||
+			ranking?.filter((domesticHelper) =>
+				domesticHelper.name.toUpperCase().includes(searchName.toUpperCase())
+			).length == 0 ? (
+				<div className="mx-auto mt-10">
+					<img src="image/sad-icon.png" className="block m-auto w-52" />
+					<p className="text-gray text-center">
+						Rất tiếc, không tìm thấy giúp việc phù hợp!
+					</p>
+				</div>
+			) : (
+				<table>
+					<thead>
+						<th className="py-3">Thứ hạng</th>
+						<th>Tên</th>
+						<th>Số giờ làm việc</th>
+						<th>Điểm phục vụ</th>
+						<th>Thu nhập</th>
+						<th>Cấp độ hiện tại</th>
+						<th>Điểm xếp hạng</th>
+					</thead>
+					<tbody>
+						{ranking
+							?.filter((domesticHelper) =>
+								domesticHelper.name
+									.toUpperCase()
+									.includes(searchName.toUpperCase())
+							)
+							.map((domesticHelper, index) => {
+								return (
+									<tr
+										key={domesticHelper._id}
+										className={`${index == 0 && 'bg-primary'} ${
+											index == 1 && 'bg-another_primary'
+										} ${index == 2 && 'bg-yellow'} ${
+											index > 2 && 'odd:bg-super_light_purple'
+										} text-center `}
 									>
-										{domesticHelper.domesticHelperRankingCriteria}
-									</span>
-								</td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+										<td className="py-5">
+											<span>#{index + 1}</span>
+										</td>
+										<td>
+											<span>{domesticHelper.name}</span>
+										</td>
+										<td>
+											<span>{domesticHelper?.totalWorkingHours} giờ</span>
+										</td>
+										<td>
+											<span>
+												{domesticHelper.rating?.domesticHelperRating || 0}
+											</span>
+										</td>
+										<td>
+											<span>{domesticHelper.accountBalance} VND</span>
+										</td>
+										<td>
+											<span className="bg-light_green text-green rounded-2xl px-7 py-2">
+												{domesticHelper.accountLevel.domesticHelperLevel.name}
+											</span>
+										</td>
+										<td>
+											<span
+												className={`${
+													index <= 2 ? 'text-white' : 'text-anotherRed'
+												} `}
+											>
+												{domesticHelper.domesticHelperRankingCriteria}
+											</span>
+										</td>
+									</tr>
+								);
+							})}
+					</tbody>
+				</table>
+			)}
 		</div>
 	);
 };

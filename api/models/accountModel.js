@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const JobPost = require('./../models/jobPostModel');
 
 const accountSchema = mongoose.Schema(
 	{
@@ -208,13 +209,40 @@ accountSchema.methods.comparePasswordInDb = async function (pswd, pswdDB) {
 	return await bcrypt.compare(pswd, pswdDB);
 };
 
-accountSchema.virtual('domesticHelperRankingCriteria').get(function () {
-	// Số giờ làm việc * 1 + Điểm rating * 10 + Thu nhập / 1tr * 5
-	return Number(
-		60 +
-			Number(this.rating.domesticHelperRating) * 10 +
-			Number(((this.accountBalance * 5) / 1000000).toFixed(1))
-	).toFixed(1);
+accountSchema.methods.calculateDomesticHelperRankingCriteria =
+	async function () {
+		const totalWorkingHours = await this.getTotalWorkingHours();
+		return Number(
+			totalWorkingHours +
+				Number(this.rating.domesticHelperRating) * 5 +
+				Number(((this.accountBalance * 5) / 1000000).toFixed(1))
+		).toFixed(1);
+	};
+
+accountSchema.methods.getTotalWorkingHours = async function () {
+	const jobPosts = await JobPost.find({
+		domesticHelperId: this._id,
+	});
+	const filteredJobPosts = jobPosts.filter(
+		(post) =>
+			post.hasCompleted.customerConfirm == true &&
+			post.hasCompleted.domesticHelperConfirm == true
+	);
+	let totalHours = 0;
+
+	filteredJobPosts.forEach((job) => {
+		job.workload.forEach((work) => {
+			if (work.optionName === 'Thời gian')
+				totalHours += Number(work.optionValue);
+		});
+	});
+
+	return totalHours;
+};
+
+accountSchema.virtual('domesticHelperRankingCriteria').get(async function () {
+	const result = await this.calculateDomesticHelperRankingCriteria();
+	return result;
 });
 
 module.exports = mongoose.model('Account', accountSchema);
