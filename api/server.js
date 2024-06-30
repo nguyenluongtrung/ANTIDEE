@@ -31,6 +31,9 @@ app.use(
 app.use('/antidee/api/promotions', require('./routes/promotionRoutes'));
 app.use('/antidee/api/appFeedback', require('./routes/appFeedbackRouters'));
 
+// Add webhook route
+app.use('/antidee/api/webhook', require('./routes/webhookRoutes'));
+
 app.use(express.static(path.join(__dir, '/client/dist')));
 
 app.get('*', (req, res) => {
