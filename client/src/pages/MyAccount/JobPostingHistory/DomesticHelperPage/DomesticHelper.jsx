@@ -16,6 +16,7 @@ import {
 } from '../../../../features/auth/authSlice';
 import { Spinner } from '../../../../components';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+import { formatDateTime } from '../../../../utils/format';
 
 export const DomesticHelper = ({
 	serviceName,
@@ -23,6 +24,7 @@ export const DomesticHelper = ({
 	domesticHelperId,
 	avatar,
 	jobPostId,
+	completedAt
 }) => {
 	const { account, isLoading: isAuthLoading } = useSelector(
 		(state) => state.auth
@@ -117,8 +119,9 @@ export const DomesticHelper = ({
 						{serviceName}
 					</p>
 					<p>
-						<span className="font-semibold">Hoàn thành lúc: </span>17:24
-						25/04/202
+						<span className="font-semibold">Hoàn thành lúc: </span>
+						{formatDateTime(completedAt)}
+					
 					</p>
 					<p>
 						<span className="font-semibold">Địa chỉ: </span>

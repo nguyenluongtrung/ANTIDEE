@@ -374,6 +374,7 @@ export const HistoryJobPostDetail = ({
 						/>
 						<DomesticHelper
 							serviceName={chosenJobPost?.serviceId?.name}
+							completedAt ={chosenJobPost?.hasCompleted?.completedAt}
 							serviceAddress={chosenJobPost?.contactInfo?.address}
 							domesticHelperId={chosenJobPost?.domesticHelperId}
 							avatar={
