@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
 import { AiOutlineClose } from 'react-icons/ai';
-import { formatDate, formatWorkingTime } from '../../../../utils/format';
+import { formatDate, formatWorkingTime, getCurrentTimeString } from '../../../../utils/format';
 import { JobPostCancel } from '../JobPostCancel/JobPostCancel';
 import { updateJobPost } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';

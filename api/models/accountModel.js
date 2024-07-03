@@ -219,6 +219,21 @@ accountSchema.methods.calculateDomesticHelperRankingCriteria =
 		).toFixed(1);
 	};
 
+function isInCurrentMonthAndYear(dateString) {
+	const currentDate = new Date();
+	const givenDate = new Date(dateString);
+
+	if (givenDate.getFullYear() !== currentDate.getFullYear()) {
+		return false;
+	}
+
+	if (givenDate.getMonth() !== currentDate.getMonth()) {
+		return false;
+	}
+
+	return true;
+}
+
 accountSchema.methods.getTotalWorkingHours = async function () {
 	const jobPosts = await JobPost.find({
 		domesticHelperId: this._id,
@@ -226,7 +241,8 @@ accountSchema.methods.getTotalWorkingHours = async function () {
 	const filteredJobPosts = jobPosts.filter(
 		(post) =>
 			post.hasCompleted.customerConfirm == true &&
-			post.hasCompleted.domesticHelperConfirm == true
+			post.hasCompleted.domesticHelperConfirm == true &&
+			isInCurrentMonthAndYear(post.workingTime.startingDate)
 	);
 	let totalHours = 0;
 
