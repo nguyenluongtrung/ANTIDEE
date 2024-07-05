@@ -19,6 +19,8 @@ export const TimeAndContactPage = () => {
 	const isChosenYourFav = location?.state?.isChosenYourFav;
 	const repeatitiveDetails = location?.state?.repeatitiveDetails;
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
+	const promoId  = location?.state?.promoId;
+    console.log('promoId:', promoId);
 	const {
 		register,
 		handleSubmit,
@@ -58,7 +60,8 @@ export const TimeAndContactPage = () => {
 				isChosenYourself,
 				isChosenYourFav,
 				repeatitiveDetails,
-				invitationCodeOwnerId
+				invitationCodeOwnerId,
+				promoId
 			},
 		});
 	};

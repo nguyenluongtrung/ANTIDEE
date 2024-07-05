@@ -423,6 +423,36 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 	});
 });
 
+const updateIsUsedVoucher = asyncHandler(async (req, res) => {
+	const { voucherId } = req.params;
+	const { isUsed, accountId } = req.body;
+  
+	const account = await Account.findById(accountId);
+  
+	if (!account) {
+	  res.status(404);
+	  throw new Error('Account not found!');
+	}
+  
+	const voucher = account.accountVouchers.find(
+	  (v) => v.voucherId.toString() === voucherId
+	);
+  
+	if (!voucher) {
+	  res.status(404);
+	  throw new Error('Voucher not found in account!');
+	}
+  
+	voucher.isUsed = isUsed;
+  
+	await account.save();
+  
+	res.status(200).json({
+	  message: 'Voucher updated successfully',
+	  voucher,
+	});
+  });
+
 module.exports = {
 	register,
 	login,
@@ -439,4 +469,5 @@ module.exports = {
 	updateRatingDomesticHelper,
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
+	updateIsUsedVoucher,
 };
