@@ -35,7 +35,7 @@ export const AccountManagement = () => {
     setSelectedRole(null);
   };
 
-  const filteredAccounts = accounts.filter((account) => {
+  const filteredAccounts = accounts.filter((account) => String(account.role) != "Admin").filter((account) => {
     const roleMatch = selectedRole ? account.role.includes(selectedRole) : true;
     const blockMatch =
       blockFilter !== null ? account.isBlocked === blockFilter : true;
@@ -97,20 +97,6 @@ export const AccountManagement = () => {
       )}
       {console.log("ACCCCCCC", filteredAccounts)}
       <div className="flex-1 px-10 pt-5">
-        {/* <div className="flex items-center justify-center mb-10">
-          <div className="flex-1 pt-2" style={{ paddingRight: "70%" }}>
-            <span>Hiển thị </span>
-            <select
-              className="rounded-md p-1 mx-1 hover:cursor-pointer"
-              style={{ backgroundColor: "#E0E0E0" }}
-            >
-              <option>10</option>
-              <option>20</option>
-              <option>30</option>
-            </select>
-            <span> hàng</span>
-          </div>
-        </div> */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Tài Khoản</h1>

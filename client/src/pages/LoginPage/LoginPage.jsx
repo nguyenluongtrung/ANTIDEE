@@ -7,13 +7,14 @@ import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { rules } from "../../utils/rules";
-import { login, reset } from "../../features/auth/authSlice";
+import { getAllAccounts, login, reset } from "../../features/auth/authSlice";
 import { Spinner } from "../../components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { errorStyle } from "../../utils/toast-customize";
 
 export const LoginPage = ({ setIsOpenLoginForm }) => {
+  const [accounts, setAccounts] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { account, isLoading, isError, isSuccess, message } = useSelector(
@@ -28,15 +29,33 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 
   const onSubmit = (data) => {
     const account = data;
-    dispatch(login(account));
+
+    const accountWithPhone = accounts.find((acc) => String(acc.phoneNumber) === String(data.phoneNumber) && acc.isBlocked)
+
+    if(accountWithPhone) {
+      toast.error("Tài khoản này đã bị chặn !!!")
+    } else {
+      dispatch(login(account));
+    }
+
   };
+
+  const initiateAllAccounts = async () => {
+    const response = await dispatch(getAllAccounts());
+    setAccounts(response.payload);
+    console.log("ALL response", response.payload)
+  };
+
+  useEffect(() => {
+    initiateAllAccounts();
+  }, []);
 
   useEffect(() => {
     if (isError && message == "Số điện thoại hoặc mật khẩu không đúng") {
       toast.error(message, errorStyle);
     }
 
-    if (isSuccess || account) {
+    if (account) {
       setIsOpenLoginForm(false);
       navigate("/home");
     }
@@ -51,7 +70,7 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
   return (
     <div className="popup active">
       <div className="overlay"></div>
-      <div className="content login-container m-auto rounded-xl">
+      <div className="content login-container m-auto rounded-xl">  
         <form onSubmit={handleSubmit(onSubmit)}>
           <AiOutlineClose
             className="absolute text-sm hover:cursor-pointer"

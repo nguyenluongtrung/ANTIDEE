@@ -145,13 +145,7 @@ const updateAccountForgottenPassword = asyncHandler(async (req, res) => {
 
 const blockAccount = asyncHandler(async (req, res) => {
 	const accountId = req.params.accountId;
-
-	// Tìm tài khoản trước để lấy giá trị hiện tại của isBlocked
 	const account = await Account.findById(accountId);
-
-	// if (!account) {
-	// 	return res.status(404).json({ message: 'Account not found' });
-	// }
 
 	const updatedAccount = await Account.findByIdAndUpdate(
 		accountId,
@@ -160,6 +154,42 @@ const blockAccount = asyncHandler(async (req, res) => {
 			new: true,
 		}
 	);
+
+	if(updatedAccount.isBlocked){
+		let email = {
+			toEmail: account.email,
+			subject: 'TÀI KHOẢN CỦA BẠN ĐÃ BỊ KHOÁ',
+			header: 'Kiểm tra tài khoản đã bị khoá !!!!',
+			imageUrl:
+				'https://cdn-icons-png.flaticon.com/256/890/890132.png',
+			mainContent: `
+				<p>Kính gửi quý khách <span style="font-style: italic">${account.name}</span>, </p>
+				<p>Chúng tôi rất tiếc thông báo rằng tài khoản của Quý khách đã bị khoá!!!</p>
+				<p>Nếu Quý khách gặp bất kỳ khó khăn nào trong quá trình đăng nhập hoặc có bất kỳ câu hỏi nào về vấn đề tài khoản, xin vui lòng liên hệ với chúng tôi qua email [antideeteam@gmail.com] hoặc số điện thoại [1800 0000], để được tư vấn và giải quyết vấn đề.</p>
+				<p>Chúng tôi rất mong nhận được sự hợp tác từ Quý khách và hy vọng rằng dịch vụ của chúng tôi sẽ mang lại sự hài lòng cho Quý khách.</p>
+				<p>Trân trọng,</p>
+				<p>Antidee Team</p>
+			`,
+		};
+		await sendMail(emailTemplate(email));
+	} else {
+		let email = {
+			toEmail: account.email,
+			subject: 'TÀI KHOẢN CỦA BẠN ĐÃ ĐƯỢC MỞ KHOÁ THÀNH CÔNG',
+			header: 'Kiểm tra tài khoản đã được mở khoá !!!!',
+			imageUrl:
+				'https://cdn-icons-png.flaticon.com/512/891/891386.png',
+			mainContent: `
+				<p>Kính gửi quý khách <span style="font-style: italic">${account.name}</span>, </p>
+				<p>Chúng tôi rất vui mừng thông báo rằng tài khoản của Quý khách đã được mở thành công.</p>
+				<p>Nếu Quý khách gặp bất kỳ khó khăn nào trong quá trình đăng nhập hoặc có bất kỳ câu hỏi nào, xin vui lòng liên hệ với chúng tôi qua email [antideeteam@gmail.com] hoặc số điện thoại [1800 0000].</p>
+				<p>Chúng tôi rất mong nhận được sự hợp tác từ Quý khách và hy vọng rằng dịch vụ của chúng tôi sẽ mang lại sự hài lòng cho Quý khách.</p>
+				<p>Trân trọng,</p>
+				<p>Antidee Team</p>
+			`,
+		};
+		await sendMail(emailTemplate(email));
+	}
 
 	res.status(200).json({
 		status: 'success',
