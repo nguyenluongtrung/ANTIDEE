@@ -51,6 +51,7 @@ import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
+import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint'
 const App = () => {
 	return (
 		<Router>
@@ -99,6 +100,7 @@ const AppContent = () => {
 						<Route path="/reply-feedback" element={<ReplyFeedback />} />
 						<Route path="/black-list" element={<BlackList />} />
 						<Route path="/favorite-list" element={<FavoriteList />} />
+						<Route path="/apoints" element={<AccumulatePoint />} />
 						<Route path="/demo-video" element={<DemoViewVideoYoutube />} />
 						<Route
 							path="/domestic-helper-feedback"

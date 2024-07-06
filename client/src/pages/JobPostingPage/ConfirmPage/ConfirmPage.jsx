@@ -5,7 +5,7 @@ import { formatDate, formatWorkingTime } from '../../../utils/format';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createJobPost } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation, loadMoneyAfterUsingInvitationCode } from '../../../features/auth/authSlice';
+import { getAccountInformation, loadMoneyAfterUsingInvitationCode, updateAPoint } from '../../../features/auth/authSlice';
 import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
@@ -13,7 +13,7 @@ import { getAllServices } from '../../../features/services/serviceSlice';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
-	const [services, setServices] = useState([]); 
+	const [services, setServices] = useState([]);
 	const [isChecked, setIsChecked] = useState(false);
 	const [customerId, setCustomerId] = useState();
 	const location = useLocation();
@@ -69,7 +69,7 @@ export const ConfirmPage = () => {
 			isChosenYourFav,
 			repeatitiveDetails,
 		}
-		if(invitationCodeOwnerId){
+		if (invitationCodeOwnerId) {
 			let ownerId = invitationCodeOwnerId;
 			await dispatch(loadMoneyAfterUsingInvitationCode(ownerId))
 		}
@@ -83,12 +83,30 @@ export const ConfirmPage = () => {
 					navigateTo: '/home'
 				},
 			});
+
+			const points = otherInfo?.totalPrice ? (Number(otherInfo.totalPrice) * 5) / 100 : 0;
+			console.log(points);
+
+			if (isNaN(points)) {
+				console.error('Points calculation resulted in NaN');
+			} else {
+				console.log(account?._id); 
+
+				if (account?._id) {
+					await dispatch(updateAPoint({ accountId: account._id, points }));
+				} else {
+					console.error('Account ID is not valid');
+				}
+			}
+
+
+
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
 	}
 
-	if(authLoading || jobPostLoading){
+	if (authLoading || jobPostLoading) {
 		return <Spinner />
 	}
 
@@ -102,7 +120,7 @@ export const ConfirmPage = () => {
 			>
 				<p className="font-extrabold text-brown mb-3">{services?.find((service) => String(service?._id) === String(serviceId))?.name?.toUpperCase()}</p>
 				<p className="custom-border-bottom pb-3 mb-3 font-semibold">
-					CHI TIẾT CÔNG VIỆC 
+					CHI TIẾT CÔNG VIỆC
 				</p>
 				<table>
 					<tbody>
@@ -168,7 +186,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Tên liên hệ</p>
 							</td>
 							<td className="pl-32">
-								<p style={{paddingLeft: '5px'}}>{contactInfo?.fullName}</p>
+								<p style={{ paddingLeft: '5px' }}>{contactInfo?.fullName}</p>
 							</td>
 						</tr>
 						<tr>
@@ -176,7 +194,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Số điện thoại</p>
 							</td>
 							<td className="pl-32">
-								<p style={{paddingLeft: '5px'}}>{contactInfo?.phoneNumber}</p>
+								<p style={{ paddingLeft: '5px' }}>{contactInfo?.phoneNumber}</p>
 							</td>
 						</tr>
 						<tr>
@@ -184,7 +202,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Email để nhận biên nhận</p>
 							</td>
 							<td className="pl-32">
-								<p style={{paddingLeft: '5px'}}>{contactInfo?.email}</p>
+								<p style={{ paddingLeft: '5px' }}>{contactInfo?.email}</p>
 							</td>
 						</tr>
 					</tbody>
@@ -199,7 +217,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Giá tiền</p>
 							</td>
 							<td className="pl-32">
-								<p style={{paddingLeft: '5px'}}>{otherInfo?.totalPrice} VND</p>
+								<p style={{ paddingLeft: '5px' }}>{otherInfo?.totalPrice} VND</p>
 							</td>
 						</tr>
 						<tr>
@@ -207,7 +225,7 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Phương thức thanh toán</p>
 							</td>
 							<td className="pl-32">
-								<p style={{paddingLeft: '5px'}}>{otherInfo?.paymentMethod}</p>
+								<p style={{ paddingLeft: '5px' }}>{otherInfo?.paymentMethod}</p>
 							</td>
 						</tr>
 					</tbody>
@@ -225,9 +243,8 @@ export const ConfirmPage = () => {
 
 			<div className="flex items-center justify-center">
 				<button
-					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${
-						!isChecked ? 'bg-gray' : 'bg-green'
-					}`}
+					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${!isChecked ? 'bg-gray' : 'bg-green'
+						}`}
 					disabled={!isChecked}
 					onClick={handleSubmitJobPost}
 				>

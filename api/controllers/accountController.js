@@ -446,6 +446,32 @@ const getDomesticHelpersRanking = asyncHandler(async (req, res) => {
 	});
 });
 
+const updateAPoint = asyncHandler(async (req, res) => {
+	const { accountId } = req.params;
+	const { points } = req.body;
+
+	if (!accountId || !points) {
+		return res.status(400).json({ message: 'Account ID and points are required' });
+	}
+
+	try {
+		const account = await Account.findById(accountId);
+
+		if (!account) {
+			return res.status(404).json({ message: 'Account not found' });
+		}
+
+		account.aPoints += points;
+
+		await account.save();
+
+		res.status(200).json({ message: 'aPoints updated successfully', account });
+	} catch (error) {
+		res.status(500).json({ message: 'Server error', error });
+	}
+});
+
+
 module.exports = {
 	register,
 	login,
@@ -463,4 +489,5 @@ module.exports = {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	updateAPoint,
 };

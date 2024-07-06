@@ -97,7 +97,8 @@ export const Sidebar = ({ account }) => {
 				<img src={mdi_gift} className="inline w-4 mr-2" />
 				<span>Săn quà giới thiệu</span>
 			</div>
-			<div className="mb-2.5 hover:text-primary hover:cursor-pointer">
+			<div className="mb-2.5 hover:text-primary hover:cursor-pointer"
+			onClick={()=> navigate('/apoints')}>
 				<img
 					src={vaadin_piggy}
 					className="inline w-4 mr-2"

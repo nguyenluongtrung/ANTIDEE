@@ -196,6 +196,22 @@ const getDomesticHelpersRanking = async (token) => {
 	return response.data.data.accountsWithRankingCriteria;
 };
 
+const updateAPoint = async (accountId, points, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + `update-apoints/${accountId}`,
+		{points},
+		config
+	);
+	return response.data.data.account;
+};
+
+
 const authService = {
 	login,
 	logout,
@@ -214,6 +230,7 @@ const authService = {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	updateAPoint,
 };
 
 export default authService;
