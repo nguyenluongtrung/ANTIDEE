@@ -84,22 +84,12 @@ export const ConfirmPage = () => {
 				},
 			});
 
-			const points = otherInfo?.totalPrice ? (Number(otherInfo.totalPrice) * 5) / 100 : 0;
-			console.log(points);
-
-			if (isNaN(points)) {
-				console.error('Points calculation resulted in NaN');
-			} else {
-				console.log(account?._id); 
-
+			const apoint = otherInfo?.totalPrice ? (Number(otherInfo.totalPrice) * 5) / 100 : 0;
+			if (!isNaN(apoint)) {
 				if (account?._id) {
-					await dispatch(updateAPoint({ accountId: account._id, points }));
-				} else {
-					console.error('Account ID is not valid');
+					await dispatch(updateAPoint({ accountId: account._id, apoint, serviceId }));
 				}
 			}
-
-
 
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);

@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
+const { populate } = require('dotenv');
 
 const generateToken = (id) => {
 	return jwt.sign({ id }, process.env.SECRET_STR, {
@@ -157,7 +158,13 @@ const getAccountForgottenPassword = asyncHandler(async (req, res) => {
 const getAccountInformation = asyncHandler(async (req, res) => {
 	const account = await Account.findById(req.account._id)
 		.populate('blackList.domesticHelperId')
-		.populate('favoriteList.domesticHelperId');
+		.populate('favoriteList.domesticHelperId')
+		.populate({
+			path: 'aPointHistory',
+			populate:{
+				path: 'serviceId',
+			}
+		});
 
 	if (!account) {
 		res.status(404);
@@ -448,9 +455,9 @@ const getDomesticHelpersRanking = asyncHandler(async (req, res) => {
 
 const updateAPoint = asyncHandler(async (req, res) => {
 	const { accountId } = req.params;
-	const { points } = req.body;
+	const { apoint, serviceId } = req.body;
 
-	if (!accountId || !points) {
+	if (!accountId || !apoint) {
 		return res.status(400).json({ message: 'Account ID and points are required' });
 	}
 
@@ -461,7 +468,14 @@ const updateAPoint = asyncHandler(async (req, res) => {
 			return res.status(404).json({ message: 'Account not found' });
 		}
 
-		account.aPoints += points;
+		// Cập nhật aPoints
+		account.aPoints += apoint;
+
+		// Thêm vào lịch sử aPointHistory
+		account.aPointHistory.push({
+			apoint,
+			serviceId,
+		});
 
 		await account.save();
 

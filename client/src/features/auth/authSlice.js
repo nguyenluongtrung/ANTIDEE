@@ -346,11 +346,11 @@ export const getDomesticHelpersRanking = createAsyncThunk(
 
 export const updateAPoint = createAsyncThunk(
 	'auth/updateApoint',
-	async ({ points, accountId }, thunkAPI) => {
+	async ({ apoint, accountId, serviceId }, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			const response = await authService.updateAPoint(accountId, points, token);
+			const response = await authService.updateAPoint(accountId, apoint, serviceId, token);
 		
 			return { ...response, accountId, points };
 		} catch (error) {
@@ -374,7 +374,7 @@ const initialState = {
 	isLoading: false,
 	message: '',
 	accountId: null,
-	updateHistory: [],
+
 };
 
 export const authSlice = createSlice({
@@ -386,7 +386,6 @@ export const authSlice = createSlice({
 			state.isLoading = false;
 			state.isSuccess = false;
 			state.message = '';
-			state.updateHistory = [];
 		},
 		
 	},
@@ -585,12 +584,8 @@ export const authSlice = createSlice({
 			.addCase(updateAPoint.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				// state.account = action.payload;
-				state.updateHistory.push({
-					accountId: action.payload.accountId,
-					points: action.payload.points,
-					timestamp: new Date().toISOString(),
-				});
+				state.account = action.payload;
+
 			})
 			.addCase(updateAPoint.rejected, (state, action) => {
 				state.isLoading = false;

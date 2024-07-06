@@ -89,6 +89,22 @@ const accountSchema = mongoose.Schema(
 			type: Number,
 			default: 0,
 		},
+		aPointHistory:[
+			{
+				apoint:{
+					type:Number,
+
+				},
+				serviceId:{
+					type: mongoose.Schema.Types.ObjectId,
+						ref: 'Service',
+				},
+				update:{
+					type:Date,
+					default:Date.now,
+				}
+			}
+		],
 		accountBalance: {
 			type: Number,
 			default: 0,
