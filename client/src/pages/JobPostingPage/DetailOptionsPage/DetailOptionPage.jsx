@@ -15,6 +15,7 @@ import { errorStyle, successStyle } from "../../../utils/toast-customize";
 import { RepeatitiveForm } from "./RepeatitiveForm/RepeatitiveForm";
 import { checkInvitationCode } from "../../../features/auth/authSlice";
 import { getAllVouchers } from "../../../features/vouchers/voucherSlice";
+import { getAllPromotions } from "../../../features/promotions/promotionSlice";
 
 export const DetailOptionPage = () => {
   const { serviceId } = useParams();
@@ -45,34 +46,48 @@ export const DetailOptionPage = () => {
   const [hasChangedPrice, setHasChangedPrice] = useState(false);
 
   const [promoCode, setPromoCode] = useState("");
-  const [voucher, setVoucher] = useState([]);
+  const [voucherList, setVoucherList] = useState([]);
+  const [promotionList, setPromotionList] = useState([]);
   const [promoValue, setPromoValue] = useState(null);
-  const { account } = useSelector((state) => state.auth);
   const [promoId, setPromoId] = useState("");
-  //   console.log(voucher)
-
-  async function initialVoucher() {
-    let output = await dispatch(getAllVouchers());
-    if (Array.isArray(output.payload)) {
-      setVoucher(output.payload);
-    }
-  }
-
-  useEffect(() => {
-    initialVoucher();
-  }, []);
-
-  const initialState = {
-    account: {
-      // other properties
-      accountVouchers: [],
-    },
-    // other slices of state
-  };
-
+  const { account } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const voucherOutput = await dispatch(getAllVouchers());
+      const promoOutput = await dispatch(getAllPromotions());
+      if (Array.isArray(voucherOutput.payload)) {
+        setVoucherList(voucherOutput.payload);
+      }
+      if (Array.isArray(promoOutput.payload)) {
+        setPromotionList(promoOutput.payload);
+      }
+    };
+    fetchData();
+  }, [dispatch]);
+
+  const isExpired = (date) => date && new Date(date) < new Date();
+
+  const findVoucher = (code) => voucherList.find((voucher) => voucher.code === code);
+  const findPromotion = (code) => promotionList.find((promo) => promo.promotionCode === code);
+
+  const validatePromo = (promo, accountVouchers) => {
+    if (isExpired(promo.endDate)) {
+      toast.error("Mã ưu đãi này đã hết hạn!", errorStyle);
+      return false;
+    }
+    const accountVoucher = accountVouchers.find(
+      (av) => av.voucherId === promo._id && !av.isUsed
+    );
+    if (!accountVoucher) {
+      toast.error("Bạn chưa sở hữu hoặc đã sử dụng mã ưu đãi này!", errorStyle);
+      return false;
+    }
+    return true;
+  };
 
   const handleCheckPromo = (e) => {
     e.preventDefault();
@@ -81,41 +96,39 @@ export const DetailOptionPage = () => {
       return;
     }
     const accountVouchers = account.accountVouchers;
-    console.log(accountVouchers);
 
-    const promoIndex = voucher.findIndex(
-      (promotion) => promotion.code === promoCode
-    );
+    const voucher = findVoucher(promoCode);
+    const promotion = findPromotion(promoCode);
+    console.log("voucher", voucher);
+    console.log("promotion", promotion);
 
-    if (promoIndex !== -1) {
-      const promotion = voucher[promoIndex];
-      console.log(promotion._id);
-      const accountVoucherIndex = accountVouchers.findIndex(
-        (accountVoucher) =>
-          accountVoucher.voucherId === promotion._id &&
-          accountVoucher.isUsed === false
-      );
+    if (voucher) {
+      if (validatePromo(voucher, accountVouchers)) {
+        setPromoValue(voucher.discountValue);
+        setPromoId(voucher._id);
+        toast.success(`Áp dụng mã ${promoCode}: Giảm ${voucher.discountValue}%`, errorStyle);
+      }
+    } else if (promotion) {
+      if (isExpired(promotion.endDate)) {
+        toast.error("Promotion này đã hết hạn!", errorStyle);
+        return;
+      }
 
-      if (accountVoucherIndex !== -1) {
-        setPromoValue(promotion.discountValue);
-        console.log(
-          `Áp dụng mã ${promoCode}: Giảm ${promotion.discountValue}%`
-        );
-        setPromoId(promotion._id);
+      // console.log("serviceId:", serviceId);
+    console.log("promotion.serviceIds:", promotion.serviceIds);
+    const idService = promotion.serviceIds.map(service => service._id);
+    console.log("ID", idService);
+    // console.log("serviceId type:", typeof serviceId);
+    // console.log(promotion.serviceIds.includes(serviceId))
+
+      if (idService.includes(serviceId)) {
+        setPromoValue(promotion.promotionValue);
+        toast.success(`Áp dụng promotion ${promoCode}: Giảm ${promotion.promotionValue}%`, errorStyle);
       } else {
-        setPromoValue(null);
-        toast.error(
-          "Bạn chưa sở hữu hoặc đã sử dụng mã ưu đãi này!",
-          errorStyle
-        );
-        console.log(
-          `Mã ${promoCode} đã được sử dụng hoặc không tồn tại trong tài khoản.`
-        );
+        toast.error("Promotion này không áp dụng được cho dịch vụ này!", errorStyle);
       }
     } else {
-      setPromoValue(null);
       toast.error("Mã ưu đãi không hợp lệ!", errorStyle);
-      console.log(`Mã ${promoCode} không hợp lệ.`);
     }
   };
 
@@ -323,7 +336,7 @@ export const DetailOptionPage = () => {
       setStartingHour("");
     } else if (
       startingDate.toISOString().slice(0, 10) ===
-        currentDate.toISOString().slice(0, 10) &&
+      currentDate.toISOString().slice(0, 10) &&
       value < min
     ) {
       toast.error(
@@ -342,9 +355,8 @@ export const DetailOptionPage = () => {
   const handleOpenTimeNote = () => {
     toast.custom((t) => (
       <div
-        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
-          t.visible ? "animate-enter" : "animate-leave"
-        }`}
+        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${t.visible ? "animate-enter" : "animate-leave"
+          }`}
       >
         Giá dịch vụ tăng 10% vào giờ cao điểm (trước 8h và sau 17h).
       </div>
@@ -354,9 +366,8 @@ export const DetailOptionPage = () => {
   const handleOpenPriceNote = (note) => {
     toast.custom((t) => (
       <div
-        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
-          t.visible ? "animate-enter" : "animate-leave"
-        }`}
+        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${t.visible ? "animate-enter" : "animate-leave"
+          }`}
       >
         {note}
       </div>
@@ -528,8 +539,8 @@ export const DetailOptionPage = () => {
                             }}
                           />
                         ) : option?.optionList?.find((op) =>
-                            /[^0-9]/.test(op?.optionValue)
-                          ) ? (
+                          /[^0-9]/.test(op?.optionValue)
+                        ) ? (
                           <>
                             <table>
                               <tbody>
@@ -560,12 +571,12 @@ export const DetailOptionPage = () => {
                                                     String(op1?.optionValue)
                                                 );
                                               updatedInputOptions[chosenIndex] =
-                                                {
-                                                  ...updatedInputOptions[
-                                                    chosenIndex
-                                                  ],
-                                                  optionValue: e.target.value,
-                                                };
+                                              {
+                                                ...updatedInputOptions[
+                                                chosenIndex
+                                                ],
+                                                optionValue: e.target.value,
+                                              };
                                               return updatedInputOptions;
                                             }
                                           );
