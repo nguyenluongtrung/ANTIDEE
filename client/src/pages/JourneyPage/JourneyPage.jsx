@@ -7,15 +7,29 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { FaAngleLeft, FaAngleRight, FaLock } from "react-icons/fa";
 import { FaBusinessTime } from "react-icons/fa6";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDomesticHelpersTotalWorkingHours, updateDomesticHelperLevel } from "../../features/auth/authSlice";
 
 export const JourneyPage = () => {
   const { account, isLoading } = useSelector((state) => state.auth);
 
   const haveAccount = account?.accountLevel?.domesticHelperLevel?.name;
+  const [workingTime, setWorkingTime] = useState(0);
+  const dispatch = useDispatch();
 
-  const progress = 20;
+  /*
+  Thời gian phải làm là 100 để lên lv 2
+  Nếu làm 110 thì lv được 10 điểm
+
+  */
+
+  //Phải có hàm calculated lại level
+  //Sau kho calculated xong phải set lại level vào trong db
+  //Người dùng vào trang này -> Hệ thống tự động lấy thời gian họ làm việc ra và tính toán
+  //-> Nếu thời gian làm là 100 thì hệ thống phải có hàm tính toán -> set lại level mới vào trong db
+  //-> Mở rộng chức năng là nhận thưởng
+
   const [nowJourney, setNowJourney] = useState(0);
   const journey = [
     {
@@ -23,30 +37,35 @@ export const JourneyPage = () => {
       leveltitle: "Cấp 1",
       imagelevel: "image/kien_con.jpg",
       reward: "- Nhận thêm 100 Apoint",
+      requiredHours: 100,
     },
     {
       level: "Kiến trưởng thành",
       leveltitle: "Cấp 2",
       imagelevel: "image/kien_truong_thanh.jpg",
       reward: "- Nhận thêm 100 Apoint và 200 vpoints",
+      requiredHours: 200,
     },
     {
       level: "Kiến thợ",
       leveltitle: "Cấp 3",
       imagelevel: "image/kien_tho.jpg",
       reward: "- Nhận thêm 100 Apoint và 200 vpoints và ...",
+      requiredHours: 300,
     },
     {
       level: "Kiến chiến binh",
       leveltitle: "Cấp 4",
       imagelevel: "image/kien_chien_binh.jpg",
       reward: "- Nhận thêm 1000 Apoint và 200 vpoints và ...",
+      requiredHours: 400,
     },
     {
       level: "Kiến chúa",
       leveltitle: "Cấp 5",
       imagelevel: "image/kien_chua.png",
       reward: "- Nhận thêm 1000 Apoint và 200 vpoints và ...",
+      requiredHours: 500,
     },
   ];
 
@@ -60,6 +79,29 @@ export const JourneyPage = () => {
 
   const currentLevelIndex = levels.indexOf(haveAccount);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await dispatch(getDomesticHelpersTotalWorkingHours());
+      console.log("RESULTTTTT", result.payload);
+      setWorkingTime(result.payload);
+      const newWorkingTime = result.payload.totalHours;
+      // Kiểm tra điều kiện nâng cấp độ
+      const currentRequiredHours =
+        journey[currentLevelIndex]?.requiredHours || 0;
+      if (newWorkingTime >= currentRequiredHours) {
+        const newLevelIndex = currentLevelIndex + 1;
+        if (newLevelIndex < levels.length) {
+          // Tăng cấp và đặt lại thời gian làm việc
+          const newLevel = levels[newLevelIndex];
+          setNowJourney(newLevelIndex);
+          setWorkingTime(newWorkingTime - currentRequiredHours);
+          await dispatch(updateDomesticHelperLevel())
+        }
+      }
+    };
+    fetchData();
+  }, []);
+
   const isLocked = (index) => {
     return index > currentLevelIndex;
   };
@@ -69,6 +111,7 @@ export const JourneyPage = () => {
       <div className="font-bold text-green text-2xl text-center mb-6">
         HÀNH TRÌNH
       </div>
+      {console.log("HAVE ACCOUNTTTT", workingTime)}
       <div className="flex flex-col gap-y-6 w-full p-6 custom-background">
         <div className="font-bold text-sm">Hành trình của tôi</div>
         <div>
@@ -105,7 +148,8 @@ export const JourneyPage = () => {
           </div>
           <div className="w-[150px]">
             <CircularProgressbarWithChildren
-              value={progress}
+              value={workingTime}
+              maxValue={journey[nowJourney].requiredHours}
               className="progress-bar-custom"
               styles={buildStyles({
                 strokeLinecap: "round",
@@ -120,8 +164,10 @@ export const JourneyPage = () => {
               <FaBusinessTime size={50} className="text-primary_dark" />
             </CircularProgressbarWithChildren>
           </div>
-          <div className="font-bold text-xl text-primary">{progress}/100</div>
-          <span>Giờ làm trong tháng</span>
+          <div className="font-bold text-xl text-primary">
+            {workingTime}/{journey[nowJourney].requiredHours}
+          </div>
+          <span>Tổng thời gian đã làm</span>
           <span className="font-bold">
             Chất lượng phục vụ phải từ 4 trở lên
           </span>
@@ -131,9 +177,7 @@ export const JourneyPage = () => {
           <div className="text-center p-10 font-bold text-xl text-green">
             PHẦN THƯỞNG
           </div>
-          <div
-            className="p-8 h-[150px] rounded-2xl bg-[#ffd966]"
-          >
+          <div className="p-8 h-[150px] rounded-2xl bg-[#ffd966]">
             {isLocked(nowJourney) && (
               <div className="absolute ml-60 mt-5">
                 <FaLock size={40} className="text-gray-500" />

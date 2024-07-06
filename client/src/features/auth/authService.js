@@ -196,6 +196,18 @@ const getDomesticHelpersRanking = async (token) => {
 	return response.data.data.accountsWithRankingCriteria;
 };
 
+const getDomesticHelpersTotalWorkingHours = async (domesticHelperId) => {
+	const response = await axios.get(API_URL + 'journey-working/' + domesticHelperId);
+	console.log("Jouney Working Time Service",response.data.data)
+	return response.data.data;
+};
+
+const updateDomesticHelperLevel = async (domesticHelperId) => {
+	const response = await axios.patch(API_URL + 'journey-level/' + domesticHelperId);
+	console.log("Jouney Working Time Service",response.data.data)
+	return response.data.data;
+};
+
 const authService = {
 	login,
 	logout,
@@ -214,6 +226,8 @@ const authService = {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	getDomesticHelpersTotalWorkingHours,
+	updateDomesticHelperLevel
 };
 
 export default authService;

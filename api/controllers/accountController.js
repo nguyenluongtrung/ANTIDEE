@@ -446,6 +446,57 @@ const getDomesticHelpersRanking = asyncHandler(async (req, res) => {
 	});
 });
 
+const getDomesticHelpersTotalWorkingHours = asyncHandler(async (req, res) => {
+	const { domesticHelperId } = req.params;
+	const myAccount = await Account.findById(domesticHelperId);
+
+	const totalHours = await myAccount.getTotalWorkingHours();
+
+	res.status(200).json({
+		status: 'success',
+		data: { totalHours },
+	});
+});
+
+const updateDomesticHelperLevel = asyncHandler(async (req, res) => {
+  const account = await Account.findById(req.params.domesticHelperId);
+
+  const journey = [
+    { level: "Kiến con", requiredHours: 1 },
+    { level: "Kiến trưởng thành", requiredHours: 2 },
+    { level: "Kiến thợ", requiredHours: 3 },
+    { level: "Kiến chiến binh", requiredHours: 4 },
+    { level: "Kiến chúa", requiredHours: 5 },
+  ];
+
+  const currentLevelIndex = journey.findIndex(
+    (level) => level.level === account.accountLevel.domesticHelperLevel.name
+  );
+
+  const totalWorkingHours = await account.getTotalWorkingHours();
+
+  let newLevelName = journey[currentLevelIndex].level; 
+  
+  if (totalWorkingHours >= journey[currentLevelIndex].requiredHours) {
+	const haveIndexJourney = Math.ceil(currentLevelIndex + (totalWorkingHours/journey[currentLevelIndex].requiredHours) - 1)
+	newLevelName = journey[haveIndexJourney].level;
+  }
+
+  const updateAccountLevel = await Account.findByIdAndUpdate(
+    req.params.domesticHelperId,
+    { "accountLevel.domesticHelperLevel.name": newLevelName },
+    { new: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      updateAccountLevel,
+    },
+  });
+});
+  
+
 module.exports = {
 	register,
 	login,
@@ -463,4 +514,6 @@ module.exports = {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	getDomesticHelpersTotalWorkingHours,
+	updateDomesticHelperLevel
 };

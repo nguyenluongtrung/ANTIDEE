@@ -16,6 +16,8 @@ const {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	getDomesticHelpersTotalWorkingHours,
+	updateDomesticHelperLevel,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -47,6 +49,8 @@ router
 		restrict('Admin', 'Người giúp việc'),
 		getDomesticHelpersRanking
 	);
+router.route('/journey-working/:domesticHelperId').get(getDomesticHelpersTotalWorkingHours)
+router.route('/journey-level/:domesticHelperId').patch(updateDomesticHelperLevel)
 router
 	.route('/blackList/:domesticHelperId')
 	.post(protect, addDomesticHelperToBlackList)
