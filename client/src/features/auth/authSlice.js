@@ -459,14 +459,13 @@ export const updateAPoint = createAsyncThunk(
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			const response = await authService.updateAPoint(
+
+			return await authService.updateAPoint(
 				accountId,
 				apoint,
 				serviceId,
 				token
 			);
-
-			return { ...response, accountId, points };
 		} catch (error) {
 			const message =
 				(error.response &&

@@ -217,6 +217,11 @@ const getDomesticHelpersRanking = async (token) => {
 };
 
 const updateAPoint = async (accountId, apoint, serviceId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
 	const response = await axios.patch(
 		API_URL + `update-apoints/${accountId}`,
 		{ apoint, serviceId },

@@ -640,7 +640,12 @@ const updateAPoint = asyncHandler(async (req, res) => {
 		}
 
 		// Cập nhật aPoints
-		account.aPoints += apoint;
+		console.log(
+			Number(account.aPoints),
+			Number(apoint),
+			Number(account.aPoints) + Number(apoint)
+		);
+		account.aPoints = Number(account.aPoints) + Number(apoint);
 
 		// Thêm vào lịch sử aPointHistory
 		account.aPointHistory.push({
