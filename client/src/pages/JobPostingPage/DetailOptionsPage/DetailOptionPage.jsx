@@ -30,6 +30,7 @@ export const DetailOptionPage = () => {
 	const [finalTimes, setFinalTimes] = useState(0);
 	const [isOpenRepeatitiveForm, setIsOpenRepeatitiveForm] = useState(false);
 	const [details, setDetails] = useState({});
+  
 	const [inputOptions, setInputOptions] = useState([
 		{
 			optionName: '',
