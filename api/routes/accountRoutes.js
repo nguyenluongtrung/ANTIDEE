@@ -18,6 +18,7 @@ const {
 	getDomesticHelpersRanking,
 	getDomesticHelpersTotalWorkingHours,
 	updateDomesticHelperLevel,
+	receiveGiftHistory,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -51,6 +52,7 @@ router
 	);
 router.route('/journey-working/:domesticHelperId').get(getDomesticHelpersTotalWorkingHours)
 router.route('/journey-level/:domesticHelperId').patch(updateDomesticHelperLevel)
+router.route('/receive-gift/:domesticHelperId').patch(receiveGiftHistory);
 router
 	.route('/blackList/:domesticHelperId')
 	.post(protect, addDomesticHelperToBlackList)

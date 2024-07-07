@@ -9,7 +9,12 @@ import { FaAngleLeft, FaAngleRight, FaLock } from "react-icons/fa";
 import { FaBusinessTime } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getDomesticHelpersTotalWorkingHours, updateDomesticHelperLevel } from "../../features/auth/authSlice";
+import {
+  getDomesticHelpersTotalWorkingHours,
+  receiveGiftHistory,
+  updateDomesticHelperLevel,
+} from "../../features/auth/authSlice";
+import { GoGift } from "react-icons/go";
 
 export const JourneyPage = () => {
   const { account, isLoading } = useSelector((state) => state.auth);
@@ -18,17 +23,47 @@ export const JourneyPage = () => {
   const [workingTime, setWorkingTime] = useState(0);
   const dispatch = useDispatch();
 
-  /*
-  Thời gian phải làm là 100 để lên lv 2
-  Nếu làm 110 thì lv được 10 điểm
+  const GiftButton = ({ levelName, levelApoint, isReceived }) => {
+    const dispatch = useDispatch();
+    const { account } = useSelector((state) => state.auth);
 
-  */
+    const handleClick = async () => {
+      const result = await dispatch(
+        receiveGiftHistory({
+          domesticHelperId: account._id,
+          levelName,
+          levelApoint,
+        })
+      );
+      console.log(result);
+      alert("đã nhận quà");
+    };
 
-  //Phải có hàm calculated lại level
-  //Sau kho calculated xong phải set lại level vào trong db
-  //Người dùng vào trang này -> Hệ thống tự động lấy thời gian họ làm việc ra và tính toán
-  //-> Nếu thời gian làm là 100 thì hệ thống phải có hàm tính toán -> set lại level mới vào trong db
-  //-> Mở rộng chức năng là nhận thưởng
+    return (
+      <button
+        onClick={handleClick}
+        disabled={isReceived}
+        className={` ${
+          isReceived ? "received" : ""
+        } animate-bounce  hover:text-green`}
+      >
+        {isReceived ? (
+          <div className="flex flex-col items-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/4017/4017791.png"
+              className="h-14"
+            />
+            "Đã nhận quà"
+          </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <GoGift size={40} />
+            {`Nhận quà ${levelName}`}
+          </div>
+        )}
+      </button>
+    );
+  };
 
   const [nowJourney, setNowJourney] = useState(0);
   const journey = [
@@ -37,35 +72,40 @@ export const JourneyPage = () => {
       leveltitle: "Cấp 1",
       imagelevel: "image/kien_con.jpg",
       reward: "- Nhận thêm 100 Apoint",
-      requiredHours: 100,
+      requiredHours: 1,
+      aPoint: 100000,
     },
     {
       level: "Kiến trưởng thành",
       leveltitle: "Cấp 2",
       imagelevel: "image/kien_truong_thanh.jpg",
       reward: "- Nhận thêm 100 Apoint và 200 vpoints",
-      requiredHours: 200,
+      requiredHours: 2,
+      aPoint: 200000,
     },
     {
       level: "Kiến thợ",
       leveltitle: "Cấp 3",
       imagelevel: "image/kien_tho.jpg",
-      reward: "- Nhận thêm 100 Apoint và 200 vpoints và ...",
-      requiredHours: 300,
+      reward: "- Nhận thêm 100 Apoint",
+      requiredHours: 3,
+      aPoint: 300000,
     },
     {
       level: "Kiến chiến binh",
       leveltitle: "Cấp 4",
       imagelevel: "image/kien_chien_binh.jpg",
-      reward: "- Nhận thêm 1000 Apoint và 200 vpoints và ...",
-      requiredHours: 400,
+      reward: "- Nhận thêm 1000 Apoint",
+      requiredHours: 4,
+      aPoint: 400000,
     },
     {
       level: "Kiến chúa",
       leveltitle: "Cấp 5",
       imagelevel: "image/kien_chua.png",
-      reward: "- Nhận thêm 1000 Apoint và 200 vpoints và ...",
-      requiredHours: 500,
+      reward: "- Nhận thêm 1000 Apoint",
+      requiredHours: 5,
+      aPoint: 500000,
     },
   ];
 
@@ -82,6 +122,8 @@ export const JourneyPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await dispatch(getDomesticHelpersTotalWorkingHours());
+      //Dùng để cập nhật lại level của Domestic
+      await dispatch(updateDomesticHelperLevel());
       console.log("RESULTTTTT", result.payload);
       setWorkingTime(result.payload);
       const newWorkingTime = result.payload.totalHours;
@@ -91,11 +133,10 @@ export const JourneyPage = () => {
       if (newWorkingTime >= currentRequiredHours) {
         const newLevelIndex = currentLevelIndex + 1;
         if (newLevelIndex < levels.length) {
-          // Tăng cấp và đặt lại thời gian làm việc
-          const newLevel = levels[newLevelIndex];
+          // // Tăng cấp và đặt lại thời gian làm việc
+          // const newLevel = levels[newLevelIndex];
           setNowJourney(newLevelIndex);
           setWorkingTime(newWorkingTime - currentRequiredHours);
-          await dispatch(updateDomesticHelperLevel())
         }
       }
     };
@@ -111,7 +152,6 @@ export const JourneyPage = () => {
       <div className="font-bold text-green text-2xl text-center mb-6">
         HÀNH TRÌNH
       </div>
-      {console.log("HAVE ACCOUNTTTT", workingTime)}
       <div className="flex flex-col gap-y-6 w-full p-6 custom-background">
         <div className="font-bold text-sm">Hành trình của tôi</div>
         <div>
@@ -183,19 +223,30 @@ export const JourneyPage = () => {
                 <FaLock size={40} className="text-gray-500" />
               </div>
             )}
-            <h2 className="font-bold text-primary_dark">
-              Chi tiết phần thưởng
-            </h2>
-            <div>
-              <div className="text-sm mb-2 text-primary_dark">
-                {journey[nowJourney].reward}
+            <div className="flex justify-between">
+              <div>
+                <h2 className="font-bold text-primary_dark">
+                  Chi tiết phần thưởng
+                </h2>
+                <div>
+                  <div className="text-sm mb-2 text-primary_dark">
+                    {journey[nowJourney].reward}
+                  </div>
+                </div>
+              </div>
+              <div className="w-[30%]">
+                <GiftButton
+                  levelName={journey[nowJourney].level}
+                  levelApoint={journey[nowJourney].aPoint}
+                  isReceived={account.receiveGiftHistory[nowJourney].isReceived}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute w-[50%] mt-[620px] ml-[488px]">
+      <div className="absolute w-[50%] mt-[680px] ml-[488px]">
         <div className="flex items-center justify-around mt-10">
           {nowJourney > 0 && (
             <div
@@ -220,3 +271,16 @@ export const JourneyPage = () => {
     </div>
   );
 };
+
+//Tạo 1 button là hộp quà (có isRecieved = false) cho cả 5 level
+//Người dùng onCLick vào hộp quà đó
+//Dispatch -> Id người dùng + hộp quà họ nhấn ở level nào
+// id: Hưng + current Level 2
+// DB sẽ nhận là có thằng này đang đứng level 2 và nhận quà
+// set lại isReceived của hộp quà thằng này là true + thêm số lượng aPoint vào cho nó
+
+  //Phải có hàm calculated lại level
+  //Sau kho calculated xong phải set lại level vào trong db
+  //Người dùng vào trang này -> Hệ thống tự động lấy thời gian họ làm việc ra và tính toán
+  //-> Nếu thời gian làm là 100 thì hệ thống phải có hàm tính toán -> set lại level mới vào trong db
+  //-> Mở rộng chức năng là nhận thưởng

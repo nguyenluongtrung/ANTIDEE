@@ -190,6 +190,21 @@ const accountSchema = mongoose.Schema(
 				},
 			},
 		],
+		receiveGiftHistory: {
+			type: [
+					{
+					levelName: { type: String, required: true },
+					isReceived: { type: Boolean, default: false }
+					}
+				],
+			default: [
+			  { levelName: 'Kiến con', isReceived: false },
+			  { levelName: 'Kiến trưởng thành', isReceived: false },
+			  { levelName: 'Kiến thợ', isReceived: false },
+			  { levelName: 'Kiến chiến binh', isReceived: false },
+			  { levelName: 'Kiến chúa', isReceived: false },
+			],
+		  },
 	},
 	{
 		timestamps: true,

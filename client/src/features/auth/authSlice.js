@@ -283,6 +283,27 @@ export const updateRatingDomesticHelper = createAsyncThunk(
   }
 );
 
+export const receiveGiftHistory = createAsyncThunk(
+  "auth/receiveGiftHistory",
+  async ({ domesticHelperId, levelName, levelApoint }, thunkAPI) => {
+    try {
+      return await authService.receiveGiftHistory(
+        domesticHelperId,
+        levelName,
+        levelApoint
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const updateDomesticHelperLevel = createAsyncThunk(
   "auth/updateDomesticHelperLevel",
   async (_, thunkAPI) => {
@@ -584,6 +605,19 @@ export const authSlice = createSlice({
         state.account = action.payload;
       })
       .addCase(updateRatingDomesticHelper.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(receiveGiftHistory.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(receiveGiftHistory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.account = action.payload;
+      })
+      .addCase(receiveGiftHistory.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

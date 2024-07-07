@@ -208,6 +208,11 @@ const updateDomesticHelperLevel = async (domesticHelperId) => {
 	return response.data.data;
 };
 
+const receiveGiftHistory = async (domesticHelperId, levelName, levelApoint) => {
+	const response = await axios.patch(API_URL + 'receive-gift/' + domesticHelperId, {levelName, levelApoint});
+	return response.data.data.updatedAccount;
+};
+
 const authService = {
 	login,
 	logout,
@@ -227,7 +232,8 @@ const authService = {
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
 	getDomesticHelpersTotalWorkingHours,
-	updateDomesticHelperLevel
+	updateDomesticHelperLevel,
+	receiveGiftHistory
 };
 
 export default authService;
