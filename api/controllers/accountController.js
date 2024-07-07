@@ -453,6 +453,118 @@ const getDomesticHelpersRanking = asyncHandler(async (req, res) => {
 	});
 });
 
+const getDomesticHelpersTotalWorkingHours = asyncHandler(async (req, res) => {
+	const { domesticHelperId } = req.params;
+	const myAccount = await Account.findById(domesticHelperId);
+
+	const totalHours = await myAccount.getTotalWorkingHours();
+
+	res.status(200).json({
+		status: 'success',
+		data: totalHours,
+	});
+});
+
+const updateDomesticHelperLevel = asyncHandler(async (req, res) => {
+	const account = await Account.findById(req.params.domesticHelperId);
+
+	const journey = [
+		{ level: 'Kiến con', requiredHours: 1 },
+		{ level: 'Kiến trưởng thành', requiredHours: 2 },
+		{ level: 'Kiến thợ', requiredHours: 3 },
+		{ level: 'Kiến chiến binh', requiredHours: 4 },
+		{ level: 'Kiến chúa', requiredHours: 5 },
+	];
+
+	const currentLevelIndex = journey.findIndex(
+		(level) => level.level === account.accountLevel.domesticHelperLevel.name
+	);
+
+	const totalWorkingHours = await account.getTotalWorkingHours();
+
+	let newLevelName = journey[currentLevelIndex].level;
+
+	if (totalWorkingHours >= journey[currentLevelIndex].requiredHours) {
+		const haveIndexJourney = Math.ceil(
+			currentLevelIndex +
+				totalWorkingHours / journey[currentLevelIndex].requiredHours -
+				1
+		);
+
+		newLevelName = journey[haveIndexJourney].level;
+	}
+
+	const updateAccountLevel = await Account.findByIdAndUpdate(
+		req.params.domesticHelperId,
+		{ 'accountLevel.domesticHelperLevel.name': newLevelName },
+		{ new: true }
+	);
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			updateAccountLevel,
+		},
+	});
+});
+
+const receiveGiftHistory = asyncHandler(async (req, res) => {
+	const { domesticHelperId } = req.params;
+	const { levelName, levelApoint } = req.body;
+
+	const account = await Account.findById(domesticHelperId);
+
+	if (!account) {
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Account not found',
+		});
+	}
+
+	const giftLevel = account.receiveGiftHistory.find(
+		(gift) => gift.levelName === String(levelName)
+	);
+
+	if (!giftLevel) {
+		return res.status(404).json({
+			status: 'fail',
+			message: 'Gift level not found',
+		});
+	}
+
+	if (!giftLevel.isReceived) {
+		await Account.findByIdAndUpdate(
+			domesticHelperId,
+			{ aPoints: account.aPoints + levelApoint },
+			{ new: true }
+		);
+	}
+
+	// Kiểm tra xem quà tặng đã được nhận chưa
+	if (giftLevel.isReceived) {
+		return res.status(400).json({
+			status: 'fail',
+			message: 'Gift already received',
+		});
+	}
+
+	// Cập nhật trạng thái isReceived thành true
+	giftLevel.isReceived = true;
+
+	const updatedAccount = await Account.findByIdAndUpdate(
+		domesticHelperId,
+		{ $set: { receiveGiftHistory: account.receiveGiftHistory } },
+		{ new: true }
+	);
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			updatedAccount,
+		},
+	});
+});
+
 const updateAPoint = asyncHandler(async (req, res) => {
 	const { accountId } = req.params;
 	const { apoint, serviceId } = req.body;
@@ -536,4 +648,7 @@ module.exports = {
 	getDomesticHelpersRanking,
 	updateAPoint,
 	updateIsUsedVoucher,
+	getDomesticHelpersTotalWorkingHours,
+	updateDomesticHelperLevel,
+	receiveGiftHistory,
 };

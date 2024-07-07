@@ -83,23 +83,28 @@ export const updateAccountInformation = createAsyncThunk(
 );
 
 export const updateIsUsedVoucher = createAsyncThunk(
-    'auth/updateIsUsedVoucher',
-    async ({ accountId, voucherId, isUsed }, thunkAPI) => {
-        try {
-            const storedAccount = JSON.parse(localStorage.getItem('account'));
-            const token = storedAccount?.data?.token;
-            return await authService.updateIsUsedVoucher(accountId, voucherId, isUsed, token);
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
+	'auth/updateIsUsedVoucher',
+	async ({ accountId, voucherId, isUsed }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount?.data?.token;
+			return await authService.updateIsUsedVoucher(
+				accountId,
+				voucherId,
+				isUsed,
+				token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
 
-            return thunkAPI.rejectWithValue(message);
-        }
-    }
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
 );
 
 export const updateAccountForgottenPassword = createAsyncThunk(
@@ -303,6 +308,49 @@ export const updateRatingDomesticHelper = createAsyncThunk(
 	}
 );
 
+export const receiveGiftHistory = createAsyncThunk(
+	'auth/receiveGiftHistory',
+	async ({ domesticHelperId, levelName, levelApoint }, thunkAPI) => {
+		try {
+			return await authService.receiveGiftHistory(
+				domesticHelperId,
+				levelName,
+				levelApoint
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const updateDomesticHelperLevel = createAsyncThunk(
+	'auth/updateDomesticHelperLevel',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const domesticHelperId = storedAccount.data.account._id;
+			return await authService.updateDomesticHelperLevel(
+				domesticHelperId
+				// token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const checkInvitationCode = createAsyncThunk(
 	'auth/checkInvitationCode',
 	async (invitationCode, thunkAPI) => {
@@ -364,14 +412,42 @@ export const getDomesticHelpersRanking = createAsyncThunk(
 	}
 );
 
+export const getDomesticHelpersTotalWorkingHours = createAsyncThunk(
+	'auth/getDomesticHelpersTotalWorkingHours',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const domesticHelperId = storedAccount.data.account._id;
+			console.log('domesticHelperId in Slice', storedAccount.data.account._id);
+			return await authService.getDomesticHelpersTotalWorkingHours(
+				domesticHelperId
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const updateAPoint = createAsyncThunk(
 	'auth/updateApoint',
 	async ({ apoint, accountId, serviceId }, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			const response = await authService.updateAPoint(accountId, apoint, serviceId, token);
-		
+			const response = await authService.updateAPoint(
+				accountId,
+				apoint,
+				serviceId,
+				token
+			);
+
 			return { ...response, accountId, points };
 		} catch (error) {
 			const message =
@@ -382,7 +458,6 @@ export const updateAPoint = createAsyncThunk(
 				error.toString();
 			return thunkAPI.rejectWithValue(message);
 		}
-		
 	}
 );
 
@@ -394,7 +469,6 @@ const initialState = {
 	isLoading: false,
 	message: '',
 	accountId: null,
-
 };
 
 export const authSlice = createSlice({
@@ -407,7 +481,6 @@ export const authSlice = createSlice({
 			state.isSuccess = false;
 			state.message = '';
 		},
-		
 	},
 	extraReducers: (builder) => {
 		builder
@@ -619,7 +692,6 @@ export const authSlice = createSlice({
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.account = action.payload;
-
 			})
 			.addCase(updateAPoint.rejected, (state, action) => {
 				state.isLoading = false;
@@ -638,6 +710,38 @@ export const authSlice = createSlice({
 				state.accounts = action.payload;
 			})
 			.addCase(getDomesticHelpersRanking.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(getDomesticHelpersTotalWorkingHours.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(
+				getDomesticHelpersTotalWorkingHours.fulfilled,
+				(state, action) => {
+					state.isLoading = false;
+					state.isSuccess = true;
+					state.accounts = action.payload;
+				}
+			)
+			.addCase(
+				getDomesticHelpersTotalWorkingHours.rejected,
+				(state, action) => {
+					state.isLoading = false;
+					state.isError = true;
+					state.message = action.payload;
+				}
+			)
+			.addCase(updateDomesticHelperLevel.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateDomesticHelperLevel.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.accounts = action.payload;
+			})
+			.addCase(updateDomesticHelperLevel.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

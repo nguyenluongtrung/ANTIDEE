@@ -231,6 +231,30 @@ const updateAPoint = async (accountId, apoint, serviceId, token) => {
 	return response.data.data.account;
 };
 
+const getDomesticHelpersTotalWorkingHours = async (domesticHelperId) => {
+	const response = await axios.get(
+		API_URL + 'journey-working/' + domesticHelperId
+	);
+	console.log('Jouney Working Time Service', response.data.data);
+	return response.data.data;
+};
+
+const updateDomesticHelperLevel = async (domesticHelperId) => {
+	const response = await axios.patch(
+		API_URL + 'journey-level/' + domesticHelperId
+	);
+	console.log('Jouney Working Time Service', response.data.data);
+	return response.data.data;
+};
+
+const receiveGiftHistory = async (domesticHelperId, levelName, levelApoint) => {
+	const response = await axios.patch(
+		API_URL + 'receive-gift/' + domesticHelperId,
+		{ levelName, levelApoint }
+	);
+	return response.data.data.updatedAccount;
+};
+
 const authService = {
 	login,
 	logout,
@@ -251,6 +275,9 @@ const authService = {
 	getDomesticHelpersRanking,
 	updateAPoint,
 	updateIsUsedVoucher,
+	getDomesticHelpersTotalWorkingHours,
+	updateDomesticHelperLevel,
+	receiveGiftHistory,
 };
 
 export default authService;
