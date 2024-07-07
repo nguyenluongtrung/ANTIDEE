@@ -71,7 +71,7 @@ export const JourneyPage = () => {
       level: "Kiến con",
       leveltitle: "Cấp 1",
       imagelevel: "image/kien_con.jpg",
-      reward: "- Nhận thêm 100 Apoint",
+      reward: "- Nhận thêm 100000 Apoint",
       requiredHours: 1,
       aPoint: 100000,
     },
@@ -79,7 +79,7 @@ export const JourneyPage = () => {
       level: "Kiến trưởng thành",
       leveltitle: "Cấp 2",
       imagelevel: "image/kien_truong_thanh.jpg",
-      reward: "- Nhận thêm 100 Apoint và 200 vpoints",
+      reward: "- Nhận thêm 200000 Apoint",
       requiredHours: 2,
       aPoint: 200000,
     },
@@ -87,7 +87,7 @@ export const JourneyPage = () => {
       level: "Kiến thợ",
       leveltitle: "Cấp 3",
       imagelevel: "image/kien_tho.jpg",
-      reward: "- Nhận thêm 100 Apoint",
+      reward: "- Nhận thêm 300000 Apoint",
       requiredHours: 3,
       aPoint: 300000,
     },
@@ -95,7 +95,7 @@ export const JourneyPage = () => {
       level: "Kiến chiến binh",
       leveltitle: "Cấp 4",
       imagelevel: "image/kien_chien_binh.jpg",
-      reward: "- Nhận thêm 1000 Apoint",
+      reward: "- Nhận thêm 400000 Apoint",
       requiredHours: 4,
       aPoint: 400000,
     },
@@ -103,7 +103,7 @@ export const JourneyPage = () => {
       level: "Kiến chúa",
       leveltitle: "Cấp 5",
       imagelevel: "image/kien_chua.png",
-      reward: "- Nhận thêm 1000 Apoint",
+      reward: "- Nhận thêm 500000 Apoint",
       requiredHours: 5,
       aPoint: 500000,
     },
@@ -148,7 +148,7 @@ export const JourneyPage = () => {
   };
 
   return (
-    <div className="px-32 flex flex-col pt-20">
+    <div className="px-32 flex flex-col pt-20 pb-10">
       <div className="font-bold text-green text-2xl text-center mb-6">
         HÀNH TRÌNH
       </div>

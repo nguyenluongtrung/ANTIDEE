@@ -57,7 +57,7 @@ import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountMa
 const App = () => {
 	return (
 		<Router>
-			<AppContent />
+			<AppContent/>
 		</Router>
 	);
 };
@@ -67,7 +67,7 @@ const AppContent = () => {
 
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
-		<div className="app-container select-none">
+		<div className="app-container select-none bg-white">
 			{!isAdminPage && (
 				<div className="sidebar-container z-50">
 					<Sidebar />
