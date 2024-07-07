@@ -217,18 +217,28 @@ const getDomesticHelpersRanking = async (token) => {
 };
 
 const updateAPoint = async (accountId, apoint, serviceId, token) => {
-	const config = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	};
-
 	const response = await axios.patch(
 		API_URL + `update-apoints/${accountId}`,
 		{ apoint, serviceId },
 		config
 	);
 	return response.data.data.account;
+};
+
+const updateRole = async (accountId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	console.log(API_URL + 'update-role/' + accountId);
+	const response = await axios.patch(
+		API_URL + 'update-role/' + accountId,
+		{},
+		config
+	);
+	return response.data.data.updatedAccount;
 };
 
 const getDomesticHelpersTotalWorkingHours = async (domesticHelperId) => {
@@ -286,6 +296,7 @@ const authService = {
 	updateDomesticHelperLevel,
 	receiveGiftHistory,
 	blockAccountChange,
+	updateRole,
 };
 
 export default authService;

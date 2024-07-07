@@ -80,7 +80,7 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const getAllAccounts = asyncHandler(async (req, res) => {
-	const accounts = await Account.find({});
+	const accounts = await Account.find({}).populate('resume.qualifications');
 
 	res.status(200).json({
 		status: 'success',
@@ -686,6 +686,16 @@ const updateIsUsedVoucher = asyncHandler(async (req, res) => {
 	});
 });
 
+const updateRole = asyncHandler(async (req, res) => {
+	const updatedAccount = await Account.findByIdAndUpdate(req.params.accountId, {
+		role: 'Người giúp việc',
+	});
+	res.status(200).json({
+		status: 'success',
+		data: { updatedAccount },
+	});
+});
+
 module.exports = {
 	register,
 	login,
@@ -709,4 +719,5 @@ module.exports = {
 	updateDomesticHelperLevel,
 	receiveGiftHistory,
 	blockAccount,
+	updateRole,
 };

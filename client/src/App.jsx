@@ -54,6 +54,7 @@ import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
 import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint'
 import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
+import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
 const App = () => {
 	return (
 		<Router>
@@ -153,6 +154,7 @@ const AppContent = () => {
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
 							<Route path="/admin-account" element={<AccountManagement />} />
+							<Route path="/admin-role" element={<UpdateAccountRole />} />
 						</>
 					)}
 				</Routes>

@@ -6,11 +6,9 @@ import {
   BiCalculator,
   BiNotification,
   BiMessage,
-  BiSupport,
   BiVideo
 } from "react-icons/bi";
 import { BsTicket } from "react-icons/bs";
-import { IoSettingsOutline } from "react-icons/io5";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation } from 'react-router-dom'
 import { MdCleaningServices } from "react-icons/md";
@@ -33,6 +31,7 @@ export default function AdminSidebar() {
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
+    { name: "Xét duyệt người giúp việc", icon:<BiUser/>, to: '/admin-role'},
   ];
 
   return (

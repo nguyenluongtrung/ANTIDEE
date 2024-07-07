@@ -478,6 +478,24 @@ export const updateAPoint = createAsyncThunk(
 		}
 	}
 );
+export const updateRole = createAsyncThunk(
+	'auth/updateAccountRole',
+	async (accountId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.updateRole(accountId, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 
 const initialState = {
 	account: account || null,
@@ -776,6 +794,23 @@ export const authSlice = createSlice({
 				state.accounts = action.payload;
 			})
 			.addCase(updateDomesticHelperLevel.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(updateRole.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateRole.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.accounts[
+					state.accounts.findIndex(
+						(account) => account._id == action.payload._id
+					)
+				] = action.payload;
+			})
+			.addCase(updateRole.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
