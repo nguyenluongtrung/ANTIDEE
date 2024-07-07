@@ -56,8 +56,18 @@ const updateService = async (token, updatedData, chosenServiceId) => {
 		updatedData,
 		config
 	);
-	console.log(response.data.data);
 	return response.data.data.updatedService;
+};
+
+const rankingServices = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(API_URL + `/ranking`, config);
+	return response.data.data.rankingServices;
 };
 
 const serviceService = {
@@ -66,5 +76,6 @@ const serviceService = {
 	createService,
 	updateService,
 	getService,
+	rankingServices,
 };
 export default serviceService;

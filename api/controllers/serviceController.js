@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Service = require('../models/serviceModel');
+const JobPost = require('../models/jobPostModel');
 
 const createService = asyncHandler(async (req, res) => {
 	const newService = await Service.create(req.body);
@@ -19,7 +20,6 @@ const createService = asyncHandler(async (req, res) => {
 		},
 	});
 });
-
 const getAllServices = asyncHandler(async (req, res) => {
 	const services = await Service.find({}).populate('requiredQualification');
 
@@ -94,10 +94,67 @@ const updateService = asyncHandler(async (req, res) => {
 		},
 	});
 });
+const rankingServices = asyncHandler(async (req, res) => {
+	const rankingServices = await JobPost.aggregate([
+		{
+			$group: {
+				_id: '$serviceId',
+				totalJobPosts: { $count: {} },
+			},
+		},
+		{
+			$lookup: {
+				from: 'services',
+				localField: '_id',
+				foreignField: '_id',
+				as: 'service',
+			},
+		},
+		{
+			$unwind: '$service',
+		},
+		{
+			$project: {
+				_id: 0,
+				serviceName: '$service.name',
+				totalJobPosts: 1,
+			},
+		},
+	]);
+
+	const services = await Service.find({});
+	let serviceNames = [];
+	services.forEach((service) => serviceNames.push(service.name));
+	const result = {
+		categories: [],
+		data: [],
+	};
+
+	serviceNames.forEach((service) => {
+		const foundService = rankingServices.find(
+			(svc) => svc.serviceName == service
+		);
+		if (foundService) {
+			result.categories.push(foundService.serviceName);
+			result.data.push(foundService.totalJobPosts);
+		} else {
+			result.categories.push(service);
+			result.data.push(0);
+		}
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			rankingServices: result,
+		},
+	});
+});
 module.exports = {
 	updateService,
 	deleteService,
 	getService,
 	getAllServices,
 	createService,
+	rankingServices,
 };

@@ -11,14 +11,16 @@ import {
 } from "react-icons/bi";
 import { BsTicket } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
-import { MdOutlineMedicalServices } from "react-icons/md";
+import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation } from 'react-router-dom'
+import { MdCleaningServices } from "react-icons/md";
 
 export default function AdminSidebar() {
   const location = useLocation();
 
   const menu = [
     { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
+    { name: "Dashboard", icon: <LuLayoutDashboard />, to: '/admin-dashboard' },
     { name: "Sự kiện khuyến mãi", icon: <BiGridAlt />, to: '/admin-promotion' },
     { name: "Đề thi", icon: <BiCreditCardAlt />, to: '/admin-exam' },
     { name: "Ngân hàng câu hỏi", icon: <BiUser />, to: '/admin-question' },
@@ -26,15 +28,10 @@ export default function AdminSidebar() {
     { name: "Liên hệ", icon: <BiUser />, to: '' },
     { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },
     { name: "Thông Báo", icon: <BiNotification />, to: '' },
-    { name: "Dịch vụ", icon: <BiNotification />, to: '/admin-service' },
+    { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
-  ];
-
-  const menuBottom = [
-    { name: "Hỗ Trợ", icon: <BiSupport /> },
-    { name: "Cài Đặt", icon: <IoSettingsOutline /> },
   ];
 
   return (
@@ -60,24 +57,6 @@ export default function AdminSidebar() {
                 </li>
               );
             })}
-          </ul>
-        </div>
-
-        <div>
-          <ul className="space-y-5">
-            <div className="mb-4 font-semibold">Mở Rộng</div>
-            {menuBottom.map((item, index) => {
-              return (
-                <li key={index}>
-                  <button className="flex flex-row items-center text-gray hover:text-primary group">
-                    <div className="mr-3">{item.icon}</div>
-                    <div><span>{item.name}</span></div>
-                    <span className="absolute w-1.5 h-8 bg-primary rounded-r-full left-0 scale-y-0 -translate-x-full group-hover:scale-y-100 group-hover:translate-x-0 ease-in-out" />
-                  </button>
-                </li>
-              );
-            })}
-           
           </ul>
         </div>
       </div>

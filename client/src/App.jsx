@@ -51,6 +51,7 @@ import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
+import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
 const App = () => {
 	return (
 		<Router>
@@ -130,6 +131,7 @@ const AppContent = () => {
 					{isAdminPage && (
 						<>
 							<Route path="/admin" element={<AdminPage />} />
+							<Route path="/admin-dashboard" element={<Dashboard />} />
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
 							<Route path="/admin-voucher" element={<VoucherManagement />} />
