@@ -691,6 +691,9 @@ export const authSlice = createSlice({
 			.addCase(inviteFriend.pending, (state) => {
 				state.isLoading = true;
 			})
+			.addCase(inviteFriend.fulfilled, (state) => {
+				state.isLoading = false;
+			})
 			.addCase(updateRatingDomesticHelper.pending, (state) => {
 				state.isLoading = true;
 			})

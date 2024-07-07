@@ -24,19 +24,22 @@ export const InviteFriendPage = () => {
 		setAccount(output.payload);
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (email.trim() === '') {
 			toast.error('Bạn cần nhập email', errorStyle);
 		}
 
-		dispatch(
+		const response = await dispatch(
 			inviteFriend({
 				invitedEmail: email,
 				invitationCode: account?.invitationCode,
 				accountName: account?.name,
 			})
 		);
+		if(response.type.includes('fulfilled')){
+			setEmail('')
+		}
 	};
 
 	const copyToClipboard = () => {
@@ -90,6 +93,7 @@ export const InviteFriendPage = () => {
 						className="border-2 border-gray rounded-2xl mr-5 max-w-lg p-3 focus:outline-none"
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="Nhập email bạn muốn giới thiệu"
+						value={email}
 					></input>
 					<button
 						className="bg-green text-white rounded-2xl max-w-24"

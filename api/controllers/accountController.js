@@ -410,6 +410,9 @@ const inviteFriend = asyncHandler(async (req, res) => {
 		`,
 	};
 	await sendMail(emailTemplate(email));
+	res.status(200).json({
+		status: 'success',
+	});
 });
 
 const checkInvitationCode = asyncHandler(async (req, res) => {
