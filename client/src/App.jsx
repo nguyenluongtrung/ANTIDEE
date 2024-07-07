@@ -53,6 +53,7 @@ import { PromotionManagement } from './pages/AdminPage/PromotionManagement/Promo
 import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
 import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint'
+import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
 const App = () => {
 	return (
 		<Router>
@@ -151,6 +152,7 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
+							<Route path="/admin-account" element={<AccountManagement />} />
 						</>
 					)}
 				</Routes>

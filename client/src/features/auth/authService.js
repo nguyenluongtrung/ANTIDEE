@@ -254,6 +254,13 @@ const receiveGiftHistory = async (domesticHelperId, levelName, levelApoint) => {
 	);
 	return response.data.data.updatedAccount;
 };
+const blockAccountChange = async (accountId) => {
+	const response = await axios.patch(
+		API_URL + '/block/' + accountId,
+		accountId
+	);
+	return response.data.data.accountId;
+};
 
 const authService = {
 	login,
@@ -278,6 +285,7 @@ const authService = {
 	getDomesticHelpersTotalWorkingHours,
 	updateDomesticHelperLevel,
 	receiveGiftHistory,
+	blockAccountChange,
 };
 
 export default authService;

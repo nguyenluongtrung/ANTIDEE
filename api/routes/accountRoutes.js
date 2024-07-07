@@ -21,13 +21,14 @@ const {
 	getDomesticHelpersTotalWorkingHours,
 	updateDomesticHelperLevel,
 	receiveGiftHistory,
+	blockAccount,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
 
 router.route('/login').post(login);
 router.route('/register').post(register);
-
+router.route('/block/:accountId').patch(blockAccount);
 router
 	.route('/information')
 	.patch(protect, updateAccountInformation)

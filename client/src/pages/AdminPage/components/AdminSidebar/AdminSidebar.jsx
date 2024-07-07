@@ -32,6 +32,7 @@ export default function AdminSidebar() {
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
+    { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
   ];
 
   return (

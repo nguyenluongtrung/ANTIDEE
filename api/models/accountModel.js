@@ -89,21 +89,20 @@ const accountSchema = mongoose.Schema(
 			type: Number,
 			default: 0,
 		},
-		aPointHistory:[
+		aPointHistory: [
 			{
-				apoint:{
-					type:Number,
-
+				apoint: {
+					type: Number,
 				},
-				serviceId:{
+				serviceId: {
 					type: mongoose.Schema.Types.ObjectId,
-						ref: 'Service',
+					ref: 'Service',
 				},
-				update:{
-					type:Date,
-					default:Date.now,
-				}
-			}
+				update: {
+					type: Date,
+					default: Date.now,
+				},
+			},
 		],
 		accountBalance: {
 			type: Number,
@@ -208,19 +207,23 @@ const accountSchema = mongoose.Schema(
 		],
 		receiveGiftHistory: {
 			type: [
-					{
+				{
 					levelName: { type: String, required: true },
-					isReceived: { type: Boolean, default: false }
-					}
-				],
-			default: [
-			  { levelName: 'Kiến con', isReceived: false },
-			  { levelName: 'Kiến trưởng thành', isReceived: false },
-			  { levelName: 'Kiến thợ', isReceived: false },
-			  { levelName: 'Kiến chiến binh', isReceived: false },
-			  { levelName: 'Kiến chúa', isReceived: false },
+					isReceived: { type: Boolean, default: false },
+				},
 			],
-		  },
+			default: [
+				{ levelName: 'Kiến con', isReceived: false },
+				{ levelName: 'Kiến trưởng thành', isReceived: false },
+				{ levelName: 'Kiến thợ', isReceived: false },
+				{ levelName: 'Kiến chiến binh', isReceived: false },
+				{ levelName: 'Kiến chúa', isReceived: false },
+			],
+		},
+		isBlocked: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,
