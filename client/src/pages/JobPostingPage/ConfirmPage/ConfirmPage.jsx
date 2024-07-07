@@ -5,7 +5,7 @@ import { formatDate, formatWorkingTime } from '../../../utils/format';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createJobPost } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation, loadMoneyAfterUsingInvitationCode, updateAPoint } from '../../../features/auth/authSlice';
+import { getAccountInformation, loadMoneyAfterUsingInvitationCode, updateAPoint, updateIsUsedVoucher } from '../../../features/auth/authSlice';
 import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
@@ -27,6 +27,8 @@ export const ConfirmPage = () => {
 	const isChosenYourFav = location?.state?.isChosenYourFav;
 	const repeatitiveDetails = location?.state?.repeatitiveDetails;
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
+
+	const promoId  = location?.state?.promoId;
 	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
@@ -76,6 +78,14 @@ export const ConfirmPage = () => {
 		const result = await dispatch(createJobPost(jobPostData));
 
 		if (result.type.endsWith('fulfilled')) {
+			
+			if(promoId){
+				const accountId = account._id;
+				console.log(accountId)
+				console.log(promoId)
+					await dispatch(updateIsUsedVoucher({ accountId, voucherId: promoId, isUsed: true }));
+			}
+
 			navigate(`/congrats`, {
 				state: {
 					congratsMsg: 'Chúc mừng bạn đã đăng công việc thành công',

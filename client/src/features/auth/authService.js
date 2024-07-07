@@ -49,6 +49,26 @@ const updateAccountForgottenPassword = async (password, accountId) => {
 	return response.data.data.updatedAccount;
 };
 
+const updateIsUsedVoucher = async (accountId, voucherId, isUsed, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		`${API_URL}isUsed/${voucherId}`,
+		{
+			accountId,
+			isUsed,
+		},
+		config
+	);
+
+	console.log('RESPONSE', response.data);
+	return response.data.data.account;
+};
+
 const getAccountForgottenPassword = async (phoneNumber) => {
 	const response = await axios.get(API_URL + `lost-account/${phoneNumber}`);
 	console.log('RESPONSE', response.data.data.singleAccount);
@@ -211,8 +231,6 @@ const updateAPoint = async (accountId, apoint, serviceId, token) => {
 	return response.data.data.account;
 };
 
-
-
 const authService = {
 	login,
 	logout,
@@ -232,6 +250,7 @@ const authService = {
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
 	updateAPoint,
+	updateIsUsedVoucher,
 };
 
 export default authService;

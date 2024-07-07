@@ -82,6 +82,26 @@ export const updateAccountInformation = createAsyncThunk(
 	}
 );
 
+export const updateIsUsedVoucher = createAsyncThunk(
+    'auth/updateIsUsedVoucher',
+    async ({ accountId, voucherId, isUsed }, thunkAPI) => {
+        try {
+            const storedAccount = JSON.parse(localStorage.getItem('account'));
+            const token = storedAccount?.data?.token;
+            return await authService.updateIsUsedVoucher(accountId, voucherId, isUsed, token);
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
 export const updateAccountForgottenPassword = createAsyncThunk(
 	'auth/updateAccountForgottenPassword',
 	async ({ password, accountId }, thunkAPI) => {
@@ -417,6 +437,20 @@ export const authSlice = createSlice({
 				state.account = action.payload;
 			})
 			.addCase(updateAccountInformation.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.account = null;
+			})
+			.addCase(updateIsUsedVoucher.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateIsUsedVoucher.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(updateIsUsedVoucher.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

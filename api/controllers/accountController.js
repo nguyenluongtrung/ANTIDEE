@@ -161,9 +161,9 @@ const getAccountInformation = asyncHandler(async (req, res) => {
 		.populate('favoriteList.domesticHelperId')
 		.populate({
 			path: 'aPointHistory',
-			populate:{
+			populate: {
 				path: 'serviceId',
-			}
+			},
 		});
 
 	if (!account) {
@@ -458,7 +458,9 @@ const updateAPoint = asyncHandler(async (req, res) => {
 	const { apoint, serviceId } = req.body;
 
 	if (!accountId || !apoint) {
-		return res.status(400).json({ message: 'Account ID and points are required' });
+		return res
+			.status(400)
+			.json({ message: 'Account ID and points are required' });
 	}
 
 	try {
@@ -485,6 +487,35 @@ const updateAPoint = asyncHandler(async (req, res) => {
 	}
 });
 
+const updateIsUsedVoucher = asyncHandler(async (req, res) => {
+	const { voucherId } = req.params;
+	const { isUsed, accountId } = req.body;
+
+	const account = await Account.findById(accountId);
+
+	if (!account) {
+		res.status(404);
+		throw new Error('Account not found!');
+	}
+
+	const voucher = account.accountVouchers.find(
+		(v) => v.voucherId.toString() === voucherId
+	);
+
+	if (!voucher) {
+		res.status(404);
+		throw new Error('Voucher not found in account!');
+	}
+
+	voucher.isUsed = isUsed;
+
+	await account.save();
+
+	res.status(200).json({
+		message: 'Voucher updated successfully',
+		voucher,
+	});
+});
 
 module.exports = {
 	register,
@@ -504,4 +535,5 @@ module.exports = {
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
 	updateAPoint,
+	updateIsUsedVoucher,
 };

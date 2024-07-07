@@ -17,6 +17,7 @@ const {
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
 	updateAPoint,
+	updateIsUsedVoucher,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -56,6 +57,8 @@ router
 	.route('/favoriteList/:domesticHelperId')
 	.post(protect, addDomesticHelperToFavoriteList)
 	.delete(protect, deleteDomesticHelperFromFavoriteList);
+
+router.route('/isUsed/:voucherId').patch(updateIsUsedVoucher);
 
 router.route('/update-apoints/:accountId').patch(updateAPoint);
 
