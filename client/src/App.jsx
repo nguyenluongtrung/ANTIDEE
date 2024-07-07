@@ -51,6 +51,7 @@ import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
+import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
 const App = () => {
 	return (
 		<Router>
@@ -147,6 +148,7 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
+							<Route path="/admin-role" element={<UpdateAccountRole />} />
 						</>
 					)}
 				</Routes>

@@ -16,13 +16,14 @@ const {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	updateRole,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
 
 router.route('/login').post(login);
 router.route('/register').post(register);
-
+router.route('/update-role/:accountId').patch(updateRole);
 router
 	.route('/information')
 	.patch(protect, updateAccountInformation)
