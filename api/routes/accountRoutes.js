@@ -48,11 +48,7 @@ router
 	.patch(protect, updateRatingDomesticHelper);
 router
 	.route('/ranking-domestic-helper')
-	.get(
-		protect,
-		restrict('Admin', 'Người giúp việc'),
-		getDomesticHelpersRanking
-	);
+	.get(protect, getDomesticHelpersRanking);
 router
 	.route('/journey-working/:domesticHelperId')
 	.get(getDomesticHelpersTotalWorkingHours);
