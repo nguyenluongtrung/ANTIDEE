@@ -344,6 +344,28 @@ export const getDomesticHelpersRanking = createAsyncThunk(
 	}
 );
 
+export const updateAPoint = createAsyncThunk(
+	'auth/updateApoint',
+	async ({ apoint, accountId, serviceId }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			const response = await authService.updateAPoint(accountId, apoint, serviceId, token);
+		
+			return { ...response, accountId, points };
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+		
+	}
+);
+
 const initialState = {
 	account: account || null,
 	accounts: [],
@@ -352,6 +374,7 @@ const initialState = {
 	isLoading: false,
 	message: '',
 	accountId: null,
+
 };
 
 export const authSlice = createSlice({
@@ -364,6 +387,7 @@ export const authSlice = createSlice({
 			state.isSuccess = false;
 			state.message = '';
 		},
+		
 	},
 	extraReducers: (builder) => {
 		builder
@@ -550,6 +574,20 @@ export const authSlice = createSlice({
 				state.isSuccess = true;
 			})
 			.addCase(checkInvitationCode.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(updateAPoint.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateAPoint.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+
+			})
+			.addCase(updateAPoint.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
