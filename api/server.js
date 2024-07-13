@@ -69,7 +69,6 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', (messageData) => {
         io.to(messageData.chatId).emit('receiveMessage', messageData);
     
-         // Notify all connected clients about the new message
          io.emit('notification', messageData);
     });
 
@@ -77,7 +76,5 @@ io.on('connection', (socket) => {
         socket.join(chatId);
     });
 });
-
-//app.listen(port, () => console.log(`Server started on port ${port}`));
 
 server.listen(port, () => console.log(`Server started on port ${port}`));
