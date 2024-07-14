@@ -130,7 +130,7 @@ export const Header = () => {
 					</li>
 					{account?.role === 'Admin' && (
 						<li className="mr-5">
-							<Link to={'/admin-exam'}>
+							<Link to={'/admin-dashboard'}>
 								<span>Trang quản lí</span>
 							</Link>
 						</li>
