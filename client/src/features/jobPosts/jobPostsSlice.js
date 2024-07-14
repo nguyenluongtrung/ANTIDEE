@@ -21,6 +21,26 @@ export const getAllJobPosts = createAsyncThunk(
 	}
 );
 
+export const countNumberOfJobsByAccountId = createAsyncThunk(
+	'jobPosts/countNumberOfJobsByAccountId',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await jobPostsService.countNumberOfJobsByAccountId(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const createJobPost = createAsyncThunk(
 	'jobPosts/createJobPost',
 	async (jobPostData, thunkAPI) => {
@@ -233,6 +253,18 @@ export const jobPostSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.jobPosts = null;
+			})
+			.addCase(countNumberOfJobsByAccountId.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(countNumberOfJobsByAccountId.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(countNumberOfJobsByAccountId.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
 			})
 			.addCase(createJobPost.pending, (state) => {
 				state.isLoading = true;

@@ -24,6 +24,8 @@ export default {
 			another_primary: '#ee9a4b',
 			info: '#ffc107',
 			hero: '#efa37f',
+			blue: '#24acf2',
+			purple: '#be84ff',
 			anotherRed: '#f61818',
 		},
 	},

@@ -23,6 +23,7 @@ const {
 	receiveGiftHistory,
 	blockAccount,
 	updateRole,
+	getAllReports,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -70,5 +71,5 @@ router
 router.route('/isUsed/:voucherId').patch(updateIsUsedVoucher);
 
 router.route('/update-apoints/:accountId').patch(updateAPoint);
-
+router.route('/report').get(protect, restrict('Admin'), getAllReports);
 module.exports = router;

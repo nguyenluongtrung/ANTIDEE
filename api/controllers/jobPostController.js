@@ -405,6 +405,40 @@ const getCurrentTimeStringPlus1Hour = () => {
 		.padStart(2, '0')}`;
 };
 
+const countNumberOfJobPostByAccountId = asyncHandler(async (req, res) => {
+	const jobPostsGroupedByAccountId = await JobPost.aggregate([
+		{
+			$group: {
+				_id: '$customerId',
+				totalJobPosts: { $count: {} },
+			},
+		},
+		{
+			$lookup: {
+				from: 'accounts',
+				localField: '_id',
+				foreignField: '_id',
+				as: 'account',
+			},
+		},
+		{
+			$unwind: '$account',
+		},
+		{
+			$project: {
+				accountId: '$account._id',
+				accountName: '$account.name',
+				totalJobPosts: 1,
+			},
+		},
+	]);
+
+	res.status(200).json({
+		success: true,
+		data: jobPostsGroupedByAccountId,
+	});
+});
+
 module.exports = {
 	updateJobPost,
 	deleteJobPost,
@@ -417,4 +451,5 @@ module.exports = {
 	deleteAllJobPost,
 	cancelAJob,
 	cancelAJobDomesticHelper,
+	countNumberOfJobPostByAccountId,
 };

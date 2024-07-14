@@ -12,6 +12,7 @@ const {
 	deleteAllJobPost,
 	cancelAJob,
 	cancelAJobDomesticHelper,
+	countNumberOfJobPostByAccountId,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
@@ -30,6 +31,9 @@ router.route('/cancel-a-job/:jobPostId').patch(protect, cancelAJob);
 router
 	.route('/cancel-a-job-domesticHelper/:jobPostId')
 	.patch(protect, cancelAJobDomesticHelper);
+router
+	.route('/countNumberOfJobsByAccountId')
+	.get(protect, restrict('Admin'), countNumberOfJobPostByAccountId);
 router
 	.route('/:jobPostId')
 	.get(protect, getJobPost)

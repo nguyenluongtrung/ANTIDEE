@@ -276,6 +276,15 @@ const blockAccountChange = async (accountId) => {
 	);
 	return response.data.data.accountId;
 };
+const getAllReports = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.get(API_URL + 'report', config);
+	return response.data.data;
+};
 
 const authService = {
 	login,
@@ -302,6 +311,7 @@ const authService = {
 	receiveGiftHistory,
 	blockAccountChange,
 	updateRole,
+	getAllReports,
 };
 
 export default authService;

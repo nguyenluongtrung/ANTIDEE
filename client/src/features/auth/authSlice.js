@@ -495,6 +495,24 @@ export const updateRole = createAsyncThunk(
 		}
 	}
 );
+export const getAllReports = createAsyncThunk(
+	'auth/getAllReports',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.getAllReports(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 
 const initialState = {
 	account: account || null,

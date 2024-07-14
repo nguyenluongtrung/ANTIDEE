@@ -105,7 +105,7 @@ export const RankingPage = () => {
 										</td>
 										<td>
 											<span>
-												{domesticHelper.rating?.domesticHelperRating || 0}
+												{Math.round(domesticHelper.rating?.domesticHelperRating || 0)}
 											</span>
 										</td>
 										<td>

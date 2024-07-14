@@ -11,7 +11,10 @@ import {
 import { BsTicket } from "react-icons/bs";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation } from 'react-router-dom'
-import { MdCleaningServices } from "react-icons/md";
+import { MdCleaningServices, MdOutlineQuestionMark } from "react-icons/md";
+import { IoNewspaperOutline } from "react-icons/io5";
+import { TbReportSearch } from "react-icons/tb";
+import { RiDiscountPercentLine } from "react-icons/ri";
 
 export default function AdminSidebar() {
   const location = useLocation();
@@ -19,23 +22,21 @@ export default function AdminSidebar() {
   const menu = [
     { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
     { name: "Dashboard", icon: <LuLayoutDashboard />, to: '/admin-dashboard' },
-    { name: "Sự kiện khuyến mãi", icon: <BiGridAlt />, to: '/admin-promotion' },
-    { name: "Đề thi", icon: <BiCreditCardAlt />, to: '/admin-exam' },
-    { name: "Ngân hàng câu hỏi", icon: <BiUser />, to: '/admin-question' },
+    { name: "Sự kiện khuyến mãi", icon: <RiDiscountPercentLine />, to: '/admin-promotion' },
+    { name: "Đề thi", icon: <IoNewspaperOutline />, to: '/admin-exam' },
+    { name: "Ngân hàng câu hỏi", icon: <MdOutlineQuestionMark />, to: '/admin-question' },
     { name: "Các chứng chỉ", icon: <BiCreditCardAlt />, to: '/admin-qualification' },
-    { name: "Liên hệ", icon: <BiUser />, to: '' },
-    { name: "Tính Toán Chi Phí", icon: <BiCalculator />, to: '' },
     { name: "Thông Báo", icon: <BiNotification />, to: '' },
     { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
-    { name: "Xét duyệt người giúp việc", icon:<BiUser/>, to: '/admin-role'},
+    { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
   ];
 
   return (
-    <div className="h-screen border-r border-opacity-50 border-gray w-64 px-9 pt-5">
+    <div className="border-r border-opacity-50 border-gray w-64 px-9 pt-5">
       <div className="flex flex-row">
         <div className="text-primary font-bold logo-text pt-1">Antidee</div>
       </div>

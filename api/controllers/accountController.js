@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Account = require('./../models/accountModel');
+const Service = require('./../models/serviceModel');
 const DomesticHelperFeedback = require('./../models/domesticHelper_FeedbackModel');
 const JobPost = require('./../models/jobPostModel');
 const jwt = require('jsonwebtoken');
@@ -701,6 +702,21 @@ const updateRole = asyncHandler(async (req, res) => {
 	});
 });
 
+const getAllReports = asyncHandler(async (req, res) => {
+	const numOfAccounts = await Account.find({});
+	const numOfServices = await Service.find({});
+	const numOfJobPosts = await JobPost.find({});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			numOfAccounts: numOfAccounts.length,
+			numOfServices: numOfServices.length,
+			numOfJobPosts: numOfJobPosts.length,
+		},
+	});
+});
+
 module.exports = {
 	register,
 	login,
@@ -725,4 +741,5 @@ module.exports = {
 	receiveGiftHistory,
 	blockAccount,
 	updateRole,
+	getAllReports,
 };
