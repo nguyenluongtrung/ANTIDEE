@@ -276,7 +276,18 @@ const blockAccountChange = async (accountId) => {
 	);
 	return response.data.data.accountId;
 };
+const getTransactionHistory = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
 
+    const response = await axios.get('/antidee/api/transactions', config);
+	console.log(response.data);
+    return response.data;
+	
+};
 const authService = {
 	login,
 	logout,
@@ -302,6 +313,7 @@ const authService = {
 	receiveGiftHistory,
 	blockAccountChange,
 	updateRole,
+	getTransactionHistory 
 };
 
 export default authService;

@@ -495,7 +495,24 @@ export const updateRole = createAsyncThunk(
 		}
 	}
 );
-
+export const getTransactionHistory = createAsyncThunk(
+    'auth/transactions',
+    async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.getTransactionHistory( token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 const initialState = {
 	account: account || null,
 	accounts: [],
@@ -504,7 +521,9 @@ const initialState = {
 	isLoading: false,
 	message: '',
 	accountId: null,
+	transactions:[],
 };
+
 
 export const authSlice = createSlice({
 	name: 'auth',
@@ -810,6 +829,19 @@ export const authSlice = createSlice({
 				] = action.payload;
 			})
 			.addCase(updateRole.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(getTransactionHistory.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getTransactionHistory.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.transactions = action.payload;
+			})
+			.addCase(getTransactionHistory.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

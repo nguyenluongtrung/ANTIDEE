@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAccountInformation } from "../../features/auth/authSlice";
-import "./Sidebar.css";
+import "./Sidebar.css";import { FaMoneyBillWave } from "react-icons/fa";
 import { BiHomeAlt, BiGridAlt, BiCreditCardAlt, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { TiWeatherPartlySunny } from "react-icons/ti";
@@ -50,6 +50,7 @@ export const Sidebar = () => {
     { name: "Tài Khoản", icon: <BiGridAlt />, to: "/my-account" },
     { name: "Mời Bạn Bè", icon: <BiCreditCardAlt />, to: "/invite-friend" },
     { name: "Ưu Đãi", icon: <BiUser />, to: "/vouchers" },
+    { name: "Lịch sử giao dịch", icon: <FaMoneyBillWave />  , to: "/transaction-history" },
     {
       name: "Diễn Đàn",
       icon: <BiCreditCardAlt />,
