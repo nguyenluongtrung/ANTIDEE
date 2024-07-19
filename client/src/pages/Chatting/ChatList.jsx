@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BiSearch } from "react-icons/bi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { createChat } from "../../features/chatting/chattingSlice";
 
@@ -18,7 +18,7 @@ const ChatList = ({
   initialChatting,
 }) => {
   const dispatch = useDispatch();
-  console.log(myAccountId)
+  // console.log(myAccountId)
 
   const handleCreateChat = async (secondUserId) => {
     try {
