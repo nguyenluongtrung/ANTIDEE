@@ -15,6 +15,7 @@ import {
   updateDomesticHelperLevel,
 } from "../../features/auth/authSlice";
 import { GoGift } from "react-icons/go";
+import toast from "react-hot-toast";
 
 export const JourneyPage = () => {
   const { account, isLoading } = useSelector((state) => state.auth);
@@ -35,8 +36,7 @@ export const JourneyPage = () => {
           levelApoint,
         })
       );
-      console.log(result);
-      alert("đã nhận quà");
+      toast.success(`Nhận quà ${levelName} thành công !!!!`)
     };
 
     return (
@@ -165,7 +165,7 @@ export const JourneyPage = () => {
         );
       }
     }
-    alert("Đã nhận tất cả quà tặng");
+    toast.success("Bạn đã nhận hết tất cả quà tặng !!!")
   };
  
   return (
@@ -199,7 +199,7 @@ export const JourneyPage = () => {
       </div>
       <hr className="text-gray" />
 
-      <div className={`flex ${isLocked(nowJourney) ? "grayscale" : ""}`}>
+      <div className={`flex ${isLocked(nowJourney) ? "grayscale pointer-events-none" : ""}`}>
         <div className="w-[45%] flex flex-col items-center justify-center gap-y-3">
           <div className="flex items-center justify-between w-full mt-4 px-20">
             <div>
