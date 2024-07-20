@@ -60,7 +60,7 @@ const AccountBalanceAreaChart = () => {
 			const result = await dispatch(getAccountBalance()); 
 			let balances = [];
 			result.payload.map((account) => {
-				balances.push(Number(account.balance));
+				balances.push(Number(account.accountBalance));
 			});
 			setChartOptions((prevState) => ({
 				...prevState,

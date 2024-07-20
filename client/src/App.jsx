@@ -51,6 +51,7 @@ import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
+import { IncomeDomesticHelper } from './pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper';
 const App = () => {
 	return (
 		<Router>
@@ -91,6 +92,7 @@ const AppContent = () => {
 							element={<JobPostingHistory />}
 						/>
 						<Route path="/my-jobs" element={<MyJobs />} />
+						<Route path="/account-balance" element={<IncomeDomesticHelper />} />
 						<Route
 							path="/exam-result-history"
 							element={<ExamResultHistory />}

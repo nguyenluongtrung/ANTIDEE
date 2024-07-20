@@ -196,6 +196,17 @@ const getDomesticHelpersRanking = async (token) => {
 	return response.data.data.accountsWithRankingCriteria;
 };
 
+const getAccountBalance = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(API_URL + 'balance', config);
+	return response.data.data.accountBalance;
+};
+
 const authService = {
 	login,
 	logout,
@@ -214,6 +225,7 @@ const authService = {
 	checkInvitationCode,
 	loadMoneyAfterUsingInvitationCode,
 	getDomesticHelpersRanking,
+	getAccountBalance,
 };
 
 export default authService;

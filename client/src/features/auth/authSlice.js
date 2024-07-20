@@ -344,6 +344,26 @@ export const getDomesticHelpersRanking = createAsyncThunk(
 	}
 );
 
+export const getAccountBalance = createAsyncThunk(
+	'auth/getAccountBalance',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await authService.getAccountBalance(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	account: account || null,
 	accounts: [],
@@ -569,6 +589,20 @@ export const authSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
+			})
+			.addCase(getAccountBalance.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAccountBalance.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(getAccountBalance.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.account = null;
 			});
 	},
 });

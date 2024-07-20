@@ -65,7 +65,7 @@ const AccountBalanceColumnChart = () => {
 			const result = await dispatch(getAccountBalance());
 			let balances = [];
 			result.payload.map((account) => {
-				balances.push(Number(account.balance));
+				balances.push(Number(account.accountBalance));
 			});
 			setState((prevState) => ({
 				...prevState,
