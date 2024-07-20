@@ -19,7 +19,7 @@ export const StepBar = ({ nowJourney }) => {
 
   return (
     <div className="mx-auto pt-20">
-      <ul className="relative flex flex-row gap-x-2 px-10">
+      <ul className="relative flex flex-row gap-x-2 px-10 z-10">
         {viewInfo.map((info, index) => {
           const isCurrentPath = nowJourney === info.to;
           const isPreviousPath =

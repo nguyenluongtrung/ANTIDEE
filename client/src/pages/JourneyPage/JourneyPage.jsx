@@ -15,11 +15,12 @@ import {
   updateDomesticHelperLevel,
 } from "../../features/auth/authSlice";
 import { GoGift } from "react-icons/go";
-import toast from "react-hot-toast";
+import PopupReceiveGift from "./PopupReceiveGift/PopupReceiveGift";
 
 export const JourneyPage = () => {
   const { account, isLoading } = useSelector((state) => state.auth);
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPopupReceiveAllGift, setIsPopupReceiveAllGift] = useState(false)
   const haveAccount = account?.accountLevel?.domesticHelperLevel?.name;
   const [workingTime, setWorkingTime] = useState(0);
   const dispatch = useDispatch();
@@ -36,7 +37,8 @@ export const JourneyPage = () => {
           levelApoint,
         })
       );
-      toast.success(`Nhận quà ${levelName} thành công !!!!`)
+      setIsPopupOpen(true);
+      // toast.success(`Nhận quà ${levelName} thành công !!!!`)
     };
 
     return (
@@ -147,12 +149,6 @@ export const JourneyPage = () => {
     return index > currentLevelIndex;
   };
 
-  // const receivedAllGift = () => {
-  //   alert("HEHEHEHEH")
-  //   // Nếu level hiện tại đang là 3 thì thì sẽ nhận 3 món quà từ lv 1-2-3
-  //   // Điều kiện nếu món quà đó có .isReceived bằng false nếu true thì không hoạt động
-  // }
-
   const receivedAllGift = async () => {
     for (let i = 0; i <= currentLevelIndex; i++) {
       if (!account.receiveGiftHistory[i].isReceived) {
@@ -165,11 +161,18 @@ export const JourneyPage = () => {
         );
       }
     }
-    toast.success("Bạn đã nhận hết tất cả quà tặng !!!")
+    setIsPopupReceiveAllGift(true)
+    setIsPopupOpen(true);
   };
- 
+
   return (
-    <div className="px-32 flex flex-col pt-20">
+    <div className="px-32 flex flex-col pt-20 mb-14">
+      <PopupReceiveGift
+        isOpen={isPopupOpen}
+        setIsPopupOpen={setIsPopupOpen}
+        levelName={journey[nowJourney].level}
+        isPopupReceiveAllGift={isPopupReceiveAllGift}
+      />
       <div className="font-bold text-green text-2xl text-center mb-6">
         HÀNH TRÌNH
       </div>
@@ -199,7 +202,11 @@ export const JourneyPage = () => {
       </div>
       <hr className="text-gray" />
 
-      <div className={`flex ${isLocked(nowJourney) ? "grayscale pointer-events-none" : ""}`}>
+      <div
+        className={`flex ${
+          isLocked(nowJourney) ? "grayscale pointer-events-none" : ""
+        }`}
+      >
         <div className="w-[45%] flex flex-col items-center justify-center gap-y-3">
           <div className="flex items-center justify-between w-full mt-4 px-20">
             <div>
