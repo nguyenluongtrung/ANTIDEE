@@ -48,7 +48,7 @@ export const TransactionHistory = () => {
                             {transactions.length === 0 ? (
                                 <tr>
                                     <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-center text-gray">
-                                        No transactions found
+                                        Không có giao dịch nào
                                     </td>
                                 </tr>
                             ) : (
