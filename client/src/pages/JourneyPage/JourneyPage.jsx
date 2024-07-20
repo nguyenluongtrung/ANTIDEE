@@ -15,10 +15,12 @@ import {
   updateDomesticHelperLevel,
 } from "../../features/auth/authSlice";
 import { GoGift } from "react-icons/go";
+import PopupReceiveGift from "./PopupReceiveGift/PopupReceiveGift";
 
 export const JourneyPage = () => {
   const { account, isLoading } = useSelector((state) => state.auth);
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPopupReceiveAllGift, setIsPopupReceiveAllGift] = useState(false)
   const haveAccount = account?.accountLevel?.domesticHelperLevel?.name;
   const [workingTime, setWorkingTime] = useState(0);
   const dispatch = useDispatch();
@@ -35,8 +37,8 @@ export const JourneyPage = () => {
           levelApoint,
         })
       );
-      console.log(result);
-      alert("đã nhận quà");
+      setIsPopupOpen(true);
+      // toast.success(`Nhận quà ${levelName} thành công !!!!`)
     };
 
     return (
@@ -147,8 +149,30 @@ export const JourneyPage = () => {
     return index > currentLevelIndex;
   };
 
+  const receivedAllGift = async () => {
+    for (let i = 0; i <= currentLevelIndex; i++) {
+      if (!account.receiveGiftHistory[i].isReceived) {
+        await dispatch(
+          receiveGiftHistory({
+            domesticHelperId: account._id,
+            levelName: journey[i].level,
+            levelApoint: journey[i].aPoint,
+          })
+        );
+      }
+    }
+    setIsPopupReceiveAllGift(true)
+    setIsPopupOpen(true);
+  };
+
   return (
-    <div className="px-32 flex flex-col pt-20 pb-10">
+    <div className="px-32 flex flex-col pt-20 mb-14">
+      <PopupReceiveGift
+        isOpen={isPopupOpen}
+        setIsPopupOpen={setIsPopupOpen}
+        levelName={journey[nowJourney].level}
+        isPopupReceiveAllGift={isPopupReceiveAllGift}
+      />
       <div className="font-bold text-green text-2xl text-center mb-6">
         HÀNH TRÌNH
       </div>
@@ -167,12 +191,22 @@ export const JourneyPage = () => {
         </div>
       </div>
 
-      <div className="pt-6 px-6">
+      <div className="pt-6 px-6 flex justify-between">
         <h2 className="font-bold mb-2">Mục tiêu cần hoàn thiện</h2>
-        <hr className="text-gray" />
+        <div
+          className="flex items-center justify-center p-3 mb-2 bg-primary rounded-lg w-[220px] text-center text-white font-bold cursor-pointer fea-item hover:bg-primary_dark"
+          onClick={() => receivedAllGift()}
+        >
+          Nhận thưởng nhanh
+        </div>
       </div>
+      <hr className="text-gray" />
 
-      <div className={`flex ${isLocked(nowJourney) ? "grayscale" : ""}`}>
+      <div
+        className={`flex ${
+          isLocked(nowJourney) ? "grayscale pointer-events-none" : ""
+        }`}
+      >
         <div className="w-[45%] flex flex-col items-center justify-center gap-y-3">
           <div className="flex items-center justify-between w-full mt-4 px-20">
             <div>
@@ -279,8 +313,8 @@ export const JourneyPage = () => {
 // DB sẽ nhận là có thằng này đang đứng level 2 và nhận quà
 // set lại isReceived của hộp quà thằng này là true + thêm số lượng aPoint vào cho nó
 
-  //Phải có hàm calculated lại level
-  //Sau kho calculated xong phải set lại level vào trong db
-  //Người dùng vào trang này -> Hệ thống tự động lấy thời gian họ làm việc ra và tính toán
-  //-> Nếu thời gian làm là 100 thì hệ thống phải có hàm tính toán -> set lại level mới vào trong db
-  //-> Mở rộng chức năng là nhận thưởng
+//Phải có hàm calculated lại level
+//Sau kho calculated xong phải set lại level vào trong db
+//Người dùng vào trang này -> Hệ thống tự động lấy thời gian họ làm việc ra và tính toán
+//-> Nếu thời gian làm là 100 thì hệ thống phải có hàm tính toán -> set lại level mới vào trong db
+//-> Mở rộng chức năng là nhận thưởng
