@@ -28,6 +28,7 @@ import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForD
 import { QualificationPage } from './pages/QualificationPage';
 import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
 import { VoucherHistory } from './pages/HistoryVoucher/VoucherHistory';
+import { DepositPage } from './pages/DepositPage/DepositPage';
 import {
 	ConfirmPage,
 	DetailOptionPage,
@@ -55,6 +56,7 @@ import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
 import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint'
 import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
 import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
+import {TransactionHistory} from './pages/TransactionHistory/TransactionHistory';
 const App = () => {
 	return (
 		<Router>
@@ -90,6 +92,9 @@ const AppContent = () => {
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
 						<Route path="/update-dw" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
+						<Route path="/deposit" element={<DepositPage />} />
+						<Route path="/transaction-history" element={<TransactionHistory />} />
+						
 						<Route
 							path="/job-posting-history"
 							element={<JobPostingHistory />}
