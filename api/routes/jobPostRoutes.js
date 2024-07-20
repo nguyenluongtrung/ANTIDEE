@@ -13,6 +13,7 @@ const {
 	cancelAJob,
 	cancelAJobDomesticHelper,
 	countNumberOfJobPostByAccountId,
+	getRevenueByCurrentMonth,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
@@ -34,6 +35,9 @@ router
 router
 	.route('/countNumberOfJobsByAccountId')
 	.get(protect, restrict('Admin'), countNumberOfJobPostByAccountId);
+router
+	.route('/get-revenue-by-current-month')
+	.get(protect, restrict('Admin'), getRevenueByCurrentMonth);
 router
 	.route('/:jobPostId')
 	.get(protect, getJobPost)

@@ -157,6 +157,20 @@ const selectATasker = async (token, jobPostId, taskerId) => {
 	return response.data.data.jobPost;
 };
 
+const getRevenueByCurrentMonth = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(
+		API_URL + '/get-revenue-by-current-month',
+		config
+	);
+	return response.data.data.revenueByCurrentMonth;
+};
+
 const jobPostService = {
 	getAllJobPosts,
 	createJobPost,
@@ -168,6 +182,7 @@ const jobPostService = {
 	applyAJob,
 	selectATasker,
 	countNumberOfJobsByAccountId,
+	getRevenueByCurrentMonth,
 };
 
 export default jobPostService;

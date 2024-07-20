@@ -439,6 +439,28 @@ const countNumberOfJobPostByAccountId = asyncHandler(async (req, res) => {
 	});
 });
 
+const getRevenueByCurrentMonth = asyncHandler(async (req, res) => {
+	const jobPosts = await JobPost.find({});
+	const currentMonth = new Date().getMonth();
+	let revenueByCurrentMonth = 0;
+	jobPosts.map((job) => {
+		if (
+			job.hasCompleted.customerConfirm &&
+			job.hasCompleted.domesticHelperConfirm &&
+			new Date(job.hasCompleted.completedAt).getMonth() === currentMonth
+		) {
+			revenueByCurrentMonth += Math.round(job.totalPrice * 0.25);
+		}
+	});
+
+	res.status(200).json({
+		success: true,
+		data: {
+			revenueByCurrentMonth,
+		},
+	});
+});
+
 module.exports = {
 	updateJobPost,
 	deleteJobPost,
@@ -452,4 +474,5 @@ module.exports = {
 	cancelAJob,
 	cancelAJobDomesticHelper,
 	countNumberOfJobPostByAccountId,
+	getRevenueByCurrentMonth,
 };

@@ -14,12 +14,14 @@ import {
 import ColumnChart from './components/ColumnChart/ColumnChart';
 import DonutChart from './components/PieChart/PieChart';
 import AreaChart from './components/AreaChart/AreaChart';
+import { getRevenueByCurrentMonth } from '../../../features/jobPosts/jobPostsSlice';
 
 export const Dashboard = () => {
 	const [numOfServices, setNumOfServices] = useState();
 	const [numOfAccounts, setNumOfAccounts] = useState();
 	const [numOfJobPosts, setNumOfJobPosts] = useState();
 	const [ranking, setRanking] = useState([]);
+	const [revenueByCurrentMonth, setRevenueByCurrentMonth] = useState();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -36,6 +38,14 @@ export const Dashboard = () => {
 		const fetchData = async () => {
 			const result = await dispatch(getDomesticHelpersRanking());
 			setRanking(result.payload);
+		};
+		fetchData();
+	}, []);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await dispatch(getRevenueByCurrentMonth());
+			setRevenueByCurrentMonth(result.payload);
 		};
 		fetchData();
 	}, []);
@@ -64,7 +74,7 @@ export const Dashboard = () => {
 								>
 									<FaMoneyBillWave color="white" size={20} />
 								</div>
-								<p className="font-bold text-xl mb-2">{0}</p>
+								<p className="font-bold text-xl mb-2">{revenueByCurrentMonth} VND</p>
 								<p>Doanh thu</p>
 								<p className="text-xs text-blue">+1.2% so với tháng trước</p>
 							</div>
