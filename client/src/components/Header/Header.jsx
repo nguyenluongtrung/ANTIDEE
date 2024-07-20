@@ -139,8 +139,8 @@ export const Header = () => {
 				<div className="flex">
 					{account ? (
 						<><Link to={'/deposit'}>
-						<span className="text-primary text-center mt-10 font-medium w-28">
-							Balance: {account.accountBalance} VND
+						<span className="navbar-menu flex text-primary normal-text mr-3 pt-2">
+							Số dư: {account.accountBalance} VND
 						</span>
 					</Link>
 							<button
