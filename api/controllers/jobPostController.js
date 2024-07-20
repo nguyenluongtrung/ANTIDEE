@@ -461,6 +461,39 @@ const getRevenueByCurrentMonth = asyncHandler(async (req, res) => {
 	});
 });
 
+const getRevenueByMonths = asyncHandler(async (req, res) => {
+	const jobPosts = await JobPost.find({});
+	const currentYear = new Date().getFullYear();
+	let revenueByMonths = Array.from({ length: 12 }, (_, index) => ({
+		month: index + 1,
+		revenue: 0,
+	}));
+	jobPosts.map((job) => {
+		if (
+			job.hasCompleted.customerConfirm &&
+			job.hasCompleted.domesticHelperConfirm &&
+			new Date(job.hasCompleted.completedAt).getFullYear() === currentYear
+		) {
+			const monthIndex = new Date(job.hasCompleted.completedAt).getMonth();
+			revenueByMonths[monthIndex].revenue += Math.round(job.totalPrice * 0.25);
+		}
+	});
+	let months = [];
+	let revenues = [];
+	revenueByMonths.map((revenue) => {
+		months.push('T' + revenue.month);
+		revenues.push(revenue.revenue);
+	});
+
+	res.status(200).json({
+		success: true,
+		data: {
+			months,
+			revenues,
+		},
+	});
+});
+
 module.exports = {
 	updateJobPost,
 	deleteJobPost,
@@ -475,4 +508,5 @@ module.exports = {
 	cancelAJobDomesticHelper,
 	countNumberOfJobPostByAccountId,
 	getRevenueByCurrentMonth,
+	getRevenueByMonths,
 };

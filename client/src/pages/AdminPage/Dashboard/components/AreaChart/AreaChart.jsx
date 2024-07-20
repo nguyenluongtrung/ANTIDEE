@@ -1,7 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { getRevenueByMonths } from '../../../../../features/jobPosts/jobPostsSlice';
+import { useDispatch } from 'react-redux';
 
 const AreaChart = () => {
+	const [months, setMonths] = useState();
+	const [revenues, setRevenues] = useState();
+
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await dispatch(getRevenueByMonths());
+			console.log(result.payload)
+			setMonths(result.payload.months);
+			setRevenues(result.payload.revenues);
+		};
+		fetchData();
+	}, []);
+
 	const [chartOptions, setChartOptions] = useState({
 		chart: {
 			type: 'area',
@@ -17,20 +34,7 @@ const AreaChart = () => {
 			curve: 'straight',
 		},
 		xaxis: {
-			categories: [
-				'T1',
-				'T2',
-				'T3',
-				'T4',
-				'T5',
-				'T6',
-				'T7',
-				'T8',
-				'T9',
-				'T10',
-				'T11',
-				'T12',
-			],
+			categories: [],
 		},
 		fill: {
 			type: 'gradient',
@@ -46,9 +50,25 @@ const AreaChart = () => {
 	const [chartSeries, setChartSeries] = useState([
 		{
 			name: 'Doanh thu',
-			data: [31, 40, 28, 51, 42, 109, 100, 80, 95, 88, 62, 72],
+			data: [],
 		},
 	]);
+
+	useEffect(() => {
+		setChartSeries([
+			{
+			  name: 'Doanh thu',
+			  data: revenues,
+			},
+		  ]);
+		  setChartOptions((prevState) => ({
+			...prevState,
+			xaxis: {
+			  ...prevState.xaxis,
+			  categories: months,
+			},
+		  }));
+	}, [months, revenues])
 
 	return (
 		<div id="chart">

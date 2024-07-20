@@ -239,6 +239,26 @@ export const getRevenueByCurrentMonth = createAsyncThunk(
 	}
 );
 
+export const getRevenueByMonths = createAsyncThunk(
+	'jobPosts/getRevenueByMonths',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await jobPostsService.getRevenueByMonths(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	jobPosts: [],
 	isError: false,
@@ -424,6 +444,18 @@ export const jobPostSlice = createSlice({
 				state.isSuccess = true;
 			})
 			.addCase(getRevenueByCurrentMonth.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(getRevenueByMonths.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getRevenueByMonths.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(getRevenueByMonths.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
