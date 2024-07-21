@@ -7,6 +7,7 @@ const PopupReceiveGift = ({
   setIsPopupOpen,
   levelName,
   isPopupReceiveAllGift,
+  setIsSuccess
 }) => {
   if (!isOpen) return null;
 
@@ -21,7 +22,7 @@ const PopupReceiveGift = ({
         )}
         <div
           className="flex items-center justify-center p-3 bg-primary rounded-lg w-[220px] text-center text-white font-bold cursor-pointer fea-item hover:bg-primary_dark"
-          onClick={() => setIsPopupOpen(false)}
+          onClick={() => {setIsPopupOpen(false); setIsSuccess(true)}}
         >
           Đóng
         </div>

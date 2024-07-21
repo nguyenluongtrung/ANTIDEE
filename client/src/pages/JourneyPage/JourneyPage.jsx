@@ -23,9 +23,10 @@ export const JourneyPage = () => {
   const [isPopupReceiveAllGift, setIsPopupReceiveAllGift] = useState(false)
   const haveAccount = account?.accountLevel?.domesticHelperLevel?.name;
   const [workingTime, setWorkingTime] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false)
   const dispatch = useDispatch();
 
-  const GiftButton = ({ levelName, levelApoint, isReceived }) => {
+  const GiftButton = ({ levelName, levelApoint, isReceived, isSuccess, setIsSuccess }) => {
     const dispatch = useDispatch();
     const { account } = useSelector((state) => state.auth);
 
@@ -37,19 +38,20 @@ export const JourneyPage = () => {
           levelApoint,
         })
       );
-      setIsPopupOpen(true);
-      // toast.success(`Nhận quà ${levelName} thành công !!!!`)
+      if (result.type.endsWith("fulfilled")) {
+        setIsPopupOpen(true);
+      }
     };
 
     return (
       <button
         onClick={handleClick}
-        disabled={isReceived}
+        disabled={isReceived || isSuccess}
         className={` ${
-          isReceived ? "received" : ""
+          isReceived  || isSuccess ? "received" : ""
         } animate-bounce  hover:text-green`}
       >
-        {isReceived ? (
+        {isReceived  || isSuccess ? (
           <div className="flex flex-col items-center">
             <img
               src="https://cdn-icons-png.flaticon.com/512/4017/4017791.png"
@@ -169,6 +171,7 @@ export const JourneyPage = () => {
     <div className="px-32 flex flex-col pt-20 mb-14">
       <PopupReceiveGift
         isOpen={isPopupOpen}
+        setIsSuccess={setIsSuccess}
         setIsPopupOpen={setIsPopupOpen}
         levelName={journey[nowJourney].level}
         isPopupReceiveAllGift={isPopupReceiveAllGift}
@@ -273,6 +276,8 @@ export const JourneyPage = () => {
                   levelName={journey[nowJourney].level}
                   levelApoint={journey[nowJourney].aPoint}
                   isReceived={account.receiveGiftHistory[nowJourney].isReceived}
+                  isSuccess={isSuccess}
+                  setIsSuccess={setIsSuccess}
                 />
               </div>
             </div>
