@@ -13,18 +13,25 @@ const getAllMessage = async (req, res) => {
         }
     })
 }
+
 const createMessage = async (req, res) => {
     try {
-        const { chatId, senderId, text, file } = req.body;
+        const { chatId, senderId, text, files } = req.body;
 
-        const messages = await MessageModel.create(req.body);
+        const messageData = {
+            chatId,
+            senderId,
+            text,
+            files
+        };
+
+        const messages = await MessageModel.create(messageData);
 
         if (chatId && io) {
             io.to(chatId).emit('receiveMessage', messages);
 
             // Emit notification for new message
             io.emit('notification', messages);
-
         }
 
         res.status(201).json({
@@ -35,10 +42,10 @@ const createMessage = async (req, res) => {
         res.status(400).json({
             success: false,
             error: error.message,
-        })
+        });
     }
-
 };
+
 
 //getMessages
 const getMessages = async (req, res) => {

@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import moment from "moment";
-import "moment/locale/vi";
+import React, { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { BiSend } from "react-icons/bi";
 import {
@@ -10,38 +8,40 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../firebase";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  createMessage,
-  getAllMessage,
-} from "../../features/message/messageSlice";
+import { useDispatch } from "react-redux";
+import { createMessage } from "../../features/message/messageSlice";
 import toast from "react-hot-toast";
 import { errorStyle } from "../../utils/toast-customize";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:5000");
+
+
+import moment from 'moment';
 moment.locale('vi');
+
+const socket = io("http://localhost:5000");
 
 const ChatBox = ({
   chosenChatBox,
   myAccountId,
   messageChat,
-  setMessageChat,
-  chatting,
   setNewMessages,
+  chatting,
 }) => {
   const dispatch = useDispatch();
   const [messageText, setMessageText] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [filePerc, setFilePerc] = useState(0);
-  const [fileUrl, setFileUrl] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [filePercs, setFilePercs] = useState([]);
+  const [fileUrls, setFileUrls] = useState([]);
+
+
 
   useEffect(() => {
-    if (selectedFile) {
-      handleFileUpload(selectedFile);
+    if (selectedFiles.length > 0) {
+      selectedFiles.forEach((file, index) => handleFileUpload(file, index));
     }
-  }, [selectedFile]);
+  }, [selectedFiles]);
 
-  const handleFileUpload = (file) => {
+  const handleFileUpload = (file, index) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, `chatImages/${fileName}`);
@@ -52,15 +52,19 @@ const ChatBox = ({
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
+        setFilePercs((prev) => {
+          const newPercs = [...prev];
+          newPercs[index] = Math.round(progress);
+          return newPercs;
+        });
       },
       (error) => {
         toast.error("File upload failed", errorStyle);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFileUrl(downloadURL)
-        );
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFileUrls((prev) => [...prev, downloadURL]);
+        });
       }
     );
   };
@@ -76,7 +80,7 @@ const ChatBox = ({
         chatId: chosenChatBox,
         senderId: myAccountId,
         text: messageText,
-        file: fileUrl,
+        files: fileUrls,
       };
       const result = await dispatch(createMessage(messageData));
       if (result.type.endsWith("fulfilled")) {
@@ -87,9 +91,9 @@ const ChatBox = ({
           [chosenChatBox]: false,
         }));
         setMessageText("");
-        setSelectedFile(null);
-        setFileUrl("");
-        setFilePerc(0);
+        setSelectedFiles([]);
+        setFileUrls([]);
+        setFilePercs([]);
       } else {
         toast.error("Send message failed", errorStyle);
       }
@@ -97,6 +101,21 @@ const ChatBox = ({
       toast.error("Failed to send message", errorStyle);
     }
   };
+
+  const formatMessageDate = (createdAt) => {
+    let createdAtMoment = moment(createdAt);
+    let now = moment();
+    let diffDays = now.diff(createdAtMoment, 'days');
+
+    if (diffDays === 0) {
+      return 'hôm nay, ' + createdAtMoment.format('HH:mm');
+    } else if (diffDays === 1) {
+      return 'hôm qua, ' + createdAtMoment.format('HH:mm');
+    } else {
+      return createdAtMoment.format('DD/MM/YYYY [lúc] HH:mm');
+    }
+  };
+
 
   return (
     <div className="flex flex-col h-full">
@@ -117,7 +136,11 @@ const ChatBox = ({
 
       <div
         className="bg-light_purple shadow-2xl rounded-xl h-64 md:h-96 p-5 overflow-y-auto"
-        style={{ display: 'flex', flexDirection: 'column-reverse', scrollBehavior: 'smooth' }}
+        style={{
+          display: "flex",
+          flexDirection: "column-reverse",
+          scrollBehavior: "smooth",
+        }}
       >
         {messageChat
           ?.filter((msg) => msg?.chatId === chosenChatBox)
@@ -126,25 +149,36 @@ const ChatBox = ({
             <div
               key={msg?._id}
               className={`grid shadow-2xl mt-3 w-fit p-3 rounded-lg
-                         ${msg?.senderId === myAccountId
+                 ${msg?.senderId === myAccountId
                   ? "bg-light_yellow ml-auto"
                   : "bg-light_primary"
                 } `}
             >
               {msg.text}
-              {msg.file && (
-                <div className="mb-2">
-                  <a href={msg.file} target="_blank" rel="noopener noreferrer">
-                    <img
-                      src={msg.file}
-                      alt="uploaded"
-                      className="w-32 h-32 object-cover rounded-lg"
-                    />
-                  </a>
+              {msg.files && (
+                <div
+                  className={`grid gap-2 ${msg.files.length === 1
+                      ? "grid-cols-1"
+                      : msg.files.length === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-3"
+                    }`}
+                >
+                  {msg.files.map((file, index) => (
+                    <div key={index} className="mb-2">
+                      <a href={file} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src={file}
+                          alt="uploaded"
+                          className="w-32 h-32 object-cover rounded-lg"
+                        />
+                      </a>
+                    </div>
+                  ))}
                 </div>
               )}
               <span className="text-xs text-right">
-                {moment(msg?.createdAt).locale("vi").calendar()}
+                {formatMessageDate(msg?.createdAt)}
               </span>
             </div>
           ))}
@@ -155,9 +189,10 @@ const ChatBox = ({
           <input
             type="file"
             accept="image/*"
+            multiple
             className="hidden"
             id="file-upload"
-            onChange={(e) => setSelectedFile(e.target.files[0])}
+            onChange={(e) => setSelectedFiles([...e.target.files])}
           />
           <label htmlFor="file-upload" className="cursor-pointer">
             <MdAdd className="text-gray hover:text-green mr-2" size={24} />
@@ -170,31 +205,36 @@ const ChatBox = ({
         />
         <button
           type="submit"
-          className="bg-green text-black p-2 w-fit rounded-lg flex items-center justify-center">
+          className="bg-green text-black p-2 w-fit rounded-lg flex items-center justify-center"
+        >
           <BiSend className="w-7 h-7" />
         </button>
       </form>
-      {selectedFile && (
-        <div className="mt-2 ml-20 shadow-lg w-fit p-2 rounded-lg bg-light_purple">
-          {filePerc > 0 && (
-            <div className="text-center ">
-              {filePerc === 100 && (
-                <div className="text-xs">Tải ảnh thành công</div>
+      {selectedFiles.length > 0 && (
+        <div className="mt-2 ml-20 shadow-lg w-fit p-2 rounded-lg bg-light_purple flex">
+          {filePercs.map((perc, index) => (
+            <div key={index} className="text-center mb-2 mr-5">
+              {perc > 0 && (
+                <>
+                  {perc === 100 && (
+                    <div className="text-xs">Tải ảnh thành công</div>
+                  )}
+                  <div
+                    className="h-1 bg-green rounded-lg"
+                    style={{
+                      width: `${perc}%`,
+                      transition: "width 0.1s linear",
+                    }}
+                  />
+                </>
               )}
-              <div
-                className="h-1 bg-green rounded-lg"
-                style={{
-                  width: `${filePerc}%`,
-                  transition: "width 0.1s linear",
-                }}
+              <img
+                src={URL.createObjectURL(selectedFiles[index])}
+                alt="preview"
+                className="w-32 h-32 object-cover inline-block rounded-lg"
               />
             </div>
-          )}
-          <img
-            src={URL.createObjectURL(selectedFile)}
-            alt="preview"
-            className="w-32 h-32 object-cover inline-block rounded-lg"
-          />
+          ))}
         </div>
       )}
     </div>
