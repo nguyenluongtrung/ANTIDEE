@@ -590,14 +590,6 @@ const receiveGiftHistory = asyncHandler(async (req, res) => {
 		});
 	}
 
-	if (!giftLevel.isReceived) {
-		await Account.findByIdAndUpdate(
-			domesticHelperId,
-			{ aPoints: account.aPoints + levelApoint },
-			{ new: true }
-		);
-	}
-
 	// Kiểm tra xem quà tặng đã được nhận chưa
 	if (giftLevel.isReceived) {
 		return res.status(400).json({
@@ -606,8 +598,18 @@ const receiveGiftHistory = asyncHandler(async (req, res) => {
 		});
 	}
 
+	if (!giftLevel.isReceived) {
+		await Account.findByIdAndUpdate(
+			domesticHelperId,
+			{ aPoints: account.aPoints + levelApoint },
+			{ new: true }
+		);
+	}
+
 	// Cập nhật trạng thái isReceived thành true
 	giftLevel.isReceived = true;
+
+	await account.save();
 
 	const updatedAccount = await Account.findByIdAndUpdate(
 		domesticHelperId,
