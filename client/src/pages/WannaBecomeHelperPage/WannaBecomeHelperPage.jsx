@@ -51,7 +51,7 @@ export const WannaBecomeHelperPage = () => {
                     </div>
 
                     <div className='grid justify-center'>
-                        <button className='bg-gray  text-white w-28 p-1 rounded-full'>Cập nhật</button>
+                        <Link className='bg-gray flex text-center text-white w-28 p-1 rounded-full' to={'/update-dw'}><p className='pl-5 !text-center'>Cập nhật</p></Link>
                     </div>
                 </div>
             </div>
