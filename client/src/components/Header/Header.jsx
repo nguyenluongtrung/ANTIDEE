@@ -22,6 +22,7 @@ export const Header = () => {
 	const [lastScrollY, setLastScrollY] = useState(0);
 
 	const { account } = useSelector((state) => state.auth);
+	const accountBalance = useSelector((state) => state.auth.account?.accountBalance);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -140,7 +141,7 @@ export const Header = () => {
 					{account ? (
 						<><Link to={'/deposit'}>
 						<span className="navbar-menu flex text-primary normal-text mr-3 pt-2">
-							Số dư: {account.accountBalance} VND
+							Số dư: {accountBalance} VND
 						</span>
 					</Link>
 							<button

@@ -278,7 +278,7 @@ export const UpdateProfileForDW = () => {
 			<div className="grid justify-center">
 				<button
 					onClick={onSubmit}
-					className={`w-72 p-1 rounded-full text-white ${
+					className={`w-72 p-1 mb-5 rounded-full text-white ${
 						!curriculumVitae ||
 						!frontIdCard ||
 						!backIdCard ||

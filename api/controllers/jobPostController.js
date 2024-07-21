@@ -13,6 +13,10 @@ const createJobPost = asyncHandler(async (req, res) => {
 	const customer = accounts.find(
 		(acc) => String(acc._id) == String(jobPost.customerId)
 	);
+	customer.accountBalance = Math.round(
+		customer.accountBalance - jobPost.totalPrice
+	);
+	await customer.save();
 
 	if (isUrgent) {
 		for (let account of accounts) {

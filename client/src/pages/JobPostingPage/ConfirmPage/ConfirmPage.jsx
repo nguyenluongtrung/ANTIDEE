@@ -86,6 +86,8 @@ export const ConfirmPage = () => {
 					await dispatch(updateIsUsedVoucher({ accountId, voucherId: promoId, isUsed: true }));
 			}
 
+			await dispatch(getAccountInformation())
+
 			navigate(`/congrats`, {
 				state: {
 					congratsMsg: 'Chúc mừng bạn đã đăng công việc thành công',
