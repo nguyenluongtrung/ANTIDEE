@@ -11,26 +11,26 @@ const createVoucher = async (req, res) => {
 		for (let account of accounts) {
 			if (account.role !== 'Admin') {
 				console.log('Sending email to:', account.email);
-			let email = {
-				toEmail: account.email,
-				subject: 'MÃ GIẢM GIÁ MỚI ĐANG CHỜ BẠN',
-				header: 'Antidee có mã khuyến mại mới dành cho bạn',
-				imageUrl:
-					'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Christmas_presents.jpg/1280px-Christmas_presents.jpg',
-				mainContent: `
+				let email = {
+					toEmail: account.email,
+					subject: 'MÃ GIẢM GIÁ MỚI ĐANG CHỜ BẠN',
+					header: 'Antidee có mã khuyến mại mới dành cho bạn',
+					imageUrl:
+						'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Christmas_presents.jpg/1280px-Christmas_presents.jpg',
+					mainContent: `
 					 
 					<p>Xin chào <span style="font-weight: bold">${account?.name}</span> Chúng tôi rất vui mừng thông báo rằng có một voucher mới với ưu đãi đặc biệt dành cho bạn.</p>
-					<p>Giảm giá sốc lên tới: <strong style="color:red">${voucher.discountValue }%</strong></p>
+					<p>Giảm giá sốc lên tới: <strong style="color:red">${voucher.discountValue}%</strong></p>
 					<p>Nhận voucher ngay hôm nay và tiết kiệm hơn cho lần mua sắm tiếp theo của bạn!</p>
 					<p>Hãy truy cập ngay vào trang web của chúng tôi để sử dụng voucher này và tiết kiệm hơn trong lần mua sắm tiếp theo!</p>
 					<p>Trân trọng,</p>
 					<p>Antidee Team</p>
 				`,
-			};
-			await sendMail(emailTemplate(email));
+				};
+				await sendMail(emailTemplate(email));
+			}
 		}
-		}
-		
+
 		res.status(201).json({
 			success: true,
 			data: voucher,
@@ -197,6 +197,7 @@ const getRedeemedVouchers = async (req, res) => {
 			endDate: voucher.voucherId.endDate,
 			receivedAt: voucher.receivedAt,
 			isUsed: voucher.isUsed,
+			image: voucher.voucherId.image,
 		}));
 
 		return res.status(200).json({ success: true, data: redeemedVouchers });
