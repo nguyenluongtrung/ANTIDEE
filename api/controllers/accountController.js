@@ -719,6 +719,20 @@ const getAllReports = asyncHandler(async (req, res) => {
 	});
 });
 
+const getAccountBalance = asyncHandler(async (req, res) => {
+	const account = await Account.findById(req.account._id);
+	if (!account) {
+		res.status(404);
+		throw new Error('Account not found');
+	}
+	res.status(200).json({
+		status: 'success',
+		data: {
+			account,
+		},
+	});
+});
+
 module.exports = {
 	register,
 	login,
@@ -744,4 +758,5 @@ module.exports = {
 	blockAccount,
 	updateRole,
 	getAllReports,
+	getAccountBalance,
 };

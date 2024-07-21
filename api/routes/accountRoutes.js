@@ -24,6 +24,7 @@ const {
 	blockAccount,
 	updateRole,
 	getAllReports,
+	getAccountBalance,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -43,6 +44,7 @@ router.route('/').get(getAllAccounts);
 router.route('/lost-account/:phoneNumber').get(getAccountForgottenPassword);
 router.route('/lost-account/:accountId').patch(updateAccountForgottenPassword);
 router.route('/invite-friend').patch(protect, inviteFriend);
+router.route('/account-balance/:accountId').patch(getAccountBalance);
 router
 	.route('/load-money/:ownerId')
 	.patch(protect, loadMoneyAfterUsingInvitationCode);

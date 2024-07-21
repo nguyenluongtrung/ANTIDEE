@@ -246,6 +246,16 @@ const updateRole = async (accountId, token) => {
 	return response.data.data.updatedAccount;
 };
 
+const getAccountBalance = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.get(API_URL + 'balance', config);
+	return response.data.data.accountBalance;
+};
+
 const getDomesticHelpersTotalWorkingHours = async (domesticHelperId) => {
 	const response = await axios.get(
 		API_URL + 'journey-working/' + domesticHelperId
@@ -296,6 +306,7 @@ const getTransactionHistory = async (token) => {
 	console.log(response.data);
 	return response.data;
 };
+
 const authService = {
 	login,
 	logout,
@@ -323,6 +334,7 @@ const authService = {
 	updateRole,
 	getAllReports,
 	getTransactionHistory,
+	getAccountBalance,
 };
 
 export default authService;

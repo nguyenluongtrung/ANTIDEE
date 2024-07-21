@@ -57,6 +57,7 @@ import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoi
 import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
 import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
 import {TransactionHistory} from './pages/TransactionHistory/TransactionHistory';
+import { IncomeDomesticHelper } from './pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper';
 const App = () => {
 	return (
 		<Router>
@@ -100,6 +101,7 @@ const AppContent = () => {
 							element={<JobPostingHistory />}
 						/>
 						<Route path="/my-jobs" element={<MyJobs />} />
+						<Route path="/account-balance" element={<IncomeDomesticHelper />} />
 						<Route
 							path="/exam-result-history"
 							element={<ExamResultHistory />}

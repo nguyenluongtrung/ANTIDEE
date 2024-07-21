@@ -105,6 +105,15 @@ export const Sidebar = ({ account }) => {
 				/>
 				<span>Điểm tích lũy</span>
 			</div>
+			{account?.role === 'Người giúp việc' && (
+				<div
+					className="mb-2.5 hover:text-primary hover:cursor-pointer"
+					onClick={() => navigate('/account-balance')}
+				>
+					<BsFillSendArrowDownFill className="inline w-4 mr-2" />
+					<span>Thu nhập</span>
+				</div>
+			)}
 		</div>
 	);
 };
