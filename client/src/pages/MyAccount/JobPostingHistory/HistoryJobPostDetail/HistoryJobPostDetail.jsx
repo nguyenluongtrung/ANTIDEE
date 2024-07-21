@@ -82,7 +82,6 @@ export const HistoryJobPostDetail = ({
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={() => {
 						setIsOpenJobPostDetail(false);
-						handleGetAllQuestions();
 					}}
 				/>
 
