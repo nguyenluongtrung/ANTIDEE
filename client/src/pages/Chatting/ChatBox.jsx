@@ -13,7 +13,11 @@ import { createMessage } from "../../features/message/messageSlice";
 import toast from "react-hot-toast";
 import { errorStyle } from "../../utils/toast-customize";
 import { io } from "socket.io-client";
-import { formatDateMessage} from "../../utils/format";
+
+
+import moment from 'moment';
+moment.locale('vi');
+
 const socket = io("http://localhost:5000");
 
 const ChatBox = ({
@@ -29,7 +33,8 @@ const ChatBox = ({
   const [filePercs, setFilePercs] = useState([]);
   const [fileUrls, setFileUrls] = useState([]);
 
-  console.log(filePercs);
+
+
   useEffect(() => {
     if (selectedFiles.length > 0) {
       selectedFiles.forEach((file, index) => handleFileUpload(file, index));
@@ -97,10 +102,20 @@ const ChatBox = ({
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+  const formatMessageDate = (createdAt) => {
+    let createdAtMoment = moment(createdAt);
+    let now = moment();
+    let diffDays = now.diff(createdAtMoment, 'days');
+
+    if (diffDays === 0) {
+      return 'hôm nay, ' + createdAtMoment.format('HH:mm');
+    } else if (diffDays === 1) {
+      return 'hôm qua, ' + createdAtMoment.format('HH:mm');
+    } else {
+      return createdAtMoment.format('DD/MM/YYYY [lúc] HH:mm');
+    }
   };
+
 
   return (
     <div className="flex flex-col h-full">
@@ -134,22 +149,20 @@ const ChatBox = ({
             <div
               key={msg?._id}
               className={`grid shadow-2xl mt-3 w-fit p-3 rounded-lg
-                 ${
-                   msg?.senderId === myAccountId
-                     ? "bg-light_yellow ml-auto"
-                     : "bg-light_primary"
-                 } `}
+                 ${msg?.senderId === myAccountId
+                  ? "bg-light_yellow ml-auto"
+                  : "bg-light_primary"
+                } `}
             >
               {msg.text}
               {msg.files && (
                 <div
-                  className={`grid gap-2 ${
-                    msg.files.length === 1
+                  className={`grid gap-2 ${msg.files.length === 1
                       ? "grid-cols-1"
                       : msg.files.length === 2
-                      ? "grid-cols-2"
-                      : "grid-cols-3"
-                  }`}
+                        ? "grid-cols-2"
+                        : "grid-cols-3"
+                    }`}
                 >
                   {msg.files.map((file, index) => (
                     <div key={index} className="mb-2">
@@ -165,7 +178,7 @@ const ChatBox = ({
                 </div>
               )}
               <span className="text-xs text-right">
-                {formatDateMessage(msg?.createdAt)}
+                {formatMessageDate(msg?.createdAt)}
               </span>
             </div>
           ))}
