@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { cancelAJobDomesticHelper } from '../../../../features/jobPosts/jobPostsSlice';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+import { getAccountInformation } from '../../../../features/auth/authSlice';
 
 export const JobPostCancel = ({
 	jobPostId,
@@ -23,6 +24,7 @@ export const JobPostCancel = ({
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+		await dispatch(getAccountInformation())
 		setIsOpenCancelForm(false);
 		setIsOpenJobPostDetail(false);
 		getAllJobList();

@@ -157,6 +157,18 @@ const updateJobPost = asyncHandler(async (req, res) => {
 		{ new: true }
 	);
 
+	if (
+		jobPost.hasCompleted.customerConfirm &&
+		jobPost.hasCompleted.domesticHelperConfirm
+	) {
+		const domesticHelper = await Account.findById(jobPost.domesticHelperId);
+		console.log(domesticHelper.accountBalance, jobPost.totalPrice * 0.75);
+		domesticHelper.accountBalance = Math.round(
+			domesticHelper.accountBalance + jobPost.totalPrice * 0.75
+		);
+		await domesticHelper.save();
+	}
+
 	res.status(200).json({
 		status: 'success',
 		data: {
