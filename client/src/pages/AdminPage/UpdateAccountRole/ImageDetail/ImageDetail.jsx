@@ -12,7 +12,7 @@ export const ImageDetail = ({ chosenAccountId, setIsOpenImageDetail, accounts })
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<form className="content rounded-md p-5" style={{ width: '45vw' }}>
+			<form className="content rounded-md p-5" style={{ width: '30vw' }}>
     <AiOutlineClose
         className="absolute text-sm hover:cursor-pointer"
         onClick={ () => {setIsOpenImageDetail(false)}}
