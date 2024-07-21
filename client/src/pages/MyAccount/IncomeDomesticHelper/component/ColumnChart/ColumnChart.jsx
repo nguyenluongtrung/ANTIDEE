@@ -58,11 +58,10 @@ const AccountBalanceColumnChart = () => {
 		},
 	});
 
-	const accountBalances = useSelector((state) => state.auth.accountBalance);
-
 	useEffect(() => {
 		const fetchData = async () => {
 			const result = await dispatch(getAccountBalance());
+			
 			let balances = [];
 			result.payload.map((account) => {
 				balances.push(Number(account.accountBalance));

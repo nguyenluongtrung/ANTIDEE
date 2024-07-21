@@ -65,7 +65,7 @@ app.post('/payment', async (req, res) => {
 	const { amount, userId } = req.body;
 	console.log('Request body:', req.body);
 	const embed_data = {
-		redirecturl: 'http://127.0.0.1:5173/',
+		redirecturl: 'http://localhost:5173/',
 	};
 
 	const items = [];
@@ -79,7 +79,7 @@ app.post('/payment', async (req, res) => {
 		item: JSON.stringify(items),
 		embed_data: JSON.stringify(embed_data),
 		amount: amount,
-		callback_url: 'https://6e8c-42-113-173-96.ngrok-free.app/callback',
+		callback_url: 'https://antidee.onrender.com/callback',
 		description: `Antidee - Payment for the order #${transID}`,
 		bank_code: '',
 	};

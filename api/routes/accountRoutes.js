@@ -44,7 +44,7 @@ router.route('/').get(getAllAccounts);
 router.route('/lost-account/:phoneNumber').get(getAccountForgottenPassword);
 router.route('/lost-account/:accountId').patch(updateAccountForgottenPassword);
 router.route('/invite-friend').patch(protect, inviteFriend);
-router.route('/account-balance/:accountId').patch(getAccountBalance);
+router.route('/account-balance/').get(getAccountBalance);
 router
 	.route('/load-money/:ownerId')
 	.patch(protect, loadMoneyAfterUsingInvitationCode);
