@@ -1,0 +1,76 @@
+/* Discussion.css */
+
+.discussion.light {
+    background-color: #F1F3F4; /* Màu nền khi ở chế độ sáng */
+    color: #000000; /* Màu chữ khi ở chế độ sáng */
+}
+
+.discussion.dark {
+    background-color: #1a202c; /* Màu nền khi ở chế độ tối */
+    color: #ffffff; /* Màu chữ khi ở chế độ tối */
+}
+
+/* Các lớp CSS khác cho từng chế độ */
+.discussion .bg-light {
+    background-color: #ffffff;
+    color: #000000; /* Màu nền phụ khi ở chế độ sáng */
+}
+
+.discussion .bg-dark {
+    background-color: #2d3748;
+    color: white; /* Màu nền phụ khi ở chế độ tối */
+}
+
+/* Shutter In Horizontal */
+.hvr-shutter-in-horizontal {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    position: relative;
+    background: #d38243;
+    -webkit-transition-property: color;
+    transition-property: color;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .hvr-shutter-in-horizontal:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+    -webkit-transform-origin: 50%;
+    transform-origin: 50%;
+    -webkit-transition-property: transform;
+    transition-property: transform;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+  }
+  .hvr-shutter-in-horizontal:hover,
+  .hvr-shutter-in-horizontal:focus,
+  .hvr-shutter-in-horizontal:active {
+    color: white;
+  }
+  .hvr-shutter-in-horizontal:hover:before,
+  .hvr-shutter-in-horizontal:focus:before,
+  .hvr-shutter-in-horizontal:active:before {
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+  }
+
+  .fea-item {
+    transition: transform 0.3s ease;
+  }
+  
+  .fea-item:hover {
+    transform: translateY(-10px);
+  }

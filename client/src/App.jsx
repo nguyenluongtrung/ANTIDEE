@@ -58,6 +58,7 @@ import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountMa
 import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
 import {TransactionHistory} from './pages/TransactionHistory/TransactionHistory';
 import { IncomeDomesticHelper } from './pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper';
+import { ForumPage } from './pages/ForumPage';
 const App = () => {
 	return (
 		<Router>
@@ -138,6 +139,7 @@ const AppContent = () => {
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
 						<Route path="/journey" element={<JourneyPage />} />
 						<Route path="/ranking" element={<RankingPage />} />
+						<Route path="/forum" element={<ForumPage />} />
 					</Route>
 					{isAdminPage && (
 						<>
