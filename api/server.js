@@ -31,12 +31,8 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 const server = http.createServer(app);
-const io = new Server(server, {
-	cors: {
-		origin: '*',
-		methods: ['GET', 'POST'],
-	},
-});
+const setupSocketIO = require('./socket/socket');
+const io = setupSocketIO(server);
 
 async function createTransaction(
 	amount,
@@ -236,24 +232,5 @@ app.get('*', (req, res) => {
 app.use(errorHandler);
 
 server.listen(port, () => console.log(`Server started on port ${port}`));
-
-io.on('connection', (socket) => {
-	console.log('a user connected');
-
-	socket.on('disconnect', () => {
-		console.log('user disconnected');
-	});
-
-	socket.on('sendMessage', (messageData) => {
-		io.to(messageData.chatId).emit('receiveMessage', messageData);
-
-		// Notify all connected clients about the new message
-		io.emit('notification', messageData);
-	});
-
-	socket.on('joinChat', (chatId) => {
-		socket.join(chatId);
-	});
-});
 
 module.exports = { app, server, io };
