@@ -14,7 +14,7 @@ export const DepositPage = () => {
 
     const handleDeposit = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/payment', { 
+            const response = await axios.post('http://localhost:5000/antidee/api/payment/payment', { 
                 amount: parseInt(amount.replace(/,/g, '')), // Chuyển đổi số định dạng lại thành số nguyên
                 userId: account._id 
             });
