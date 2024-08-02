@@ -3,8 +3,9 @@ const CryptoJS = require('crypto-js');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const config = require('../config/paymentConfig');
-const Transaction = require('../models/transaction');
+const Transaction = require('../models/transactionModel');
 const Account = require('../models/accountModel');
+const transactionController = require('./transactionController');
 
 exports.createPayment = async (req, res) => {
     console.log("Payment endpoint hit");
@@ -25,7 +26,7 @@ exports.createPayment = async (req, res) => {
         item: JSON.stringify(items),
         embed_data: JSON.stringify(embed_data),
         amount: amount,
-        callback_url: 'https://c96c-2402-800-627d-15de-4c18-81bc-7c3d-5b67.ngrok-free.app/callback',
+        callback_url: 'https://7d45-2402-800-627d-15de-c4c2-d073-b3f2-18e6.ngrok-free.app/callback',
         description: `Payment for order #${transID}`,
         bank_code: '',
     };
@@ -85,23 +86,6 @@ exports.paymentCallback = async (req, res) => {
     }
 };
 
-async function createTransaction(amount, description, fromAccountId, toAccountId) {
-    const transaction = new Transaction({
-        amount,
-        description,
-        fromAccountId,
-        toAccountId,
-        status: 'PENDING'
-    });
-
-    try {
-        await transaction.save();
-        console.log('Transaction saved successfully');
-    } catch (error) {
-        console.error('Error saving transaction:', error);
-    }
-}
-
 async function updateUserBalance(userId, amount, transId) {
     console.log("Updating user balance for user:", userId);
     const user = await Account.findOne({ _id: userId });
@@ -116,7 +100,7 @@ async function updateUserBalance(userId, amount, transId) {
         user.transactions.push(transId);
 
         const toAccountId = new mongoose.Types.ObjectId();
-        await createTransaction(amount, `Payment for order #${transId}`, userId, toAccountId);
+        await transactionController.createTransaction(amount, `Payment for order #${transId}`, userId, toAccountId);
         await user.save();
         console.log("User balance updated successfully");
     } else {
