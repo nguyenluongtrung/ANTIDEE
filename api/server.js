@@ -7,7 +7,6 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 const http = require('http');
 const { Server } = require('socket.io');
 const connectDB = require('./config/dbConnect');
-const paymentRoutes = require('./routes/paymentRoutes');
 const port = process.env.PORT || 5000;
 const app = express();
 
@@ -26,7 +25,6 @@ const setupSocketIO = require('./socket/socket');
 const io = setupSocketIO(server);
 
 // Routes setup
-app.use('/api', paymentRoutes);
 app.use('/antidee/api/accounts', require('./routes/accountRoutes'));
 app.use('/antidee/api/questions', require('./routes/questionRoutes'));
 app.use('/antidee/api/exams', require('./routes/examRoutes'));
@@ -45,6 +43,7 @@ app.use('/antidee/api/chat', require('./routes/chatRoutes'));
 app.use('/antidee/api/message', require('./routes/messageRoutes'));
 app.use('/antidee/api/transactions', require('./routes/transactionRoutes'));
 app.use('/antidee/api/payment', require('./routes/paymentRoutes'));
+app.use('/antidee/api/forumPosts', require('./routes/forumPostRoutes'));
 // Serve static files
 app.use(express.static(path.join(__dir, '/client/dist')));
 
