@@ -47,26 +47,6 @@ export const DepositPage = () => {
         }
     };
 
-    const checkPaymentStatus = async () => {
-        if (!appTransId) {
-            setMessage('Không có giao dịch nào để kiểm tra');
-            return;
-        }
-
-        try {
-            const response = await axios.post(`http://localhost:5000/antidee/api/payment/orderStatus/${appTransId}`);
-            console.log('Phản hồi kiểm tra trạng thái thanh toán:', response.data);
-            if (response.data.return_code === 1) {
-                await updateBalance(); // Cập nhật số dư nếu thanh toán thành công
-            } else {
-                setMessage('Thanh toán thất bại hoặc đang chờ xử lý');
-            }
-        } catch (error) {
-            console.error('Lỗi kiểm tra trạng thái thanh toán:', error.response ? error.response.data : error.message);
-            setMessage('Kiểm tra trạng thái thanh toán thất bại');
-        }
-    };
-
     const handleChange = (e) => {
         const value = e.target.value.replace(/,/g, ''); // Loại bỏ dấu phẩy
         if (value === '' || /^[0-9\b]+$/.test(value)) {
@@ -91,12 +71,7 @@ export const DepositPage = () => {
                 >
                     Nạp Tiền
                 </button>
-                <button 
-                    onClick={checkPaymentStatus} 
-                    className="w-full bg-green text-white py-2 rounded hover:bg-light_green"
-                >
-                    Kiểm Tra Trạng Thái Thanh Toán
-                </button>
+               
                 <span className="block text-center mt-4 text-gray">
                     ID: {account._id}
                 </span>
