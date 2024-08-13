@@ -12,6 +12,7 @@ import videoReducer from './../features/videos/videoSlice';
 import appFeedbackReducer from './../features/appFeedbacks/appFeedbackSlice';
 import chatReducer from './../features/chatting/chattingSlice';
 import messageReducer from './../features/message/messageSlice';
+import forumPostReducer from './../features/forumPost/forumPostSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -28,5 +29,6 @@ export const store = configureStore({
 		appFeedbacks: appFeedbackReducer,
 		chatting: chatReducer,
 		messages: messageReducer,
+		forumPosts:forumPostReducer,
 	},
 });

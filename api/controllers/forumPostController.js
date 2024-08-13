@@ -27,7 +27,15 @@ const deleteForumPost = asyncHandler(async (req, res) => {
 const updateForumPost = asyncHandler(async (req, res) => { });
 const getAllForumPosts = asyncHandler(async (req, res) => {
 	try {
-		const forumPosts = await ForumPost.find({});
+		const forumPosts = await ForumPost.find({})
+		.populate({
+			path: 'author',
+			select: 'name avatar role', 
+		})
+		.populate({
+			path: 'comments.author',
+			select: 'avatar name', 
+		});
 		res.status(200).json({
 			success: true,
 			data: { forumPosts },
