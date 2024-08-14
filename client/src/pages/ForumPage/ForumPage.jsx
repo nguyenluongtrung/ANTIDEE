@@ -1,6 +1,6 @@
 import { GiVacuumCleaner } from "react-icons/gi";
 import { FaRegUser } from "react-icons/fa6";
-import { TbArrowRampRight2 } from "react-icons/tb";
+import { TbArrowRampRight2, TbMessageReport } from "react-icons/tb";
 import { HiOutlineHome } from "react-icons/hi";
 import {
   FaHeart,
@@ -8,13 +8,14 @@ import {
   FaRegBookmark,
   FaRegComment,
   FaUser,
-  FaRegHeart
+  FaRegHeart,
 } from "react-icons/fa";
 import { IoIosAdd } from "react-icons/io";
 import {
   MdCleaningServices,
   MdDeleteForever,
   MdDryCleaning,
+  MdEdit,
   MdFiberNew,
   MdOutlineReport,
 } from "react-icons/md";
@@ -28,10 +29,14 @@ import { Carousel } from "flowbite-react";
 import { PiShareFat } from "react-icons/pi";
 import { IoSend } from "react-icons/io5";
 import { useDispatch } from "react-redux";
-import { deleteForumPost, getAllForumPosts } from "../../features/forumPost/forumPostSlice";
+import {
+  deleteForumPost,
+  getAllForumPosts,
+} from "../../features/forumPost/forumPostSlice";
 import { formatDateForumPost } from "../../utils/format";
 import toast from "react-hot-toast";
 import { errorStyle, successStyle } from "../../utils/toast-customize";
+import { getAccountInformation } from "../../features/auth/authSlice";
 
 export const ForumPage = () => {
   const dispatch = useDispatch();
@@ -39,29 +44,40 @@ export const ForumPage = () => {
   const [showPostOptions, setShowPostOptions] = useState();
   const postOptionsRef = useRef(null);
 
+  const [accountId, setAccountId] = useState();
+  console.log(accountId);
 
   const [forumPost, setForumPost] = useState([]);
-  console.log(forumPost);
 
   async function initialForumPostList() {
     let output = await dispatch(getAllForumPosts());
     setForumPost(output.payload);
   }
 
+  async function initialAccountInfomation() {
+    let output = await dispatch(getAccountInformation());
+    setAccountId(output.payload._id);
+  }
+
   useEffect(() => {
     initialForumPostList();
   }, []);
 
+  useEffect(() => {
+    initialAccountInfomation();
+  }, []);
+
   const handleShowPostOptions = (postId) => {
-    setShowPostOptions((prevState) =>
-      prevState === postId ? null : postId
-    );
-  }
+    setShowPostOptions((prevState) => (prevState === postId ? null : postId));
+  };
 
   // Effect to close post options when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (postOptionsRef.current && !postOptionsRef.current.contains(event.target)) {
+      if (
+        postOptionsRef.current &&
+        !postOptionsRef.current.contains(event.target)
+      ) {
         setShowPostOptions(null);
       }
     };
@@ -75,17 +91,15 @@ export const ForumPage = () => {
 
   //Delete post
 
-  const handleDeleteForumPost = async (forumPostId) =>{
+  const handleDeleteForumPost = async (forumPostId) => {
     const result = await dispatch(deleteForumPost(forumPostId));
-    if(result.type.endsWith("fulfilled")){
+    if (result.type.endsWith("fulfilled")) {
       toast.success("Bài viết đã được xóa", successStyle);
       await dispatch(getAllForumPosts());
-    }else if (result?.error?.message === "Rejected") {
+    } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
-  }
-
-
+  };
 
   const images = [
     "https://afamilycdn.com/150157425591193600/2024/4/21/xunca41610754610138283396792721646981210768392888n-17136875891431871750366-1713695207997-171369520808115892481.jpg",
@@ -98,12 +112,13 @@ export const ForumPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-4">
         <div className="p-4">
           <div
-            className={`bg-white ${isDarkMode ? "bg-dark" : "bg-light"
-              } rounded-lg shadow-md p-4 space-y-2`}
+            className={`bg-white ${
+              isDarkMode ? "bg-dark" : "bg-light"
+            } rounded-lg shadow-md p-4 space-y-2`}
           >
             <button
               className="bg-primary text-white rounded-xl px-5 py-2 w-full font-semibold	hover:bg-primary_dark fea-item"
-            //   onClick={() => setIsCreateDiscussionOpen(true)}
+              //   onClick={() => setIsCreateDiscussionOpen(true)}
             >
               Tạo thảo luận
             </button>
@@ -122,8 +137,9 @@ export const ForumPage = () => {
           </div>
 
           <div
-            className={`bg-white ${isDarkMode ? "bg-dark" : "bg-light"
-              } mt-4 p-6 rounded-lg shadow-lg`}
+            className={`bg-white ${
+              isDarkMode ? "bg-dark" : "bg-light"
+            } mt-4 p-6 rounded-lg shadow-lg`}
           >
             <h2 className="text-base font-semibold mb-3">Chủ đề phổ biến</h2>
             <div>
@@ -153,8 +169,9 @@ export const ForumPage = () => {
         <div className="p-4">
           <div className="">
             <div
-              className={`relative flex flex-col  ${isDarkMode ? "bg-dark" : "bg-light"
-                } rounded-lg shadow-lg p-4`}
+              className={`relative flex flex-col  ${
+                isDarkMode ? "bg-dark" : "bg-light"
+              } rounded-lg shadow-lg p-4`}
             >
               <div className="flex justify-around">
                 <div className="">
@@ -181,7 +198,6 @@ export const ForumPage = () => {
             </div>
           </div>
 
-
           {/* Header */}
 
           {forumPost?.map((post, index) => {
@@ -197,52 +213,80 @@ export const ForumPage = () => {
                       />
                       <div className="ml-3">
                         <div className="text-sm font-semibold text-gray-900">
-                          <div>{post?.author?.name} ({post?.author?.role})</div>
+                          <div>
+                            {post?.author?.name} ({post?.author?.role})
+                          </div>
                         </div>
-                        <div className="text-xs text-gray-600">{formatDateForumPost(post?.createdAt)}</div>
+                        <div className="text-xs text-gray-600">
+                          {formatDateForumPost(post?.createdAt)}
+                        </div>
                       </div>
                     </div>
                     <div className="mx-4 my-3 flex items-center justify-center cursor-pointer w-10 h-10 rounded-full hover:bg-light_gray text-center">
-                      <AiOutlineEllipsis size={30} onClick={() => handleShowPostOptions(post?._id)} />
+                      <AiOutlineEllipsis
+                        size={30}
+                        onClick={() => handleShowPostOptions(post?._id)}
+                      />
                       {showPostOptions === post?._id && (
-                        <div ref={postOptionsRef} className="absolute bg-white shadow-lg rounded-lg p-2 w-30">
+                        <div
+                          ref={postOptionsRef}
+                          className="absolute bg-white shadow-lg rounded-lg p-2 max-w-48">
                           <ul>
                             <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
                               <div className="flex items-center">
-                                <MdDeleteForever className="mr-2" />
-                                <span>Edit</span>
+                                <MdEdit className="mr-2" />
+                                <span>Chỉnh sửa</span>
                               </div>
-                              <p className="text-xs text-gray">Bài viết của bạn sẽ bị xóa vĩnh viễn</p>
+                              <p className="text-xs text-gray text-left">
+                                Chỉnh sửa nội dung bài đăng của bạn
+                              </p>
                             </li>
-
-                            <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
-                              <div className="flex items-center" onClick={()=>handleDeleteForumPost(post?._id)}>
+                            {post?.author?._id === accountId ? (
+                              <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
+                                <div
+                                  className="flex items-center"
+                                  onClick={() =>
+                                    handleDeleteForumPost(post?._id)
+                                  }
+                                >
+                                  <MdDeleteForever className="mr-2" />
+                                  <span>Xóa</span>
+                                </div>
+                                <p className="text-xs text-gray text-left">
+                                  Bài đăng này của bạn sẽ bị xóa vĩnh viễn
+                                </p>
+                              </li>
+                            ) : (
+                              <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
+                              <div className="flex items-center">
                                 <MdDeleteForever className="mr-2" />
-                                <span>Delete</span>
+                                <span>Ẩn</span>
                               </div>
-                              <p className="text-xs text-gray">Bài viết của bạn sẽ bị xóa vĩnh viễn</p>
+                              <p className="text-xs text-gray text-left">
+                                Bài viết sẽ bị ẩn khỏi bạn
+                              </p>
                             </li>
+                             
+                            )}
 
                             <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
                               <div className="flex items-center">
-                                <MdDeleteForever className="mr-2" />
-                                <span>Report</span>
+                                <TbMessageReport className="mr-2" />
+                                <span>Báo cáo bài viết</span>
                               </div>
-                              <p className="text-xs text-gray">Bài viết của bạn sẽ bị xóa vĩnh viễn</p>
+                              <p className="text-xs text-gray text-left">
+                                Hãy cho chúng tôi biết bài viết này có vấn đề gì 
+                              </p>
                             </li>
-
                           </ul>
                         </div>
                       )}
-
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="my-2 px-4 py-2">
-                    <p className="text-black text-base">
-                      {post?.content}
-                    </p>
+                    <p className="text-black text-base">{post?.content}</p>
                   </div>
 
                   {/* Image */}
@@ -253,7 +297,6 @@ export const ForumPage = () => {
                       alt="Post image"
                     />
                   ))}
-
 
                   <div className="my-3 flex justify-around items-center">
                     <div className="flex items-center cursor-pointer rounded-xl hover:bg-primary hover:text-white px-3 py-2 hvr-shutter-in-horizontal">
@@ -304,7 +347,9 @@ export const ForumPage = () => {
                               </button>
                               <button className="flex items-center ml-6 hover:text-primary">
                                 <FaRegComment className="mr-1" />
-                                <span className="text-sm w-[60px]">Phản hồi</span>
+                                <span className="text-sm w-[60px]">
+                                  Phản hồi
+                                </span>
                               </button>
                             </div>
                             <div className="flex">
@@ -330,7 +375,9 @@ export const ForumPage = () => {
                                     className="hover:text-primary cursor-pointer"
                                   />
                                 </div>
-                                <p className="text-sm text-gray-700">Chắc chưa?</p>
+                                <p className="text-sm text-gray-700">
+                                  Chắc chưa?
+                                </p>
                               </div>
                               <div className="flex justify-between mt-2 ml-2 pr-2 w-full">
                                 <div className="flex">
@@ -340,7 +387,9 @@ export const ForumPage = () => {
                                   </button>
                                   <button className="flex items-center ml-6 hover:text-primary">
                                     <FaRegComment className="mr-1" />
-                                    <span className="text-sm w-[60px]">Phản hồi</span>
+                                    <span className="text-sm w-[60px]">
+                                      Phản hồi
+                                    </span>
                                   </button>
                                 </div>
                                 <div className="flex">
@@ -371,8 +420,6 @@ export const ForumPage = () => {
                       </div>
                     ))}
 
-
-
                     {/* Thẻ Nhập bình luận cho bài viết =================================== */}
                     <div className="flex items-center mt-5 h-10">
                       <img
@@ -394,33 +441,33 @@ export const ForumPage = () => {
 
                     {/* Thẻ Nhập bình luận cho bài viết =================================== */}
                   </div>
-
-
-
                 </div>
               </div>
-            )
-
+            );
           })}
-
-
-
-
         </div>
         <div className="p-4">
           <div
-            className={`bg-white ${isDarkMode ? "bg-dark" : "bg-light"
-              } p-4 mt-4 rounded-lg shadow-md`}
+            className={`bg-white ${
+              isDarkMode ? "bg-dark" : "bg-light"
+            } p-4 mt-4 rounded-lg shadow-md`}
           >
             <strong className="text-base font-bold block mb-4">
               Thảo luận hàng đầu
             </strong>
-            <div className="flex items-center p-2 gap-x-2 rounded-xl cursor-pointer hover:bg-primary hvr-shutter-in-horizontal mb-4" ><HiOutlineHome className="mx-2" />Trang chủ</div>
-            <div className="flex items-center p-2 gap-x-2 rounded-xl cursor-pointer hover:bg-primary hvr-shutter-in-horizontal mb-4" ><FaRegUser className="mx-2" />Trang cá nhân</div>
+            <div className="flex items-center p-2 gap-x-2 rounded-xl cursor-pointer hover:bg-primary hvr-shutter-in-horizontal mb-4">
+              <HiOutlineHome className="mx-2" />
+              Trang chủ
+            </div>
+            <div className="flex items-center p-2 gap-x-2 rounded-xl cursor-pointer hover:bg-primary hvr-shutter-in-horizontal mb-4">
+              <FaRegUser className="mx-2" />
+              Trang cá nhân
+            </div>
           </div>
           <div
-            className={`bg-white ${isDarkMode ? "bg-dark" : "bg-light"
-              } p-4 mt-4 rounded-lg shadow-md`}
+            className={`bg-white ${
+              isDarkMode ? "bg-dark" : "bg-light"
+            } p-4 mt-4 rounded-lg shadow-md`}
           >
             <strong className="text-base font-bold block mb-4">
               Thảo luận hàng đầu
@@ -451,8 +498,9 @@ export const ForumPage = () => {
             })} */}
           </div>
           <div
-            className={`bg-white ${isDarkMode ? "bg-dark" : "bg-light"
-              } p-4 mt-4 rounded-lg shadow-md`}
+            className={`bg-white ${
+              isDarkMode ? "bg-dark" : "bg-light"
+            } p-4 mt-4 rounded-lg shadow-md`}
           >
             <div className="flex justify-between gap-10">
               <strong className="text-base font-bold block mb-4">
@@ -484,6 +532,6 @@ export const ForumPage = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
