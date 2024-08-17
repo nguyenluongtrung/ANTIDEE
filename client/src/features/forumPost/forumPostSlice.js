@@ -38,7 +38,46 @@ export const deleteForumPost = createAsyncThunk(
 			return thunkAPI.rejectWithValue(message);
         }
     }
-)
+);
+export const createForumPost = createAsyncThunk(
+	'forumPosts/createForumPost',
+	async (forumPostData, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await forumPostService.createForumPost(forumPostData,token );
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const updateForumPost = createAsyncThunk(
+	'forumPosts/updateForumPost',
+	async ({ forumPostData, id }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await forumPostService.updateForumPost(token, forumPostData, id);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 
 const initialState = {
     forumPosts: [],
@@ -46,7 +85,7 @@ const initialState = {
     isError: false,
     isSuccess: false,
     message: '',
-}
+};
 
 export const forumPostSlice = createSlice({
     name: 'forumPosts',
@@ -90,6 +129,34 @@ export const forumPostSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 			})
+            .addCase(createForumPost.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createForumPost.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.forumPosts.push(action.payload);
+            })
+            .addCase(createForumPost.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updateForumPost.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateForumPost.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.forumPosts[
+                    state.forumPosts.findIndex((forumPost) => forumPost._id === action.payload._id)
+                ] = action.payload;
+            })
+            .addCase(updateForumPost.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            });
     }
 });
 

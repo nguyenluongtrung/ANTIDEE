@@ -25,10 +25,7 @@ const commentSchema = mongoose.Schema({
 
 const forumPostSchema = mongoose.Schema(
 	{
-		title: {
-			type: String,
-			required: true,
-		},
+		
 		content: {
 			type: String,
 			required: true,
@@ -36,7 +33,7 @@ const forumPostSchema = mongoose.Schema(
 		images: [
 			{
 				type: String,
-			},
+			}
 		],
 		author: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -55,6 +52,9 @@ const forumPostSchema = mongoose.Schema(
 				ref: 'Account',
 			},
 		],
+		hidden:{
+			type:Boolean,
+		}
 	},
 	{
 		timestamps: true,

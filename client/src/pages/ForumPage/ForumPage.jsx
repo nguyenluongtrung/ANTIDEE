@@ -37,8 +37,9 @@ import { formatDateForumPost } from "../../utils/format";
 import toast from "react-hot-toast";
 import { errorStyle, successStyle } from "../../utils/toast-customize";
 import { getAccountInformation } from "../../features/auth/authSlice";
-
+import { CreatePostForum } from './CreatePostForum/CreatePostForum';
 export const ForumPage = () => {
+  const [isOpenCreateForumPost, setIsOpenCreateForumPost] = useState(false);
   const dispatch = useDispatch();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showPostOptions, setShowPostOptions] = useState();
@@ -51,8 +52,11 @@ export const ForumPage = () => {
 
   async function initialForumPostList() {
     let output = await dispatch(getAllForumPosts());
-    setForumPost(output.payload);
-  }
+    let sortedPosts = [...output.payload].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    setForumPost(sortedPosts);
+}
 
   async function initialAccountInfomation() {
     let output = await dispatch(getAccountInformation());
@@ -70,7 +74,14 @@ export const ForumPage = () => {
   const handleShowPostOptions = (postId) => {
     setShowPostOptions((prevState) => (prevState === postId ? null : postId));
   };
-
+  const handleGetAllForumPosts = () => {
+    Promise.all([dispatch(getAllForumPosts())]).catch((error) => {
+        console.error('Error during dispatch:', error);
+    });
+};
+  const handleOpenCreateForumPost = () => {
+    setIsOpenCreateForumPost(true);
+};
   // Effect to close post options when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -95,12 +106,15 @@ export const ForumPage = () => {
     const result = await dispatch(deleteForumPost(forumPostId));
     if (result.type.endsWith("fulfilled")) {
       toast.success("Bài viết đã được xóa", successStyle);
-      await dispatch(getAllForumPosts());
+  
+      // Cập nhật lại danh sách bài viết sau khi xóa
+      setForumPost((prevPosts) =>
+        prevPosts.filter((post) => post._id !== forumPostId)
+      );
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
   };
-
   const images = [
     "https://afamilycdn.com/150157425591193600/2024/4/21/xunca41610754610138283396792721646981210768392888n-17136875891431871750366-1713695207997-171369520808115892481.jpg",
     "https://kenh14cdn.com/203336854389633024/2024/3/20/photo-7-1710943211596924084338.jpg",
@@ -110,6 +124,12 @@ export const ForumPage = () => {
   return (
     <div className={`discussion ${isDarkMode ? "dark" : "light"} mt-16`}>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-4">
+      {isOpenCreateForumPost && (
+                    <CreatePostForum
+                        setIsOpenCreateForumPost={setIsOpenCreateForumPost}
+                        handleGetAllForumPosts={handleGetAllForumPosts}
+                    />
+                )}
         <div className="p-4">
           <div
             className={`bg-white ${
@@ -181,9 +201,12 @@ export const ForumPage = () => {
                     className="w-14 h-14 rounded-full"
                   />
                 </div>
-                <div className=" w-[85%] rounded-full border border-gray flex items-center px-4 font-medium text-gray cursor-pointer hover:bg-[#F6F6F6]">
+                <button className=" w-[85%] rounded-full border border-gray flex items-center px-4 font-medium text-gray cursor-pointer hover:bg-[#F6F6F6]" 
+                onClick={handleOpenCreateForumPost}
+                >
+                
                   Nêu lên suy nghĩ của bạn?
-                </div>
+                </button>
               </div>
               <div className="flex justify-around border-0 border-t-2 border-light_gray mt-4 p-4 pb-0">
                 <div className="flex justify-center items-center w-[45%] hover:bg-light_gray cursor-pointer rounded-xl">

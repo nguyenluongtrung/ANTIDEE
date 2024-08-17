@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Account = require('./../models/accountModel');
+const ForumPost = require('../models/forumPostModel');
 const asyncHandler = require('express-async-handler');
 
 const protect = asyncHandler(async (req, res, next) => {
@@ -43,5 +44,20 @@ const restrict = (...roles) => {
 		next();
 	};
 };
+const restrictToOwner = asyncHandler(async (req, res, next) => {
+	const forumPost = await ForumPost.findById(req.params.forumPostId);
 
-module.exports = { protect, restrict };
+	if (!forumPost) {
+		res.status(404);
+		throw new Error('Không tìm thấy bài viết');
+	} 
+	console.log("Author ne",forumPost.author)
+	console.log("ID ne",req.account._id)
+	if (forumPost.author.toString() !== req.account._id.toString()) {
+		res.status(403);
+		throw new Error('Bạn không có quyền chỉnh sửa hoặc xóa bài viết này');
+	}
+
+	next();
+});
+module.exports = { protect, restrict, restrictToOwner  };

@@ -1,5 +1,5 @@
-const express = require("express");
-const { protect, restrict } = require("../middleware/accountMiddleware");
+const express = require('express');
+const { protect, restrictToOwner } = require('../middleware/accountMiddleware');
 const {
   getAllForumPosts,
   createForumPost,
@@ -9,11 +9,15 @@ const {
 } = require("../controllers/forumPostController");
 const router = express.Router();
 
-router.route("/").get(getAllForumPosts).post(createForumPost);
 router
-  .route("/:forumPostId")
-  .get(getForumPost)
-  .patch(updateForumPost)
-  .delete(deleteForumPost);
+	.route('/')
+	.get(getAllForumPosts)
+	.post(protect, createForumPost);
+
+router
+	.route('/:forumPostId')
+	.get(getForumPost)
+	.patch(protect, restrictToOwner, updateForumPost)
+	.delete(protect, restrictToOwner, deleteForumPost);
 
 module.exports = router;
