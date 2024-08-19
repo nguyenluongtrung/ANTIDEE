@@ -1,49 +1,45 @@
-const asyncHandler = require('express-async-handler');
-const ForumPost = require('../models/forumPostModel');
+const asyncHandler = require("express-async-handler");
+const ForumPost = require("../models/forumPostModel");
 
 const createForumPost = asyncHandler(async (req, res) => {
 	try {
-	  const newForumPost = await ForumPost.create({
-		...req.body,
-		author: req.account._id,  
-	  });
-	  res.status(201).json({
-		success: true,
-		data: newForumPost,
-	  });
-	} catch (error) {
-	  res.status(400).json({
-		success: false,
-		error: error.message,
-	  });
-	}
-  });
-  
-
-const deleteForumPost = asyncHandler(async (req, res) => {
-	try {
-		const OldforumPost = await ForumPost.findById(req.params.forumPostId);
-
-		if (!forumPost) {
-			res.status(404);
-		throw new Error('Không tìm thấy bài đăng');
-		}
-
-		await ForumPost.findByIdAndDelete(req.params.forumPostId);
-		res.status(200).json({
-			success: true,
-			data: {
-				OldforumPost
-			},
+		const newForumPost = await ForumPost.create({
+		  ...req.body,
+		  author: req.account._id,  
 		});
-	} catch (error) {
+		res.status(201).json({
+		  success: true,
+		  data: newForumPost,
+		});
+	  } catch (error) {
 		res.status(400).json({
-			success: false,
-			error: error.message,
+		  success: false,
+		  error: error.message,
 		});
-	}
-});
+	  }
+ });
+const deleteForumPost = asyncHandler(async (req, res) => {
+	const { forumPostId } = req.params;
 
+	// Tìm bài đăng theo ID
+	const forumPost = await ForumPost.findById(forumPostId);
+
+	// Kiểm tra nếu bài đăng không tồn tại
+	if (!forumPost) {
+		res.status(404);
+		throw new Error("Bài đăng không tồn tại");
+	}
+
+	// Xóa bài đăng
+	await ForumPost.findByIdAndDelete(req.params.forumPostId);
+
+	res.status(200).json({
+		status: "success",
+		data: {
+			id: req.params.forumPostId,
+		},
+	});
+});
 const updateForumPost = asyncHandler(async (req, res) => {
 	try {
 		const forumPost = await ForumPost.findById(req.params.forumPostId);
@@ -69,38 +65,46 @@ const updateForumPost = asyncHandler(async (req, res) => {
 			error: error.message,
 		});
 	}
-});
-
+ });
 const getAllForumPosts = asyncHandler(async (req, res) => {
 	try {
-		const forumPosts = await ForumPost.find();
+		const forumPosts = await ForumPost.find({})
+		.populate({
+			path: 'author',
+			select: 'name avatar role', 
+		})
+		.populate({
+			path: 'comments.author',
+			select: 'avatar name', 
+		});
 		res.status(200).json({
 			success: true,
-			data: forumPosts,
+			data: { forumPosts },
 		});
 	} catch (error) {
-		res.status(400).json({
+		res.status(500).json({
 			success: false,
 			error: error.message,
 		});
 	}
 });
-
 const getForumPost = asyncHandler(async (req, res) => {
 	try {
-		const forumPost = await ForumPost.findById(req.params.forumPostId);
+		const { forumPostId } = req.params;
+
+		const forumPost = await ForumPost.findById(forumPostId);
 
 		if (!forumPost) {
 			res.status(404);
-		throw new Error('Không tìm thấy bài đăng');
+			throw new Error("Bài đăng không tồn tại");
 		}
-
 		res.status(200).json({
 			success: true,
-			data: forumPost,
-		});
+			data: { forumPost },
+		})
+
 	} catch (error) {
-		res.status(400).json({
+		res.status(500).json({
 			success: false,
 			error: error.message,
 		});

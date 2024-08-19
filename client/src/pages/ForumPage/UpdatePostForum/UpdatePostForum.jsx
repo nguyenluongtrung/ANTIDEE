@@ -2,12 +2,12 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createForumPost, getAllForumPosts } from '../../../features/forumPost/forumPostSlice';
+import { updateForumPost } from '../../../features/forumPost/forumPostSlice';
 import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
-import './CreatePostForum.css';
+import './UpdatePostForum.css';
 import {
     getDownloadURL,
     getStorage,
@@ -16,30 +16,30 @@ import {
 } from 'firebase/storage';
 import { app } from '../../../firebase';
 
-export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPosts }) => {
-    const { isLoading: forumPostLoading, forumPosts } = useSelector((state) => state.forumPosts);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+export const UpdatePostForum = ({ setIsOpenUpdatePostForum, chosenPostForumId , handleGetAllPostForums }) => {
+    const { postForums, isLoading: postForumLoading } = useSelector((state) => state.postForums || {});
+    const [chosenPostForum, setChosenPostForum] = useState(
+        postForums[postForums.findIndex((postForum) => postForum._id == chosenPostForumId)]
+    );
 
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (!forumPosts || forumPosts.length === 0) {
-            dispatch(getAllForumPosts());
-        }
-    }, [dispatch, forumPosts]);
     const fileRef = useRef(null);
     const [file, setFile] = useState(undefined);
     const [filePerc, setFilePerc] = useState(0);
     const [fileUploadError, setFileUploadError] = useState('');
     const [imagesUrl, setImagesUrl] = useState('');
     const [isCheckingImage, setIsCheckingImage] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue
+    } = useForm();
+
+    const dispatch = useDispatch();
+
     const checkThreshold = (item, threshold) => {
         if (item && typeof item === 'object' && !Array.isArray(item)) {
-            // Loại bỏ thuộc tính 'indoor_other' và 'outdoor_other' khỏi đối tượng nudity.context
             if (item.hasOwnProperty('indoor_other')) {
                 delete item.indoor_other;
             }
@@ -55,9 +55,8 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
     };
 
     const onSubmit = async (formData) => {
-        if (imagesUrl || !formData.images) { // Điều kiện kiểm tra nếu ảnh không bắt buộc
+        if (imagesUrl || !formData.images) {
             try {
-                // Gọi API kiểm duyệt hình ảnh nếu có ảnh
                 setIsCheckingImage(true);
                 if (imagesUrl) {
                     const response = await axios.get('https://api.sightengine.com/1.0/check.json', {
@@ -68,9 +67,8 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                             api_secret: 'FkPHdBHxik6823yZw5Nms9uDV9wjVQjY',
                         }
                     });
-    
+
                     const data = response.data;
-                    console.log(data); // Kiểm tra kết quả từ API
 
                     const thresholds = {
                         nudity: 0.2,
@@ -83,10 +81,10 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                         self_harm: 0.4,
                         gambling: 0.4
                     };
-    
+
                     let warnings = [];
                     let isImageValid = true;
-    
+
                     if (data.weapon && checkThreshold(data.weapon.classes, thresholds.weapon)) {
                         isImageValid = false;
                         warnings.push('Ảnh chứa vũ khí.');
@@ -123,85 +121,70 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                         isImageValid = false;
                         warnings.push('Ảnh chứa nội dung cờ bạc.');
                     }
-    
+
                     if (!isImageValid) {
                         throw new Error(warnings.join(' '));
                     }
                 }
                 setIsCheckingImage(false);
-                // Tạo bài đăng nếu ảnh được duyệt hoặc không có ảnh
-                const forumPostData = {
+                const postForumData = {
                     ...formData,
-                    images: imagesUrl || formData.images, // Đảm bảo trường ảnh không rỗng nếu không có ảnh
+                    images: imagesUrl || formData.images,
                 };
                 
-                console.log('Forum Post Data:', forumPostData); // Kiểm tra dữ liệu gửi
-                const result = await dispatch(createForumPost(forumPostData));
+                const result = await dispatch(updateForumPost({ postForumData, id: chosenPostForumId }));
                 if (result.type.endsWith('fulfilled')) {
-                    toast.success('Đăng bài thành công', successStyle);
-                    setIsOpenCreatePostForum(false);
-            handleGetAllForumPosts();
-            
+                    toast.success('Cập nhật bài viết thành công', successStyle);
                 } else if (result?.error?.message === 'Rejected') {
                     toast.error(result?.payload, errorStyle);
                 }
-                setIsOpenCreatePostForum(false);
-                handleGetAllForumPosts();
+                setIsOpenUpdatePostForum(false);
+                handleGetAllPostForums();
             } catch (error) {
                 setIsCheckingImage(false);
                 toast.error(`Lỗi: ${error.message}`, errorStyle);
             }
         } else {
-            toast.error('Vui lòng tải ảnh lên trước khi đăng bài', errorStyle);
+            toast.error('Vui lòng tải ảnh lên trước khi cập nhật bài viết', errorStyle);
         }
     };
-    
-
 
     useEffect(() => {
-		if (file) {
-			setFileUploadError(false);
-			handleFileUpload(file);
-		}
-	}, [file]);
+        if (file) {
+            handleFileUpload(file);
+        }
+    }, [file]);
 
     const handleFileUpload = (file) => {
+        const storage = getStorage(app);
+        const fileName = new Date().getTime() + file.name;
+        const storageRef = ref(storage, `images/${fileName}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
 
-        if (file.size > 2 * 1024 * 1024) {
-            setFileUploadError('Dung lượng ảnh phải nhỏ hơn 2MB');
-            setFilePerc(0);
-            return;
-        }
-
-		const storage = getStorage(app);
-		const fileName = new Date().getTime() + file.name;
-		const storageRef = ref(storage, `images/${fileName}`);
-		const uploadTask = uploadBytesResumable(storageRef, file);
-
-		uploadTask.on(
+        uploadTask.on(
             'state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setFilePerc(Math.round(progress));
-                setFileUploadError(''); // Reset error state on new upload
+                setFileUploadError(''); 
             },
             (error) => {
                 setFileUploadError('Tải ảnh lên thất bại');
-                setFilePerc(0); // Reset progress on error
+                setFilePerc(0); 
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('Download URL:', downloadURL);
-                    setImagesUrl(downloadURL); // Thay vì setServiceUrl, sử dụng setImagesUrl
-                    setFilePerc(100); // Set progress to 100 on successful upload
-                    setFileUploadError(''); // Reset error state on successful upload
+                    setImagesUrl(downloadURL); 
+                    setFilePerc(100);
+                    setFileUploadError('');
                 });
             }
         );
     };
-    if (forumPostLoading) {
-      return <Spinner />;
-  }
+
+    if (postForumLoading) {
+        return <Spinner />;
+    }
 
     return (
         <div className="popup active">
@@ -213,60 +196,48 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
             >
                 <AiOutlineClose
                     className="absolute text-sm hover:cursor-pointer"
-                    onClick={() => setIsOpenCreatePostForum(false)}
+                    onClick={() => setIsOpenUpdatePostForum(false)}
                 />
                 <p className="grid text-primary font-bold text-xl justify-center">
-                    TẠO BÀI VIẾT
+                    CẬP NHẬT BÀI VIẾT
                 </p>
                 <div className="mt-3">
                     <textarea
                         {...register('content', { required: 'Nội dung bài viết là bắt buộc' })}
-                        className="create-forumPost-input text-center text-sm w-full h-40"
-                        placeholder="Bạn đang nghĩ gì thế?"
+                        className="update-postForum-input text-center text-sm w-full h-40"
+                        defaultValue={chosenPostForum?.content}
+                        placeholder="Cập nhật nội dung bài viết"
                         required
                     />
                     {errors.content && <p className="text-red text-center">{errors.content.message}</p>}
                 </div>
                 <div className="mt-3">
-                
-                        <span
-                                    className="block bg-white rounded-md cursor-pointer text-primary justify-center border p-2 text-sm"
-                                    onClick={() => fileRef.current.click()}
-                                >
-                                    Chọn ảnh
-                                </span>
-                            
+                    <span
+                        className="block bg-white rounded-md cursor-pointer text-primary justify-center border p-2 text-sm"
+                        onClick={() => fileRef.current.click()}
+                    >
+                        Chọn ảnh
+                    </span>
                     <input
                         ref={fileRef}
-                        className="create-forumPost-input w-full h-16 hidden"
+                        className="update-postForum-input w-full h-16 hidden"
                         placeholder="Ảnh"
                         type="file"
                         accept="image/*"
                         onChange={(e) => setFile(e.target.files[0])}
                     />
-                    {filePerc > 0 && <span> Đang tải ảnh lên: {filePerc}%</span>}
-                    {fileUploadError && <p className="text-red">{fileUploadError}</p>}
+                    {filePerc > 0 && <progress value={filePerc} max="100" />}
+                    {fileUploadError && <p className="text-red text-center">{fileUploadError}</p>}
                 </div>
-                {imagesUrl && (
-                    <div className="mt-3 image-preview">
-                        <img src={imagesUrl} alt="Preview" className="w-[40%] max-h-96 object-contain" />
-                    </div>
-                )}
-                <div className="flex mt-3 justify-center">
                 <button
-    className="btn-submit bg-primary w-full h-10 text-white p-2 rounded-md hover:bg-primary-dark"
-    type="submit"
-    disabled={isCheckingImage || forumPostLoading}
->
-    {isCheckingImage ? (
-        <>
-            <Spinner /> Đang kiểm tra hình ảnh
-        </>
-    ) : 'Đăng bài'}
-</button>
-                </div>
+                    className="w-full bg-primary p-2 mt-5 rounded-md text-white font-bold text-sm"
+                    type="submit"
+                    disabled={isCheckingImage}
+                >
+                    {isCheckingImage ? <Spinner /> : 'CẬP NHẬT'}
+                </button>
             </form>
         </div>
     );
 };
-
+``

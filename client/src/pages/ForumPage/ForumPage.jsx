@@ -38,8 +38,11 @@ import toast from "react-hot-toast";
 import { errorStyle, successStyle } from "../../utils/toast-customize";
 import { getAccountInformation } from "../../features/auth/authSlice";
 import { CreatePostForum } from './CreatePostForum/CreatePostForum';
+import { UpdatePostForum } from './UpdatePostForum/UpdatePostForum';
 export const ForumPage = () => {
-  const [isOpenCreateForumPost, setIsOpenCreateForumPost] = useState(false);
+  const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
+  const [isOpenUpdatePostForum, setIsOpenUpdatePostForum] = useState(false);
+  const [chosenPostForumId, setChosenPostForumId] = useState('');
   const dispatch = useDispatch();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showPostOptions, setShowPostOptions] = useState();
@@ -74,15 +77,17 @@ export const ForumPage = () => {
   const handleShowPostOptions = (postId) => {
     setShowPostOptions((prevState) => (prevState === postId ? null : postId));
   };
-  const handleGetAllForumPosts = () => {
-    Promise.all([dispatch(getAllForumPosts())]).catch((error) => {
-        console.error('Error during dispatch:', error);
-    });
+  const handleGetAllForumPosts = async () => {
+    let output = await dispatch(getAllForumPosts());
+    let sortedPosts = [...output.payload].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    setForumPost(sortedPosts);
 };
   const handleOpenCreateForumPost = () => {
-    setIsOpenCreateForumPost(true);
+    setIsOpenCreatePostForum(true);
 };
-  // Effect to close post options when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -102,7 +107,7 @@ export const ForumPage = () => {
 
   //Delete post
 
-  const handleDeleteForumPost = async (forumPostId) => {
+ const handleDeleteForumPost = async (forumPostId) => {
     const result = await dispatch(deleteForumPost(forumPostId));
     if (result.type.endsWith("fulfilled")) {
       toast.success("Bài viết đã được xóa", successStyle);
@@ -114,7 +119,7 @@ export const ForumPage = () => {
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
-  };
+  };  
   const images = [
     "https://afamilycdn.com/150157425591193600/2024/4/21/xunca41610754610138283396792721646981210768392888n-17136875891431871750366-1713695207997-171369520808115892481.jpg",
     "https://kenh14cdn.com/203336854389633024/2024/3/20/photo-7-1710943211596924084338.jpg",
@@ -124,12 +129,19 @@ export const ForumPage = () => {
   return (
     <div className={`discussion ${isDarkMode ? "dark" : "light"} mt-16`}>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-4">
-      {isOpenCreateForumPost && (
+      {isOpenCreatePostForum && (
                     <CreatePostForum
-                        setIsOpenCreateForumPost={setIsOpenCreateForumPost}
+                        setIsOpenCreatePostForum={setIsOpenCreatePostForum}
                         handleGetAllForumPosts={handleGetAllForumPosts}
                     />
                 )}
+        {isOpenUpdatePostForum && (
+                    <UpdatePostForum
+                        setIsOpenUpdatePostForum={setIsOpenUpdatePostForum}
+                        handleGetAllForumPosts={handleGetAllForumPosts}
+                        chosenPostForumId={chosenPostForumId}
+                    />
+                )}  
         <div className="p-4">
           <div
             className={`bg-white ${
@@ -255,16 +267,9 @@ export const ForumPage = () => {
                           ref={postOptionsRef}
                           className="absolute bg-white shadow-lg rounded-lg p-2 max-w-48">
                           <ul>
-                            <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
-                              <div className="flex items-center">
-                                <MdEdit className="mr-2" />
-                                <span>Chỉnh sửa</span>
-                              </div>
-                              <p className="text-xs text-gray text-left">
-                                Chỉnh sửa nội dung bài đăng của bạn
-                              </p>
-                            </li>
+                           
                             {post?.author?._id === accountId ? (
+                              
                               <li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
                                 <div
                                   className="flex items-center"
@@ -300,6 +305,22 @@ export const ForumPage = () => {
                               <p className="text-xs text-gray text-left">
                                 Hãy cho chúng tôi biết bài viết này có vấn đề gì 
                               </p>
+                            </li>
+                            <li>
+                            <div className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
+                              <div className="flex items-center"
+                             onClick={() => {
+                              setIsOpenUpdatePostForum(true);
+                              setChosenPostForumId(post?._id);
+                          }}
+                              >
+                                <MdEdit className="mr-2" />
+                                <span>Chỉnh sửa</span>
+                              </div>
+                              <p className="text-xs text-gray text-left">
+                                Chỉnh sửa nội dung bài đăng của bạn
+                              </p>
+                            </div>
                             </li>
                           </ul>
                         </div>

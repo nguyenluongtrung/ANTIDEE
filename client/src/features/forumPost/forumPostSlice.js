@@ -125,17 +125,17 @@ export const forumPostSlice = createSlice({
                     (post) => String(post._id) !== String(action.payload));
             })
             .addCase(deleteForumPost.rejected, (state, action) => {
-				state.isLoading = false;
-				state.isError = true;
-				state.message = action.payload;
-			})
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
             .addCase(createForumPost.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(createForumPost.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.forumPosts.push(action.payload);
+                state.forumPosts.unshift(action.payload);
             })
             .addCase(createForumPost.rejected, (state, action) => {
                 state.isLoading = false;
@@ -158,6 +158,7 @@ export const forumPostSlice = createSlice({
                 state.message = action.payload;
             });
     }
+    
 });
 
 export const { reset } = forumPostSlice.actions;
