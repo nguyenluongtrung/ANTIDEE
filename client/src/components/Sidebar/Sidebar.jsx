@@ -54,7 +54,7 @@ export const Sidebar = () => {
     {
       name: "Diễn Đàn",
       icon: <BiCreditCardAlt />,
-      to: "/forum",
+      to: "/forum/discussions",
     },
   ];
 

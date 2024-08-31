@@ -1,27 +1,56 @@
 const mongoose = require('mongoose');
 
-const commentSchema = mongoose.Schema({
-	content: {
-		type: String,
-		required: true,
-	},
-	author: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Account',
-	},
-	likes: [
-		{
+const commentSchema = mongoose.Schema(
+	{
+		content: {
+			type: String,
+			required: true,
+		},
+		author: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Account',
 		},
-	],
-	dislikes: [
-		{
+		likes: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			},
+		],
+		dislikes: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			},
+		],
+	},
+	{
+		timestamps: true,
+	}
+);
+
+const postRepositorySchema = mongoose.Schema(
+	{
+		repositoryName: {
+			type: String,
+			required: true,
+		},
+		postsList: [
+			{
+				postId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'ForumPost',
+				},
+			},
+		],
+		account: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Account',
 		},
-	],
-});
+	},
+	{
+		timestamps: true,
+	}
+);
 
 const forumPostSchema = mongoose.Schema(
 	{
@@ -61,4 +90,7 @@ const forumPostSchema = mongoose.Schema(
 	}
 );
 
-module.exports = mongoose.model('ForumPost', forumPostSchema);
+module.exports = {
+	ForumPost: mongoose.model('ForumPost', forumPostSchema),
+	PostRepository: mongoose.model('PostRepository', postRepositorySchema),
+};

@@ -1,7 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const ForumPost = require("../models/forumPostModel");
+const asyncHandler = require('express-async-handler');
+const { ForumPost } = require('../models/forumPostModel');
+const { PostRepository } = require('./../models/forumPostModel');
 
-const createForumPost = asyncHandler(async (req, res) => { });
+const createForumPost = asyncHandler(async (req, res) => {});
 const deleteForumPost = asyncHandler(async (req, res) => {
 	const { forumPostId } = req.params;
 
@@ -11,63 +12,94 @@ const deleteForumPost = asyncHandler(async (req, res) => {
 	// Kiểm tra nếu bài đăng không tồn tại
 	if (!forumPost) {
 		res.status(404);
-		throw new Error("Bài đăng không tồn tại");
+		throw new Error('Bài đăng không tồn tại');
 	}
 
 	// Xóa bài đăng
 	await ForumPost.findByIdAndDelete(req.params.forumPostId);
 
 	res.status(200).json({
-		status: "success",
+		status: 'success',
 		data: {
 			id: req.params.forumPostId,
 		},
 	});
 });
-const updateForumPost = asyncHandler(async (req, res) => { });
+const updateForumPost = asyncHandler(async (req, res) => {});
 const getAllForumPosts = asyncHandler(async (req, res) => {
-	try {
-		const forumPosts = await ForumPost.find({})
+	const forumPosts = await ForumPost.find({})
 		.populate({
 			path: 'author',
-			select: 'name avatar role', 
+			select: 'name avatar role',
 		})
 		.populate({
 			path: 'comments.author',
-			select: 'avatar name', 
+			select: 'avatar name',
 		});
-		res.status(200).json({
-			success: true,
-			data: { forumPosts },
-		});
-	} catch (error) {
-		res.status(500).json({
-			success: false,
-			error: error.message,
-		});
-	}
+	res.status(200).json({
+		success: true,
+		data: { forumPosts },
+	});
 });
 const getForumPost = asyncHandler(async (req, res) => {
-	try {
-		const { forumPostId } = req.params;
+	const { forumPostId } = req.params;
 
-		const forumPost = await ForumPost.findById(forumPostId);
+	const forumPost = await ForumPost.findById(forumPostId).populate({
+		path: 'author',
+		select: 'name avatar role',
+	});
 
-		if (!forumPost) {
-			res.status(404);
-			throw new Error("Bài đăng không tồn tại");
-		}
-		res.status(200).json({
-			success: true,
-			data: { forumPost },
-		})
-
-	} catch (error) {
-		res.status(500).json({
-			success: false,
-			error: error.message,
-		});
+	if (!forumPost) {
+		res.status(404);
+		throw new Error('Bài đăng không tồn tại');
 	}
+	res.status(200).json({
+		success: true,
+		data: { forumPost },
+	});
+});
+const saveForumPost = asyncHandler(async (req, res) => {
+	const repositoryExists = await PostRepository.findOne({
+		repositoryName: req.body.repositoryName,
+	});
+	let repository;
+	if (!repositoryExists) {
+		repository = await PostRepository.create({
+			repositoryName: req.body.repositoryName,
+			postsList: [
+				{
+					postId: req.params.forumPostId,
+				},
+			],
+			account: req.account._id,
+		});
+	} else {
+		repositoryExists.postsList.push({
+			postId: req.params.forumPostId,
+		});
+		repository = repositoryExists;
+		await repositoryExists.save();
+	}
+	res.status(201).json({
+		status: 'success',
+		data: {
+			repository,
+		},
+	});
+});
+
+const getForumRepositories = asyncHandler(async (req, res) => {
+	const repositories = await PostRepository.find({
+		account: req.account._id,
+	}).populate('postsList.postId');
+	// .populate('postsList.postId.author');
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			repositories,
+		},
+	});
 });
 
 module.exports = {
@@ -76,4 +108,6 @@ module.exports = {
 	updateForumPost,
 	getAllForumPosts,
 	getForumPost,
+	saveForumPost,
+	getForumRepositories,
 };

@@ -53,16 +53,20 @@ import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
-import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint'
+import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint';
 import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
 import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
-import {TransactionHistory} from './pages/TransactionHistory/TransactionHistory';
+import { TransactionHistory } from './pages/TransactionHistory/TransactionHistory';
 import { IncomeDomesticHelper } from './pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper';
-import { ForumPage } from './pages/ForumPage';
+import { ForumLayout } from './pages/ForumPage/layout';
+import { ForumDiscussions } from './pages/ForumPage/ForumDiscussions';
+import { ForumRepositories } from './pages/ForumPage/ForumRepositories';
+import { DetailedRepository } from './pages/ForumPage/DetailedRepository';
+import { DetailedForumPost } from './pages/ForumPage/components/DetailedForumPost';
 const App = () => {
 	return (
 		<Router>
-			<AppContent/>
+			<AppContent />
 		</Router>
 	);
 };
@@ -95,8 +99,11 @@ const AppContent = () => {
 						<Route path="/update-dw" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/deposit" element={<DepositPage />} />
-						<Route path="/transaction-history" element={<TransactionHistory />} />
-						
+						<Route
+							path="/transaction-history"
+							element={<TransactionHistory />}
+						/>
+
 						<Route
 							path="/job-posting-history"
 							element={<JobPostingHistory />}
@@ -139,7 +146,12 @@ const AppContent = () => {
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
 						<Route path="/journey" element={<JourneyPage />} />
 						<Route path="/ranking" element={<RankingPage />} />
-						<Route path="/forum" element={<ForumPage />} />
+						<Route path="/forum" element={<ForumLayout />}>
+							<Route path="discussions" element={<ForumDiscussions />} />
+							<Route path="repositories" element={<ForumRepositories />}/>
+							<Route path="repositories/:repositoryId" element={<DetailedRepository />}/>
+							<Route path="discussions/:postId" element={<DetailedForumPost />}/>
+						</Route>
 					</Route>
 					{isAdminPage && (
 						<>
