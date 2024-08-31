@@ -52,45 +52,44 @@ const postRepositorySchema = mongoose.Schema(
 	}
 );
 
-const forumPostSchema = mongoose.Schema(
-	{
-		title: {
-			type: String,
-			required: true,
-		},
-		content: {
-			type: String,
-			required: true,
-		},
-		images: [
-			{
+	const forumPostSchema = mongoose.Schema(
+		{
+			
+			content: {
 				type: String,
+				required: true,
 			},
-		],
-		author: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Account',
+			images: [
+				{
+					type: String,
+				}
+			],
+			author: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			},
+			comments: [commentSchema],
+			likes: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Account',
+				},
+			],
+			dislikes: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Account',
+				},
+			],
+			
 		},
-		comments: [commentSchema],
-		likes: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Account',
-			},
-		],
-		dislikes: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Account',
-			},
-		],
-	},
-	{
-		timestamps: true,
-	}
-);
+		{
+			timestamps: true,
+		}
+	);
 
-module.exports = {
-	ForumPost: mongoose.model('ForumPost', forumPostSchema),
-	PostRepository: mongoose.model('PostRepository', postRepositorySchema),
-};
+	module.exports = {
+		ForumPost: mongoose.model('ForumPost', forumPostSchema),
+		PostRepository: mongoose.model('PostRepository', postRepositorySchema),
+	}
+	

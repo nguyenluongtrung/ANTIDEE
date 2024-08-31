@@ -224,6 +224,10 @@ const accountSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		hiddenPost: [{
+			type:mongoose.Schema.Types.ObjectId,
+			ref: 'ForumPost',
+		}],
 	},
 	{
 		timestamps: true,

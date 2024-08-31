@@ -5,24 +5,50 @@ import { RiEmotionLine } from 'react-icons/ri';
 import { useDispatch } from 'react-redux';
 import { getAllForumPosts } from '../../features/forumPost/forumPostSlice';
 import { DetailedForumPost } from './components/DetailedForumPost';
-
+import { CreatePostForum } from './components/CreateForumPost/CreateForumPost';
 export const ForumDiscussions = () => {
 	const dispatch = useDispatch();
-	const [forumPosts, setForumPosts] = useState([]);
-
+	const [forumPost, setForumPost] = useState([]);
+	const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
+	const handleOpenCreateForumPost = () => {
+		setIsOpenCreatePostForum(true);
+	};
 	async function initialForumPostList() {
-		let output = await dispatch(getAllForumPosts());
-		setForumPosts(output.payload);
-	}
+		try {
+		  let output = await dispatch(getAllForumPosts());
+		  if (output.payload) {
+			let sortedPosts = [...output.payload].sort(
+			  (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+			);
+			setForumPost(sortedPosts);
+		  } else {
+			console.error('No posts found.');
+		  }
+		} catch (error) {
+		  console.error('Error fetching posts:', error);
+		}
+	  }
 
 	useEffect(() => {
 		initialForumPostList();
 	}, []);
-
+	const handleGetAllForumPosts = async () => {
+		let output = await dispatch(getAllForumPosts());
+		let sortedPosts = [...output.payload].sort(
+			(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+		);
+		setForumPost(sortedPosts);
+	};
 	return (
 		<div>
 			<div className="p-4">
 				<div className="">
+				{isOpenCreatePostForum && (
+                    <CreatePostForum
+                    setIsOpenCreatePostForum={setIsOpenCreatePostForum}
+                        handleGetAllForumPosts={handleGetAllForumPosts}
+                    />
+                )}
 					<div className={`relative flex flex-col rounded-lg shadow-lg p-4`}>
 						<div className="flex justify-around">
 							<div className="">
@@ -32,7 +58,7 @@ export const ForumDiscussions = () => {
 									className="w-14 h-14 rounded-full"
 								/>
 							</div>
-							<div className=" w-[85%] rounded-full border border-gray flex items-center px-4 font-medium text-gray cursor-pointer hover:bg-[#F6F6F6]">
+							<div className=" w-[85%] rounded-full border border-gray flex items-center px-4 font-medium text-gray cursor-pointer hover:bg-[#F6F6F6]"onClick={handleOpenCreateForumPost}>
 								Nêu lên suy nghĩ của bạn?
 							</div>
 						</div>
@@ -49,7 +75,7 @@ export const ForumDiscussions = () => {
 					</div>
 				</div>
 
-				{forumPosts?.map((post) => {
+				{forumPost?.map((post) => {
 					return <DetailedForumPost postContent={post}/>;
 				})}
 			</div>
