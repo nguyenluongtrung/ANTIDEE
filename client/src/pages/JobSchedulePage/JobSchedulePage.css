@@ -1,0 +1,69 @@
+.fc .fc-toolbar {
+	background-color: #fb7f0c;
+	color: white;
+	z-index: 50;
+}
+
+.fc .fc-daygrid-day {
+	background-color: #fff5e6;
+}
+
+.fc .fc-event {
+	background-color: #fb7f0c;
+	color: white;
+	border: none;
+}
+
+.fc .fc-event:hover {
+	background-color: #ffa04d;
+}
+
+.fc .fc-day-today {
+	background-color: #ffd9b3;
+	border-color: #fb7f0c;
+}
+
+.fc .fc-button {
+	background-color: #fb7f0c;
+	color: white;
+	border: none;
+}
+
+.fc .fc-button:hover {
+	background-color: #ffa04d;
+	color: white;
+}
+
+.fc .fc-daygrid-day-number {
+	color: #fb7f0c;
+}
+
+.fc .fc-scrollgrid-section {
+	border-color: #fb7f0c;
+}
+
+.fc-daygrid-day-frame {
+	height: 200px;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+	background-color: #fb7f0c;
+	color: white;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	font-weight: bold;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 5px;
+}
+
+.fc-daygrid-day-top {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

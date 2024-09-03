@@ -63,6 +63,7 @@ import { ForumDiscussions } from './pages/ForumPage/ForumDiscussions';
 import { ForumRepositories } from './pages/ForumPage/ForumRepositories';
 import { DetailedRepository } from './pages/ForumPage/DetailedRepository';
 import { DetailedForumPost } from './pages/ForumPage/components/DetailedForumPost';
+import { JobSchedulePage } from './pages/JobSchedulePage';
 const App = () => {
 	return (
 		<Router>
@@ -146,6 +147,7 @@ const AppContent = () => {
 						<Route path="/forgot-password" element={<ForgotPasswordPage />} />
 						<Route path="/journey" element={<JourneyPage />} />
 						<Route path="/ranking" element={<RankingPage />} />
+						<Route path="/job-schedule" element={<JobSchedulePage />} />
 						<Route path="/forum" element={<ForumLayout />}>
 							<Route path="discussions" element={<ForumDiscussions />} />
 							<Route path="repositories" element={<ForumRepositories />}/>

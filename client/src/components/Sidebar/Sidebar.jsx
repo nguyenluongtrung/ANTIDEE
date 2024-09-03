@@ -1,6 +1,5 @@
 import { FaChevronRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAccountInformation } from "../../features/auth/authSlice";
 import "./Sidebar.css";import { FaMoneyBillWave } from "react-icons/fa";
@@ -11,26 +10,17 @@ import { GiJourney } from "react-icons/gi";
 import { MdPostAdd } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import { FaRankingStar } from "react-icons/fa6";
+import { GrSchedules } from "react-icons/gr";
 
 export const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState(null);
-  const [sidebarVisible, setSidebarVisible] = useState(true); // State for sidebar visibility
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const { account } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getAccountInformation());
   }, [dispatch]);
-
-  const handleMouseEnter = (item) => {
-    setActiveItem(item);
-  };
-
-  const handleMouseLeave = () => {
-    setActiveItem(null);
-  };
 
   const handleArrowMouseEnter = () => {
     setSidebarVisible(true);
@@ -38,11 +28,6 @@ export const Sidebar = () => {
 
   const handleSidebarMouseLeave = () => {
     setSidebarVisible(false);
-  };
-
-  const handleClick = (item, path) => {
-    setActiveItem(item);
-    navigate(path);
   };
 
   const menu = [
@@ -61,6 +46,7 @@ export const Sidebar = () => {
   const menuDomestic = [
     { name: "Công Việc", icon: <MdPostAdd />, to: "/job-posts" },
     { name: "Hành Trình", icon: <GiJourney />, to: "/journey" },
+    { name: "Lịch làm việc", icon: <GrSchedules />, to: "/job-schedule" },
     { name: "Xếp Hạng", icon: <FaRankingStar />, to: "/ranking" },
     {
       name: "Thời Tiết",
