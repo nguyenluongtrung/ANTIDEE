@@ -1,11 +1,7 @@
 .fc .fc-toolbar {
-	background-color: #fb7f0c;
-	color: white;
+	color: #fb7f0c;
 	z-index: 50;
-}
-
-.fc .fc-daygrid-day {
-	background-color: #fff5e6;
+	font-weight: bold;
 }
 
 .fc .fc-event {
@@ -16,11 +12,11 @@
 
 .fc .fc-event:hover {
 	background-color: #ffa04d;
+	cursor: pointer;
 }
 
 .fc .fc-day-today {
 	background-color: #ffd9b3;
-	border-color: #fb7f0c;
 }
 
 .fc .fc-button {
@@ -43,7 +39,7 @@
 }
 
 .fc-daygrid-day-frame {
-	height: 200px;
+	height: 100px;
 }
 
 .fc-day-today .fc-daygrid-day-number {
