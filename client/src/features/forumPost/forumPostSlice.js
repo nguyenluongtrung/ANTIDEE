@@ -2,26 +2,26 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import forumPostService from './forumPostService';
 
 export const getAllForumPosts = createAsyncThunk(
-    'forumPosts/getAllForumPosts',
-    async (_, thunkAPI) => {
-        try {
-            const storedAccount = JSON.parse(localStorage.getItem('account'));
-            const token = storedAccount?.data?.token; // Safely retrieve the token
-            if (!token) {
-                throw new Error("No token found");
-            }
-            return await forumPostService.getAllForumPosts(token);
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
+	'forumPosts/getAllForumPosts',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount?.data?.token; // Safely retrieve the token
+			if (!token) {
+				throw new Error("No token found");
+			}
+			return await forumPostService.getAllForumPosts(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
 
-            return thunkAPI.rejectWithValue(message);
-        }
-    }
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
 );
 
 export const getForumPost = createAsyncThunk(
@@ -47,7 +47,7 @@ export const createForumPost = createAsyncThunk(
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await forumPostService.createForumPost(forumPostData,token );
+			return await forumPostService.createForumPost(forumPostData, token);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -163,6 +163,26 @@ export const unhideForumPost = createAsyncThunk(
 	}
 );
 
+export const commentForumPost = createAsyncThunk(
+	'forumPosts/commentForumPost',
+	async ({ commentData, forumPostId }, thunkAPI) => {
+		try {
+			const storedUser = JSON.parse(localStorage.getItem('account'));
+			const token = storedUser.data.token;
+			return await forumPostService.commentForumPost(commentData, forumPostId, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+)
+
 
 const initialState = {
 	forumPosts: [],
@@ -214,49 +234,49 @@ export const forumPostSlice = createSlice({
 				state.message = action.payload;
 			})
 			.addCase(createForumPost.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(createForumPost.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isSuccess = true;
-                state.forumPosts.unshift(action.payload);
-            })
-            .addCase(createForumPost.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-            })
+				state.isLoading = true;
+			})
+			.addCase(createForumPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.forumPosts.unshift(action.payload);
+			})
+			.addCase(createForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
 			.addCase(hideForumPost.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(hideForumPost.fulfilled, (state, action) => {
-                console.log('Payload:', action.payload);
-                state.isLoading = false;
-                state.isSuccess = true;
-                // Ensure the action.payload matches the ID structure returned from API
-                state.forumPosts = state.forumPosts.filter(
-                    (post) => String(post._id) !== String(action.payload)
-                );
-            })
-            .addCase(hideForumPost.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-            })
-            .addCase(unhideForumPost.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(unhideForumPost.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isSuccess = true;
-                state.forumPosts.push(action.payload);
-            })
-            .addCase(unhideForumPost.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-            })
-        
+				state.isLoading = true;
+			})
+			.addCase(hideForumPost.fulfilled, (state, action) => {
+				console.log('Payload:', action.payload);
+				state.isLoading = false;
+				state.isSuccess = true;
+				// Ensure the action.payload matches the ID structure returned from API
+				state.forumPosts = state.forumPosts.filter(
+					(post) => String(post._id) !== String(action.payload)
+				);
+			})
+			.addCase(hideForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(unhideForumPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(unhideForumPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.forumPosts.push(action.payload);
+			})
+			.addCase(unhideForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+
 			.addCase(deleteForumPost.pending, (state) => {
 				state.isLoading = true;
 			})
@@ -294,6 +314,22 @@ export const forumPostSlice = createSlice({
 				state.repositories.push(action.payload);
 			})
 			.addCase(saveForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+
+			.addCase(commentForumPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(commentForumPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.forumPosts = state.forumPosts.filter(
+					(post) => String(post._id) !== String(action.payload)
+				);
+			})
+			.addCase(commentForumPost.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

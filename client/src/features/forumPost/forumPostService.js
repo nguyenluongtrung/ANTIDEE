@@ -137,6 +137,18 @@ export const unhideForumPost = async (forumPostId, token) => {
     }
 };
 
+export const commentForumPost = async(commentData, forumPostId, token)=>{
+    const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+    const response = await axios.post(API_URL +'comment/'+forumPostId, commentData, config);
+    return response.data.data.comments;
+
+}
+
 
 
 const forumPostService = {
@@ -147,5 +159,7 @@ const forumPostService = {
 	createForumPost,
 	hideForumPost,
     unhideForumPost,
+    commentForumPost,
+
 };
 export default forumPostService;
