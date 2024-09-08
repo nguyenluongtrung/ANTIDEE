@@ -18,7 +18,6 @@ import { IoLocationOutline } from "react-icons/io5";
 import { MdOutlineNoteAlt } from "react-icons/md";
 import { LiaMoneyCheckAltSolid } from "react-icons/lia";
 import { PiMoneyWavy } from "react-icons/pi";
-import toast from "react-hot-toast";
 
 export const JobSchedulePage = () => {
 	const [myJobs, setMyJobs] = useState([]);
@@ -86,11 +85,6 @@ export const JobSchedulePage = () => {
 	}
 	
 	const handleEventClick = (clickInfo) => {
-		//E chốt giúp anh là sẽ open cái popup ở đâu ha
-		//+ Nếu ở đây thì data sẽ chưa load -> ui lỏ vì mở rồi mới ghi đè 
-		//+ Nếu ở trên dòng 85 thì ngon ui hoàn chỉnh đúng logic nhma đợi lâu -> test thử ik
-		//+ Có giải pháp mô ngon hơn núa a nhen
-		// setOpenPopupDetailJobPost(true);
 		getDetailInformationFormDB(clickInfo.event)
 	};
 
