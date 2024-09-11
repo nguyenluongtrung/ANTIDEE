@@ -30,12 +30,7 @@ export const CreatePromotion = ({ setIsOpenCreatePromotion, handleGetAllPromotio
         }
     }, [dispatch, services]);
 
-    useEffect(() => {
-        if (!promotions || promotions.length === 0) {
-            dispatch(getAllPromotions());
-        }
-    }, [dispatch, promotions]);
-
+ 
     const handleServiceDeselect = (serviceId) => {
         const updatedSelectedServices = selectedServices.filter(
             (service) => service !== serviceId
