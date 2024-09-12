@@ -6,83 +6,77 @@ const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
 
 const createJobPost = asyncHandler(async (req, res) => {
-	const jobPost = await JobPost.create(req.body);
-	const accounts = await Account.find({});
-	const service = await Service.findById(jobPost.serviceId);
-	const { isUrgent, isChosenYourFav } = req.body;
-	const customer = accounts.find(
-		(acc) => String(acc._id) == String(jobPost.customerId)
-	);
-	customer.accountBalance = Math.round(
-		customer.accountBalance - jobPost.totalPrice
-	);
-	await customer.save();
+    const { customerId, totalPrice, serviceId, isUrgent, isChosenYourFav } = req.body;
 
-	if (isUrgent) {
-		for (let account of accounts) {
-			if (
-				account?.resume[0]?.qualifications?.includes(
-					service.requiredQualification
-				) &&
-				account?.role === 'Người giúp việc'
-			) {
-				let email = {
-					toEmail: account.email,
-					subject: 'CÔNG VIỆC MỚI ĐANG CHỜ BẠN',
-					header: 'Công việc mới dành cho bạn',
-					imageUrl:
-						'https://storage.timviec365.vn/timviec365/pictures/images_08_2020/Cong-viec-danh-cho-nhung-tien-si-giay.jpg',
-					mainContent: `
-						<p>Chào <span style="font-style: italic">${account.name}</span>, </p>
+    const jobPost = await JobPost.create(req.body);
+    const accounts = await Account.find({});
+    const service = await Service.findById(serviceId);
+
+    const customer = accounts.find(acc => String(acc._id) == String(customerId));
+
+    if (customer.accountBalance < totalPrice) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'Tài khoản của bạn không đủ để đăng việc'
+        });
+    }
+
+    customer.accountBalance = Math.round(customer.accountBalance - totalPrice);
+    await customer.save();
+
+    if (isUrgent) {
+        for (let account of accounts) {
+            if (account?.resume[0]?.qualifications?.includes(service.requiredQualification) &&
+                account?.role === 'Người giúp việc') {
+                let email = {
+                    toEmail: account.email,
+                    subject: 'CÔNG VIỆC MỚI ĐANG CHỜ BẠN',
+                    header: 'Công việc mới dành cho bạn',
+                    imageUrl: 'https://storage.timviec365.vn/timviec365/pictures/images_08_2020/Cong-viec-danh-cho-nhung-tien-si-giay.jpg',
+                    mainContent: `
+                        <p>Chào <span style="font-style: italic">${account.name}</span>, </p>
                         <p>Hiện đang có công việc <span style="font-weight: bold">${service?.name?.toUpperCase()}</span> cần người giúp việc gấp, và chúng tôi thấy rằng công việc này phù hợp với chứng chỉ của bạn.</p>
                         <p>Hãy đăng nhập để nhận công việc ngay nhé!</p>
                         <p>Trân trọng,</p>
                         <p>Antidee Team</p>
-					`,
-				};
-				await sendMail(emailTemplate(email));
-			}
-		}
-	}
+                    `,
+                };
+                await sendMail(emailTemplate(email));
+            }
+        }
+    }
 
-	if (isChosenYourFav) {
-		for (let account of accounts) {
-			if (
-				account?.resume[0]?.qualifications?.includes(
-					service.requiredQualification
-				) &&
-				account?.role === 'Người giúp việc' &&
-				customer?.favoriteList?.findIndex(
-					(tasker) => String(tasker.domesticHelperId) == String(account._id)
-				) !== -1
-			) {
-				console.log(account);
-				let email = {
-					toEmail: account.email,
-					subject: 'BẠN CÓ CÔNG VIỆC MỚI TỪ KHÁCH HÀNG CŨ',
-					header: 'Công việc mới dành cho bạn',
-					imageUrl:
-						'https://media.baamboozle.com/uploads/images/914905/1667366395_512149.jpeg',
-					mainContent: `
-						<p>Chào <span style="font-style: italic">${account.name}</span>, </p>
+    if (isChosenYourFav) {
+        for (let account of accounts) {
+            if (account?.resume[0]?.qualifications?.includes(service.requiredQualification) &&
+                account?.role === 'Người giúp việc' &&
+                customer?.favoriteList?.findIndex(tasker => String(tasker.domesticHelperId) == String(account._id)) !== -1) {
+                let email = {
+                    toEmail: account.email,
+                    subject: 'BẠN CÓ CÔNG VIỆC MỚI TỪ KHÁCH HÀNG CŨ',
+                    header: 'Công việc mới dành cho bạn',
+                    imageUrl: 'https://media.baamboozle.com/uploads/images/914905/1667366395_512149.jpeg',
+                    mainContent: `
+                        <p>Chào <span style="font-style: italic">${account.name}</span>, </p>
                         <p>Hiện khách hàng cũ của bạn đang có công việc <span style="font-weight: bold">${service?.name?.toUpperCase()}</span> cần người giúp việc gấp, và chúng tôi thấy rằng công việc này phù hợp với chứng chỉ của bạn.</p>
                         <p>Hãy đăng nhập để nhận công việc ngay nhé!</p>
                         <p>Trân trọng,</p>
                         <p>Antidee Team</p>
-					`,
-				};
-				await sendMail(emailTemplate(email));
-			}
-		}
-	}
+                    `,
+                };
+                await sendMail(emailTemplate(email));
+            }
+        }
+    }
 
-	res.status(201).json({
-		status: 'success',
-		data: {
-			jobPost,
-		},
-	});
+    res.status(201).json({
+        status: 'success',
+        data: {
+            jobPost,
+        },
+    });
 });
+
 
 const getAllJobPosts = asyncHandler(async (req, res) => {
 	const jobPosts = await JobPost.find({})
@@ -277,14 +271,21 @@ const selectATasker = asyncHandler(async (req, res) => {
 const cancelAJob = asyncHandler(async (req, res) => {
 	const { isCanceled, reason, account } = req.body;
 	const jobPostId = req.params.jobPostId;
-
+ 
 	const isFoundJobPost = await JobPost.findById(jobPostId);
 	const foundAcc = await Account.findById(account);
+
 	if (!isFoundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
-
+ 
+	const penaltyAmount = Math.round(0.3 * isFoundJobPost?.totalPrice);
+	if (foundAcc.accountBalance < penaltyAmount) {
+		res.status(400);
+		throw new Error('Tài khoản của bạn không đủ để hủy việc (số tiền yêu cầu lớn hơn hoặc bằng 30% giá trị công việc)');
+	}
+ 
 	const updatedJobPost = await JobPost.findByIdAndUpdate(
 		jobPostId,
 		{
@@ -312,8 +313,7 @@ const cancelAJob = asyncHandler(async (req, res) => {
 		.toString()
 		.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
 
-	let msg;
-
+	let msg; 
 	if (
 		isFoundJobPost?.domesticHelperId === null ||
 		startingDate.toDateString() > new Date().toDateString() ||
@@ -321,15 +321,15 @@ const cancelAJob = asyncHandler(async (req, res) => {
 			startingTime >= getCurrentTimeStringPlus1Hour())
 	) {
 		msg = 'Bạn đã hủy việc thành công';
-	} else {
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
+	} else { 
+		foundAcc.accountBalance -= penaltyAmount;
 		foundAcc.rating.customerRating =
 			Math.round(foundAcc.rating.customerRating) - 0.1;
 		await foundAcc.save();
 		msg =
 			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
 	}
+ 
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -339,17 +339,19 @@ const cancelAJob = asyncHandler(async (req, res) => {
 	});
 });
 
+
 const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 	const { isCanceled, reason, account } = req.body;
 	const jobPostId = req.params.jobPostId;
-
+ 
 	const isFoundJobPost = await JobPost.findById(jobPostId);
 	const foundAcc = await Account.findById(account);
+
 	if (!isFoundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
-
+ 
 	const updatedJobPost = await JobPost.findByIdAndUpdate(
 		jobPostId,
 		{
@@ -361,7 +363,7 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 		},
 		{ new: true }
 	);
-
+ 
 	const currentTime = new Date();
 	const workingStartTime = new Date(isFoundJobPost.workingTime.startingDate);
 	const workingStartHour = parseInt(
@@ -379,33 +381,42 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 	const workingEndTime = new Date(workingEndMs);
 
 	let msg;
-
+	let penaltyAmount;
+ 
 	if (currentTime <= workingEndTime) {
+		penaltyAmount = Math.round(0.3 * isFoundJobPost?.totalPrice);
+		if (foundAcc.accountBalance < penaltyAmount) {
+			res.status(400);
+			throw new Error('Tài khoản của bạn nhỏ hơn giá trị công việc cần trừ');
+		}
 		msg =
 			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
 	} else {
+		penaltyAmount = Math.round(0.8 * isFoundJobPost?.totalPrice);
+		if (foundAcc.accountBalance < penaltyAmount) {
+			res.status(400);
+			throw new Error('Tài khoản của bạn nhỏ hơn giá trị công việc cần trừ');
+		}
 		msg =
 			'Bạn đã hủy việc thành công và bị phạt 80% giá trị công việc và giảm điểm uy tín';
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.8 * isFoundJobPost?.totalPrice);
 	}
-
-	console.log(foundAcc.rating.domesticHelperRating);
+ 
+	foundAcc.accountBalance -= penaltyAmount;
 	foundAcc.rating.domesticHelperRating =
 		foundAcc.rating.domesticHelperRating - 0.1;
-
+ 
 	await foundAcc.save();
-
+ 
 	res.status(200).json({
 		status: 'success',
 		data: {
 			jobPost: updatedJobPost,
+			account: foundAcc,   
 			message: msg,
 		},
 	});
 });
+
 
 const getCurrentTimeStringPlus1Hour = () => {
 	const now = new Date();

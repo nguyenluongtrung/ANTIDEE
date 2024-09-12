@@ -17,14 +17,19 @@ export const JobPostCancel = ({
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const result = await dispatch(cancelJobPost({ isCanceled: true, reason, account: myAccountId, jobPostId }));
-		if (result.type.endsWith('fulfilled')) {
-			toast.success(result?.payload?.msg, successStyle);
-		} else if (result?.error?.message === 'Rejected') {
-			toast.error(result?.payload, errorStyle);
+		try {
+			const result = await dispatch(cancelJobPost({ isCanceled: true, reason, account: myAccountId, jobPostId }));
+			if (result.type.endsWith('fulfilled')) {
+				toast.success(result?.payload?.msg, successStyle); 
+				getAllInitialJobList(); 
+				setIsOpenJobPostDetail(false);
+				setIsOpenCancelForm(false);
+			} else if (result?.error?.message === 'Rejected') {
+				toast.error(result?.payload, errorStyle);
+			}
+		} catch (error) {
+			toast.error('Đã xảy ra lỗi khi hủy công việc.', errorStyle);
 		}
-		getAllInitialJobList();
-		setIsOpenJobPostDetail(false)
 	};
 
 	return (
@@ -42,10 +47,10 @@ export const JobPostCancel = ({
 					id="select1"
 					className="hidden"
 					name="select"
-					onClick={() => {setShowOtherFeedback(false); setReason("Bận việc đột xuất")}}
+					onClick={() => { setShowOtherFeedback(false); setReason("Bận việc đột xuất") }}
 				/>
 				<label
-					for="select1"
+					htmlFor="select1"
 					className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
 				>
@@ -56,10 +61,10 @@ export const JobPostCancel = ({
 					id="select2"
 					className="hidden"
 					name="select"
-					onClick={() => {setShowOtherFeedback(false); setReason("Đăng nhầm ngày")}}
+					onClick={() => { setShowOtherFeedback(false); setReason("Đăng nhầm ngày") }}
 				/>
 				<label
-					for="select2"
+					htmlFor="select2"
 					className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
 				>
@@ -70,7 +75,7 @@ export const JobPostCancel = ({
 					id="select3"
 					className="hidden"
 					name="select"
-					onClick={() => {setShowOtherFeedback(false); setReason("Không cần việc này nữa")}}
+					onClick={() => { setShowOtherFeedback(false); setReason("Không cần việc này nữa") }}
 				/>
 				<label
 					htmlFor="select3"

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { cancelAJobDomesticHelper } from '../../../../features/jobPosts/jobPostsSlice';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
@@ -20,11 +20,12 @@ export const JobPostCancel = ({
 		e.preventDefault();
 		const result = await dispatch(cancelAJobDomesticHelper({ isCanceled: true, reason, account: myAccountId, jobPostId }));
 		if (result.type.endsWith('fulfilled')) {
-			toast.success(result?.payload?.msg, successStyle);
+			toast.success(result?.payload?.msg, successStyle); 
+
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-		await dispatch(getAccountInformation())
+
 		setIsOpenCancelForm(false);
 		setIsOpenJobPostDetail(false);
 		getAllJobList();
@@ -48,7 +49,7 @@ export const JobPostCancel = ({
 					onClick={() => {setShowOtherFeedback(false); setReason("Bận việc đột xuất")}}
 				/>
 				<label
-					for="select1"
+					htmlFor="select1"
 					className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
 				>
@@ -62,7 +63,7 @@ export const JobPostCancel = ({
 					onClick={() => {setShowOtherFeedback(false); setReason("Đăng nhầm ngày")}}
 				/>
 				<label
-					for="select2"
+					htmlFor="select2"
 					className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
 				>
