@@ -181,7 +181,43 @@ export const commentForumPost = createAsyncThunk(
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
-)
+);
+
+export const reactLikesPost = createAsyncThunk(
+	'forumPosts/reactLikesPost',
+	async ({ forumPostId, accountId }, thunkAPI) => {
+		try {
+			return await forumPostService.reactLikesPost(forumPostId, accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const reactDislikesPost = createAsyncThunk(
+	'forumPosts/reactDislikesPost',
+	async ({ forumPostId, accountId }, thunkAPI) => {
+		try {
+			return await forumPostService.reactDislikesPost(forumPostId, accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 
 
 const initialState = {
@@ -333,7 +369,41 @@ export const forumPostSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
-			});
+			})
+			.addCase(reactLikesPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(reactLikesPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.forumPosts[
+					state.forumPosts.findIndex(
+						(forumPost) => forumPost._id == action.payload._id
+					)
+				] = action.payload;
+			})
+			.addCase(reactLikesPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(reactDislikesPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(reactDislikesPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.forumPosts[
+					state.forumPosts.findIndex(
+						(forumPost) => forumPost._id == action.payload._id
+					)
+				] = action.payload;
+			})
+			.addCase(reactDislikesPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
 	},
 });
 

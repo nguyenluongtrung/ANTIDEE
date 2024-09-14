@@ -15,6 +15,8 @@ const {
   hideForumPost,
   unhideForumPost,
   commentForumPost,
+  reactLikesPost,
+	reactDislikesPost,
 } = require("../controllers/forumPostController");
 const router = express.Router();
 
@@ -29,6 +31,8 @@ router
 router.route("/comment/:forumPostId").post(protect, commentForumPost);
 router.route("/save-forum-post/:forumPostId").post(protect, saveForumPost);
 router.route("/:forumPostId/hide").patch(protect, hideForumPost);
+router.route('/:forumPostId/:accountId').patch(reactLikesPost);
+router.route('/:forumPostId/:accountId').patch(reactDislikesPost);
 
 router.patch("/:forumPostId/unhide", protect, unhideForumPost);
 module.exports = router;

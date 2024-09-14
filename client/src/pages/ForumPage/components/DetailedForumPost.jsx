@@ -20,14 +20,18 @@ import {
 	getForumPost,
 	hideForumPost,
 	unhideForumPost,
+	reactLikesPost,
+	reactDislikesPost,
 } from "../../../features/forumPost/forumPostSlice";
 import { IoMdSend } from "react-icons/io";
 import { getAccountInformation } from "../../../features/auth/authSlice";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SavePostForm } from "./SavePostForm";
+import { BiLike } from "react-icons/bi";
+import { BiDislike } from "react-icons/bi";
 
-export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUpdateCommentLocal, setForumPost }) => {
+export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUpdateCommentLocal, setForumPost, setChosenForumPost }) => {
 	const [showPostOptions, setShowPostOptions] = useState();
 	const [hiddenPostIds, setHiddenPostIds] = useState([]);
 	const [openSavePostForm, setOpenSavePostForm] = useState(false);
@@ -36,6 +40,7 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 	const dispatch = useDispatch();
 	const { postId } = useParams();
 	const [accountId, setAccountId] = useState();
+	const [account, setAccount] = useState('');
 	const [post, setPost] = useState();
 	const postOptionsRef = useRef(null);
 	const postRef = useRef(null);
@@ -156,6 +161,20 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 	const handleHideComments = () => {
 		setShowAllComments(false);
 		postRef.current?.scrollIntoView({ behavior: 'smooth' });
+	};
+
+	const handleReactLikesPost = async (postId) => {
+		const response = await dispatch(
+			reactLikesPost({ postId, accountId: account._id })
+		);
+		setChosenForumPost(response.payload);
+	};
+
+	const handleReactDislikesPost = async (postId) => {
+		const response = await dispatch(
+			reactDislikesPost({ postId, accountId: account._id })
+		);
+		setChosenForumPost(response.payload);
 	};
 
 
@@ -280,11 +299,35 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 						<div className="flex">
 							<div className="flex items-center cursor-pointer">
 								{post?.likes?.includes(accountId) ? (
-									<FaHeart color="red" />
+									<BiLike
+									className="absolute right-8 hover:cursor-pointer" 
+									size={20} color="blue" 
+									onClick={() => handleReactLikesPost(post?._id)}
+									/>
 								) : (
-									<FaRegHeart />
+									<BiLike
+									className="absolute right-8 hover:cursor-pointer" 
+									size={20} 
+									onClick={() => handleReactLikesPost(post?._id)}
+									/>
 								)}
 								<span className="ml-2">{post?.likes?.length}</span>
+							</div>
+							<div className="flex items-center cursor-pointer ml-4">
+								{post?.dislikes?.includes(accountId) ? (
+									<BiDislike
+									className="absolute right-8 hover:cursor-pointer" 
+									size={20} color="blue" 
+									onClick={() => handleReactDislikesPost(post?._id)}
+									/>
+								) : (
+									<BiDislike
+									className="absolute right-8 hover:cursor-pointer" 
+									size={20} 
+									onClick={() => handleReactDislikesPost(post?._id)}
+									/>
+								)}
+								<span className="ml-2">{post?.dislikes?.length}</span>
 							</div>
 							<div className="flex items-center cursor-pointer ml-4">
 								<FaRegComment />

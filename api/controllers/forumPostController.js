@@ -260,6 +260,64 @@ const commentForumPost = asyncHandler(async (req, res) => {
 	});
 });
 
+const reactLikesPost = asyncHandler(async (req, res) => {
+	try {
+		const forumPost = await ForumPost.findById(req.params.forumPostId);
+		if (
+			forumPost.likeAccounts.find((account) => account == req.params.accountId)
+		) {
+			forumPost.likeCount = Number(forumPost.likeCount) - 1;
+			forumPost.likeAccounts = forumPost.likeAccounts.filter(
+				(acc) => String(acc) !== String(req.params.accountId)
+			);
+		} else {
+			forumPost.likeCount = Number(forumPost.likeCount) + 1;
+			forumPost.likeAccounts.push(req.params.accountId);
+		}
+		const newForumPost = await forumPost.save();
+		res.status(200).json({
+			status: 'success',
+			data: {
+				discussion: newForumPost,
+			},
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			error: error.message,
+		});
+	}
+});
+
+const reactDislikesPost = asyncHandler(async (req, res) => {
+	try {
+		const forumPost = await ForumPost.findById(req.params.forumPostId);
+		if (
+			forumPost.dislikeAccounts.find((account) => account == req.params.accountId)
+		) {
+			forumPost.dislikeCount = Number(forumPost.dislikeCount) - 1;
+			forumPost.dislikeAccounts = forumPost.dislikeAccounts.filter(
+				(acc) => String(acc) !== String(req.params.accountId)
+			);
+		} else {
+			forumPost.dislikeCount = Number(forumPost.dislikeCount) + 1;
+			forumPost.dislikeAccounts.push(req.params.accountId);
+		}
+		const newForumPost = await forumPost.save();
+		res.status(200).json({
+			status: 'success',
+			data: {
+				discussion: newForumPost,
+			},
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			error: error.message,
+		});
+	}
+});
+
 module.exports = {
 	createForumPost,
 	deleteForumPost,
@@ -271,4 +329,6 @@ module.exports = {
 	hideForumPost,
 	unhideForumPost,
 	commentForumPost,
+	reactLikesPost,
+	reactDislikesPost,
 };

@@ -147,7 +147,23 @@ export const commentForumPost = async(commentData, forumPostId, token)=>{
     const response = await axios.post(API_URL +'comment/'+forumPostId, commentData, config);
     return response.data.data.comments;
 
-}
+};
+
+const reactLikesPost = async (forumPostId, accountId) => {
+	const response = await axios.patch(
+		API_URL + `/${forumPostId}/${accountId}`,
+		{}
+	);
+	return response.data.data.forumPost;
+};
+
+const reactDislikesPost = async (forumPostId, accountId) => {
+	const response = await axios.patch(
+		API_URL + `/${forumPostId}/${accountId}`,
+		{}
+	);
+	return response.data.data.forumPost;
+};
 
 
 
@@ -160,6 +176,8 @@ const forumPostService = {
 	hideForumPost,
     unhideForumPost,
     commentForumPost,
+    reactLikesPost,
+    reactDislikesPost,
 
 };
 export default forumPostService;
