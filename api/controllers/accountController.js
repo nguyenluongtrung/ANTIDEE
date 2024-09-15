@@ -641,13 +641,6 @@ const updateAPoint = asyncHandler(async (req, res) => {
 		if (!account) {
 			return res.status(404).json({ message: 'Account not found' });
 		}
-
-		// Cập nhật aPoints
-		console.log(
-			Number(account.aPoints),
-			Number(apoint),
-			Number(account.aPoints) + Number(apoint)
-		);
 		account.aPoints = Number(account.aPoints) + Number(apoint);
 
 		// Thêm vào lịch sử aPointHistory
