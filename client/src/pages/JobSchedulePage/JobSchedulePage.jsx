@@ -25,7 +25,7 @@ export const JobSchedulePage = () => {
 	const [myJobs, setMyJobs] = useState([]);
 	const dispatch = useDispatch();
 	const [myAccountId, setMyAccountId] = useState();
-	const { services, isLoading } = useSelector((state) => state.services);
+	const { services } = useSelector((state) => state.services);
 	const [selectedServices, setSelectedServices] = useState([]);
 
 	async function initiateAccountInformation() {
@@ -61,6 +61,7 @@ export const JobSchedulePage = () => {
 
 		setMyJobs(myJobs);
 	};
+	
 	useEffect(() => {
 		initiateAccountInformation();
 		dispatch(getAllServices());

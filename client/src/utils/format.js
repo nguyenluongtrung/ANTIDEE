@@ -181,5 +181,7 @@ export const appendHourToDate = (dateString, hourString) => {
 
 	date.setUTCHours(hours, minutes, 0, 0);
 
+	date.setUTCHours(date.getUTCHours() - 7);
+
 	return date.toISOString();
 };
