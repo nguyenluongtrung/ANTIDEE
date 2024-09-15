@@ -1,48 +1,52 @@
-import { AiOutlineEllipsis } from "react-icons/ai";
-import { FaUserAlt } from "react-icons/fa";
+import { AiOutlineEllipsis } from 'react-icons/ai';
+import { FaUserAlt } from 'react-icons/fa';
 import {
 	FaHeart,
 	FaRegBookmark,
 	FaRegComment,
 	FaRegHeart,
-} from "react-icons/fa6";
-import { MdDeleteForever, MdEdit, MdOutlineReport } from "react-icons/md";
-import { PiShareFat } from "react-icons/pi";
-import { TbMessageReport } from "react-icons/tb";
-import { formatDateForumPost } from "../../../utils/format";
-import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { errorStyle, successStyle } from "../../../utils/toast-customize";
+} from 'react-icons/fa6';
+import { MdDeleteForever, MdEdit, MdOutlineReport } from 'react-icons/md';
+import { PiShareFat } from 'react-icons/pi';
+import { TbMessageReport } from 'react-icons/tb';
+import { formatDateForumPost } from '../../../utils/format';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import {
 	commentForumPost,
-	deleteForumPost,
 	getAllForumPosts,
-	getForumPost,
 	hideForumPost,
+	reactToForumPost,
 	unhideForumPost,
-} from "../../../features/forumPost/forumPostSlice";
-import { IoMdSend } from "react-icons/io";
-import { getAccountInformation } from "../../../features/auth/authSlice";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { SavePostForm } from "./SavePostForm";
+	unReactToForumPost,
+} from '../../../features/forumPost/forumPostSlice';
+import { IoMdSend } from 'react-icons/io';
+import { getAccountInformation } from '../../../features/auth/authSlice';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { SavePostForm } from './SavePostForm';
 
-export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUpdateCommentLocal, setForumPost }) => {
+export const DetailedForumPost = ({
+	postContent,
+	handleDeleteForumPost,
+	setForumPost,
+}) => {
 	const [showPostOptions, setShowPostOptions] = useState();
-	const [hiddenPostIds, setHiddenPostIds] = useState([]);
+	const [_hiddenPostIds, setHiddenPostIds] = useState([]);
 	const [openSavePostForm, setOpenSavePostForm] = useState(false);
-	const [chosenForumPostId, setChosenForumPostId] = useState(undefined);
 	const [undoPostId, setUndoPostId] = useState(null);
 	const dispatch = useDispatch();
 	const { postId } = useParams();
 	const [accountId, setAccountId] = useState();
+	const [myAvatar, setMyAvatar] = useState();
 	const [post, setPost] = useState();
 	const postOptionsRef = useRef(null);
 	const postRef = useRef(null);
 
 	const [showAllComments, setShowAllComments] = useState(false);
 
-	const [comment, setComment] = useState("");
+	const [comment, setComment] = useState('');
 
 	const handleShowPostOptions = (postId) => {
 		setShowPostOptions((prevState) => (prevState === postId ? null : postId));
@@ -66,10 +70,10 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 			}
 		};
 
-		document.addEventListener("mousedown", handleClickOutside);
+		document.addEventListener('mousedown', handleClickOutside);
 
 		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
 
@@ -79,27 +83,26 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 
 	async function initialAccountInfomation() {
 		let output = await dispatch(getAccountInformation());
+		setMyAvatar(output.payload.avatar);
 		setAccountId(output.payload._id);
 	}
 
 	const handleHidePost = async (postId) => {
 		try {
-			const result = await dispatch(hideForumPost(postId)).unwrap();
+			await dispatch(hideForumPost(postId)).unwrap();
 			setHiddenPostIds((prevHiddenIds) => [...prevHiddenIds, postId]);
-			// Hiển thị nút hoàn tác
 			setUndoPostId(postId);
 			setTimeout(() => {
-				setUndoPostId(null); // Ẩn nút hoàn tác sau một khoảng thời gian
-			}, 5000); // Ví dụ: 5 giây
+				setUndoPostId(null);
+			}, 5000);
 		} catch (error) {
-			console.error("Đã xảy ra lỗi khi ẩn bài viết:", error);
+			console.error('Đã xảy ra lỗi khi ẩn bài viết:', error);
 		}
 	};
 
 	const handleUndoHidePost = async (postId) => {
 		try {
 			const result = await dispatch(unhideForumPost(postId)).unwrap();
-			console.log(`Bài viết với ID ${postId} đã được khôi phục.`);
 			setHiddenPostIds((prevHiddenIds) =>
 				prevHiddenIds.filter((id) => id !== postId)
 			);
@@ -109,18 +112,18 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 				)
 			);
 		} catch (error) {
-			console.error("Lỗi khi khôi phục bài viết:", error);
+			console.error('Lỗi khi khôi phục bài viết:', error);
 		}
 	};
 
 	const handleCommentSubmit = async (forumPostId) => {
 		if (!comment.trim()) {
-			toast.error("Bình luận không được để trống", errorStyle);
+			toast.error('Bình luận không được để trống', errorStyle);
 			return;
 		}
 
 		if (!accountId || !forumPostId) {
-			toast.error("Thông tin tài khoản hoặc bài viết không hợp lệ", errorStyle);
+			toast.error('Thông tin tài khoản hoặc bài viết không hợp lệ', errorStyle);
 			return;
 		}
 
@@ -131,26 +134,25 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 			})
 		);
 
-		if (result.type.endsWith("fulfilled")) {
-			toast.success("Bình luận thành công", successStyle);
-			console.log(result.payload)
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Bình luận thành công', successStyle);
+			console.log(result.payload);
 			setForumPost((prevPosts) => {
 				const updatedPost = [...prevPosts];
 				const foundPostIndex = updatedPost.findIndex(
 					(post) => post._id == forumPostId
 				);
-				updatedPost[foundPostIndex] = { ...updatedPost[foundPostIndex], comments: result.payload };
+				updatedPost[foundPostIndex] = {
+					...updatedPost[foundPostIndex],
+					comments: result.payload,
+				};
 				return updatedPost;
 			});
-		} else if (result?.error?.message === "Rejected") {
-			toast.error("Có lỗi xảy ra. Vui lòng thử lại!", errorStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error('Có lỗi xảy ra. Vui lòng thử lại!', errorStyle);
 		}
 		await dispatch(getAllForumPosts());
 		setComment('');
-	};
-
-	const handleToggleShowAllComments = () => {
-		setShowAllComments((prevShowAll) => !prevShowAll);
 	};
 
 	const handleHideComments = () => {
@@ -158,12 +160,29 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 		postRef.current?.scrollIntoView({ behavior: 'smooth' });
 	};
 
+	const handleReactToForumPost = async (postId) => {
+		const result = await dispatch(
+			reactToForumPost({ forumPostId: postId, userId: accountId })
+		);
+		if (result.type.endsWith('fulfilled')) {
+			setPost(result.payload);
+		}
+	};
+
+	const handleUnReactToForumPost = async (postId) => {
+		const result = await dispatch(
+			unReactToForumPost({ forumPostId: postId, userId: accountId })
+		);
+		if (result.type.endsWith('fulfilled')) {
+			setPost(result.payload);
+		}
+	};
 
 	return (
-		<div ref={postRef} className="bg-white shadow-md rounded-lg overflow-hidden mt-4">
-
-
-
+		<div
+			ref={postRef}
+			className="bg-white shadow-md rounded-lg overflow-hidden mt-4"
+		>
 			{undoPostId && undoPostId === post?._id ? (
 				<div className="flex justify-center mt-4">
 					<button
@@ -280,9 +299,16 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 						<div className="flex">
 							<div className="flex items-center cursor-pointer">
 								{post?.likes?.includes(accountId) ? (
-									<FaHeart color="red" />
+									<FaHeart
+										color="red"
+										onClick={() =>
+											handleUnReactToForumPost(post._id, accountId)
+										}
+									/>
 								) : (
-									<FaRegHeart />
+									<FaRegHeart
+										onClick={() => handleReactToForumPost(post._id, accountId)}
+									/>
 								)}
 								<span className="ml-2">{post?.likes?.length}</span>
 							</div>
@@ -304,39 +330,75 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 					</div>
 					{post?.comments && (
 						<div className="px-4 py-4">
-							{post.comments.slice(0, showAllComments ? post.comments.length : 3).map((comment, index) => (
-								<div key={index} className="flex mb-4">
-									<img className="h-8 w-8 rounded-full object-cover mt-3" src={comment?.author?.avatar} alt="Commenter avatar" />
-									<div className="ml-2 bg-gray-100 rounded-lg px-3 py-2">
-										<div className="bg-[#f0efef] p-2 w-full rounded-xl">
-											<div className="text-sm font-semibold text-gray-900 flex justify-between">
-												{comment?.author?.name}
-												<MdOutlineReport size={20} className="hover:text-primary cursor-pointer" />
+							{post.comments
+								.slice(0, showAllComments ? post.comments.length : 3)
+								.map((comment, index) => (
+									<div key={index} className="flex mb-4">
+										<img
+											className="h-8 w-8 rounded-full object-cover mt-3"
+											src={comment?.author?.avatar}
+											alt="Commenter avatar"
+										/>
+										<div className="ml-2 bg-gray-100 rounded-lg px-3 py-2">
+											<div className="bg-[#f0efef] p-2 w-full rounded-xl">
+												<div className="text-sm font-semibold text-gray-900 flex justify-between">
+													{comment?.author?.name}
+													<MdOutlineReport
+														size={20}
+														className="hover:text-primary cursor-pointer"
+													/>
+												</div>
+												<p className="text-sm text-gray-700">
+													{comment?.content}
+												</p>
 											</div>
-											<p className="text-sm text-gray-700">{comment?.content}</p>
-										</div>
-										<div className="flex justify-between mt-2 ml-2 pr-2 w-full">
-											<div className="flex">
-												<button className="flex items-center hover:text-anotherRed">
-													<FaRegHeart className="mr-1" />
-													<span className="text-sm">Thích</span>
-												</button>
-												<button className="flex items-center ml-6 hover:text-primary">
-													<FaRegComment className="mr-1" />
-													<span className="text-sm w-[60px]">Phản hồi</span>
-												</button>
-											</div>
-											<div className="flex">
-												<div className="flex items-center ">
-													<span className="text-sm mr-1">100</span>
-													<FaHeart className="text-anotherRed" />
+											<div className="flex justify-between mt-2 ml-2 pr-2 w-full">
+												<div className="flex">
+													<button className="flex items-center hover:text-anotherRed">
+														<FaRegHeart className="mr-1" />
+														<span className="text-sm">Thích</span>
+													</button>
+													<button className="flex items-center ml-6 hover:text-primary">
+														<FaRegComment className="mr-1" />
+														<span className="text-sm w-[60px]">Phản hồi</span>
+													</button>
+												</div>
+												<div className="flex">
+													<div className="flex items-center ">
+														<span className="text-sm mr-1">100</span>
+														<FaHeart className="text-anotherRed" />
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
+								))}
+							<div className="flex items-center mt-5 h-10">
+								{myAvatar ? (
+									<img
+										className="h-10 w-10 rounded-full object-cover"
+										src={post?.author?.avatar}
+										alt="User avatar"
+									/>
+								) : (
+									<FaUserAlt color="gray" size={20} />
+								)}
+								<div className="flex items-center ml-3 w-full rounded-full border-[1px] px-3 py-2 group focus-within:border-[1px]">
+									<input
+										className="w-full text-sm focus:outline-none"
+										type="text"
+										placeholder="Viết bình luận của bạn"
+										value={comment}
+										onChange={(e) => setComment(e.target.value)}
+									/>
+									<div className="ml-2 text-blue">
+										<IoMdSend
+											className="hover:text-primary cursor-pointer"
+											onClick={() => handleCommentSubmit(post?._id)}
+										/>
+									</div>
 								</div>
-							))}
-
+							</div>
 							{showAllComments ? (
 								<>
 									{post?.comments?.map((comment, index) => (
@@ -350,32 +412,14 @@ export const DetailedForumPost = ({ postContent, handleDeleteForumPost, handleUp
 										<p key={index} comment={comment} />
 									))}
 									{post?.comments?.length > 3 && (
-										<button onClick={() => setShowAllComments(true)}>Hiển thị tất cả bình luận</button>
+										<button onClick={() => setShowAllComments(true)}>
+											Hiển thị tất cả bình luận
+										</button>
 									)}
 								</>
 							)}
 						</div>
 					)}
-
-					{/* Comment Input Section */}
-					<div className="flex items-center mt-5 h-10">
-						<FaUserAlt color="gray" size={20} />
-						<div className="flex items-center ml-3 w-full rounded-full border-[1px] px-3 py-2 group focus-within:border-[1px]">
-							<input
-								className="w-full text-sm focus:outline-none"
-								type="text"
-								placeholder="Viết bình luận của bạn"
-								value={comment}
-								onChange={(e) => setComment(e.target.value)}
-							/>
-							<div className="ml-2 text-blue">
-								<IoMdSend
-									className="hover:text-primary cursor-pointer"
-									onClick={() => handleCommentSubmit(post?._id)}
-								/>
-							</div>
-						</div>
-					</div>
 
 					{openSavePostForm && (
 						<SavePostForm

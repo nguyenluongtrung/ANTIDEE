@@ -8,7 +8,7 @@ export const getAllForumPosts = createAsyncThunk(
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount?.data?.token; // Safely retrieve the token
 			if (!token) {
-				throw new Error("No token found");
+				throw new Error('No token found');
 			}
 			return await forumPostService.getAllForumPosts(token);
 		} catch (error) {
@@ -163,13 +163,17 @@ export const unhideForumPost = createAsyncThunk(
 	}
 );
 
-export const commentForumPost = createAsyncThunk(
-	'forumPosts/commentForumPost',
-	async ({ commentData, forumPostId }, thunkAPI) => {
+export const reactToForumPost = createAsyncThunk(
+	'forumPosts/reactToForumPost',
+	async ({ forumPostId, userId }, thunkAPI) => {
 		try {
-			const storedUser = JSON.parse(localStorage.getItem('account'));
-			const token = storedUser.data.token;
-			return await forumPostService.commentForumPost(commentData, forumPostId, token);
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await forumPostService.reactToForumPost(
+				forumPostId,
+				userId,
+				token
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -181,8 +185,55 @@ export const commentForumPost = createAsyncThunk(
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
-)
+);
 
+export const unReactToForumPost = createAsyncThunk(
+	'forumPosts/unReactToForumPost',
+	async ({ forumPostId, userId }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await forumPostService.unReactToForumPost(
+				forumPostId,
+				userId,
+				token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const commentForumPost = createAsyncThunk(
+	'forumPosts/commentForumPost',
+	async ({ commentData, forumPostId }, thunkAPI) => {
+		try {
+			const storedUser = JSON.parse(localStorage.getItem('account'));
+			const token = storedUser.data.token;
+			return await forumPostService.commentForumPost(
+				commentData,
+				forumPostId,
+				token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 
 const initialState = {
 	forumPosts: [],
@@ -250,15 +301,37 @@ export const forumPostSlice = createSlice({
 				state.isLoading = true;
 			})
 			.addCase(hideForumPost.fulfilled, (state, action) => {
-				console.log('Payload:', action.payload);
 				state.isLoading = false;
 				state.isSuccess = true;
-				// Ensure the action.payload matches the ID structure returned from API
 				state.forumPosts = state.forumPosts.filter(
 					(post) => String(post._id) !== String(action.payload)
 				);
 			})
 			.addCase(hideForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(reactToForumPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(reactToForumPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(reactToForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(unReactToForumPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(unReactToForumPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(unReactToForumPost.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
