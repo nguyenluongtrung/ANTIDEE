@@ -4,11 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import viLocale from "@fullcalendar/core/locales/vi";
-import "./JobSchedulePage.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getAccountInformation } from "../../features/auth/authSlice";
-import { getAllJobPosts, getAJob } from "../../features/jobPosts/jobPostsSlice";
-import { appendHourToDate } from "../../utils/format";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { BiDetail } from "react-icons/bi";
 import { MdDriveFileRenameOutline } from "react-icons/md";
@@ -18,8 +14,15 @@ import { IoLocationOutline } from "react-icons/io5";
 import { MdOutlineNoteAlt } from "react-icons/md";
 import { LiaMoneyCheckAltSolid } from "react-icons/lia";
 import { PiMoneyWavy } from "react-icons/pi";
-import { getAllServices } from "../../features/services/serviceSlice";
 import { RiCalendarScheduleLine } from "react-icons/ri";
+
+import { appendHourToDate } from "../../utils/format";
+
+import { getAccountInformation } from "../../features/auth/authSlice";
+import { getAllJobPosts, getAJob } from "../../features/jobPosts/jobPostsSlice";
+import { getAllServices } from "../../features/services/serviceSlice";
+
+import "./JobSchedulePage.css";
 
 export const JobSchedulePage = () => {
 	const [myJobs, setMyJobs] = useState([]);
