@@ -16,12 +16,6 @@ const commentSchema = mongoose.Schema(
 				ref: 'Account',
 			},
 		],
-		dislikes: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Account',
-			},
-		],
 	},
 	{
 		timestamps: true,
@@ -52,44 +46,35 @@ const postRepositorySchema = mongoose.Schema(
 	}
 );
 
-	const forumPostSchema = mongoose.Schema(
-		{
-			
-			content: {
+const forumPostSchema = mongoose.Schema(
+	{
+		content: {
+			type: String,
+			required: true,
+		},
+		images: [
+			{
 				type: String,
-				required: true,
 			},
-			images: [
-				{
-					type: String,
-				}
-			],
-			author: {
+		],
+		author: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Account',
+		},
+		comments: [commentSchema],
+		likes: [
+			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Account',
 			},
-			comments: [commentSchema],
-			likes: [
-				{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Account',
-				},
-			],
-			dislikes: [
-				{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Account',
-				},
-			],
-			
-		},
-		{
-			timestamps: true,
-		}
-	);
-
-	module.exports = {
-		ForumPost: mongoose.model('ForumPost', forumPostSchema),
-		PostRepository: mongoose.model('PostRepository', postRepositorySchema),
+		],
+	},
+	{
+		timestamps: true,
 	}
-	
+);
+
+module.exports = {
+	ForumPost: mongoose.model('ForumPost', forumPostSchema),
+	PostRepository: mongoose.model('PostRepository', postRepositorySchema),
+};
