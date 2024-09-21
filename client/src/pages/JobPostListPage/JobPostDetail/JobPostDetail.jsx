@@ -63,6 +63,15 @@ export const JobPostDetail = ({
 			handleGetAllJobPosts();
 			return;
 		}
+		if (account.accountBalance < Math.round(0.3 * chosenJobPost.totalPrice)) {
+			toast.error(
+				`Bạn cần có ít nhất ${Math.round(0.3 * chosenJobPost.totalPrice)} trong tài khoản để nhận công việc này`,
+				errorStyle
+			);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+			return;
+		}
 		let result;
 		if (chosenJobPost?.isChosenYourself) {
 			result = await dispatch(
