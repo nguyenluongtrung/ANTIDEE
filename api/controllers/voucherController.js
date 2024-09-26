@@ -1,11 +1,12 @@
 const Voucher = require('../models/voucherModel');
+const AccountVoucher = require('../models/accountVoucherModel')
 const Account = require('../models/accountModel');
 const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
+
 const createVoucher = async (req, res) => {
 	try {
 		const voucher = await Voucher.create(req.body);
-
 		const accounts = await Account.find({});
 
 		for (let account of accounts) {
@@ -59,18 +60,36 @@ const getAllVouchers = async (req, res) => {
 	}
 };
 
+const getAllAccountVouchers = async (req, res) => {
+	try {
+
+		const accountVouchers = await AccountVoucher.find({ accountId: req.params.accountId });
+		res.status(200).json({
+			success: true,
+			data: { accountVouchers },
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			error: error.message,
+		});
+	}
+};
+
 const getVoucherById = async (req, res) => {
 	try {
 		const voucher = await Voucher.findById(req.params.voucherId);
+		const accountVouchers = await AccountVoucher.find({ accountId: req.params.accountId });
 		if (!voucher) {
 			return res.status(404).json({
 				success: false,
 				error: 'Voucher not found',
 			});
 		}
+		const isMyVoucher = accountVouchers.find((accountVoucher) => String(accountVoucher.voucherId) == String(voucher._id)) ? true : false
 		res.status(200).json({
 			success: true,
-			data: voucher,
+			data: { ...voucher._doc, isMyVoucher },
 		});
 	} catch (error) {
 		res.status(500).json({
@@ -132,8 +151,8 @@ const deleteVoucher = async (req, res) => {
 };
 
 const redeemVoucher = async (req, res) => {
-	const { userId, voucherId } = req.body;
-	const user = await Account.findById(userId);
+	const { accountId, voucherId } = req.body;
+	const user = await Account.findById(accountId);
 	const voucher = await Voucher.findById(voucherId);
 
 	try {
@@ -154,12 +173,15 @@ const redeemVoucher = async (req, res) => {
 		if (voucher.quantity > 0) {
 			voucher.quantity -= 1;
 			user.aPoints -= voucher.price;
+			const accountVoucher = new AccountVoucher({
+				accountId: user._id,
+				voucherId: voucher._id,
+			});
 
-			user.accountVouchers.push({ voucherId: voucher._id });
-			voucher.voucherAccounts.push({ userId: user._id });
-
+			await accountVoucher.save();
 			await voucher.save();
 			await user.save();
+
 			return res.status(200).json({
 				message: 'Đổi voucher thành công',
 				data: { voucher, account: user },
@@ -176,35 +198,34 @@ const redeemVoucher = async (req, res) => {
 };
 
 const getRedeemedVouchers = async (req, res) => {
-	const { userId } = req.params;
+	const { accountId } = req.params;
 
 	try {
-		const user = await Account.findById(userId).populate(
-			'accountVouchers.voucherId'
-		);
-
+		const user = await Account.findById(accountId);
 		if (!user) {
 			return res.status(404).json({ message: 'User not found.' });
 		}
 
-		const redeemedVouchers = user.accountVouchers.map((voucher) => ({
-			voucherId: voucher.voucherId._id,
-			name: voucher.voucherId.name,
-			description: voucher.voucherId.description,
-			discountValue: voucher.voucherId.discountValue,
-			brand: voucher.voucherId.brand,
-			code: voucher.voucherId.code,
-			endDate: voucher.voucherId.endDate,
-			receivedAt: voucher.receivedAt,
-			isUsed: voucher.isUsed,
-			image: voucher.voucherId.image,
+		const redeemedVouchers = await AccountVoucher.find({ accountId: user._id })
+			.populate('voucherId');
+
+		const formattedVouchers = redeemedVouchers.map((accountVoucher) => ({
+			voucherId: accountVoucher.voucherId._id,
+			name: accountVoucher.voucherId.name,
+			description: accountVoucher.voucherId.description,
+			discountValue: accountVoucher.voucherId.discountValue,
+			code: accountVoucher.voucherId.code,
+			endDate: accountVoucher.voucherId.endDate,
+			receivedAt: accountVoucher.createdAt, // sử dụng createdAt từ AccountVoucher
+			image: accountVoucher.voucherId.image,
 		}));
 
-		return res.status(200).json({ success: true, data: redeemedVouchers });
+		return res.status(200).json({ success: true, data: formattedVouchers });
 	} catch (error) {
 		res.status(500).json({ success: false, error: error.message });
 	}
 };
+
 
 module.exports = {
 	createVoucher,
@@ -214,4 +235,5 @@ module.exports = {
 	deleteVoucher,
 	redeemVoucher,
 	getRedeemedVouchers,
+	getAllAccountVouchers
 };
