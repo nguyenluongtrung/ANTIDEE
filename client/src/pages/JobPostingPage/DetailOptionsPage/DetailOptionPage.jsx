@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
-import { RepeatitiveForm } from './RepeatitiveForm/RepeatitiveForm';
 import {
 	checkInvitationCode,
 	getAccountInformation,
@@ -20,7 +19,6 @@ import {
 import { getAllVouchers } from '../../../features/vouchers/voucherSlice';
 import { getAllPromotions } from '../../../features/promotions/promotionSlice';
 import { getAllJobPosts } from '../../../features/jobPosts/jobPostsSlice';
-import { validateIntersectWorkingHours } from '../../../utils';
 import { ConfirmModal } from '../../../components/ConfirmModal/ConfirmModal';
 
 export const DetailOptionPage = () => {
@@ -34,12 +32,10 @@ export const DetailOptionPage = () => {
 	const [invitationCode, setInvitationCode] = useState('');
 	const [totalPrice, setTotalPrice] = useState(0);
 	const [isUrgent, setIsUrgent] = useState(false);
-	const [isRepeatitive, setIsRepeatitive] = useState(false);
 	const [isChosenYourFav, setIsChosenYourFav] = useState(false);
 	const [isChosenYourself, setIsChosenYourself] = useState(false);
 	const [times, setTimes] = useState(0);
 	const [finalTimes, setFinalTimes] = useState(0);
-	const [isOpenRepeatitiveForm, setIsOpenRepeatitiveForm] = useState(false);
 	const [details, setDetails] = useState({});
 	const [agree, setAgree] = useState(false);
 	const [inputOptions, setInputOptions] = useState([
@@ -332,18 +328,6 @@ export const DetailOptionPage = () => {
 	}, [isChosenYourFav]);
 
 	useEffect(() => {
-		if (totalPrice) {
-			if (finalTimes && isRepeatitive) {
-				setTotalPrice((totalPrice) => totalPrice * finalTimes);
-			} else if (finalTimes != 0 && !isRepeatitive) {
-				setTotalPrice((totalPrice) => totalPrice / finalTimes);
-				setFinalTimes(0);
-				setTimes(0);
-			}
-		}
-	}, [finalTimes, isRepeatitive]);
-
-	useEffect(() => {
 		if (startingHour) {
 			if (
 				(startingHour < '08:00:00' || startingHour > '17:00:00') &&
@@ -460,28 +444,9 @@ export const DetailOptionPage = () => {
 		setIsChosenYourself(!isChosenYourself);
 	};
 
-	const handleToggleRepeatitiveButton = () => {
-		if (!anotherOptions.includes('isRepeatitive')) {
-			const tempOptions = [...anotherOptions, 'isRepeatitive'];
-			setAnotherOptions(tempOptions);
-		} else {
-			let tempOptions = anotherOptions.filter(
-				(option) => option !== 'isRepeatitive'
-			);
-			setAnotherOptions(tempOptions);
-		}
-		setIsRepeatitive(!isRepeatitive);
-	};
-
 	const handleInvitationCode = (e) => {
 		setInvitationCode(e.target.value);
 	};
-
-	useEffect(() => {
-		if (isRepeatitive) {
-			setIsOpenRepeatitiveForm(true);
-		}
-	}, [isRepeatitive]);
 
 	const handleValidateWorkingHours = () => {
     setOpenConfirmWorkingHoursModal(true);
@@ -536,10 +501,6 @@ export const DetailOptionPage = () => {
 				isUrgent,
 				isChosenYourself,
 				isChosenYourFav,
-				repeatitiveDetails: {
-					isRepeatitive,
-					details,
-				},
 				invitationCodeOwnerId,
 				promoId,
 			},
@@ -553,16 +514,6 @@ export const DetailOptionPage = () => {
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
-			{isOpenRepeatitiveForm && (
-				<RepeatitiveForm
-					setDetails={setDetails}
-					setFinalTimes={setFinalTimes}
-					times={times}
-					setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm}
-					setIsRepeatitive={setIsRepeatitive}
-					setTimes={setTimes}
-				/>
-			)}
 			{openConfirmWorkingHoursModal && (
 				<ConfirmModal
 					confirmMsg={
@@ -571,14 +522,6 @@ export const DetailOptionPage = () => {
 					setAgree={setAgree}
 					setOpenConfirmWorkingHoursModal={setOpenConfirmWorkingHoursModal}
 				/>
-        // <RepeatitiveForm
-				// 	setDetails={setDetails}
-				// 	setFinalTimes={setFinalTimes}
-				// 	times={times}
-				// 	setIsOpenRepeatitiveForm={setIsOpenRepeatitiveForm}
-				// 	setIsRepeatitive={setIsRepeatitive}
-				// 	setTimes={setTimes}
-				// />
 			)}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div
@@ -793,25 +736,6 @@ export const DetailOptionPage = () => {
 								</tr>
 								<tr>
 									<td>
-										{' '}
-										<p className="mr-3 mb-6 mt-3">Đăng việc lặp lại</p>
-									</td>
-									<td className="pl-32">
-										{' '}
-										<Switch
-											className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
-											onChange={handleToggleRepeatitiveButton}
-											checked={isRepeatitive ? true : false}
-											disabled={
-												totalPrice == 0 || anotherOptions.includes('isUrgent')
-											}
-										>
-											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
-										</Switch>
-									</td>
-								</tr>
-								<tr>
-									<td>
 										<p className="mr-3 mb-2 mt-3">Cần gấp</p>
 									</td>
 									<td className="pl-32">
@@ -820,7 +744,6 @@ export const DetailOptionPage = () => {
 											onChange={handleToggleUrgentButton}
 											disabled={
 												anotherOptions.includes('isChosenYourFav') ||
-												anotherOptions.includes('isRepeatitive') ||
 												anotherOptions.includes('isChosenYourself') ||
 												totalPrice == 0
 											}

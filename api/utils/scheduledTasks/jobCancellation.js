@@ -18,7 +18,8 @@ cron.schedule('*/1 * * * *', async () => {
 			jobPost?.cancelDetails?.isCanceled === false &&
 			jobPost?.hasCompleted?.customerConfirm === false &&
 			jobPost?.hasCompleted?.domesticHelperConfirm === false &&
-			jobPost?.domesticHelperId == null
+			(jobPost?.domesticHelperId == null ||
+				jobPost?.domesticHelperId == undefined)
 		) {
 			const startingDate = new Date(jobPost.workingTime.startingDate);
 			startingDate.setMinutes(
@@ -35,14 +36,8 @@ cron.schedule('*/1 * * * *', async () => {
 				.toString()
 				.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
 
-			console.log(
-				startingDate.toISOString(),
-				new Date().toISOString(),
-				startingDate.toISOString() < new Date().toISOString()
-			);
-
 			if (
-				startingDate.toISOString() < new Date().toISOString() ||
+				startingDate.toDateString() < new Date().toDateString() ||
 				(startingDate.toDateString() == new Date().toDateString() &&
 					startingTime <= getCurrentTimeString())
 			) {

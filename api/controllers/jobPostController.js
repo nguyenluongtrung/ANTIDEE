@@ -4,10 +4,7 @@ const Account = require('../models/accountModel');
 const Service = require('../models/serviceModel');
 const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
-const {
-	updateSystemBalanceForIncome,
-	updateSystemBalanceForExpense,
-} = require('./systemBalanceController');
+const { addNewTransaction } = require('./transactionController');
 
 const createJobPost = asyncHandler(async (req, res) => {
 	const jobPost = await JobPost.create(req.body);
@@ -23,10 +20,11 @@ const createJobPost = asyncHandler(async (req, res) => {
 			customer.accountBalance - jobPost.totalPrice
 		);
 
-		await updateSystemBalanceForIncome(
+		await addNewTransaction(
 			jobPost.totalPrice,
 			jobPost.customerId,
-			`Chuyển khoản mua dịch vụ ${service.name}`
+			`Chuyển khoản mua dịch vụ ${service.name}`,
+			'income'
 		);
 
 		await customer.save();
@@ -180,10 +178,11 @@ const updateJobPost = asyncHandler(async (req, res) => {
 		domesticHelper.accountBalance = Math.round(
 			domesticHelper.accountBalance + jobPost.totalPrice * 1
 		);
-		await updateSystemBalanceForExpense(
+		await addNewTransaction(
 			Math.round(jobPost.totalPrice),
 			jobPost.domesticHelperId,
-			'Chuyển tiền hoàn thành công việc'
+			'Chuyển tiền hoàn thành công việc',
+			'expense'
 		);
 		await domesticHelper.save();
 	}
@@ -228,10 +227,11 @@ const getAJob = asyncHandler(async (req, res) => {
 	account.accountBalance =
 		account.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
 	await account.save();
-	await updateSystemBalanceForIncome(
+	await addNewTransaction(
 		Math.round(0.3 * isFoundJobPost?.totalPrice),
 		account._id,
-		'Lợi nhuận sau khi giúp việc nhận việc'
+		'Lợi nhuận sau khi giúp việc nhận việc',
+		'income'
 	);
 
 	res.status(200).json({
@@ -355,10 +355,11 @@ const cancelAJob = asyncHandler(async (req, res) => {
 			foundAcc.accountBalance =
 				foundAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
 			await foundAcc.save();
-			await updateSystemBalanceForExpense(
+			await addNewTransaction(
 				Math.round(1 * isFoundJobPost?.totalPrice),
 				foundAcc._id,
-				'Chuyển tiền hủy việc'
+				'Chuyển tiền hủy việc',
+				'expense'
 			);
 		}
 	} else {
@@ -370,10 +371,11 @@ const cancelAJob = asyncHandler(async (req, res) => {
 			foundAcc.rating.customerRating =
 				Math.round(foundAcc.rating.customerRating) - 0.1;
 			await foundAcc.save();
-			await updateSystemBalanceForExpense(
+			await addNewTransaction(
 				Math.round(0.7 * isFoundJobPost?.totalPrice),
 				foundAcc._id,
-				'Chuyển tiền hủy việc - phạt 30% giá trị công việc'
+				'Chuyển tiền hủy việc - phạt 30% giá trị công việc',
+				'expense'
 			);
 		}
 	}
@@ -381,10 +383,11 @@ const cancelAJob = asyncHandler(async (req, res) => {
 		domesticHelperAcc.accountBalance +
 		Math.round(0.3 * isFoundJobPost?.totalPrice);
 	await domesticHelperAcc.save();
-	await updateSystemBalanceForExpense(
+	await addNewTransaction(
 		Math.round(0.3 * isFoundJobPost?.totalPrice),
 		domesticHelperAcc._id,
-		'Chuyển tiền bồi thường hủy việc cho giúp việc'
+		'Chuyển tiền bồi thường hủy việc cho giúp việc',
+		'expense'
 	);
 	res.status(200).json({
 		status: 'success',
@@ -420,54 +423,24 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 		{ new: true }
 	);
 
-	const currentTime = new Date();
-	const workingStartTime = new Date(isFoundJobPost.workingTime.startingDate);
-	const workingStartHour = parseInt(
-		isFoundJobPost.workingTime.startingHour.split(':')[0]
-	);
-	const workingStartMinute = parseInt(
-		isFoundJobPost.workingTime.startingHour.split(':')[1]
-	);
-	const workingStartMs = workingStartTime.setHours(
-		workingStartHour,
-		workingStartMinute
-	);
-	const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
-	const workingEndMs = workingStartMs - twoHoursInMilliseconds;
-	const workingEndTime = new Date(workingEndMs);
-
 	let msg;
-	let newIncome;
 
-	if (currentTime <= workingEndTime) {
-		msg =
-			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
-		newIncome = Math.round(0.3 * isFoundJobPost?.totalPrice);
-	} else {
-		msg =
-			'Bạn đã hủy việc thành công và bị phạt 80% giá trị công việc và giảm điểm uy tín';
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.8 * isFoundJobPost?.totalPrice);
-		newIncome = Math.round(0.8 * isFoundJobPost?.totalPrice);
-	}
-
-	customerAcc.accountBalance =
-		customerAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
+	msg =
+		'Bạn đã hủy việc thành công và mất tiền cọc đồng thời bị giảm điểm uy tín';
 
 	foundAcc.rating.domesticHelperRating =
 		foundAcc.rating.domesticHelperRating - 0.1;
-	await updateSystemBalanceForIncome(
-		newIncome,
-		foundAcc._id,
-		'Tiền phạt vì hủy việc'
-	);
-	await updateSystemBalanceForExpense(
-		Math.round(1 * isFoundJobPost?.totalPrice),
-		customerAcc._id,
-		'Tiền bồi thường vì người giúp việc hủy công việc'
-	);
+
+	if (isFoundJobPost.paymentMethod == 'Chuyển khoản') {
+		customerAcc.accountBalance =
+			customerAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
+		await addNewTransaction(
+			Math.round(1 * isFoundJobPost?.totalPrice),
+			customerAcc._id,
+			'Tiền bồi thường vì người giúp việc hủy công việc',
+			'expense'
+		);
+	}
 
 	await foundAcc.save();
 	await customerAcc.save();

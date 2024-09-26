@@ -198,11 +198,6 @@ export const JobPostingHistory = () => {
 									<p className="text-brown font-bold mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
 									</p>
-									{post?.repeatitiveDetails?.isRepeatitive && (
-										<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
-											Lặp lại
-										</button>
-									)}
 									{post?.isUrgent && (
 										<div class="triangle-down absolute top-0 right-0"></div>
 									)}
@@ -219,17 +214,27 @@ export const JobPostingHistory = () => {
 											Hoàn thành lúc: {''}
 											<span className="text-brown">
 												{formatDate(post?.hasCompleted?.completedAt)}{' '}
-												{formatTime(Date.parse(post?.hasCompleted?.completedAt))}
+												{formatTime(
+													Date.parse(post?.hasCompleted?.completedAt)
+												)}
 											</span>
 										</p>
 									) : (
-										<p className="text-gray mb-2">
-											Đã đăng lúc: {''}
-											<span className="text-brown">
-												{formatDate(post?.createdAt)}{' '}
-												{formatTime(Date.parse(post?.createdAt))}
-											</span>
-										</p>
+										<div>
+											<p className="text-gray mb-2">
+												Đã đăng lúc: {''}
+												<span className="text-brown">
+													{formatDate(post?.createdAt)}{' '}
+													{formatTime(Date.parse(post?.createdAt))}
+												</span>
+											</p>
+											<p className="text-gray mb-2">
+											 	Hết hạn lúc: {''}
+												<span className="text-brown">
+													{formatDate(post?.dueDate)}{' '}
+												</span>
+											</p>
+										</div>
 									)}
 
 									<div className="border-2 border-gray  my-3">
