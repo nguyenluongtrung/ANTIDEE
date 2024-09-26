@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import './TimeAndContactPage.css';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
+import { formatDateInput } from '../../../utils/format';
 
 export const TimeAndContactPage = () => {
 	const { serviceId } = useParams();
@@ -17,10 +18,8 @@ export const TimeAndContactPage = () => {
 	const isUrgent = location?.state?.isUrgent;
 	const isChosenYourself = location?.state?.isChosenYourself;
 	const isChosenYourFav = location?.state?.isChosenYourFav;
-	const repeatitiveDetails = location?.state?.repeatitiveDetails;
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
-	const promoId  = location?.state?.promoId;
-    console.log('promoId:', promoId);
+	const promoId = location?.state?.promoId;
 	const {
 		register,
 		handleSubmit,
@@ -40,6 +39,10 @@ export const TimeAndContactPage = () => {
 			toast.error('Vui lòng điền "Email để biên nhận"', errorStyle);
 			return;
 		}
+		if (!data.dueDate) {
+			toast.error('Vui lòng chọn "Hạn chốt cho bài đăng"', errorStyle);
+			return;
+		}
 		const contactInfo = {
 			fullName: data.fullName,
 			email: data.email,
@@ -54,14 +57,14 @@ export const TimeAndContactPage = () => {
 					note: data.note,
 					paymentMethod: data.paymentMethod,
 				},
+				dueDate: data.dueDate,
 				workingTime,
 				inputOptions,
 				isUrgent,
 				isChosenYourself,
 				isChosenYourFav,
-				repeatitiveDetails,
 				invitationCodeOwnerId,
-				promoId
+				promoId,
 			},
 		});
 	};
@@ -101,6 +104,17 @@ export const TimeAndContactPage = () => {
 								placeholder="abc@gmail.com"
 								{...register('email')}
 								className="p-2 my-4 border-light_gray border-2 rounded-md hover:outline-none focus:outline-none"
+							/>
+						</div>
+						<div className='flex items-center justify-between mb-2'>
+							<p className="font-semibold">Hạn chốt cho bài đăng</p>
+							<input
+								type="date"
+								{...register('dueDate')}
+								max={new Date(workingTime.startingDate).toISOString().split('T')[0]}
+								min={new Date().toISOString().split('T')[0]}
+								defaultValue={formatDateInput(new Date())}
+								className="border-2 rounded-md w-40 p-1.5 border-light_gray text-center focus:outline-none hover:cursor-pointer"
 							/>
 						</div>
 						<div>
