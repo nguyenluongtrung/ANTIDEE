@@ -1,5 +1,5 @@
-const express = require('express');
-const { protect, restrict } = require('../middleware/accountMiddleware');
+const express = require("express");
+const { protect, restrict } = require("../middleware/accountMiddleware");
 const {
   createVoucher,
   getAllVouchers,
@@ -7,27 +7,30 @@ const {
   updateVoucher,
   deleteVoucher,
   redeemVoucher,
-  getRedeemedVouchers  // Import the new function
-} = require('../controllers/voucherController');
+  getRedeemedVouchers,
+  getAllAccountVouchers,
+} = require("../controllers/voucherController");
 const router = express.Router();
 
 router
-  .route('/')
-  .post(protect, restrict('Admin'), createVoucher)
+  .route("/")
+  .post(protect, restrict("Admin"), createVoucher)
   .get(getAllVouchers);
+router.route("/accountVoucher/:accountId").get(getAllAccountVouchers);
 
 router
-  .route('/:voucherId')
-  .get(getVoucherById)
-  .delete(protect, restrict('Admin'), deleteVoucher)
-  .patch(protect, restrict('Admin'), updateVoucher);
+  .route("/:voucherId")
+  // .get(getVoucherById)
+  .delete(protect, restrict("Admin"), deleteVoucher)
+  .patch(protect, restrict("Admin"), updateVoucher);
 
 router
-  .route('/redeemVoucher')
-  .post(redeemVoucher);
+  .route("/:voucherId/:accountId")
+  .get(getVoucherById);
 
-router
-  .route('/redeemed/:userId')  // Add this new route
-  .get(getRedeemedVouchers);
+router.route("/redeemVoucher").post(redeemVoucher);
+
+
+router.route("/redeemed/:userId").get(getRedeemedVouchers);
 
 module.exports = router;
