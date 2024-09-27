@@ -20,16 +20,7 @@ const addNewTransaction = async (
 			jobId,
 			externalId,
 			paymentMethod,
-		});
-		console.log('Creating new transaction with:', {
-			amount,
-			accountId,
-			message,
-			category,
-			jobId,
-			externalId,
-			paymentMethod,
-		  });
+		}); 
 		return newTransaction;
 		
 	} catch (error) {
