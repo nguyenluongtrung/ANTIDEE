@@ -25,8 +25,8 @@ exports.createPayment = async (req, res) => {
 		embed_data: JSON.stringify(embed_data),
 		amount: amount,
 		callback_url:
-			'https://7d45-2402-800-627d-15de-c4c2-d073-b3f2-18e6.ngrok-free.app/callback',
-		description: `Payment for order #${transID}`,
+			'https://c316-42-115-113-153.ngrok-free.app/callback',
+		description: `Nạp tiền vào ví người dùng`,
 		bank_code: '',
 	};
 
@@ -81,8 +81,7 @@ exports.paymentCallback = async (req, res) => {
 
 		await updateUserBalance(userId, amount, transId);
 		await Transaction.findByIdAndUpdate(transId, { status: 'COMPLETED' });
-
-		console.log('Transaction status updated to COMPLETED');
+ 
 		return res.json({
 			return_code: 1,
 			return_message: 'Transaction completed successfully',
@@ -98,26 +97,27 @@ exports.paymentCallback = async (req, res) => {
 async function updateUserBalance(userId, amount, transId) {
 	console.log('Updating user balance for user:', userId);
 	const user = await Account.findOne({ _id: userId });
-	if (user) {
+	if (user) { 
 		if (user.transactions && user.transactions.includes(transId)) {
 			console.log('Transaction already processed');
 			return;
 		}
-
+ 
 		user.accountBalance += amount;
 		user.transactions = user.transactions || [];
 		user.transactions.push(transId);
-
-		const toAccountId = new mongoose.Types.ObjectId();
-		await transactionController.createTransaction(
+ 
+		await transactionController.addNewTransaction(
 			amount,
-			`Payment for order #${transId}`,
 			userId,
-			toAccountId
+			`Nạp tiền vào ví người dùng`,
+			`balance_income`,  
+			null, 
+			`${transId}`,  
+			`ZaloPay` 
 		);
-		await user.save();
-		console.log('User balance updated successfully');
-	} else {
-		console.log('User not found');
-	}
+		 
+		await user.save(); 
+	}  
 }
+

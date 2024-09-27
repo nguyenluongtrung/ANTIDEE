@@ -9,10 +9,11 @@ export const TransactionHistory = () => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await dispatch(getTransactionHistory());
-            console.log(result);
-            // Sao chép mảng trước khi sắp xếp
-            const sortedTransactions = [...result.payload].sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-            setTransactions(sortedTransactions);
+            console.log('Transaction History:', result.payload);  
+            if (result.payload) {
+                const sortedTransactions = [...result.payload].sort((a, b) => new Date(b.date) - new Date(a.date));  
+                setTransactions(sortedTransactions);
+            }
         };
         fetchData();
     }, [dispatch]);
@@ -23,8 +24,7 @@ export const TransactionHistory = () => {
                 <div className="flex">
                     <div className="flex-1 pt-2">
                         <span>Displaying </span>
-                        <select className="rounded-md p-1 mx-1 hover:cursor-pointer"
-                            style={{ backgroundColor: '#E0E0E0' }}>
+                        <select className="rounded-md p-1 mx-1 hover:cursor-pointer" style={{ backgroundColor: '#E0E0E0' }}>
                             <option>10</option>
                             <option>20</option>
                             <option>30</option>
@@ -36,13 +36,13 @@ export const TransactionHistory = () => {
                 <div>
                     <table className="w-full border-b border-gray mt-3">
                         <thead>
-                        <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
-                            <td className="py-2 px-1 text-center font-bold">Người gửi </td>
-                            <td className="py-2 px-1 text-center font-bold">Nội dung</td>
-                            <td className="py-2 px-1 text-center font-bold">Người nhận</td>
-                            <td className="py-2 px-1 text-center font-bold">Số tiền</td>
-                            <td className="py-2 px-1 text-center font-bold">Thời gian giao dịch</td>
-                        </tr>
+                            <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
+                                <td className="py-2 px-1 text-center font-bold">Người gửi </td>
+                                <td className="py-2 px-1 text-center font-bold">Nội dung</td>
+                                <td className="py-2 px-1 text-center font-bold">Mã giao dịch</td>
+                                <td className="py-2 px-1 text-center font-bold">Số tiền</td>
+                                <td className="py-2 px-1 text-center font-bold">Thời gian giao dịch</td>
+                            </tr>
                         </thead>
                         <tbody>
                             {transactions.length === 0 ? (
@@ -55,19 +55,19 @@ export const TransactionHistory = () => {
                                 transactions.map((transaction) => (
                                     <tr key={transaction._id} className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
                                         <td className="font-medium text-center text-gray p-3"> 
-                                            {transaction.fromAccountId?.name}
+                                        {transaction.accountId?.name}
                                         </td>
                                         <td className="font-medium text-center text-gray p-3">
-                                            {transaction.description}
+                                            {transaction.message}
                                         </td>
                                         <td className="font-medium text-center text-gray p-3">
-                                            Admin Antidee
+                                        {transaction.externalId}
                                         </td>
                                         <td className="font-medium text-center text-gray p-3">
                                             {transaction.amount.toLocaleString()}
                                         </td>
                                         <td className="font-medium text-center text-gray p-3">
-                                            {new Date(transaction.createdDate).toLocaleString()}
+                                            {new Date(transaction.date).toLocaleString()}
                                         </td>
                                     </tr>
                                 ))
