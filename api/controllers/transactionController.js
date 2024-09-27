@@ -22,7 +22,15 @@ const createTransaction = async (
 	}
 };
 
-const addNewTransaction = async (amount, accountId, message, category) => {
+const addNewTransaction = async (
+	amount,
+	accountId,
+	message,
+	category,
+	jobId,
+	externalId,
+	paymentMethod
+) => {
 	try {
 		const newTransaction = await Transaction.create({
 			accountId,
@@ -30,6 +38,9 @@ const addNewTransaction = async (amount, accountId, message, category) => {
 			date: new Date(),
 			amount,
 			category,
+			jobId,
+			externalId,
+			paymentMethod,
 		});
 		return newTransaction;
 	} catch (error) {
