@@ -51,7 +51,7 @@ const voucherSchema = new Schema({
         enum: ['Mua sắm', 'Dịch vụ', 'Giải trí', 'Du lịch', 'Ẩm thực'],
         required: true
     },
-    image: {
+    video: {
         type: String,
         // required: true
     },

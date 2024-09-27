@@ -8,109 +8,111 @@ import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateVoucher.css';
 import {
-    getDownloadURL,
-    getStorage,
-    ref,
-    uploadBytesResumable,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../../../../firebase';
 import { rules } from '../../../../utils/rules';
 import { formatDatePicker, validCurrentDate } from '../../../../utils/format';
 
 export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) => {
-    const currentDate = validCurrentDate();
-    const { isLoading: voucherLoading } = useSelector((state) => state.vouchers);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+  const currentDate = validCurrentDate();
+  const { isLoading: voucherLoading } = useSelector((state) => state.vouchers);
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  useEffect(() => {
+    formatDatePicker();
+  });
 
-    useEffect(() => {
-        formatDatePicker();
-    });
+  const fileRef = useRef(null);
+  const [file, setFile] = useState(undefined);
+  const [filePerc, setFilePerc] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
 
-    const onSubmit = async (data) => {
-        const trimmedData = {
-            ...data,
-        };
-        const voucherData = voucherUrl !== '' ? { ...trimmedData, image: voucherUrl } : { ...trimmedData, image: 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg' };
-        const result = await dispatch(createVoucher(voucherData));
-        if (result.type.endsWith('fulfilled')) {
-            toast.success('Thêm voucher thành công', successStyle);
-        } else if (result?.error?.message === 'Rejected') {
-            toast.error(result?.payload, errorStyle);
-        }
-        setIsOpenCreateVoucher(false);
-        handleGetAllVouchers();
-    };
+  // Khi tệp thay đổi, bắt đầu quá trình tải lên
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
 
-    const fileRef = useRef(null);
-    const [file, setFile] = useState(undefined);
-    const [filePerc, setFilePerc] = useState(0);
-    const [fileUploadError, setFileUploadError] = useState('');
-    const [voucherUrl, setServiceUrl] = useState('');
-
-    useEffect(() => {
-        if (file) {
-            handleFileUpload(file);
-        }
-    }, [file]);
-
-    const handleFileUpload = (file) => {
-        if (file.size > 2 * 1024 * 1024) {
-            setFileUploadError('Dung lượng ảnh phải nhỏ hơn 2MB');
-            setFilePerc(0);
-            return;
-        }
-
-        const storage = getStorage(app);
-        const fileName = new Date().getTime() + file.name;
-        const storageRef = ref(storage, `vouchers/${fileName}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setFilePerc(Math.round(progress));
-                setFileUploadError(''); // Reset error state on new upload
-            },
-            (error) => {
-                setFileUploadError('Tải ảnh lên thất bại');
-                setFilePerc(0); // Reset progress on error
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setServiceUrl(downloadURL);
-                    setFilePerc(100); // Set progress to 100 on successful upload
-                    setFileUploadError(''); // Reset error state on successful upload
-                });
-            }
-        );
-    };
-
-    if (voucherLoading) {
-        return <Spinner />;
+  const handleFileUpload = (file) => {
+    if (file.size > 50 * 1024 * 1024) { // Giới hạn dung lượng tệp 50MB
+      setFileUploadError('Dung lượng video phải nhỏ hơn 50MB');
+      setFilePerc(0);
+      return;
     }
 
-    return (
-        <div className="popup active">
-            <div className="overlay"></div>
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="content rounded-md p-5 w-[35vw] max-h-[80vh] overflow-y-auto  "
-                
-            >
-                <AiOutlineClose
-                    className="absolute text-sm hover:cursor-pointer"
-                    onClick={() => setIsOpenCreateVoucher(false)}
-                />
-                <p className="grid text-green font-bold text-xl justify-center">
-                    TẠO VOUCHER
-                </p>
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, `videos/${fileName}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePerc(Math.round(progress));
+        setFileUploadError('');
+        console.log(`Upload is ${progress}% done`);  // Debug thông tin tiến độ tải lên
+      },
+      (error) => {
+        setFileUploadError(`Tải video lên thất bại: ${error.message}`);
+        setFilePerc(0);
+        console.error("Error during file upload:", error);  // Debug chi tiết lỗi
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setVideoUrl(downloadURL);
+          setFilePerc(100);
+          setFileUploadError('');
+          console.log("Upload successful, video URL:", downloadURL);  // Debug URL video tải lên thành công
+        });
+      }
+    );
+  };
+
+  const onSubmit = async (data) => {
+    if (!videoUrl) {
+      toast.error('Vui lòng đợi quá trình tải video hoàn tất trước khi tạo voucher', errorStyle);
+      return;
+    }
+
+    const trimmedData = {
+      ...data,
+    };
+
+    const voucherData = { ...trimmedData, video: videoUrl };
+    const result = await dispatch(createVoucher(voucherData));
+    if (result.type.endsWith('fulfilled')) {
+      toast.success('Thêm voucher thành công', successStyle);
+    } else if (result?.error?.message === 'Rejected') {
+      toast.error(result?.payload, errorStyle);
+    }
+    setIsOpenCreateVoucher(false);
+    handleGetAllVouchers();
+  };
+
+  if (voucherLoading) {
+    return <Spinner />;
+  }
+
+  return (
+    <div className="popup active">
+      <div className="overlay"></div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="content rounded-md p-5 w-[35vw] max-h-[80vh] overflow-y-auto"
+      >
+        <AiOutlineClose
+          className="absolute text-sm hover:cursor-pointer"
+          onClick={() => setIsOpenCreateVoucher(false)}
+        />
+        <p className="grid text-green font-bold text-xl justify-center">TẠO VOUCHER</p>
                 <table className="mt-3 text-sm">
                     <tbody>
                         <tr>
@@ -124,46 +126,38 @@ export const CreateVoucher = ({ setIsOpenCreateVoucher, handleGetAllVouchers }) 
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <span className="font-bold">Ảnh ưu đãi</span>
-                            </td>
-                            <td className="pl-[30px] py-2 grid justify-center">
-                                <img
-                                    src={voucherUrl || 'https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg'}
-                                    className="block mx-auto mb-1 w-[120px] h-[120px]"
-                                />
-                                <span
-                                    className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        fileRef.current.click();
-                                    }}
-                                >
-                                    <span>Chọn ảnh ưu đãi</span>
-                                </span>
-                                <input
-                                    type="file"
-                                    ref={fileRef}
-                                    hidden
-                                    onChange={(e) => {
-                                        setFile(e.target.files[0]);
-                                        setFileUploadError(''); // Reset error state on file change
-                                    }}
-                                />
-                                <p className="text-sm self-center pl-2">
-                                    {fileUploadError ? (
-                                        <span className="text-red">
-                                            {fileUploadError}
-                                        </span>
-                                    ) : filePerc > 0 && filePerc < 100 ? (
-                                        <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
-                                    ) : filePerc === 100 ? (
-                                        <span className="text-green">Tải ảnh lên thành công!</span>
-                                    ) : (
-                                        ''
-                                    )}
-                                </p>
-                            </td>
+            <td>
+              <span className="font-bold">Video ưu đãi</span>
+            </td>
+            <td className="pl-[30px] py-2 grid justify-center">
+              <span
+                className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  fileRef.current.click();
+                }}
+              >
+                <span>Chọn video ưu đãi</span>
+              </span>
+              <input
+                type="file"
+                ref={fileRef}
+                hidden
+                accept="video/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <p className="text-sm self-center pl-2">
+                {fileUploadError ? (
+                  <span className="text-red">{fileUploadError}</span>
+                ) : filePerc > 0 && filePerc < 100 ? (
+                  <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
+                ) : filePerc === 100 ? (
+                  <span className="text-green">Tải video lên thành công!</span>
+                ) : (
+                  ''
+                )}
+              </p>
+            </td>
                         </tr>
                         <tr >
                             <td className='pt-3'>

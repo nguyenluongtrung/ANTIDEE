@@ -228,10 +228,7 @@ const accountSchema = mongoose.Schema(
 			type:mongoose.Schema.Types.ObjectId,
 			ref: 'ForumPost',
 		}],
-		course: [{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Course',
-		}],
+		
 	},
 	{
 		timestamps: true,
