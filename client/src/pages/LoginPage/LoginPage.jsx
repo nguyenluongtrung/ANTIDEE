@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { errorStyle } from "../../utils/toast-customize";
 
-export const LoginPage = ({ setIsOpenLoginForm }) => {
+export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
   const [accounts, setAccounts] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,13 +37,11 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
     } else {
       dispatch(login(account));
     }
-
   };
 
   const initiateAllAccounts = async () => {
     const response = await dispatch(getAllAccounts());
     setAccounts(response.payload);
-    console.log("ALL response", response.payload)
   };
 
   useEffect(() => {
@@ -57,7 +55,6 @@ export const LoginPage = ({ setIsOpenLoginForm }) => {
 
     if (account) {
       setIsOpenLoginForm(false);
-      navigate("/home");
     }
 
     dispatch(reset());

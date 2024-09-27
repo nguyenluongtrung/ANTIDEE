@@ -135,7 +135,7 @@ export const TimeAndContactPage = () => {
 								defaultValue={'Tiền mặt'}
 							>
 								<option value={'Tiền mặt'}>Tiền mặt</option>
-								<option value={'Chuyển khoản'}>Chuyển khoản</option>
+								<option value={'Ví người dùng'}>Ví người dùng</option>
 							</select>
 						</div>
 					</div>

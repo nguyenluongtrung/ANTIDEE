@@ -6,6 +6,17 @@ const transactionSchema = mongoose.Schema({
 		ref: 'Account',
 		required: true,
 	},
+	jobId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'JobPost',
+	},
+	externalId: {
+		type: String,
+	},
+	paymentMethod: {
+		type: String,
+		enum: ['ZaloPay', 'Ví người dùng', 'Tiền mặt'],
+	},
 	message: {
 		type: String,
 	},
@@ -16,7 +27,13 @@ const transactionSchema = mongoose.Schema({
 	},
 	category: {
 		type: String,
-		enum: ['income', 'expense', 'other'],
+		enum: [
+			'salary',
+			'commission_fee',
+			'job_income',
+			'refund',
+			'balance_income',
+		],
 	},
 });
 

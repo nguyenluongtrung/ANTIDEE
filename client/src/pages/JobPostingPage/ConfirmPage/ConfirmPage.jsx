@@ -15,13 +15,13 @@ import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
 import { getAllServices } from '../../../features/services/serviceSlice';
+import { LoginPage } from '../../LoginPage/LoginPage';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
 	const [services, setServices] = useState([]);
+	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 	const [isChecked, setIsChecked] = useState(false);
-	const [customerId, setCustomerId] = useState();
-	const [customerInfo, setCustomerInfo] = useState();
 	const location = useLocation();
 	const address = location?.state?.address;
 	const contactInfo = location?.state?.contactInfo;
@@ -35,18 +35,15 @@ export const ConfirmPage = () => {
 	const dueDate = location?.state?.dueDate;
 
 	const promoId = location?.state?.promoId;
-	const { account, isLoading: authLoading } = useSelector(
-		(state) => state.auth
-	);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	async function initiateAccountInformation() {
-		let output = await dispatch(getAccountInformation());
-
-		setCustomerId(output.payload._id);
-		setCustomerInfo(output.payload);
+		const account = JSON.parse(localStorage.getItem('account'));
+		if(!account){
+			setIsOpenLoginForm(true)
+		}
 	}
 
 	async function initiateService() {
@@ -61,9 +58,10 @@ export const ConfirmPage = () => {
 	}, []);
 
 	const handleSubmitJobPost = async () => {
+		const account = JSON.parse(localStorage.getItem('account')).data.account;
 		if (
-			otherInfo?.paymentMethod == 'Chuyển khoản' &&
-			customerInfo.accountBalance < Math.round(otherInfo?.totalPrice)
+			otherInfo?.paymentMethod == 'Ví người dùng' &&
+			account.accountBalance < Math.round(otherInfo?.totalPrice)
 		) {
 			toast.error(
 				'Tài khoản của bạn không đủ số dư để đăng công việc này',
@@ -71,6 +69,7 @@ export const ConfirmPage = () => {
 			);
 			return;
 		}
+		
 		const jobPostData = {
 			workingTime,
 			serviceId: serviceId,
@@ -90,7 +89,7 @@ export const ConfirmPage = () => {
 				fullName: contactInfo?.fullName,
 			},
 			workload: inputOptions,
-			customerId,
+			customerId: account._id,
 			paymentMethod: otherInfo?.paymentMethod,
 			totalPrice: otherInfo?.totalPrice,
 			dueDate,
@@ -98,6 +97,7 @@ export const ConfirmPage = () => {
 			isChosenYourself,
 			isChosenYourFav,
 		};
+
 		if (invitationCodeOwnerId) {
 			let ownerId = invitationCodeOwnerId;
 			await dispatch(loadMoneyAfterUsingInvitationCode(ownerId));
@@ -106,13 +106,10 @@ export const ConfirmPage = () => {
 
 		if (result.type.endsWith('fulfilled')) {
 			if (promoId) {
-				const accountId = account._id;
 				await dispatch(
-					updateIsUsedVoucher({ accountId, voucherId: promoId, isUsed: true })
+					updateIsUsedVoucher({ accountId: account._id, voucherId: promoId, isUsed: true })
 				);
 			}
-
-			await dispatch(getAccountInformation());
 
 			navigate(`/congrats`, {
 				state: {
@@ -137,13 +134,14 @@ export const ConfirmPage = () => {
 		}
 	};
 
-	if (authLoading || jobPostLoading) {
+	if (jobPostLoading) {
 		return <Spinner />;
 	}
 
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
+			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm}/>}
 
 			<div
 				className="confirm-form mx-auto py-7 px-16 rounded-xl border-2 mt-5 border-light_gray"

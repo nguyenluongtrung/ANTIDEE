@@ -15,7 +15,7 @@ const createJobPost = asyncHandler(async (req, res) => {
 		(acc) => String(acc._id) == String(jobPost.customerId)
 	);
 
-	if (jobPost.paymentMethod == 'Chuyển khoản') {
+	if (jobPost.paymentMethod == 'Ví người dùng') {
 		customer.accountBalance = Math.round(
 			customer.accountBalance - jobPost.totalPrice
 		);
@@ -23,8 +23,11 @@ const createJobPost = asyncHandler(async (req, res) => {
 		await addNewTransaction(
 			jobPost.totalPrice,
 			jobPost.customerId,
-			`Chuyển khoản mua dịch vụ ${service.name}`,
-			'income'
+			`Thanh toán mua dịch vụ ${service.name}`,
+			'job_income',
+			jobPost._id,
+			'',
+			'Ví người dùng'
 		);
 
 		await customer.save();
@@ -170,7 +173,7 @@ const updateJobPost = asyncHandler(async (req, res) => {
 	);
 
 	if (
-		jobPost.paymentMethod == 'Chuyển khoản' &&
+		jobPost.paymentMethod == 'Ví người dùng' &&
 		jobPost.hasCompleted.customerConfirm &&
 		jobPost.hasCompleted.domesticHelperConfirm
 	) {
@@ -182,7 +185,10 @@ const updateJobPost = asyncHandler(async (req, res) => {
 			Math.round(jobPost.totalPrice),
 			jobPost.domesticHelperId,
 			'Chuyển tiền hoàn thành công việc',
-			'expense'
+			'salary',
+			jobPost._id,
+			'',
+			'Ví người dùng'
 		);
 		await domesticHelper.save();
 	}
@@ -231,7 +237,10 @@ const getAJob = asyncHandler(async (req, res) => {
 		Math.round(0.3 * isFoundJobPost?.totalPrice),
 		account._id,
 		'Lợi nhuận sau khi giúp việc nhận việc',
-		'income'
+		'commission_fee',
+		jobPostId,
+		'',
+		'Ví người dùng'
 	);
 
 	res.status(200).json({
@@ -351,7 +360,7 @@ const cancelAJob = asyncHandler(async (req, res) => {
 	) {
 		msg =
 			'Bạn đã hủy việc thành công. Bạn sẽ nhận lại 100% giá trị công việc đã hủy';
-		if (isFoundJobPost.paymentMethod == 'Chuyển khoản') {
+		if (isFoundJobPost.paymentMethod == 'Ví người dùng') {
 			foundAcc.accountBalance =
 				foundAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
 			await foundAcc.save();
@@ -359,11 +368,14 @@ const cancelAJob = asyncHandler(async (req, res) => {
 				Math.round(1 * isFoundJobPost?.totalPrice),
 				foundAcc._id,
 				'Chuyển tiền hủy việc',
-				'expense'
+				'refund',
+				jobPostId,
+				'',
+				'Ví người dùng'
 			);
 		}
 	} else {
-		if (isFoundJobPost.paymentMethod == 'Chuyển khoản') {
+		if (isFoundJobPost.paymentMethod == 'Ví người dùng') {
 			msg =
 				'Bạn đã hủy việc thành công và sẽ nhận lại 70% giá trị công việc đã hủy và giảm điểm uy tín';
 			foundAcc.accountBalance =
@@ -375,7 +387,10 @@ const cancelAJob = asyncHandler(async (req, res) => {
 				Math.round(0.7 * isFoundJobPost?.totalPrice),
 				foundAcc._id,
 				'Chuyển tiền hủy việc - phạt 30% giá trị công việc',
-				'expense'
+				'refund',
+				jobPostId,
+				'',
+				'Ví người dùng'
 			);
 		}
 	}
@@ -387,7 +402,10 @@ const cancelAJob = asyncHandler(async (req, res) => {
 		Math.round(0.3 * isFoundJobPost?.totalPrice),
 		domesticHelperAcc._id,
 		'Chuyển tiền bồi thường hủy việc cho giúp việc',
-		'expense'
+		'refund',
+		jobPostId,
+		'',
+		'Ví người dùng'
 	);
 	res.status(200).json({
 		status: 'success',
@@ -431,14 +449,17 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 	foundAcc.rating.domesticHelperRating =
 		foundAcc.rating.domesticHelperRating - 0.1;
 
-	if (isFoundJobPost.paymentMethod == 'Chuyển khoản') {
+	if (isFoundJobPost.paymentMethod == 'Ví người dùng') {
 		customerAcc.accountBalance =
 			customerAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
 		await addNewTransaction(
 			Math.round(1 * isFoundJobPost?.totalPrice),
 			customerAcc._id,
 			'Tiền bồi thường vì người giúp việc hủy công việc',
-			'expense'
+			'refund',
+			jobPostId,
+			'',
+			'Ví người dùng'
 		);
 	}
 
