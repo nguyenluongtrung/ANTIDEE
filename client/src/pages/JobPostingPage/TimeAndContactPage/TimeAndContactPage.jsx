@@ -20,6 +20,8 @@ export const TimeAndContactPage = () => {
 	const isChosenYourFav = location?.state?.isChosenYourFav;
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
 	const promoId = location?.state?.promoId;
+	const accountApoints= location?.state?.accountApoints;
+	console.log(accountApoints)
 	const {
 		register,
 		handleSubmit,
@@ -65,6 +67,7 @@ export const TimeAndContactPage = () => {
 				isChosenYourFav,
 				invitationCodeOwnerId,
 				promoId,
+				accountApoints
 			},
 		});
 	};

@@ -627,7 +627,7 @@ const receiveGiftHistory = asyncHandler(async (req, res) => {
 
 const updateAPoint = asyncHandler(async (req, res) => {
 	const { accountId } = req.params;
-	const { apoint, serviceId } = req.body;
+	const { aPoints, apoint, serviceId } = req.body;
 
 	if (!accountId || !apoint) {
 		return res
@@ -641,9 +641,9 @@ const updateAPoint = asyncHandler(async (req, res) => {
 		if (!account) {
 			return res.status(404).json({ message: 'Account not found' });
 		}
-		account.aPoints = Number(account.aPoints) + Number(apoint);
-
-		// Thêm vào lịch sử aPointHistory
+		// account.aPoints = Number(account.aPoints) + Number(apoint);
+		account.aPoints= aPoints
+		
 		account.aPointHistory.push({
 			apoint,
 			serviceId,
