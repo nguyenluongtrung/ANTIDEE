@@ -36,7 +36,6 @@ export const ConfirmPage = () => {
 
 	const promoId = location?.state?.promoId;
 	const accountApoints= location?.state?.accountApoints;
-	console.log(accountApoints)
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -120,13 +119,18 @@ export const ConfirmPage = () => {
 					navigateTo: '/home',
 				},
 			});
-
+			let newApoints = 0;
+			if(!accountApoints){
+				newApoints = account.aPoints
+			} else{
+				newApoints = accountApoints
+			}
 			const apoint = otherInfo?.totalPrice
 				? (Number(otherInfo.totalPrice) * 5) / 100
 				: 0;
 			if (!isNaN(apoint)) {
 				if (account?._id) {
-					const totalApoint = accountApoints+apoint
+					const totalApoint = newApoints+apoint
 					console.log(apoint,totalApoint)
 					await dispatch(
 						updateAPoint({ accountId: account._id, aPoints:totalApoint, apoint, serviceId })
