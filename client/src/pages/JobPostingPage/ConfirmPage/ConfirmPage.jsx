@@ -35,6 +35,8 @@ export const ConfirmPage = () => {
 	const dueDate = location?.state?.dueDate;
 
 	const promoId = location?.state?.promoId;
+	const accountApoints= location?.state?.accountApoints;
+	console.log(accountApoints)
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -124,8 +126,10 @@ export const ConfirmPage = () => {
 				: 0;
 			if (!isNaN(apoint)) {
 				if (account?._id) {
+					const totalApoint = accountApoints+apoint
+					console.log(apoint,totalApoint)
 					await dispatch(
-						updateAPoint({ accountId: account._id, apoint, serviceId })
+						updateAPoint({ accountId: account._id, aPoints:totalApoint, apoint, serviceId })
 					);
 				}
 			}

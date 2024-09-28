@@ -21,6 +21,7 @@ import { getAllPromotions } from '../../../features/promotions/promotionSlice';
 import { getAllJobPosts } from '../../../features/jobPosts/jobPostsSlice';
 import { ConfirmModal } from '../../../components/ConfirmModal/ConfirmModal';
 
+
 export const DetailOptionPage = () => {
 	const { serviceId } = useParams();
 	const { services, isLoading: serviceLoading } = useSelector(
@@ -62,6 +63,10 @@ export const DetailOptionPage = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 
+	const [accountApoints, setAccountApoints] = useState()
+	
+
+
 	useEffect(() => {
 		const fetchData = async () => {
 			const voucherOutput = await dispatch(getAllVouchers());
@@ -80,6 +85,7 @@ export const DetailOptionPage = () => {
 		let output = await dispatch(getAccountInformation());
 
 		setMyAccountId(output.payload._id);
+		setAccountApoints(output.payload.aPoints);
 	}
 
 	const getAllJobList = async () => {
@@ -105,7 +111,30 @@ export const DetailOptionPage = () => {
 		}
 	}, [myAccountId]);
 
-	console.log(myJobs);
+	const [initialPrice, setInitialPrice] = useState(totalPrice);
+	const [initialPoints, setInitialPoints] = useState(accountApoints);
+
+	const handleApplyApoints = () => {	
+		if (accountApoints <= 0) {
+			alert("Invalid points. Please enter a valid number.");
+			return;
+		}
+
+		const equivalentVND = accountApoints * 1; // 1 point = 1 VND
+		console.log(totalPrice, equivalentVND);
+
+		if (equivalentVND >= totalPrice) {
+			setTotalPrice(0);
+			toast.success(`Bạn đã áp dụng thành công ${totalPrice} điểm (tương đương với ${totalPrice}đ).`, successStyle);
+			setAccountApoints(equivalentVND-totalPrice)
+		} else {
+			const updatedPrice = totalPrice - equivalentVND;
+			setTotalPrice(updatedPrice);
+			toast.success(`Bạn đã áp dụng thành công ${accountApoints} điểm (tương đương với ${equivalentVND}đ).`, successStyle);
+			setAccountApoints(0)
+		}
+	};
+
 
 	const isExpired = (date) => date && new Date(date) < new Date();
 
@@ -353,6 +382,9 @@ export const DetailOptionPage = () => {
 		}
 	}, [promoValue]);
 
+
+
+
 	const handleTimeChange = (e) => {
 		const { value } = e.target;
 		const min = getOneHourLaterTimeString();
@@ -365,7 +397,7 @@ export const DetailOptionPage = () => {
 			setStartingHour('');
 		} else if (
 			startingDate.toISOString().slice(0, 10) ===
-				currentDate.toISOString().slice(0, 10) &&
+			currentDate.toISOString().slice(0, 10) &&
 			value < min
 		) {
 			toast.error(
@@ -384,9 +416,8 @@ export const DetailOptionPage = () => {
 	const handleOpenTimeNote = () => {
 		toast.custom((t) => (
 			<div
-				className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
-					t.visible ? 'animate-enter' : 'animate-leave'
-				}`}
+				className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${t.visible ? 'animate-enter' : 'animate-leave'
+					}`}
 			>
 				Giá dịch vụ tăng 10% vào giờ cao điểm (trước 8h và sau 17h).
 			</div>
@@ -396,9 +427,8 @@ export const DetailOptionPage = () => {
 	const handleOpenPriceNote = (note) => {
 		toast.custom((t) => (
 			<div
-				className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
-					t.visible ? 'animate-enter' : 'animate-leave'
-				}`}
+				className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${t.visible ? 'animate-enter' : 'animate-leave'
+					}`}
 			>
 				{note}
 			</div>
@@ -417,6 +447,9 @@ export const DetailOptionPage = () => {
 		}
 		setIsUrgent(!isUrgent);
 	};
+	
+
+
 
 	const handleToggleFavButton = () => {
 		if (!anotherOptions.includes('isChosenYourFav')) {
@@ -444,26 +477,14 @@ export const DetailOptionPage = () => {
 		setIsChosenYourself(!isChosenYourself);
 	};
 
+
+
 	const handleInvitationCode = (e) => {
 		setInvitationCode(e.target.value);
 	};
 
 	const handleValidateWorkingHours = () => {
-    setOpenConfirmWorkingHoursModal(true);
-		// const isSuitableWorkingHours = validateIntersectWorkingHours({
-		// 	startingDate: data.startingDate,
-		// 	startingHour: startingHour,
-		// 	duration: inputOptions.find(
-		// 		(option) => String(option?.optionName) === 'Thời gian'
-		// 	)?.optionValue,
-		// });
-		// if (true) {
-		// 	setOpenConfirmWorkingHoursModal(true);
-		// }
-		// if (!agree) {
-		// 	setValue('startingDate', '');
-		// 	return;
-		// }
+		setOpenConfirmWorkingHoursModal(true);
 	};
 
 	const onSubmit = async (data) => {
@@ -503,6 +524,7 @@ export const DetailOptionPage = () => {
 				isChosenYourFav,
 				invitationCodeOwnerId,
 				promoId,
+				accountApoints
 			},
 		});
 	};
@@ -565,8 +587,8 @@ export const DetailOptionPage = () => {
 														}}
 													/>
 												) : option?.optionList?.find((op) =>
-														/[^0-9]/.test(op?.optionValue)
-												  ) ? (
+													/[^0-9]/.test(op?.optionValue)
+												) ? (
 													<>
 														<table>
 															<tbody>
@@ -597,12 +619,12 @@ export const DetailOptionPage = () => {
 																										String(op1?.optionValue)
 																								);
 																							updatedInputOptions[chosenIndex] =
-																								{
-																									...updatedInputOptions[
-																										chosenIndex
-																									],
-																									optionValue: e.target.value,
-																								};
+																							{
+																								...updatedInputOptions[
+																								chosenIndex
+																								],
+																								optionValue: e.target.value,
+																							};
 																							return updatedInputOptions;
 																						}
 																					);
@@ -794,6 +816,33 @@ export const DetailOptionPage = () => {
 										/>
 									</td>
 								</tr>
+								<tr>
+									<td>
+										<p className="mr-3 mb-2 mt-3">
+											Dùng <span className="font-bold">{accountApoints}</span> aPoints
+										</p>
+									</td>
+
+									<td className="pl-32">
+										<Switch
+											className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
+											onChange={(checked) => {
+												if (checked) {
+													setInitialPoints(accountApoints); // Lưu số điểm ban đầu
+													setInitialPrice(totalPrice); // Lưu giá tiền ban đầu
+													handleApplyApoints(accountApoints); // Áp dụng điểm khi bật switch
+												  } else {
+													setAccountApoints(initialPoints); // Khôi phục điểm ban đầu khi tắt switch
+													setTotalPrice(initialPrice); // Khôi phục giá tiền ban đầu
+												  }
+											}}
+											 
+										>
+											<span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
+										</Switch>
+									</td>
+								</tr>
+
 								<tr className="border-light_gray border-t-2">
 									<td>
 										<div className="flex">
