@@ -40,7 +40,7 @@ export const WannaBecomeHelperPage = () => {
                     <p className='font-normal text-xs'>Khóa đào tạo kỹ năng bao gồm các video và bài kiểm tra cho từng video tương ứng,
                         giúp bạn chuẩn bị một hành trang tốt cho công việc sắp tới.</p>
                     <div className='grid justify-center'>
-                        <button className='bg-gray text-white mt-3 w-28 p-1 rounded-full'>Vào học</button>
+                        <Link className='bg-gray text-center text-white w-28 p-1 rounded-full' to={'/courses'}>Vào học</Link>
                     </div>
                 </div>
 
