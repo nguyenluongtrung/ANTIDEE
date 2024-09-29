@@ -13,6 +13,17 @@ const getAllJobPosts = async (token) => {
 	return response.data.data.jobPosts;
 };
 
+const getJobPost = async (jobPostId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(API_URL + jobPostId, config);
+	return response.data.data.jobPost;
+};
+
 const countNumberOfJobsByAccountId = async (token) => {
 	const config = {
 		headers: {
@@ -195,6 +206,7 @@ const jobPostService = {
 	countNumberOfJobsByAccountId,
 	getRevenueByCurrentMonth,
 	getRevenueByMonths,
+	getJobPost,
 };
 
 export default jobPostService;
