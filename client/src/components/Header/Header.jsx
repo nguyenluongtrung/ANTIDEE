@@ -22,7 +22,9 @@ export const Header = () => {
 	const [lastScrollY, setLastScrollY] = useState(0);
 
 	const { account } = useSelector((state) => state.auth);
-	const accountBalance = useSelector((state) => state.auth.account?.accountBalance);
+	const accountBalance = useSelector(
+		(state) => state.auth.account?.accountBalance
+	);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -83,7 +85,11 @@ export const Header = () => {
 					setIsOpenLoginForm={setIsOpenLoginForm}
 				/>
 			)}
-			<div className={`navbar-container flex justify-between px-16 py-3 ${showHeader ? 'header-background' : ''}`}>
+			<div
+				className={`navbar-container flex justify-between px-16 py-3 ${
+					showHeader ? 'header-background' : ''
+				}`}
+			>
 				<Link to="/home">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>
@@ -97,7 +103,10 @@ export const Header = () => {
 						<div className="dropdown-content">
 							{services?.map((service) => {
 								return (
-									<div className="shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden service-section" onClick={() => navigateToServicePage(service?._id)}>
+									<div
+										className="shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden service-section"
+										onClick={() => navigateToServicePage(service?._id)}
+									>
 										<div className="relative grid gap-6 bg-white px-5 py-3 sm:gap-8 sm:p-8 hover:bg-light_primary hover:text-white">
 											<a
 												href="#"
@@ -124,11 +133,13 @@ export const Header = () => {
 							<span>Về Antidee</span>
 						</Link>
 					</li>
-					{/* <li className="mr-5">
-						<Link to={'/become-helper'}>
-							<span>Trở thành người giúp việc</span>
-						</Link>
-					</li> */}
+					{account?.role === 'Người giúp việc' && (
+						<li className="mr-5">
+							<Link to={'/become-helper'}>
+								<span>Trở thành người giúp việc</span>
+							</Link>
+						</li>
+					)}
 					{account?.role === 'Admin' && (
 						<li className="mr-5">
 							<Link to={'/admin-dashboard'}>
@@ -139,11 +150,12 @@ export const Header = () => {
 				</ul>
 				<div className="flex">
 					{account ? (
-						<><Link to={'/deposit'}>
-							<span className="navbar-menu flex text-primary normal-text mr-3 pt-2">
-								Số dư: {accountBalance} VND
-							</span>
-						</Link>
+						<>
+							<Link to={'/deposit'}>
+								<span className="navbar-menu flex text-primary normal-text mr-3 pt-2">
+									Số dư: {accountBalance} VND
+								</span>
+							</Link>
 							<button
 								className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 border-primary border-2"
 								onClick={onLogout}
@@ -159,7 +171,7 @@ export const Header = () => {
 							>
 								<span>Đăng nhập</span>
 							</button>
-							<Link to={"/sign-up"}>
+							<Link to={'/sign-up'}>
 								<button
 									className="header-register-btn text-white text-center rounded-2xl font-medium w-28 ml-5 bg-primary"
 									// onClick={() => setIsOpenRegisterForm(true)}

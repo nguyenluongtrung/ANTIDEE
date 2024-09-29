@@ -4,7 +4,7 @@ import { firebase } from "../../firebase";
 import { auth } from "../../firebase";
 import { deleteUser, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast, Toaster } from "react-hot-toast";
-import { getAllAccounts, register } from "../../features/auth/authSlice";
+import { getAllAccounts, login, register } from "../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { errorStyle, successStyle } from "../../utils/toast-customize";
 import { useNavigate } from "react-router-dom";
@@ -88,7 +88,6 @@ export const SignUpPage = () => {
   };
 
   const checkExistEmailAccount = (newEmail) => {
-    console.log("Account Data", accounts);
     const listEmails = accounts.map((item) => item.email);
     if (listEmails.includes(newEmail)) {
       return true;
@@ -133,10 +132,14 @@ export const SignUpPage = () => {
     };
 
     const result = await dispatch(register(accountData));
-    console.log("ACCount Data", accountData);
     if (result.type.endsWith("fulfilled")) {
       toast.success("Đăng Ký Tài Khoản Thành Công !!!!!", successStyle);
-      navigate("/become-helper");
+      dispatch(login({phoneNumber: accountData.phoneNumber, password: accountData.password}));
+      if(accountData.role == 'Người giúp việc'){
+        navigate("/become-helper");
+      } else{
+        navigate("/home");
+      }
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
