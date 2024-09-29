@@ -30,42 +30,44 @@ import { JobPostListPage } from "./pages/JobPostListPage/JobPostListPage";
 import { VoucherHistory } from "./pages/HistoryVoucher/VoucherHistory";
 import { DepositPage } from "./pages/DepositPage/DepositPage";
 import {
-  ConfirmPage,
-  DetailOptionPage,
-  TimeAndContactPage,
-  ViewServiceDetail,
-  WorkingLocationPage,
-} from "./pages/JobPostingPage";
-import { JobPostingHistory } from "./pages/MyAccount/JobPostingHistory/JobPostingHistory";
-import { SignUpPage } from "./pages/SignUpPage";
-import { DomesticHelper } from "./pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper";
-import { ReplyFeedback } from "./pages/MyAccount/ReplyFeedback/ReplyFeedback";
-import { VoucherList } from "./pages/SearchVoucherPage/VoucherList";
-import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
-import { ExamResultHistory } from "./pages/MyAccount/ExamResultHistory/ExamResultHistory";
-import { MyJobs } from "./pages/MyAccount/MyJobs/MyJobs";
-import { BlackList } from "./pages/MyAccount/BlackList/BlackList";
-import { FavoriteList } from "./pages/MyAccount/FavoriteList/FavoriteList";
-import { DemoViewVideoYoutube } from "./pages/DemoViewVideoYoutube";
-import { VideoManagement } from "./pages/AdminPage/VideoManagement/VideoManagement";
-import { JourneyPage } from "./pages/JourneyPage";
-import { ChatForm } from "./pages/Chatting/ChatForm";
-import { PromotionManagement } from "./pages/AdminPage/PromotionManagement/PromotionManagement";
-import { RankingPage } from "./pages/RankingPage/RankingPage";
-import { Dashboard } from "./pages/AdminPage/Dashboard/Dashboard";
-import { AccumulatePoint } from "./pages/MyAccount/AccumulatePoint/AccumulatePoint";
-import { AccountManagement } from "./pages/AdminPage/AccountManagement/AccountManagement";
-import { UpdateAccountRole } from "./pages/AdminPage/UpdateAccountRole/UpdateAccountRole";
-import { TransactionHistory } from "./pages/TransactionHistory/TransactionHistory";
-import { IncomeDomesticHelper } from "./pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper";
-import { ForumLayout } from "./pages/ForumPage/layout";
-import { ForumDiscussions } from "./pages/ForumPage/ForumDiscussions";
-import { ForumRepositories } from "./pages/ForumPage/ForumRepositories";
-import { DetailedRepository } from "./pages/ForumPage/DetailedRepository";
-import { DetailedForumPost } from "./pages/ForumPage/components/DetailedForumPost";
-import { JobSchedulePage } from "./pages/JobSchedulePage";
-import { VoucherDetail } from "./pages/SearchVoucherPage/VoucherDetail/VoucherDetail";
-import { UpdateVoucher } from "./pages/AdminPage/VoucherManagement/UpdateVoucher/UpdateVoucher";
+	ConfirmPage,
+	DetailOptionPage,
+	TimeAndContactPage,
+	ViewServiceDetail,
+	WorkingLocationPage,
+} from './pages/JobPostingPage';
+import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
+import { SignUpPage } from './pages/SignUpPage';
+import { DomesticHelper } from './pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
+import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
+import { VoucherList } from './pages/SearchVoucherPage/VoucherList';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ExamResultHistory } from './pages/MyAccount/ExamResultHistory/ExamResultHistory';
+import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
+import { BlackList } from './pages/MyAccount/BlackList/BlackList';
+import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
+import { DemoViewVideoYoutube } from './pages/DemoViewVideoYoutube';
+import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
+import { JourneyPage } from './pages/JourneyPage';
+import { ChatForm } from './pages/Chatting/ChatForm';
+import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
+import { RankingPage } from './pages/RankingPage/RankingPage';
+import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
+import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoint';
+import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
+import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
+import { TransactionHistory } from './pages/TransactionHistory/TransactionHistory';
+import { IncomeDomesticHelper } from './pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper';
+import { ForumLayout } from './pages/ForumPage/layout';
+import { ForumDiscussions } from './pages/ForumPage/ForumDiscussions';
+import { ForumRepositories } from './pages/ForumPage/ForumRepositories';
+import { DetailedRepository } from './pages/ForumPage/DetailedRepository';
+import { DetailedForumPost } from './pages/ForumPage/components/DetailedForumPost';
+import { JobSchedulePage } from './pages/JobSchedulePage';
+import { MyCourses } from './pages/CoursesPage';
+import { CourseDetail } from './pages/CoursesPage/LessionsPage/LessionsPage';
+import { VoucherDetail } from "./pages/HistoryVoucher/VoucherDetail/VoucherDetail";
+
 const App = () => {
   return (
     <Router>
@@ -77,35 +79,37 @@ const App = () => {
 const AppContent = () => {
   const { pathname } = useLocation();
 
-  const isAdminPage = pathname.startsWith("/admin");
-  return (
-    <div className="app-container select-none bg-white">
-      {!isAdminPage && (
-        <div className="sidebar-container z-50">
-          <Sidebar />
-        </div>
-      )}
-      <ChatForm />
-      <div className="content-container select-none">
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/my-account" element={<MyAccount />} />
-            <Route path="/entry-exam" element={<EntryExamPage />} />
-            <Route path="/invite-friend" element={<InviteFriendPage />} />
-            <Route path="/become-helper" element={<WannaBecomeHelperPage />} />
-            <Route path="/congrats" element={<CongratsPage />} />
-            <Route path="/weather-forecast" element={<WeatherForecastPage />} />
-            <Route path="/update-dw" element={<UpdateProfileForDW />} />
-            <Route path="/qualifications" element={<QualificationPage />} />
-            <Route path="/deposit" element={<DepositPage />} />
-            <Route
-              path="/transaction-history"
-              element={<TransactionHistory />}
-            />
+	const isAdminPage = pathname.startsWith('/admin');
+	return (
+		<div className="app-container select-none bg-white">
+			{!isAdminPage && (
+				<div className="sidebar-container z-50">
+					<Sidebar />
+				</div>
+			)}
+			<ChatForm />
+			<div className="content-container select-none">
+				<Routes>
+					<Route path="/" element={<Layout />}>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/home" element={<HomePage />} />
+						<Route path="/register" element={<RegisterPage />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route path="/my-account" element={<MyAccount />} />
+						<Route path="/entry-exam" element={<EntryExamPage />} />
+						<Route path="/invite-friend" element={<InviteFriendPage />} />
+						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
+						<Route path="/congrats" element={<CongratsPage />} />
+						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
+						<Route path="/update-dw" element={<UpdateProfileForDW />} />
+						<Route path="/qualifications" element={<QualificationPage />} />
+						<Route path="/deposit" element={<DepositPage />} />
+						<Route path="/courses" element={<MyCourses />} />
+						<Route path="/lessons" element={<CourseDetail />} />
+						<Route
+							path="/transaction-history"
+							element={<TransactionHistory />}
+						/>
 
             <Route
               path="/job-posting-history"
