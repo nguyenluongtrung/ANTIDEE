@@ -17,11 +17,11 @@ export const CourseDetail = () => {
     },
     {
       id: 2,
-      title: "Mô hình Client - Server là gì?",
+      title: "Cách chăm sóc trẻ em",
       duration: "11:35",
       contents: [
-        { id: "2.1", type: "video", title: "Định nghĩa mô hình Client-Server", duration: "3:00", url: "https://via.placeholder.com/1920x1080.png?text=Video+2" },
-        { id: "2.2", type: "quiz", title: "Kiểm tra mô hình Client-Server", duration: "4:00" },
+        { id: "2.1", type: "video", title: "Video hướng dẫn chăm sóc trẻ em", duration: "3:00", url: "https://via.placeholder.com/1920x1080.png?text=Video+2" },
+        { id: "2.2", type: "quiz", title: "Kiểm tra", duration: "4:00" },
       ],
     },
   ];
@@ -48,25 +48,23 @@ export const CourseDetail = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 mt-14">
+    <div className="flex flex-col h-screen bg-gray-50 pt-14 mb-28">
       <div className="bg-white shadow-lg p-6 top-0 z-10">
-        <h1 className="text-3xl font-bold text-gray-900">Khóa học: Kiến thức nhập môn IT</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Khóa học: Kiến thức chăm sóc trẻ em</h1>
       </div>
 
       <div className="flex flex-grow">
         <div className="flex-[7] bg-white flex flex-col justify-center items-center p-8">
-          <div className="relative w-full h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg overflow-hidden flex items-center justify-center">
+          <div className="relative w-full h-[calc(100vh-10rem)] bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg overflow-hidden flex items-center justify-center">
             {selectedContent && selectedContent.type === "video" ? (
               <img
                 src={selectedContent.url}
                 alt={selectedContent.title}
                 className="object-cover w-full h-full"
               />
-            ) : selectedContent ? (
+            ) : selectedContent && selectedContent.type === "quiz" ? (
               <div className="text-white text-xl">Nội dung bài kiểm tra: {selectedContent.title}</div>
-            ) : (
-              <div className="text-white text-xl">Chưa chọn nội dung nào</div>
-            )}
+            ) : null}
           </div>
           {selectedContent && (
             <h2 className="text-3xl font-bold mt-6 mb-2 text-gray-800">
@@ -120,5 +118,3 @@ export const CourseDetail = () => {
     </div>
   );
 };
-
-
