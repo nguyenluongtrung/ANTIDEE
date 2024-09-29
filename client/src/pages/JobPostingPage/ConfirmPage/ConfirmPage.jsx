@@ -112,6 +112,8 @@ export const ConfirmPage = () => {
 				);
 			}
 
+			await dispatch(getAccountInformation());
+
 			navigate(`/congrats`, {
 				state: {
 					congratsMsg: 'Chúc mừng bạn đã đăng công việc thành công',
