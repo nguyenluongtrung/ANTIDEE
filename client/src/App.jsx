@@ -65,7 +65,7 @@ import { DetailedRepository } from './pages/ForumPage/DetailedRepository';
 import { DetailedForumPost } from './pages/ForumPage/components/DetailedForumPost';
 import { JobSchedulePage } from './pages/JobSchedulePage';
 import { MyCourses } from './pages/CoursesPage';
-import { CourseDetail } from './pages/CoursesPage/LessionsPage/LessionsPage';
+import { CourseDetail } from './pages/CoursesPage/LessonsPage/LessonsPage';
 import { VoucherDetail } from "./pages/HistoryVoucher/VoucherDetail/VoucherDetail";
 
 const App = () => {

@@ -4,32 +4,30 @@ import { Link } from "react-router-dom";
 
 const courses = [
   {
-    title: "E-Learning and Digital Cultures",
-    rating: 8.7,
-    date: "Feb 4, 2020 - Feb 22, 2020",
-    status: "current",
+    title: "Khóa học nấu ăn",
+    rating: 4.7,
+    status: "đang học",
     completed: true,
     img: "https://via.placeholder.com/100/4A90E2/FFFFFF?text=E-Learning",
   },
   {
-    title: "Machine Learning: Regression",
-    rating: 8.6,
-    date: "Feb 8, 2020 - Feb 18, 2020",
-    status: "archived",
+    title: "Khóa học nấu ăn",
+    rating: 4.6,
+    status: "đã hoàn thành",
     completed: false,
     img: "https://via.placeholder.com/100/E94E77/FFFFFF?text=ML",
   },
   {
-    title: "Principles of Computing (Part 1)",
+    title: "Khóa học chăm sóc người già",
     rating: null,
-    status: "current",
+    status: "đang học",
     completed: true,
     img: "https://via.placeholder.com/100/50E3C2/FFFFFF?text=Computing",
   },
   {
-    title: "Design Principles: an Introduction",
+    title: "Khóa học chăm sóc trẻ em",
     rating: null,
-    status: "upcoming",
+    status: "sắp tới",
     completed: false,
     img: "https://via.placeholder.com/100/BD10E0/FFFFFF?text=Design",
   },
@@ -50,13 +48,13 @@ export const MyCourses = () => {
           {/* Main Content */}
           <div className="md:col-span-3">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">
-              My Courses
+              CÁC KHÓA HỌC
             </h2>
 
             {/* Tab Navigation */}
             <div className="mb-6">
               <nav className="flex space-x-4">
-                {["all", "current", "archived", "upcoming", "watchlist"].map(
+                {["Tất cả", "đang học", "đã hoàn thành", "sắp tới", "danh sách theo dõi"].map(
                   (tab) => (
                     <button
                       key={tab}
@@ -109,7 +107,7 @@ export const MyCourses = () => {
                           : "bg-gray hover:bg-gray"
                       }`}
                     >
-                      {course.completed ? "Completed" : "View Course"}
+                      {course.completed ? "Hoàn thành" : "Xem chi tiết"}
                     </Link>
                   </div>
                 </li>
@@ -127,27 +125,23 @@ export const MyCourses = () => {
               />
               <div>
                 <h4 className="font-bold text-xl text-gray-800">
-                  Yosef Dowling
+                  Thông tin của bạn
                 </h4>
-                <p className="text-gray-500">Software Engineer</p>
+                <p className="text-gray-500"></p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
                 <h5 className="text-2xl font-semibold text-gray-800">16</h5>
-                <p className="text-sm text-gray-600">Courses Completed</p>
+                <p className="text-sm text-gray-600">Đã hoàn thành</p>
               </div>
               <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
                 <h5 className="text-2xl font-semibold text-gray-800">14</h5>
-                <p className="text-sm text-gray-600">Certificates Earned</p>
+                <p className="text-sm text-gray-600">Chứng chỉ</p>
               </div>
               <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
                 <h5 className="text-2xl font-semibold text-gray-800">8</h5>
-                <p className="text-sm text-gray-600">Courses In Progress</p>
-              </div>
-              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-                <h5 className="text-2xl font-semibold text-gray-800">26</h5>
-                <p className="text-sm text-gray-600">Forum Discussions</p>
+                <p className="text-sm text-gray-600">Đang học</p>
               </div>
             </div>
           </div>
