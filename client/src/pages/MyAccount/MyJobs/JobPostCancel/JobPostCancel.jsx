@@ -111,9 +111,8 @@ export const JobPostCancel = ({
 			)}
 			<div className="mt-5">
 				<p>(*) Quy định hủy công việc như sau:</p>
-				<p className="pl-10">1. Hủy trước giờ làm việc trên 2 tiếng: Phạt <span className="font-bold">30%</span> giá trị công việc</p>
-				<p className="pl-10">2. Hủy trước giờ làm việc dưới 2 tiếng: Phạt <span className="font-bold">80%</span> giá trị công việc</p>
-				<p>Độ tin cậy của bạn sẽ giảm sau mỗi lần hủy việc.</p>
+				<p className="pl-10">1. Bạn sẽ mất tiền cọc khi nhận việc</p>
+				<p className="pl-10">2. Độ tin cậy của bạn sẽ giảm sau mỗi lần hủy việc</p>
 				<p>Bạn chắc chắn hủy công việc này?</p>
 			</div>
 			<div className="flex mt-5">

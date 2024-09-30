@@ -4,6 +4,7 @@ const Account = require('../models/accountModel');
 const Service = require('../models/serviceModel');
 const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
+const { addNewTransaction } = require('./transactionController');
 
 const createJobPost = asyncHandler(async (req, res) => {
 	const jobPost = await JobPost.create(req.body);
@@ -13,10 +14,24 @@ const createJobPost = asyncHandler(async (req, res) => {
 	const customer = accounts.find(
 		(acc) => String(acc._id) == String(jobPost.customerId)
 	);
-	customer.accountBalance = Math.round(
-		customer.accountBalance - jobPost.totalPrice
-	);
-	await customer.save();
+
+	if (jobPost.paymentMethod == 'Ví người dùng') {
+		customer.accountBalance = Math.round(
+			customer.accountBalance - jobPost.totalPrice
+		);
+
+		await addNewTransaction(
+			jobPost.totalPrice,
+			jobPost.customerId,
+			`Thanh toán mua dịch vụ ${service.name}`,
+			'job_income',
+			jobPost._id,
+			'',
+			'Ví người dùng'
+		);
+
+		await customer.save();
+	}
 
 	if (isUrgent) {
 		for (let account of accounts) {
@@ -158,13 +173,22 @@ const updateJobPost = asyncHandler(async (req, res) => {
 	);
 
 	if (
+		jobPost.paymentMethod == 'Ví người dùng' &&
 		jobPost.hasCompleted.customerConfirm &&
 		jobPost.hasCompleted.domesticHelperConfirm
 	) {
 		const domesticHelper = await Account.findById(jobPost.domesticHelperId);
-		console.log(domesticHelper.accountBalance, jobPost.totalPrice * 0.75);
 		domesticHelper.accountBalance = Math.round(
-			domesticHelper.accountBalance + jobPost.totalPrice * 0.75
+			domesticHelper.accountBalance + jobPost.totalPrice * 1
+		);
+		await addNewTransaction(
+			Math.round(jobPost.totalPrice),
+			jobPost.domesticHelperId,
+			'Chuyển tiền hoàn thành công việc',
+			'salary',
+			jobPost._id,
+			'',
+			'Ví người dùng'
 		);
 		await domesticHelper.save();
 	}
@@ -180,6 +204,7 @@ const updateJobPost = asyncHandler(async (req, res) => {
 const getAJob = asyncHandler(async (req, res) => {
 	const jobPostId = req.params.jobPostId;
 	const accountId = req.params.accountId;
+	const account = await Account.findById(accountId);
 
 	const isFoundJobPost = await JobPost.findById(jobPostId);
 
@@ -201,12 +226,22 @@ const getAJob = asyncHandler(async (req, res) => {
 		}
 	);
 
-	const account = await Account.findById(accountId);
 	account.receivedJobList.push({
 		jobPostId,
 		receivedAt,
 	});
+	account.accountBalance =
+		account.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
 	await account.save();
+	await addNewTransaction(
+		Math.round(0.3 * isFoundJobPost?.totalPrice),
+		account._id,
+		'Lợi nhuận sau khi giúp việc nhận việc',
+		'commission_fee',
+		jobPostId,
+		'',
+		'Ví người dùng'
+	);
 
 	res.status(200).json({
 		status: 'success',
@@ -280,6 +315,9 @@ const cancelAJob = asyncHandler(async (req, res) => {
 
 	const isFoundJobPost = await JobPost.findById(jobPostId);
 	const foundAcc = await Account.findById(account);
+	const domesticHelperAcc = await Account.findById(
+		isFoundJobPost.domesticHelperId
+	);
 	if (!isFoundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
@@ -320,16 +358,55 @@ const cancelAJob = asyncHandler(async (req, res) => {
 		(startingDate.toDateString() == new Date().toDateString() &&
 			startingTime >= getCurrentTimeStringPlus1Hour())
 	) {
-		msg = 'Bạn đã hủy việc thành công';
-	} else {
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
-		foundAcc.rating.customerRating =
-			Math.round(foundAcc.rating.customerRating) - 0.1;
-		await foundAcc.save();
 		msg =
-			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
+			'Bạn đã hủy việc thành công. Bạn sẽ nhận lại 100% giá trị công việc đã hủy';
+		if (isFoundJobPost.paymentMethod == 'Ví người dùng') {
+			foundAcc.accountBalance =
+				foundAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
+			await foundAcc.save();
+			await addNewTransaction(
+				Math.round(1 * isFoundJobPost?.totalPrice),
+				foundAcc._id,
+				'Chuyển tiền hủy việc',
+				'refund',
+				jobPostId,
+				'',
+				'Ví người dùng'
+			);
+		}
+	} else {
+		if (isFoundJobPost.paymentMethod == 'Ví người dùng') {
+			msg =
+				'Bạn đã hủy việc thành công và sẽ nhận lại 70% giá trị công việc đã hủy và giảm điểm uy tín';
+			foundAcc.accountBalance =
+				foundAcc.accountBalance + Math.round(0.7 * isFoundJobPost?.totalPrice);
+			foundAcc.rating.customerRating =
+				Math.round(foundAcc.rating.customerRating) - 0.1;
+			await foundAcc.save();
+			await addNewTransaction(
+				Math.round(0.7 * isFoundJobPost?.totalPrice),
+				foundAcc._id,
+				'Chuyển tiền hủy việc - phạt 30% giá trị công việc',
+				'refund',
+				jobPostId,
+				'',
+				'Ví người dùng'
+			);
+		}
 	}
+	domesticHelperAcc.accountBalance =
+		domesticHelperAcc.accountBalance +
+		Math.round(0.3 * isFoundJobPost?.totalPrice);
+	await domesticHelperAcc.save();
+	await addNewTransaction(
+		Math.round(0.3 * isFoundJobPost?.totalPrice),
+		domesticHelperAcc._id,
+		'Chuyển tiền bồi thường hủy việc cho giúp việc',
+		'refund',
+		jobPostId,
+		'',
+		'Ví người dùng'
+	);
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -350,6 +427,8 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
 
+	const customerAcc = await Account.findById(isFoundJobPost.customerId);
+
 	const updatedJobPost = await JobPost.findByIdAndUpdate(
 		jobPostId,
 		{
@@ -362,41 +441,30 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 		{ new: true }
 	);
 
-	const currentTime = new Date();
-	const workingStartTime = new Date(isFoundJobPost.workingTime.startingDate);
-	const workingStartHour = parseInt(
-		isFoundJobPost.workingTime.startingHour.split(':')[0]
-	);
-	const workingStartMinute = parseInt(
-		isFoundJobPost.workingTime.startingHour.split(':')[1]
-	);
-	const workingStartMs = workingStartTime.setHours(
-		workingStartHour,
-		workingStartMinute
-	);
-	const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
-	const workingEndMs = workingStartMs - twoHoursInMilliseconds;
-	const workingEndTime = new Date(workingEndMs);
-
 	let msg;
 
-	if (currentTime <= workingEndTime) {
-		msg =
-			'Bạn đã hủy việc thành công và bị phạt 30% giá trị công việc và giảm điểm uy tín';
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.3 * isFoundJobPost?.totalPrice);
-	} else {
-		msg =
-			'Bạn đã hủy việc thành công và bị phạt 80% giá trị công việc và giảm điểm uy tín';
-		foundAcc.accountBalance =
-			foundAcc.accountBalance - Math.round(0.8 * isFoundJobPost?.totalPrice);
-	}
+	msg =
+		'Bạn đã hủy việc thành công và mất tiền cọc đồng thời bị giảm điểm uy tín';
 
-	console.log(foundAcc.rating.domesticHelperRating);
 	foundAcc.rating.domesticHelperRating =
 		foundAcc.rating.domesticHelperRating - 0.1;
 
+	if (isFoundJobPost.paymentMethod == 'Ví người dùng') {
+		customerAcc.accountBalance =
+			customerAcc.accountBalance + Math.round(1 * isFoundJobPost?.totalPrice);
+		await addNewTransaction(
+			Math.round(1 * isFoundJobPost?.totalPrice),
+			customerAcc._id,
+			'Tiền bồi thường vì người giúp việc hủy công việc',
+			'refund',
+			jobPostId,
+			'',
+			'Ví người dùng'
+		);
+	}
+
 	await foundAcc.save();
+	await customerAcc.save();
 
 	res.status(200).json({
 		status: 'success',

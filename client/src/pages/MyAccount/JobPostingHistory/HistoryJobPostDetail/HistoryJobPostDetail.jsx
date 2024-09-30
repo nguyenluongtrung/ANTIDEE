@@ -9,7 +9,10 @@ import {
 } from '../../../../utils/format';
 import toast from 'react-hot-toast';
 import { IoMdCheckboxOutline } from 'react-icons/io';
-import { selectATasker, updateJobPost } from '../../../../features/jobPosts/jobPostsSlice';
+import {
+	selectATasker,
+	updateJobPost,
+} from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { DomesticHelper } from '../../../MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { getAllFeedbacks } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
@@ -55,8 +58,17 @@ export const HistoryJobPostDetail = ({
 
 	const handleCompleteJobPost = async (e) => {
 		e.preventDefault();
-		const jobPostData = {...chosenJobPost, hasCompleted: {...chosenJobPost.hasCompleted, customerConfirm: true, completedAt: new Date()}}
-		const result = await dispatch(updateJobPost({jobPostData, id: chosenJobPostId}));
+		const jobPostData = {
+			...chosenJobPost,
+			hasCompleted: {
+				...chosenJobPost.hasCompleted,
+				customerConfirm: true,
+				completedAt: new Date(),
+			},
+		};
+		const result = await dispatch(
+			updateJobPost({ jobPostData, id: chosenJobPostId })
+		);
 
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
@@ -65,7 +77,7 @@ export const HistoryJobPostDetail = ({
 		}
 		setIsOpenJobPostDetail(false);
 		getAllInitialJobList();
-	}
+	};
 
 	useEffect(() => {
 		handleGetAllInitialFeedbacks();
@@ -99,6 +111,12 @@ export const HistoryJobPostDetail = ({
 								<span className="text-brown">
 									{formatDate(chosenJobPost?.workingTime?.startingDate)}{' '}
 									{formatWorkingTime(chosenJobPost?.workingTime?.startingHour)}
+								</span>
+							</p>
+							<p className="text-gray mb-2">
+								Hết hạn lúc: {''}
+								<span className="text-brown">
+									{formatDate(chosenJobPost?.dueDate)}{' '}
 								</span>
 							</p>
 							<p className="text-gray mb-2">
@@ -258,7 +276,7 @@ export const HistoryJobPostDetail = ({
 											<p className="text-center">Hủy việc</p>
 										</button>
 									</div>
-							)}
+								)}
 							{!chosenJobPost?.hasCompleted?.customerConfirm &&
 								chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
 								!chosenJobPost?.cancelDetails?.isCanceled && (
@@ -270,10 +288,12 @@ export const HistoryJobPostDetail = ({
 											style={{ width: '70%' }}
 											onClick={handleCompleteJobPost}
 										>
-											<p className="text-center">Xác nhận hoàn thành công việc</p>
+											<p className="text-center">
+												Xác nhận hoàn thành công việc
+											</p>
 										</button>
 									</div>
-							)}
+								)}
 						</div>
 					</>
 				) : (

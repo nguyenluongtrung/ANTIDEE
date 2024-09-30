@@ -10,7 +10,6 @@ import toast from 'react-hot-toast';
 export const WorkingLocationPage = () => {
 	const { serviceId } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
-	const [houseType, setHouseType] = useState('');
 	const navigate = useNavigate();
 	const {
 		register,
@@ -73,10 +72,6 @@ export const WorkingLocationPage = () => {
 	}, [districtCode]);
 
 	const onSubmit = (data) => {
-		if (!houseType.trim()) {
-			toast.error('Vui lòng chọn "Loại nhà"', errorStyle);
-			return;
-		} 
 		if (!data.street.trim()) {
 			toast.error('Vui lòng điền "Số nhà, đường"', errorStyle);
 			return;
@@ -84,7 +79,6 @@ export const WorkingLocationPage = () => {
 		const detailWard = wards.find((ward) => String(ward.code) === String(wardCode));
 		const address = {
 			...data,
-			houseType,
 			province: detailWard.province,
 			district: detailWard.district,
 			ward: detailWard.name
@@ -140,40 +134,6 @@ export const WorkingLocationPage = () => {
 							className="p-2 my-4 border-light_gray border-2 rounded-md hover:outline-none focus:outline-none"
 						/>
 					</div>
-					<div className="">
-						<p className="font-bold">Loại nhà</p>
-						<p
-							onClick={() => setHouseType('Nhà / nhà phố')}
-							className={`pl-3 py-2 my-4 border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
-								houseType === 'Nhà / nhà phố'
-									? 'text-primary border-primary'
-									: 'border-light_gray'
-							}`}
-							style={{fontSize: '16px'}}
-						>Nhà / nhà phố</p>
-						<p
-							onClick={() => setHouseType('Căn hộ')}
-							className={`pl-3 py-2 my-4  border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
-								houseType === 'Căn hộ'
-									? 'text-primary border-primary'
-									: 'border-light_gray'
-							}`}
-							style={{fontSize: '16px'}}
-						>Căn hộ</p>
-						<p
-							onClick={() => setHouseType('Biệt thự')}
-							className={`pl-3 py-2 my-4 border-2 rounded-md hover:outline-none focus:outline-none hover:cursor-pointer ${
-								houseType === 'Biệt thự'
-									? 'text-primary border-primary'
-									: 'border-light_gray'
-							}`}
-							style={{fontSize: '16px'}}
-						>Biệt thự</p>
-					</div>
-					<p className="italic text-gray">
-						*Vui lòng chọn loại nhà, số nhà phù hợp để người giúp việc dễ dàng
-						tìm kiếm
-					</p>
 				</div>
 
 				<div className="flex items-center justify-center">

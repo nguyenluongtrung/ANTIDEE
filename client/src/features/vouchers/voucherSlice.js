@@ -19,6 +19,44 @@ export const getAllVouchers = createAsyncThunk(
 	}
 );
 
+export const getAllAccountVouchers = createAsyncThunk(
+	'vouchers/getAllAccountVouchers',
+	async (accountId, thunkAPI) => {
+		try {
+			return await voucherService.getAllAccountVouchers(accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const getVoucherById = createAsyncThunk(
+	'vouchers/getVouchetById',
+	async ({voucherId, accountId}, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount?.data?.token;
+			return await voucherService.getVoucherById(token, voucherId, accountId);
+
+		} catch (error) {
+			const message =
+				(error.response && error.response.data && error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+
+		}
+	}
+)
+
 export const createVoucher = createAsyncThunk(
 	'vouchers/createVoucher',
 	async (voucherData, thunkAPI) => {
@@ -81,11 +119,11 @@ export const deleteVoucher = createAsyncThunk(
 
 export const redeemVoucher = createAsyncThunk(
 	'vouchers/redeemVoucher',
-	async ({userId, voucherId}, thunkAPI)=>{
+	async ({accountId, voucherId}, thunkAPI)=>{
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await voucherService.redeemVoucher(token, userId, voucherId);
+			return await voucherService.redeemVoucher(token, accountId, voucherId);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -100,12 +138,12 @@ export const redeemVoucher = createAsyncThunk(
 )
 export const getRedeemedVouchers = createAsyncThunk(
 	'vouchers/getRedeemedVouchers',
-	async (userId, thunkAPI) => {
+	async (accountId, thunkAPI) => {
 		
 	try {
 		const storedAccount = JSON.parse(localStorage.getItem('account'));
 		const token = storedAccount?.data?.token;
-		return await voucherService.getRedeemedVouchers(token, userId);
+		return await voucherService.getRedeemedVouchers(token, accountId);
 		
 	} catch (error) {
 		const message =
@@ -148,6 +186,20 @@ export const voucherSlice = createSlice({
 				state.vouchers = action.payload;
 			})
 			.addCase(getAllVouchers.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.vouchers = null;
+			})
+			.addCase(getAllAccountVouchers.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAllAccountVouchers.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.vouchers = action.payload;
+			})
+			.addCase(getAllAccountVouchers.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
@@ -232,10 +284,24 @@ export const voucherSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.vouchers = [];
+			})
+			.addCase(getVoucherById.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getVoucherById.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.vouchers = action.payload;
+			})
+			.addCase(getVoucherById.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.vouchers = []
 			});
-			
 
 	},
 });
+
 export const { reset } = voucherSlice.actions;
 export default voucherSlice.reducer;
