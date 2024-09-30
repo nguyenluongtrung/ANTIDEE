@@ -34,7 +34,7 @@ const createCourse = asyncHandler(async (req, res) => {
     res.status(201).json({
       status: "success",
       data: {
-        course,
+        video,
       },
     });
 });
