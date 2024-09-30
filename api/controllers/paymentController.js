@@ -10,7 +10,7 @@ const transactionController = require('./transactionController');
 exports.createPayment = async (req, res) => {
 	const { amount, userId } = req.body;
 	const embed_data = {
-		redirecturl: 'http://127.0.0.1:5173/',
+		redirecturl: 'https://antidee.onrender.com/',
 	};
 
 	const items = [];
@@ -25,7 +25,7 @@ exports.createPayment = async (req, res) => {
 		embed_data: JSON.stringify(embed_data),
 		amount: amount,
 		callback_url:
-			'https://c316-42-115-113-153.ngrok-free.app/callback',
+			'https://antidee.onrender.com/callback',
 		description: `Nạp tiền vào ví người dùng`,
 		bank_code: '',
 	};
