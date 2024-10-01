@@ -37,9 +37,8 @@ export const TransactionHistory = () => {
                     <table className="w-full border-b border-gray mt-3">
                         <thead>
                             <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
-                                <td className="py-2 px-1 text-center font-bold">Người gửi </td>
-                                <td className="py-2 px-1 text-center font-bold">Nội dung</td>
-                                <td className="py-2 px-1 text-center font-bold">Mã giao dịch</td>
+                                <td className="py-2 px-1 text-center font-bold">Tài khoản </td>
+                                <td className="py-2 px-1 text-center font-bold">Nội dung</td> 
                                 <td className="py-2 px-1 text-center font-bold">Số tiền</td>
                                 <td className="py-2 px-1 text-center font-bold">Thời gian giao dịch</td>
                             </tr>
@@ -59,10 +58,7 @@ export const TransactionHistory = () => {
                                         </td>
                                         <td className="font-medium text-center text-gray p-3">
                                             {transaction.message}
-                                        </td>
-                                        <td className="font-medium text-center text-gray p-3">
-                                        {transaction.externalId}
-                                        </td>
+                                        </td> 
                                         <td className="font-medium text-center text-gray p-3">
                                             {transaction.amount.toLocaleString()}
                                         </td>
