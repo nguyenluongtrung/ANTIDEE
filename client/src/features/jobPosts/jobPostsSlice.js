@@ -5,9 +5,7 @@ export const getAllJobPosts = createAsyncThunk(
 	'jobPosts/getAllJobPosts',
 	async (_, thunkAPI) => {
 		try {
-			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount.data.token;
-			return await jobPostsService.getAllJobPosts(token);
+			return await jobPostsService.getAllJobPosts();
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -182,9 +180,7 @@ export const getJobPost = createAsyncThunk(
 	'jobPosts/getJobPost',
 	async (jobPostId, thunkAPI) => {
 		try {
-			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount.data.token;
-			return await jobPostsService.getJobPost(jobPostId, token);
+			return await jobPostsService.getJobPost(jobPostId);
 		} catch (error) {
 			const message =
 				(error.response &&
