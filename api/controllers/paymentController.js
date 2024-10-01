@@ -10,7 +10,7 @@ const transactionController = require('./transactionController');
 exports.createPayment = async (req, res) => {
 	const { amount, userId } = req.body;
 	const embed_data = {
-		redirecturl: 'http://127.0.0.1:5173/',
+		redirecturl: 'https://antidee.onrender.com/',
 	};
 
 	const items = [];
@@ -24,9 +24,8 @@ exports.createPayment = async (req, res) => {
 		item: JSON.stringify(items),
 		embed_data: JSON.stringify(embed_data),
 		amount: amount,
-		callback_url:
-			'https://7d45-2402-800-627d-15de-c4c2-d073-b3f2-18e6.ngrok-free.app/callback',
-		description: `Payment for order #${transID}`,
+		callback_url: 'https://antidee.onrender.com/callback',
+		description: `Nạp tiền vào ví người dùng`,
 		bank_code: '',
 	};
 
@@ -82,7 +81,6 @@ exports.paymentCallback = async (req, res) => {
 		await updateUserBalance(userId, amount, transId);
 		await Transaction.findByIdAndUpdate(transId, { status: 'COMPLETED' });
 
-		console.log('Transaction status updated to COMPLETED');
 		return res.json({
 			return_code: 1,
 			return_message: 'Transaction completed successfully',
@@ -108,16 +106,16 @@ async function updateUserBalance(userId, amount, transId) {
 		user.transactions = user.transactions || [];
 		user.transactions.push(transId);
 
-		const toAccountId = new mongoose.Types.ObjectId();
-		await transactionController.createTransaction(
+		await transactionController.addNewTransaction(
 			amount,
-			`Payment for order #${transId}`,
 			userId,
-			toAccountId
+			`Nạp tiền vào ví người dùng`,
+			`balance_income`,
+			null,
+			`${transId}`,
+			`ZaloPay`
 		);
+
 		await user.save();
-		console.log('User balance updated successfully');
-	} else {
-		console.log('User not found');
 	}
 }

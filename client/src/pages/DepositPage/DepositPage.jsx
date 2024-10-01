@@ -15,13 +15,13 @@ export const DepositPage = () => {
     const handleDeposit = async () => {
         try {
             const response = await axios.post('http://localhost:5000/antidee/api/payment/payment', { 
-                amount: parseInt(amount.replace(/,/g, '')), // Chuyển đổi số định dạng lại thành số nguyên
+                amount: parseInt(amount.replace(/,/g, '')),  
                 userId: account._id 
             });
             console.log('Phản hồi khởi tạo thanh toán:', response.data);
             setAppTransId(response.data.app_trans_id);
             if (response.data.order_url) {
-                window.location.href = response.data.order_url; // Chuyển hướng tới ZaloPay
+                window.location.href = response.data.order_url;  
             } else {
                 setMessage('Không thể lấy được URL thanh toán');
             }
@@ -38,9 +38,9 @@ export const DepositPage = () => {
                 userId: account._id
             });
             console.log('Phản hồi cập nhật số dư:', response.data);
-            dispatch(getAccountInformation()); // Cập nhật thông tin tài khoản
+            dispatch(getAccountInformation());  
             setMessage('Số dư đã được cập nhật');
-            navigate('/'); // Chuyển hướng về trang chủ
+            navigate('/');  
         } catch (error) {
             console.error('Lỗi cập nhật số dư:', error.response ? error.response.data : error.message);
             setMessage('Cập nhật số dư thất bại');
@@ -54,23 +54,21 @@ export const DepositPage = () => {
         }
 
         try {
-            const response = await axios.post(`http://localhost:5000/antidee/api/payment/orderStatus/${appTransId}`);
-            console.log('Phản hồi kiểm tra trạng thái thanh toán:', response.data);
+            const response = await axios.post(`http://localhost:5000/antidee/api/payment/orderStatus/${appTransId}`); 
             if (response.data.return_code === 1) {
-                await updateBalance(); // Cập nhật số dư nếu thanh toán thành công
+                await updateBalance();  
             } else {
                 setMessage('Thanh toán thất bại hoặc đang chờ xử lý');
             }
-        } catch (error) {
-            console.error('Lỗi kiểm tra trạng thái thanh toán:', error.response ? error.response.data : error.message);
+        } catch (error) { 
             setMessage('Kiểm tra trạng thái thanh toán thất bại');
         }
     };
 
     const handleChange = (e) => {
-        const value = e.target.value.replace(/,/g, ''); // Loại bỏ dấu phẩy
+        const value = e.target.value.replace(/,/g, '');  
         if (value === '' || /^[0-9\b]+$/.test(value)) {
-            setAmount(value === '' ? '' : parseInt(value, 10).toLocaleString()); // Định dạng số
+            setAmount(value === '' ? '' : parseInt(value, 10).toLocaleString());  
         }
     };
 
