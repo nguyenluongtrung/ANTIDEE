@@ -180,6 +180,25 @@ const updateRatingDomesticHelper = async (
 	return response.data.data.account;
 };
 
+const updateRatingCustomer  = async (
+	ratingData,
+	customerId,
+	token
+) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + 'rating-customer/' + customerId,
+		ratingData,
+		config
+	);
+	return response.data.data.account;
+};
+
 const checkInvitationCode = async (invitationCode, token) => {
 	const config = {
 		headers: {
@@ -335,6 +354,7 @@ const authService = {
 	getAllReports,
 	getTransactionHistory,
 	getAccountBalance,
+	updateRatingCustomer
 };
 
 export default authService;

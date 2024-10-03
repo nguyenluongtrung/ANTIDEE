@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaStar } from 'react-icons/fa';
-import './DomesticHelper.css';
 import toast from 'react-hot-toast';
 import {
 	createFeedback,
@@ -9,21 +8,20 @@ import {
 } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
 import { useForm } from 'react-hook-form';
 import {
-	addDomesticHelperToBlackList,
-	addDomesticHelperToFavoriteList,
 	getAccountInformation,
+	updateRatingCustomer,
 	updateRatingDomesticHelper,
 } from '../../../../features/auth/authSlice';
 import { Spinner } from '../../../../components';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 
-export const DomesticHelper = ({
+export const CustomerFeedback = ({
 	serviceName,
 	serviceAddress,
-	domesticHelperId,
+	customerId,
 	avatar,
 	jobPostId,
-	role
+    role
 }) => {
 	const { account, isLoading: isAuthLoading } = useSelector(
 		(state) => state.auth
@@ -31,9 +29,6 @@ export const DomesticHelper = ({
 	const [rating, setRating] = useState(0);
 	const [hover, setHover] = useState(0);
 	const [feedback, setFeedback] = useState('');
-
-	const [blacklist, setBlacklist] = useState(false);
-	const [favoriteList, setFavoriteList] = useState(false);
 
 	const [showOtherFeedback, setShowOtherFeedback] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,36 +45,13 @@ export const DomesticHelper = ({
 		const feedbackData = {
 			...data,
 			jobPostId,
-			customerId: account?._id,
-			feedbackFrom:role
+			domesticHelperId: account?._id,
+			feedbackFrom: role
 		};
 		const result = await dispatch(createFeedback(feedbackData));
 		console.log(result);
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Feedback thành công', successStyle);
-			if (blacklist) {
-				const blacklistResult = await dispatch(
-					addDomesticHelperToBlackList(domesticHelperId)
-				);
-				if (blacklistResult.type.endsWith('fulfilled')) {
-					toast.success('Thêm vào danh sách đen thành công', successStyle);
-				} else {
-					toast.error('Thêm vào danh sách đen thất bại', errorStyle);
-				}
-			}
-			if (favoriteList) {
-				const favoriteListResult = await dispatch(
-					addDomesticHelperToFavoriteList(domesticHelperId)
-				);
-				if (favoriteListResult.type.endsWith('fulfilled')) {
-					toast.success(
-						'Thêm vào danh sách yêu thích thành công',
-						successStyle
-					);
-				} else {
-					toast.error('Thêm vào danh sách yêu thích thất bại', errorStyle);
-				}
-			}
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
@@ -89,9 +61,9 @@ export const DomesticHelper = ({
 				rating: Number(rating),
 			};
 			await dispatch(
-				updateRatingDomesticHelper({
+				updateRatingCustomer({
 					ratingData,
-					domesticHelperId: domesticHelperId,
+					customerId: customerId,
 				})
 			);
 		}
@@ -111,7 +83,7 @@ export const DomesticHelper = ({
 		<div className="popup active">
 			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl p-10 max-h-[90vh] overflow-y-auto">
 				<h2 className="text-center p-3 font-bold text-xl">
-					ĐÁNH GIÁ NGƯỜI GIÚP VIỆC
+					ĐÁNH GIÁ CHỦ NHÀ
 				</h2>
 				<div>
 					<p className="text-green">
@@ -137,9 +109,9 @@ export const DomesticHelper = ({
 				</div>
 				<form onSubmit={handleSubmit(onSubmit)} className="p-5">
 					<input
-						{...register('domesticHelperId')}
+						{...register('customerId')}
 						hidden="true"
-						value={domesticHelperId}
+						value={customerId}
 					/>
 					<div className="flex justify-center">
 						{[...Array(5)].map((star, i) => {
@@ -194,7 +166,7 @@ export const DomesticHelper = ({
 								className="hidden"
 								name="select"
 								{...register('content')}
-								value="Mặc đồng phục khi đi làm"
+								value="Cung cấp chỉ dẫn cụ thể hơn"
 								onClick={() => setShowOtherFeedback(false)}
 							/>
 							<label
@@ -202,7 +174,7 @@ export const DomesticHelper = ({
 								className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
 							>
-								Mặc đồng phục khi đi làm
+								Cung cấp chỉ dẫn cụ thể hơn
 							</label>
 
 							<input
@@ -211,7 +183,7 @@ export const DomesticHelper = ({
 								className="hidden"
 								name="select"
 								{...register('content')}
-								value="Làm cẩn thận hơn"
+								value="Đối xử lịch sự, tôn trọng"
 								onClick={() => setShowOtherFeedback(false)}
 							/>
 							<label
@@ -219,7 +191,7 @@ export const DomesticHelper = ({
 								className="flex justify-center rounded-md 
                             cursor-pointer items-center h-24 shadow-2xl  hover:bg-light_yellow"
 							>
-								Làm cẩn thận hơn
+								Đối xử lịch sự, tôn trọng
 							</label>
 
 							<input
@@ -228,7 +200,7 @@ export const DomesticHelper = ({
 								className="hidden"
 								name="select"
 								{...register('content')}
-								value="Thân thiện hơn"
+								value="Thanh toán đúng hạn"
 								onClick={() => setShowOtherFeedback(false)}
 							/>
 							<label
@@ -236,7 +208,7 @@ export const DomesticHelper = ({
 								className="flex  justify-center rounded-md
                              cursor-pointer items-center h-24 shadow-2xl  hover:bg-light_yellow"
 							>
-								Thân thiện hơn
+								Thanh toán đúng hạn
 							</label>
 
 							<input
@@ -256,30 +228,6 @@ export const DomesticHelper = ({
 								Khác
 							</label>
 						</div>
-					</div>
-
-					<div class="grid grid-rows-2 gap-2 mt-10 text-sm">
-						<label className="flex gap-4">
-							<input
-								type="radio"
-								name="options"
-								value="option1"
-								class="h-5 w-5"
-								onClick={() => setFavoriteList(true)}
-							/>
-							Thêm người giúp việc vào danh sách yêu thích
-						</label>
-
-						<label className="flex gap-4">
-							<input
-								type="radio"
-								name="options"
-								value="option2"
-								class="h-5 w-5"
-								onClick={() => setBlacklist(true)}
-							/>
-							Đưa người giúp việc vào danh sách đen
-						</label>
 					</div>
 
 					{showOtherFeedback && (

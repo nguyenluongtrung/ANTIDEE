@@ -43,6 +43,11 @@ const domesticHelperFeedbackSchema = mongoose.Schema(
       type: String,
       maxLength: 255,
     },
+    feedbackFrom:{
+      type:String,
+      enum:["Khách hàng","Người giúp việc"],
+      required:true,
+    },
     reply: [replySchema],
   },
   {

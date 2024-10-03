@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
 import { getAllJobPosts } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation } from '../../../features/auth/authSlice';
+import { getAccountInformation, getAllAccounts } from '../../../features/auth/authSlice';
 import {
 	formatDate,
 	formatTime,
@@ -12,10 +12,12 @@ import { MyJobDetail } from './MyJobDetail/MyJobDetail';
 
 export const MyJobs = () => {
 	const [myAccountId, setMyAccountId] = useState();
+	const [myAccountRole, setMyAccountRole] = useState();
 	const [chosenJobPostId, setChosenJobPostId] = useState();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const [filterOption, setFilterOption] = useState('readyToWork');
 	const [myJobs, setMyJobs] = useState([]);
+	const [accounts, setAccounts] = useState([]);
 	const dispatch = useDispatch();
 	const { isLoading: accountLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
@@ -24,7 +26,18 @@ export const MyJobs = () => {
 		let output = await dispatch(getAccountInformation());
 
 		setMyAccountId(output.payload._id);
+		setMyAccountRole(output.payload.role);
 	}
+
+	async function initialAccountList() {
+		let output = await dispatch(getAllAccounts());
+
+		setAccounts(output.payload);
+	}
+
+	useEffect(() => {
+		initialAccountList();
+	}, []);
 
 	const getAllJobList = async () => {
 		let output = await dispatch(getAllJobPosts());
@@ -83,7 +96,9 @@ export const MyJobs = () => {
 						chosenJobPostId={chosenJobPostId}
 						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
 						myAccountId={myAccountId}
+						accounts={accounts}
 						getAllJobList={getAllJobList}
+						role={myAccountRole}
 					/>
 				)}
 				<div
