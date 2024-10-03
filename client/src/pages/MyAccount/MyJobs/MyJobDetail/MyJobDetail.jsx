@@ -117,7 +117,6 @@ export const MyJobDetail = ({
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={() => {
 							setIsOpenJobPostDetail(false);
-							getAllJobList();
 						}}
 					/>
 					<p className="grid text-green font-bold text-xl justify-center mb-3">
