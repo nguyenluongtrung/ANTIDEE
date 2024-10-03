@@ -133,7 +133,6 @@ export const ConfirmPage = () => {
 			if (!isNaN(apoint)) {
 				if (account?._id) {
 					const totalApoint = newApoints+apoint
-					console.log(apoint,totalApoint)
 					await dispatch(
 						updateAPoint({ accountId: account._id, aPoints:totalApoint, apoint, serviceId })
 					);

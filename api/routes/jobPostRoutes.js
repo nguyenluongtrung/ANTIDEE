@@ -22,7 +22,7 @@ const router = express.Router();
 router
 	.route('/')
 	.post(protect, createJobPost)
-	.get(protect, getAllJobPosts)
+	.get(getAllJobPosts)
 	.delete(protect, restrict('Admin'), deleteAllJobPost);
 router.route('/get-a-job/:jobPostId/:accountId').patch(protect, getAJob);
 router.route('/apply-a-job/:jobPostId/:accountId').patch(protect, applyAJob);
@@ -44,7 +44,7 @@ router
 	.get(protect, restrict('Admin'), getRevenueByMonths);
 router
 	.route('/:jobPostId')
-	.get(protect, getJobPost)
+	.get(getJobPost)
 	.delete(protect, deleteJobPost)
 	.patch(protect, updateJobPost);
 

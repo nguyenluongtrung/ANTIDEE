@@ -2,25 +2,13 @@ import axios from 'axios';
 
 const API_URL = '/antidee/api/jobPosts/';
 
-const getAllJobPosts = async (token) => {
-	const config = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	};
-
-	const response = await axios.get(API_URL, config);
+const getAllJobPosts = async () => {
+	const response = await axios.get(API_URL);
 	return response.data.data.jobPosts;
 };
 
-const getJobPost = async (jobPostId, token) => {
-	const config = {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	};
-
-	const response = await axios.get(API_URL + jobPostId, config);
+const getJobPost = async (jobPostId) => {
+	const response = await axios.get(API_URL + jobPostId);
 	return response.data.data.jobPost;
 };
 
