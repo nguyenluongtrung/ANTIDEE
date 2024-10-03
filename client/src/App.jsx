@@ -187,7 +187,7 @@ const AppContent = () => {
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
 
-							<Route path="/admin-voucher" element={<VoucherManagement />}>
+							{/* <Route path="/admin-voucher" element={<VoucherManagement />}>
 								<Route
 									path="/admin-voucher/voucher-detail/:voucherId"
 									element={<VoucherDetail />}
@@ -196,7 +196,7 @@ const AppContent = () => {
 									path="/admin-voucher/voucher-update/:voucherId"
 									element={<UpdateVoucher />}
 								/>
-							</Route>
+							</Route> */}
 
 							<Route
 								path="/admin-promotion"
