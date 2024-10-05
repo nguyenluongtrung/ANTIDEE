@@ -1,6 +1,7 @@
 const express = require('express');
 const {
 	login,
+	loginWithGoogle,
 	register,
 	updateAccountInformation,
 	getAccountInformation,
@@ -31,6 +32,7 @@ const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
 
 router.route('/login').post(login);
+router.route('/login-with-google').post(loginWithGoogle);
 router.route('/register').post(register);
 router.route('/block/:accountId').patch(blockAccount);
 router.route('/update-role/:accountId').patch(updateRole);

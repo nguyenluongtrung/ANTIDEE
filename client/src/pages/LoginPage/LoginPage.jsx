@@ -7,7 +7,9 @@ import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { rules } from "../../utils/rules";
-import { getAllAccounts, login, reset } from "../../features/auth/authSlice";
+import { auth } from "../../firebase";
+import { deleteUser, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAllAccounts, login, loginWithGoogle, reset } from "../../features/auth/authSlice";
 import { Spinner } from "../../components";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -60,6 +62,52 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
     dispatch(reset());
   }, [account, isError, isSuccess, message, navigate, dispatch]);
 
+  //Login with Google
+  const provider = new GoogleAuthProvider();
+
+  const checkExistEmailAccount = (newEmail) => {
+    const listEmails = accounts.map((item) => item.email);
+    if (listEmails.includes(newEmail)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+
+      const emailExists = checkExistEmailAccount(result.user.email);
+
+      if (!emailExists) {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          await deleteUser(currentUser); // Xóa người dùng ngay lập tức khỏi Firebase Authentication
+        }
+
+        toast.error(
+          "Email này chưa đăng kí tài khoản cho hệ thống Antidee, hãy sử dụng mail khác"
+        );
+        return;
+      }
+
+      const account = { email: result.user.email }
+
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+
+      dispatch(loginWithGoogle(account));
+
+    } catch (error) {
+      console.error('Error during Google Sign-In:', error);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+    }
+  };
+
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -67,7 +115,7 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
   return (
     <div className="popup active">
       <div className="overlay"></div>
-      <div className="content login-container m-auto rounded-xl">  
+      <div className="content login-container m-auto rounded-xl">
         <form onSubmit={handleSubmit(onSubmit)}>
           <AiOutlineClose
             className="absolute text-sm hover:cursor-pointer"
@@ -116,29 +164,26 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
               Quên mật khẩu
             </button>
           </Link>
-          <div class="flex items-center w-full max-w-md mb-3">
-            <div class="flex-grow border-t border-gray"></div>
-            <span class="mx-4 text-gray text-xs">Hoặc</span>
-            <div class="flex-grow border-t border-gray"></div>
-          </div>
-          <div className="social-login">
-            <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between">
-              <BsFacebook className="mx-2" />{" "}
-              <p className="font-bold text-xs">Đăng ký bằng Facebook</p>
-              <div></div>
-            </button>
-            <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between">
-              <TfiEmail className="mx-2" />{" "}
-              <p className="font-bold text-xs">Đăng ký bằng Email</p>
-              <div></div>
-            </button>
-            <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between">
-              <FcGoogle className="mx-2" />{" "}
-              <p className="font-bold text-xs">Đăng ký bằng Google</p>
-              <div></div>
-            </button>
-          </div>
         </form>
+        <div class="flex items-center w-full max-w-md mb-3">
+          <div class="flex-grow border-t border-gray"></div>
+          <span class="mx-4 text-gray text-xs">Hoặc</span>
+          <div class="flex-grow border-t border-gray"></div>
+        </div>
+        <div className="social-login">
+          <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between fea-item"
+            onClick={() => handleGoogleLogin()}
+          >
+            <FcGoogle className="mx-2" />{" "}
+            <p className="font-bold text-xs">Đăng nhập bằng Google</p>
+            <div></div>
+          </button>
+          <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between fea-item">
+            <BsFacebook className="mx-2 text-blue" />{" "}
+            <p className="font-bold text-xs">Đăng nhập bằng Facebook</p>
+            <div></div>
+          </button>
+        </div>
       </div>
     </div>
   );
