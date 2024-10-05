@@ -10,6 +10,7 @@ import AOS from 'aos';
 import { PiArrowBendDownRightBold } from 'react-icons/pi';
 import features2 from '../../assets/img/features2.jpg';
 import features3 from '../../assets/img/features3.jpg';
+import PromotionPage from './Promotion/PromotionPage';
 
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
@@ -178,6 +179,7 @@ export const HomePage = () => {
 					</div>
 				</div>
 			</div>
+			<PromotionPage/>
 
 			<div className="mt-20 flex flex-col bg-white gap-y-28">
 				<div
