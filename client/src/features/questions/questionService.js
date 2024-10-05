@@ -10,10 +10,11 @@ const getAllQuestions = async (token) => {
 	};
 
 	const response = await axios.get(API_URL, config);
+	console.log(response.data.data.questions);
 	return response.data.data.questions;
 };
 
-const createQuestion = async (token, questionData) => {
+const createQuestions = async (token, questionData) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -49,7 +50,7 @@ const deleteQuestion = async (token, id) => {
 
 const questionService = {
 	getAllQuestions,
-	createQuestion,
+	createQuestions,
 	updateQuestion,
 	deleteQuestion,
 };

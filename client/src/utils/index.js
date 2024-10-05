@@ -11,3 +11,8 @@ export const validateIntersectWorkingHours = (currentJobPost) => {
 	);
 	return true;
 };
+
+export const extractOptions = (input) => {
+	const options = input.split(/[A-Z]\.\s+/).filter((option) => option !== '');
+	return options;
+};

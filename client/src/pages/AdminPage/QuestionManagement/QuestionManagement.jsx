@@ -5,7 +5,10 @@ import { BiEdit, BiTrash } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
-import { deleteQuestion, getAllQuestions } from '../../../features/questions/questionSlice';
+import {
+	deleteQuestion,
+	getAllQuestions,
+} from '../../../features/questions/questionSlice';
 import { Spinner } from '../../../components';
 import { CreateQuestion } from './CreateQuestion/CreateQuestion';
 import { QuestionDetail } from './QuestionDetail/QuestionDetail';
@@ -116,51 +119,56 @@ export const QuestionManagement = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{questions?.map((question, index) => {
-							return (
-								<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
-									<td className="font-medium text-center text-gray p-3">
-										<span>{index + 1}</span>
-									</td>
-									<td className="font-medium text-center text-gray">
-										<span>{question?.serviceId?.name}</span>
-									</td>
-									<td className="font-medium text-gray">
-										<span>{question.content}</span>
-									</td>
-									<td className="font-medium text-center text-gray">
-										<span>{question.difficultyLevel}</span>
-									</td>
-									<td className="font-medium text-center text-gray">
-										<button
-											className="hover:cursor-pointer text-xl pt-1.5"
-											onClick={() => {
-												setIsOpenDetailQuestion(true);
-												setChosenQuestionId(question._id);
-											}}
-										>
-											<MdOutlineRemoveRedEye className="block mx-auto" />
-										</button>
-									</td>
-									<td className="">
-										<div className="flex items-center justify-center">
+						{questions && questions
+							.filter((question) => question != undefined)
+							?.map((question, index) => {
+								return (
+									<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
+										<td className="font-medium text-center text-gray p-3">
+											<span>{index + 1}</span>
+										</td>
+										<td className="font-medium text-center text-gray">
+											<span>{question?.serviceId?.name}</span>
+										</td>
+										<td className="font-medium text-gray">
+											<span>{question.content}</span>
+										</td>
+										<td className="font-medium text-center text-gray">
+											<span>{question.difficultyLevel}</span>
+										</td>
+										<td className="font-medium text-center text-gray">
 											<button
-												className="flex items-center justify-end py-3 pr-2 text-xl"
+												className="hover:cursor-pointer text-xl pt-1.5"
 												onClick={() => {
-													setIsOpenUpdateQuestion(true);
+													setIsOpenDetailQuestion(true);
 													setChosenQuestionId(question._id);
 												}}
 											>
-												<BiEdit className="text-green" />
+												<MdOutlineRemoveRedEye className="block mx-auto" />
 											</button>
-											<button className="flex items-center justify-start py-3 pl-2 text-xl">
-												<BiTrash className="text-red" onClick={() => handleDeleteQuestion(question._id)}/>
-											</button>
-										</div>
-									</td>
-								</tr>
-							);
-						})}
+										</td>
+										<td className="">
+											<div className="flex items-center justify-center">
+												<button
+													className="flex items-center justify-end py-3 pr-2 text-xl"
+													onClick={() => {
+														setIsOpenUpdateQuestion(true);
+														setChosenQuestionId(question._id);
+													}}
+												>
+													<BiEdit className="text-green" />
+												</button>
+												<button className="flex items-center justify-start py-3 pl-2 text-xl">
+													<BiTrash
+														className="text-red"
+														onClick={() => handleDeleteQuestion(question._id)}
+													/>
+												</button>
+											</div>
+										</td>
+									</tr>
+								);
+							})}
 					</tbody>
 				</table>
 			</div>
