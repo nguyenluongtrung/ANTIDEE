@@ -101,15 +101,16 @@ export const ExamManagement = () => {
 						onClick={() => setIsOpenCreateExam(true)}
 					>
 						<div className="flex items-center">
-                            <IoAddOutline className='size-8 pl-2 mr-2' />
-                            <span className="text-sm pr-2">Thêm đề thi</span>
-                        </div>
+							<IoAddOutline className="size-8 pl-2 mr-2" />
+							<span className="text-sm pr-2">Thêm đề thi</span>
+						</div>
 					</button>
 				</div>
 				<table className="w-full border-b border-gray mt-3">
 					<thead>
 						<tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
 							<td className="py-2 px-4 text-center font-bold">STT</td>
+							<td className="py-2 px-4 text-center font-bold">Tên</td>
 							<td className="py-2 px-4 text-center font-bold">Chứng chỉ</td>
 							<td className="py-2 px-4 text-center font-bold">Danh mục</td>
 							<td className="py-2 px-4 text-center font-bold">Thời gian</td>
@@ -126,7 +127,15 @@ export const ExamManagement = () => {
 										<span>{index + 1}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{exam?.qualificationId?.name}</span>
+										<span>{exam?.name}</span>
+									</td>
+									<td className="font-medium text-center text-gray">
+										<span>
+											{String(exam?.qualificationId?.name)
+												.substring(10, 11)
+												.toUpperCase() +
+												String(exam?.qualificationId?.name).substring(11)}
+										</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>{exam.category}</span>

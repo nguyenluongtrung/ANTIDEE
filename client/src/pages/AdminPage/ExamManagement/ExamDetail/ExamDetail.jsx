@@ -5,7 +5,11 @@ import './ExamDetail.css';
 import { useEffect, useState } from 'react';
 import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 
-export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExams }) => {
+export const ExamDetail = ({
+	chosenExamId,
+	setIsOpenDetailExam,
+	handleGetAllExams,
+}) => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
 	const { qualifications, isLoading: qualificationLoading } = useSelector(
 		(state) => state.qualifications
@@ -30,7 +34,10 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => {setIsOpenDetailExam(false) ; handleGetAllExams()}}
+					onClick={() => {
+						setIsOpenDetailExam(false);
+						handleGetAllExams();
+					}}
 				/>
 				<p className="grid text-green font-bold text-xl justify-center">
 					XEM CHI TIẾT ĐỀ THI
@@ -39,7 +46,17 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 					<tbody>
 						<tr>
 							<td>
-								<span className='font-bold'>Chứng chỉ</span>
+								<span className="font-bold">Tên</span>
+							</td>
+							<td className="pl-6 py-1 w-80">
+								<p className="text-center" style={{ width: '100%' }}>
+									{chosenExam?.name}
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span className="font-bold">Chứng chỉ</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -50,7 +67,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Danh mục</span>
+								<span className="font-bold">Danh mục</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -60,7 +77,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Thời gian</span>
+								<span className="font-bold">Thời gian</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -70,7 +87,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Điểm cần đạt</span>
+								<span className="font-bold">Điểm cần đạt</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -90,7 +107,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Số lượng câu dễ</span>
+								<span className="font-bold">Số lượng câu dễ</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -100,7 +117,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Số lượng câu bình thường</span>
+								<span className="font-bold">Số lượng câu bình thường</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
@@ -111,7 +128,7 @@ export const ExamDetail = ({ chosenExamId, setIsOpenDetailExam, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Số lượng câu khó</span>
+								<span className="font-bold">Số lượng câu khó</span>
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
