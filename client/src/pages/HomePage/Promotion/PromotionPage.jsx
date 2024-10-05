@@ -12,43 +12,58 @@ const PromotionPage = () => {
     const [promotionList, setPromotionList] = useState([]);
     const dispatch = useDispatch();
 
+
+    const isPromotionActive = (promotion) => {
+        const today = new Date();
+        const startDate = new Date(promotion.startDate);
+        const endDate = new Date(promotion.endDate);
+        return startDate <= today && endDate >= today;
+    };
+
+  
     async function initialPromotionList() {
-        let output = await dispatch(getAllPromotions());
-        setPromotionList(output.payload);
+        try {
+            const output = await dispatch(getAllPromotions());
+            if (output.payload) {
+                const activePromotions = output.payload.filter(isPromotionActive);
+                setPromotionList(activePromotions);
+            }
+        } catch (error) {
+            console.error("Error fetching promotions:", error);
+        }
     }
 
     useEffect(() => {
         initialPromotionList();
     }, []);
 
-const NextArrow = (props) => {
-    const { onClick } = props;
-    return (
-        <button
-            onClick={onClick}
-            className="absolute bottom-[-28px] right-14 bg-gray text-white font-bold text-lg 
-            rounded-full p-2 shadow-lg hover:bg-gray transition-colors duration-200 
-            transform hover:scale-105 w-fit h-6 z-10 flex items-center justify-center"
-        >
-            &gt;
-        </button>
-    );
-};
+    const NextArrow = (props) => {
+        const { onClick } = props;
+        return (
+            <button
+                onClick={onClick}
+                className="absolute bottom-[-28px] right-14 bg-gray text-white font-bold text-lg 
+                rounded-full p-2 shadow-lg hover:bg-gray transition-colors duration-200 
+                transform hover:scale-105 w-fit h-6 z-10 flex items-center justify-center"
+            >
+                &gt;
+            </button>
+        );
+    };
 
-const PrevArrow = (props) => {
-    const { onClick } = props;
-    return (
-        <button
-            onClick={onClick}
-            className="absolute bottom-[-28px] left-14 bg-gray text-white font-bold text-lg 
-            rounded-full p-2 shadow-lg hover:bg-gray transition-colors duration-200 
-            transform hover:scale-105 w-fit h-6 z-10 flex items-center justify-center"
-        >
-            &lt;
-        </button>
-    );
-};
-
+    const PrevArrow = (props) => {
+        const { onClick } = props;
+        return (
+            <button
+                onClick={onClick}
+                className="absolute bottom-[-28px] left-14 bg-gray text-white font-bold text-lg 
+                rounded-full p-2 shadow-lg hover:bg-gray transition-colors duration-200 
+                transform hover:scale-105 w-fit h-6 z-10 flex items-center justify-center"
+            >
+                &lt;
+            </button>
+        );
+    };
 
     const settings = {
         dots: true,
@@ -81,42 +96,48 @@ const PrevArrow = (props) => {
                 CHƯƠNG TRÌNH KHUYẾN MÃI
             </div>
             <div className="absolute top-[30%] right-10 transform w-[30%]">
-                <Slider {...settings}>
-                    {promotionList?.map((promotion, index) => (
-                        <div
-                            key={index}
-                            className="text-center p-5 bg-white bg-opacity-80 rounded-lg h-[230px]"
-                        >
-                            <strong className="text-xl">Hoạt động từ:</strong>
-                            <p className="bg-primary bg-opacity-80 rounded-lg p-1 text-white font-semibold text-lg">
-                                {formatDate(promotion?.startDate)} -{" "}
-                                {formatDate(promotion?.endDate)}
-                            </p>
-                            <p className="pt-2 font-semibold">
-                                Giảm
-                                <span className="text-red text-xl">
-                                    {" "}
-                                    {promotion?.promotionValue * 100}%{" "}
-                                </span>
-                                cho các dịch vụ:
-                            </p>
+                {promotionList.length > 0 ? (
+                    <Slider {...settings}>
+                        {promotionList.map((promotion, index) => (
+                            <div
+                                key={index}
+                                className="text-center p-5 bg-white bg-opacity-80 rounded-lg h-[230px]"
+                            >
+                                <strong className="text-xl">Hoạt động từ:</strong>
+                                <p className="bg-primary bg-opacity-80 rounded-lg p-1 text-white font-semibold text-lg">
+                                    {formatDate(promotion.startDate)} -{" "}
+                                    {formatDate(promotion.endDate)}
+                                </p>
+                                <p className="pt-2 font-semibold">
+                                    Giảm
+                                    <span className="text-red text-xl">
+                                        {" "}
+                                        {promotion.promotionValue * 100}%{" "}
+                                    </span>
+                                    cho các dịch vụ:
+                                </p>
 
-                            <div className="flex flex-wrap justify-center">
-                                {promotion?.serviceIds.map((service, i) => (
-                                    <p className="pl-1" key={i}>
-                                        {service?.name}
-                                        {","}{" "}
-                                    </p>
-                                ))}
+                                <div className="flex flex-wrap justify-center">
+                                    {promotion.serviceIds.map((service, i) => (
+                                        <p className="pl-1" key={i}>
+                                            {service.name}
+                                            {i < promotion.serviceIds.length - 1 ? "," : ""}
+                                        </p>
+                                    ))}
+                                </div>
+                                <p className="pt-1 font-semibold">
+                                    MÃ KHUYẾN MÃI: 
+                                    <span className="text-red text-xl"> {promotion.promotionCode}</span>
+                                </p>
+                                <p className="text-lg">Số lượng có hạn: {promotion.promotionQuantity}</p>
                             </div>
-                            <p className="pt-1 font-semibold">
-                                MÃ KHUYẾN MÃI: 
-                                <span className="text-red text-xl"> {promotion?.promotionCode}</span>
-                            </p>
-                            <p className="text-lg">Số lượng có hạn: {promotion?.promotionQuantity}</p>
-                        </div>
-                    ))}
-                </Slider>
+                        ))}
+                    </Slider>
+                ) : (
+                    <div className="text-center p-5 bg-white bg-opacity-80 rounded-lg h-[230px] flex items-center justify-center">
+                        <p className="text-xl text-gray-500">Hiện không có chương trình khuyến mãi nào.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
