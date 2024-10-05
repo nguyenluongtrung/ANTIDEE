@@ -6,10 +6,7 @@ const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
 
 const getAllPromotions = asyncHandler(async (req, res) => {
-	const promotions = await Promotion.find({
-		startDate: { $lte: Date.now() },
-		endDate: { $gte: Date.now() },
-	}).populate('serviceIds', 'name description');
+	const promotions = await Promotion.find({}).populate('serviceIds', 'name description');
 
 	res.status(200).json({
 		status: 'success',

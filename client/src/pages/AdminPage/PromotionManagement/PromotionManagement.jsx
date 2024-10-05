@@ -4,7 +4,7 @@ import './PromotionManagement.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePromotion, getAllPromotions } from '../../../features/promotions/promotionSlice';
 import { Spinner } from '../../../components';
-import toast, { Toaster, ToastBar } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
@@ -12,6 +12,7 @@ import { CreatePromotion } from './CreatePromotion/CreatePromotion';
 import { UpdatePromotion } from './UpdatePromotion/UpdatePromotion';
 import { PromotionDetail } from './PromotionDetail/PromotionDetail';
 import { formatDate } from '../../../utils/format';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const PromotionManagement = () => {
     const [isOpenCreatePromotion, setIsOpenCreatePromotion] = useState(false);
@@ -19,29 +20,52 @@ export const PromotionManagement = () => {
     const [isOpenDetailPromotion, setIsOpenDetailPromotion] = useState(false);
     const [chosenPromotionId, setChosenPromotionId] = useState('');
     const { promotions, isLoading } = useSelector((state) => state.promotions);
+    console.log(promotions)
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getAllPromotions());
-    }, [dispatch]);
+    }, []);
 
     const handleDeletePromotion = async (id) => {
         const result = await dispatch(deletePromotion(id));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá mã giảm giá thành công', successStyle);
-        } else if (result?.error?.message === 'Rejected') {
+        } else {
             toast.error(result?.payload, errorStyle);
         }
     };
 
-    const handleGetAllPromotions = () => {
-        Promise.all([dispatch(getAllPromotions())]).catch((error) => {
-            console.error('Error during dispatch:', error);
-        });
+    const handleGetAllPromotions = async () => {
+        await dispatch(getAllPromotions());
     };
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname.includes("/detail-promotion/")) {
+            setIsOpenDetailPromotion(true);
+            setIsOpenUpdatePromotion(false); 
+
+        } else if (location.pathname.includes("/update-promotion")) {
+            setIsOpenDetailPromotion(false);
+            setIsOpenUpdatePromotion(true); 
+
+        }
+    }, [location.pathname]);
+
 
     const handleOpenCreatePromotion = () => {
         setIsOpenCreatePromotion(true);
+    };
+
+    const handleOpenDetailPromotion = (promotionId) => {
+        navigate(`/admin-promotion/detail-promotion/${promotionId}`);
+    };
+
+    const handleOpenUpdatePromotion = (promotionId) => {
+        navigate(`/admin-promotion/update-promotion/${promotionId}`);
     };
 
     if (isLoading) {
@@ -49,22 +73,10 @@ export const PromotionManagement = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-white flex flex-row">
+        <div className="w-full min-h-screen bg-white flex">
             <AdminSidebar />
             <div className="flex-1 px-10 pt-5">
-                <Toaster>
-                    {(t) => (
-                        <ToastBar
-                            toast={t}
-                            style={{
-                                ...t.style,
-                                animation: t.visible
-                                    ? 'custom-enter 1s ease'
-                                    : 'custom-exit 1s ease',
-                            }}
-                        />
-                    )}
-                </Toaster>
+                <Toaster />
 
                 {isOpenCreatePromotion && (
                     <CreatePromotion
@@ -75,25 +87,18 @@ export const PromotionManagement = () => {
                 {isOpenUpdatePromotion && (
                     <UpdatePromotion
                         setIsOpenUpdatePromotion={setIsOpenUpdatePromotion}
-                        handleGetAllPromotions={handleGetAllPromotions}
-                        chosenPromotionId={chosenPromotionId}
                     />
                 )}
                 {isOpenDetailPromotion && (
                     <PromotionDetail
                         setIsOpenDetailPromotion={setIsOpenDetailPromotion}
-                        handleGetAllPromotions={handleGetAllPromotions}
-                        chosenPromotionId={chosenPromotionId}
                     />
                 )}
 
-                <div className="flex">
+                <div className="flex justify-between items-center">
                     <div className="flex-1 pt-2">
                         <span>Hiển thị </span>
-                        <select
-                            className="rounded-md p-1 mx-1 hover:cursor-pointer"
-                            style={{ backgroundColor: '#E0E0E0' }}
-                        >
+                        <select className="rounded-md p-1 mx-1 hover:cursor-pointer bg-gray-200">
                             <option>10</option>
                             <option>20</option>
                             <option>30</option>
@@ -101,16 +106,17 @@ export const PromotionManagement = () => {
                         <span> hàng</span>
                     </div>
                     <button
-                        className="bg-pink text-white py-2 rounded-md block mx-auto"
+                        className="bg-pink text-white py-2 rounded-md"
                         style={{ width: '120px' }}
                         onClick={handleOpenCreatePromotion}
                     >
-                        <span>Thêm mã ưu đãi</span>
+                        Thêm ưu đãi
                     </button>
                 </div>
+
                 <table className="w-full border-b border-gray mt-3">
                     <thead>
-                        <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
+                        <tr className="text-sm font-medium text-gray-700 border-b">
                             <td className="py-2 px-1 text-center font-bold">Tên mã giảm giá</td>
                             <td className="py-2 px-1 text-center font-bold">Thời gian bắt đầu</td>
                             <td className="py-2 px-1 text-center font-bold">Thời gian kết thúc</td>
@@ -123,32 +129,17 @@ export const PromotionManagement = () => {
                     </thead>
                     <tbody>
                         {promotions?.map((promotion) => (
-                            <tr key={promotion._id} className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
-                                <td className="font-medium text-center text-gray p-3">
-                                    <span>{promotion?.promotionName}</span>
-                                </td>
-                                <td className="font-medium text-center text-gray">
-                                    <span>{formatDate(promotion?.startDate)}</span>
-                                </td>
-                                <td className="font-medium text-center text-gray">
-                                    <span>{formatDate(promotion?.endDate)}</span>
-                                </td>
-                                <td className="font-medium text-center text-gray">
-                                    <span>{promotion?.promotionValue * 100} %</span>
-                                </td>
-                                <td className="font-medium text-center text-gray">
-                                    <span>{promotion?.promotionCode}</span>
-                                </td>
-                                <td className="font-medium text-center text-gray">
-                                    <span>{promotion?.promotionQuantity}</span>
-                                </td>
+                            <tr key={promotion?._id} className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
+                                <td className="font-medium text-center text-gray p-3">{promotion?.promotionName}</td>
+                                <td className="font-medium text-center text-gray">{formatDate(promotion?.startDate)}</td>
+                                <td className="font-medium text-center text-gray">{formatDate(promotion?.endDate)}</td>
+                                <td className="font-medium text-center text-gray">{promotion?.promotionValue * 100} %</td>
+                                <td className="font-medium text-center text-gray">{promotion?.promotionCode}</td>
+                                <td className="font-medium text-center text-gray">{promotion?.promotionQuantity}</td>
                                 <td className="font-medium text-center text-gray">
                                     <button
                                         className="hover:cursor-pointer text-xl pt-1.5"
-                                        onClick={() => {
-                                            setIsOpenDetailPromotion(true);
-                                            setChosenPromotionId(promotion._id);
-                                        }}
+                                        onClick={() => handleOpenDetailPromotion(promotion?._id)}
                                     >
                                         <MdOutlineRemoveRedEye className="block mx-auto" />
                                     </button>
@@ -157,18 +148,15 @@ export const PromotionManagement = () => {
                                     <div className="flex items-center justify-center">
                                         <button
                                             className="flex items-center justify-end py-3 pr-2 text-xl"
-                                            onClick={() => {
-                                                setIsOpenUpdatePromotion(true);
-                                                setChosenPromotionId(promotion._id);
-                                            }}
+                                            onClick={() => handleOpenUpdatePromotion(promotion?._id)}
                                         >
                                             <BiEdit className="text-green" />
                                         </button>
-                                        <button className="flex items-center justify-start py-3 pl-2 text-xl">
-                                            <BiTrash
-                                                className="text-red"
-                                                onClick={() => handleDeletePromotion(promotion._id)}
-                                            />
+                                        <button
+                                            className="flex items-center justify-start py-3 pl-2 text-xl"
+                                            onClick={() => handleDeletePromotion(promotion._id)}
+                                        >
+                                            <BiTrash className="text-red" />
                                         </button>
                                     </div>
                                 </td>
