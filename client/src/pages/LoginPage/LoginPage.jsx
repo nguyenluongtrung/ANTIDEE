@@ -29,7 +29,7 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const account = data;
 
     const accountWithPhone = accounts.find((acc) => String(acc.phoneNumber) === String(data.phoneNumber) && acc.isBlocked)
@@ -37,7 +37,12 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
     if(accountWithPhone) {
       toast.error("Tài khoản này đã bị chặn !!!")
     } else {
-      dispatch(login(account));
+      const response = await dispatch(login(account));
+      if(response.type.endsWith('fulfilled')){
+        if(response.payload.role == 'Admin'){
+          navigate('/admin-dashboard')
+        }
+      }
     }
   };
 

@@ -1,26 +1,27 @@
 import {
-  BiHomeAlt,
-  BiGridAlt,
   BiCreditCardAlt,
   BiUser,
-  BiCalculator,
   BiNotification,
   BiMessage,
   BiVideo
 } from "react-icons/bi";
+import { IoMdLogOut } from "react-icons/io";
 import { BsTicket } from "react-icons/bs";
 import { LuLayoutDashboard } from "react-icons/lu";
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { MdCleaningServices, MdOutlineQuestionMark } from "react-icons/md";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { TbReportSearch } from "react-icons/tb";
 import { RiDiscountPercentLine } from "react-icons/ri";
+import { logout, reset } from "../../../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function AdminSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const menu = [
-    { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
     { name: "Dashboard", icon: <LuLayoutDashboard />, to: '/admin-dashboard' },
     { name: "Sự kiện khuyến mãi", icon: <RiDiscountPercentLine />, to: '/admin-promotion' },
     { name: "Đề thi", icon: <IoNewspaperOutline />, to: '/admin-exam' },
@@ -34,6 +35,12 @@ export default function AdminSidebar() {
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
   ];
+
+  const onLogout = () => {
+		navigate('/home');
+		dispatch(logout());
+		dispatch(reset());
+	};
 
   return (
     <div className="border-r border-opacity-50 border-gray w-64 px-9 pt-5">
@@ -58,6 +65,12 @@ export default function AdminSidebar() {
                 </li>
               );
             })}
+            <button
+								className="flex items-center justify-center text-primary hover:bg-primary hover:text-white text-center rounded-2xl p-1.5 font-medium w-28 border-primary border-2"
+								onClick={onLogout}
+							>
+								<IoMdLogOut size={20}/><span>Đăng xuất</span>
+							</button>
           </ul>
         </div>
       </div>

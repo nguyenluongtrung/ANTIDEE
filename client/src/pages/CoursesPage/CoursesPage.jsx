@@ -54,7 +54,7 @@ export const MyCourses = () => {
             {/* Tab Navigation */}
             <div className="mb-6">
               <nav className="flex space-x-4">
-                {["Tất cả", "đang học", "đã hoàn thành", "sắp tới", "danh sách theo dõi"].map(
+                {["Tất cả", "đang học", "đã hoàn thành"].map(
                   (tab) => (
                     <button
                       key={tab}
@@ -65,7 +65,7 @@ export const MyCourses = () => {
                           : " text-gray hover:bg-primary"
                       }`}
                     >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)} Courses
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </button>
                   )
                 )}
@@ -116,7 +116,7 @@ export const MyCourses = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="bg-white shadow-lg rounded-lg p-6">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-80">
             <div className="flex items-center mb-6">
               <img
                 className="w-16 h-16 rounded-full border-2 border-gray-300 mr-4"
@@ -131,15 +131,15 @@ export const MyCourses = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+              <div className="bg-gray-100 p-4 rounded-lg shadow-md">
                 <h5 className="text-2xl font-semibold text-gray-800">16</h5>
                 <p className="text-sm text-gray-600">Đã hoàn thành</p>
               </div>
-              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+              <div className="bg-gray-100 p-4 rounded-lg shadow-md">
                 <h5 className="text-2xl font-semibold text-gray-800">14</h5>
                 <p className="text-sm text-gray-600">Chứng chỉ</p>
               </div>
-              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+              <div className="bg-gray-100 p-4 rounded-lg shadow-md">
                 <h5 className="text-2xl font-semibold text-gray-800">8</h5>
                 <p className="text-sm text-gray-600">Đang học</p>
               </div>
