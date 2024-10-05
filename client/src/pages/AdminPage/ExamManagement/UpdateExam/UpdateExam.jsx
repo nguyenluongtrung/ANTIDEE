@@ -9,9 +9,15 @@ import { updateExam } from '../../../../features/exams/examSlice';
 import { useEffect, useState } from 'react';
 import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 
-export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExams }) => {
+export const UpdateExam = ({
+	setIsOpenUpdateExam,
+	chosenExamId,
+	handleGetAllExams,
+}) => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
-	const { qualifications, isLoading: qualificationLoading } = useSelector((state) => state.qualifications);
+	const { qualifications, isLoading: qualificationLoading } = useSelector(
+		(state) => state.qualifications
+	);
 	const [chosenExam, setChosenExam] = useState(
 		exams[exams.findIndex((exam) => exam._id == chosenExamId)]
 	);
@@ -68,7 +74,20 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 					<tbody>
 						<tr>
 							<td>
-								<span className='font-bold'>Chứng chỉ</span>
+								<span className="font-bold">Tên</span>
+							</td>
+							<td className="pl-6 py-1">
+								<input
+									type="text"
+									{...register('name')}
+									defaultValue={chosenExam?.name}
+									className="create-exam-input text-center"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span className="font-bold">Chứng chỉ</span>
 							</td>
 							<td>
 								<select
@@ -77,7 +96,9 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 									defaultValue={chosenExam?.qualificationId._id}
 								>
 									{qualifications?.map((qualification) => (
-										<option value={qualification._id}>{qualification.name}</option>
+										<option value={qualification._id}>
+											{qualification.name}
+										</option>
 									))}
 								</select>
 							</td>
@@ -85,7 +106,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Danh mục</span>
+								<span className="font-bold">Danh mục</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -108,7 +129,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Thời gian</span>
+								<span className="font-bold">Thời gian</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -121,7 +142,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Điểm cần đạt</span>
+								<span className="font-bold">Điểm cần đạt</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -135,7 +156,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 						<tr>
 							<td>
 								{' '}
-								<span className='font-bold'>Số lượng câu dễ</span>
+								<span className="font-bold">Số lượng câu dễ</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -150,7 +171,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Số lượng câu bình thường</span>
+								<span className="font-bold">Số lượng câu bình thường</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input
@@ -165,7 +186,7 @@ export const UpdateExam = ({ setIsOpenUpdateExam, chosenExamId, handleGetAllExam
 						</tr>
 						<tr>
 							<td>
-								<span className='font-bold'>Số lượng câu khó</span>
+								<span className="font-bold">Số lượng câu khó</span>
 							</td>
 							<td className="pl-6 py-1">
 								<input

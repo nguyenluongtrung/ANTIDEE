@@ -84,6 +84,10 @@ const examSchema = mongoose.Schema(
 				},
 			},
 		],
+		name: {
+			type: String,
+			required: true,
+		},
 	},
 	{
 		timestamps: true,

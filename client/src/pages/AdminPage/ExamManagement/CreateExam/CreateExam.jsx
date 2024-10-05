@@ -63,6 +63,18 @@ export const CreateExam = ({ setIsOpenCreateExam, handleGetAllExams }) => {
 				</p>
 				<table className="mt-3">
 					<tbody>
+					<tr>
+							<td>
+								<span className='font-bold'>Tên</span>
+							</td>
+							<td className="pl-6 py-1">
+								<input
+									type="text"
+									{...register('name')}
+									className="create-exam-input text-center"
+								/>
+							</td>
+						</tr>
 						<tr>
 							<td><span className='font-bold'>Chứng chỉ</span></td>
 							<td>

@@ -14,6 +14,7 @@ const createExam = asyncHandler(async (req, res) => {
 		category,
 		passGrade,
 		qualificationId,
+		name,
 	} = req.body;
 
 	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
@@ -67,6 +68,7 @@ const createExam = asyncHandler(async (req, res) => {
 		description,
 		category,
 		passGrade,
+		name,
 	};
 
 	const exam = await Exam.create(examInfo);
@@ -143,6 +145,7 @@ const updateExam = asyncHandler(async (req, res) => {
 		category,
 		passGrade,
 		qualificationId,
+		name,
 	} = req.body;
 
 	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
@@ -196,6 +199,7 @@ const updateExam = asyncHandler(async (req, res) => {
 		description,
 		category,
 		passGrade,
+		name,
 	};
 
 	const updatedExam = await Exam.findByIdAndUpdate(
