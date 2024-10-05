@@ -807,4 +807,5 @@ module.exports = {
 	updateRole,
 	getAllReports,
 	getAccountBalance,
+	updateRatingCustomer,
 };
