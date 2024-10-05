@@ -21,13 +21,13 @@ export const getAllQuestions = createAsyncThunk(
 	}
 );
 
-export const createQuestion = createAsyncThunk(
-	'questions/createQuestion',
+export const createQuestions = createAsyncThunk(
+	'questions/createQuestions',
 	async (questionData, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await questionService.createQuestion(token, questionData);
+			return await questionService.createQuestions(token, questionData);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -116,15 +116,15 @@ export const questionSlice = createSlice({
 				state.message = action.payload;
 				state.questions = null;
 			})
-			.addCase(createQuestion.pending, (state) => {
+			.addCase(createQuestions.pending, (state) => {
 				state.isLoading = true;
 			})
-			.addCase(createQuestion.fulfilled, (state, action) => {
+			.addCase(createQuestions.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.questions.push(action.payload);
 			})
-			.addCase(createQuestion.rejected, (state, action) => {
+			.addCase(createQuestions.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

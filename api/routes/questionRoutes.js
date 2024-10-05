@@ -1,7 +1,7 @@
 const express = require('express');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const {
-	createQuestion,
+	createQuestions,
 	getAllQuestions,
 	getQuestion,
 	deleteQuestion,
@@ -11,7 +11,7 @@ const router = express.Router();
 
 router
 	.route('/')
-	.post(protect, restrict('Admin'), createQuestion)
+	.post(protect, restrict('Admin'), createQuestions)
 	.get(protect, restrict('Admin'), getAllQuestions);
 router
 	.route('/:questionId')
