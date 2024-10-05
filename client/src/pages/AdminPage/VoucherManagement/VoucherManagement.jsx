@@ -1,7 +1,7 @@
 import toast, { Toaster, ToastBar } from "react-hot-toast";
 import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
 import "./VoucherManagement.css";
-import { MdAddCircleOutline, MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BiEdit, BiTrash } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,10 +22,8 @@ export const VoucherManagement = () => {
     const [isOpenCreateVoucher, setIsOpenCreateVoucher] = useState(false);
     const [isOpenUpdateVoucher, setIsOpenUpdateVoucher] = useState(false);
     const [isOpenDetailVoucher, setIsOpenDetailVoucher] = useState(false);
-    const [chosenVoucherId, setChosenVoucherId] = useState("");
     const { vouchers, isLoading } = useSelector((state) => state.vouchers);
     const navigate = useNavigate();
-    const { voucherId } = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -58,9 +56,9 @@ export const VoucherManagement = () => {
     };
 
     const handleGetAllVouchers = () => {
-        Promise.all([dispatch(getAllVouchers())]).catch((error) => {
+        Promise.all([dispatch(getAllVouchers())].catch((error) => {
             console.error("Error during dispatch:", error);
-        });
+        }));
     };
 
     const location = useLocation();

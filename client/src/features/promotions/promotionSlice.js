@@ -5,9 +5,7 @@ export const getAllPromotions = createAsyncThunk(
 	'promotions/getAllPromotions',
 	async (_, thunkAPI) => {
 		try {
-			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount.data.token;
-			return await promotionService.getAllPromotions(token);
+			return await promotionService.getAllPromotions();
 		} catch (error) {
 			const message =
 				(error.response &&

@@ -5,17 +5,24 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './UpdatePromotion.css';
-import { updatePromotion } from '../../../../features/promotions/promotionSlice';
+import { getAllPromotions, updatePromotion } from '../../../../features/promotions/promotionSlice';
 import { useEffect, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
-import { formatDateInput } from '../../../../utils/format';
+import { formatDatePicker, validCurrentDate } from '../../../../utils/format';
 import { FaTimes } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
+import { rules } from '../../../../utils/rules';
 
-export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, handleGetAllPromotions }) => {
+export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
+  
+  const navigate=useNavigate();
+  const {promotionId} = useParams();
   const { promotions, isLoading: promotionLoading } = useSelector((state) => state.promotions || { promotions: [], isLoading: false });
   const { services, isLoading: serviceLoading } = useSelector((state) => state.services || { services: [], isLoading: false });
   const [selectedServices, setSelectedServices] = useState([]);
   const [chosenPromotion, setChosenPromotion] = useState(null);
+  const currentDate = validCurrentDate();
+
 
   const {
     register,
@@ -27,18 +34,26 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
 
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   formatDatePicker();
+  // });
+
   useEffect(() => {
     dispatch(getAllServices());
   }, [dispatch]);
 
   useEffect(() => {
-    const foundPromotion = promotions.find(promotion => promotion._id === chosenPromotionId);
+    const foundPromotion = promotions.find(promotion => promotion._id === promotionId);
     if (foundPromotion) {
       setChosenPromotion(foundPromotion);
       setSelectedServices(foundPromotion.serviceIds || []);
     }
-  }, [promotions, chosenPromotionId]);
+  }, [promotions, promotionId]);
 
+  const handleExitUpdatePromotion=()=>{
+    setIsOpenUpdatePromotion(false);
+    navigate("/admin-promotion")
+  }
   const onSubmit = async (data) => {
     if (!validatePromotionName(data.promotionName)) return;
     if (!validateSelectedServices()) return;
@@ -48,14 +63,14 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
       serviceIds: selectedServices.map(service => service._id),
     };
 
-    const result = await dispatch(updatePromotion({ promotionData, id: chosenPromotionId }));
+    const result = await dispatch(updatePromotion({ promotionData, id: promotionId }));
     if (result.type.endsWith('fulfilled')) {
       toast.success('Cập nhật mã khuyến mãi thành công', successStyle);
     } else if (result?.error?.message === 'Rejected') {
       toast.error(result?.payload, errorStyle);
     }
-    setIsOpenUpdatePromotion(false);
-    handleGetAllPromotions();
+    await dispatch(getAllPromotions());
+    handleExitUpdatePromotion();
   };
 
   const validatePromotionName = (name) => {
@@ -64,7 +79,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
       (promo) =>
         promo.promotionName.trim().toLowerCase() === trimmedName &&
         new Date(promo.endDate) >= new Date() &&
-        promo._id !== chosenPromotionId
+        promo._id !== promotionId
     );
     if (existingPromotion) {
       setError('promotionName', {
@@ -98,11 +113,23 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
       const service = services.find(service => service._id === option.value);
       return { _id: service._id, name: service.name };
     });
-    setSelectedServices((prevSelectedServices) => [
-      ...prevSelectedServices,
-      ...selectedOptions.filter((newService) => !prevSelectedServices.some(service => service._id === newService._id)),
-    ]);
+    setSelectedServices((prevSelectedServices) => {
+      const newServices = selectedOptions.filter(
+        (newService) => !prevSelectedServices.some((service) => service._id === newService._id)
+      );
+      return [...prevSelectedServices, ...newServices];
+    });
   };
+
+  function formatInput(date) {
+    if (!date) return "";
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = `0${d.getMonth() + 1}`.slice(-2);
+    const day = `0${d.getDate()}`.slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+ 
 
   if (promotionLoading || serviceLoading) {
     return <Spinner />;
@@ -122,7 +149,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
       >
         <AiOutlineClose
           className="absolute text-sm hover"
-          onClick={() => setIsOpenUpdatePromotion(false)}
+          onClick={() => handleExitUpdatePromotion()}
         />
         <p className="grid text-green font-bold text-xl justify-center">
           CẬP NHẬT KHUYẾN MÃI
@@ -150,13 +177,14 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
               </td>
               <td>
                 <input
+                  {...register("startDate", rules.startDate)}
                   type="date"
-                  {...register('startDate')}
-                  min={new Date().toISOString().split('T')[0]}
-                  defaultValue={formatDateInput(chosenPromotion?.startDate)}
-                  required
-                  className='create-question-input text-center ml-[60px] text-sm w-[300px]'
-                />{' '}
+                  min ={currentDate}
+                  defaultValue={formatInput(chosenPromotion?.startDate)}
+                  className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${
+                    errors.startDate ? "error-input" : ""
+                  }`}
+                />
               </td>
             </tr>
             <tr>
@@ -166,11 +194,14 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
               <td>
                 <input
                   type="date"
-                  {...register('endDate')}
-                  min={new Date().toISOString().split('T')[0]}
-                  defaultValue={formatDateInput(chosenPromotion?.endDate)}
+                  name='endDate'
+                  min={currentDate}
+                  {...register('endDate',rules.endDate)}
+                  defaultValue={formatInput(chosenPromotion?.endDate)}
                   required
-                  className='create-question-input text-center ml-[60px] text-sm w-[300px]'
+                  className={`create-question-input text-center ml-[60px] text-sm w-[300px] ${
+                    errors.endDate ? "error-input" : ""
+                  }`}
                 />{' '}
               </td>
             </tr>
@@ -250,20 +281,22 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion, chosenPromotionId, h
               <td>
                 <span className='font-bold'>Đã chọn:</span>
               </td>
-              <td className="">
-                <ul>
+              <td className='py-1 pl-32'>
+                <ul className="space-y-2" >
                   {selectedServices.map(selected => {
                     return (
-                      <li className='flex items-center' key={selected._id}>
-                        {selected.name}
-                        <button
+                      <li className="flex items-center whitespace-normal" key={selected._id}>
+                      <span className='w-72'>{selected.name}</span>  
+                      <button
                           type="button"
                           className="ml-2 text-red"
                           onClick={() => handleServiceDeselect(selected._id)}
-                        >
+                      >
                           <FaTimes />
-                        </button>
-                      </li>
+                      </button>
+                    </li>
+                    
+                      
                     );
                   })}
                 </ul>

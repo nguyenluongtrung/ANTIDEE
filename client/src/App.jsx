@@ -68,6 +68,10 @@ import { MyCourses } from './pages/CoursesPage';
 import { CourseDetail } from './pages/CoursesPage/LessonsPage/LessonsPage';
 import { VoucherDetail } from './pages/HistoryVoucher/VoucherDetail/VoucherDetail';
 import { JobPostDetail } from './pages/JobPostListPage/JobPostDetail/JobPostDetail';
+import { UpdateVoucher } from './pages/AdminPage/VoucherManagement/UpdateVoucher/UpdateVoucher';
+import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
+import { PromotionDetail } from './pages/AdminPage/PromotionManagement/PromotionDetail/PromotionDetail';
+import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePromotion/UpdatePromotion';
 
 const App = () => {
 	return (
@@ -200,8 +204,16 @@ const AppContent = () => {
 
 							<Route
 								path="/admin-promotion"
-								element={<PromotionManagement />}
-							/>
+								element={<PromotionManagement />}>
+								<Route
+									path="/admin-promotion/detail-promotion/:promotionId"
+									element={<PromotionDetail />}
+								/>
+								<Route
+									path="/admin-promotion/update-promotion/:promotionId"
+									element={<UpdatePromotion />}
+								/>
+								</Route>
 							<Route
 								path="/admin-appFeedback"
 								element={<AppFeedbackManagement />}
