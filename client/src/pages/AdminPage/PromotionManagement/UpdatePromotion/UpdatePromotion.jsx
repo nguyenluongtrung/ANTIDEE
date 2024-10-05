@@ -8,7 +8,7 @@ import './UpdatePromotion.css';
 import { getAllPromotions, updatePromotion } from '../../../../features/promotions/promotionSlice';
 import { useEffect, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
-import { formatDatePicker, validCurrentDate } from '../../../../utils/format';
+import { syncEndDateWithStartDate, validCurrentDate } from '../../../../utils/format';
 import { FaTimes } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { rules } from '../../../../utils/rules';
@@ -122,9 +122,8 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
   const startDate = watch('startDate');
   const endDate = watch('endDate');
 
-  // UseEffect để kiểm tra và cập nhật endDate nếu startDate lớn hơn endDate
   useEffect(() => {
-    syncEndDateWithStartDate(startDate, endDate, setValue); // Sử dụng hàm tái sử dụng
+    syncEndDateWithStartDate(startDate, endDate, setValue);
   }, [startDate, endDate, setValue]);
 
   function formatInput(date) {

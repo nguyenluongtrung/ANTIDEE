@@ -9,7 +9,7 @@ import "./CreatePromotion.css";
 import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { getAllServices } from "../../../../features/services/serviceSlice";
-import { formatDatePicker, validCurrentDate } from "../../../../utils/format";
+import {syncEndDateWithStartDate, validCurrentDate } from "../../../../utils/format";
 import { rules } from "../../../../utils/rules";
 
 export const CreatePromotion = ({
