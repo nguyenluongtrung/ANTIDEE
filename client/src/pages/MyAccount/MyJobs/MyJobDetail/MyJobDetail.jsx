@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -7,15 +7,21 @@ import { JobPostCancel } from '../JobPostCancel/JobPostCancel';
 import { updateJobPost } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import toast from 'react-hot-toast';
+import { CustomerFeedback } from '../CustomerFeedback/CustomerFeedback';
+import { getAllFeedbacks } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
+import { CustomerFeedBackReview } from '../CustomerFeedback/CustomerFeedbackReview';
 
 export const MyJobDetail = ({
 	chosenJobPostId,
 	setIsOpenJobPostDetail,
 	myAccountId,
 	getAllJobList,
+	accounts,
+	role
 }) => {
 	const [isOpenCancelForm, setIsOpenCancelForm] = useState(false);
-	const [isCompletedForm, setIsCompletedForm] = useState(false);
+	const [isOpenFeedbackPopup, setIsOpenFeedbackPopup] = useState(false);
+	const [isOpenReviewPopup, setIsOpenReviewPopup] = useState(false);
 	const { jobPosts, isLoading: jobPostLoading } = useSelector(
 		(state) => state.jobPosts
 	);
@@ -23,8 +29,19 @@ export const MyJobDetail = ({
 	const [chosenJobPost, setChosenJobPost] = useState(
 		jobPosts?.find((jobPost) => String(jobPost._id) === String(chosenJobPostId))
 	);
+	const [feedbacks, setFeedbacks] = useState([]);
 
 	const dispatch = useDispatch();
+
+	const handleGetAllInitialFeedbacks = async (id) => {
+		const result = await dispatch(getAllFeedbacks());
+
+		setFeedbacks(result.payload);
+	};
+
+	useEffect(() => {
+		handleGetAllInitialFeedbacks();
+	}, []);
 
 	const checkIsCompleted = () => {
 		const startingDate = new Date(chosenJobPost.workingTime.startingDate);
@@ -51,8 +68,8 @@ export const MyJobDetail = ({
 
 	const handleCompleteJobPost = async (e) => {
 		e.preventDefault();
-		const jobPostData = {...chosenJobPost, hasCompleted: {...chosenJobPost.hasCompleted, domesticHelperConfirm: true}}
-		const result = await dispatch(updateJobPost({jobPostData, id: chosenJobPostId}));
+		const jobPostData = { ...chosenJobPost, hasCompleted: { ...chosenJobPost.hasCompleted, domesticHelperConfirm: true } }
+		const result = await dispatch(updateJobPost({ jobPostData, id: chosenJobPostId }));
 
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
@@ -100,7 +117,6 @@ export const MyJobDetail = ({
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={() => {
 							setIsOpenJobPostDetail(false);
-							getAllJobList();
 						}}
 					/>
 					<p className="grid text-green font-bold text-xl justify-center mb-3">
@@ -172,6 +188,34 @@ export const MyJobDetail = ({
 							<p className="text-black ml-10">
 								+ Tên khách hàng: {chosenJobPost?.contactInfo?.fullName}
 							</p>
+							{chosenJobPost?.hasCompleted?.customerConfirm &&
+								chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
+								chosenJobPost?.domesticHelperId && (
+									<p className="text-gray mb-3">
+										{feedbacks?.findIndex(
+											(feedback) =>
+												String(feedback.jobPostId) === String(chosenJobPostId) && feedback.feedbackFrom === role
+										) !== -1 ? (
+											<span
+												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
+												onClick={() => {
+													setIsOpenReviewPopup(true);
+												}}
+											>
+												(Review)
+											</span>
+										) : (
+											<span
+												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
+												onClick={() => {
+													setIsOpenFeedbackPopup(true);
+												}}
+											>
+												(Đánh giá)
+											</span>
+										)}
+									</p>
+								)}
 							<p className="text-black ml-10">
 								+ Email: {chosenJobPost?.contactInfo?.email}
 							</p>
@@ -208,6 +252,66 @@ export const MyJobDetail = ({
 					</div>
 				</form>
 			)}
+
+			{isOpenFeedbackPopup && (
+				<div className="popup active">
+					<div
+						className="overlay"
+						onClick={() => setIsOpenFeedbackPopup(false)}
+					></div>
+					<div className="content rounded-md">
+						<AiOutlineClose
+							className="absolute text-sm hover:cursor-pointer m-5"
+							onClick={() => setIsOpenFeedbackPopup(false)}
+						/>
+						<CustomerFeedback
+							serviceName={chosenJobPost?.serviceId?.name}
+							serviceAddress={chosenJobPost?.contactInfo?.address}
+							customerId={chosenJobPost?.customerId}
+							role={role}
+							avatar={
+								accounts?.find(
+									(acc) =>
+										String(acc._id) == String(chosenJobPost?.customerId)
+								)?.avatar
+							}
+							jobPostId={chosenJobPost?._id}
+						/>
+					</div>
+				</div>
+			)}
+
+			{isOpenReviewPopup && (
+				<div className="popup active">
+					<div
+						className="overlay"
+						onClick={() => setIsOpenReviewPopup(false)}
+					></div>
+					<div className="content rounded-md">
+						<AiOutlineClose
+							className="absolute text-sm hover:cursor-pointer m-5"
+							onClick={() => setIsOpenReviewPopup(false)}
+						/>
+						<CustomerFeedBackReview
+							serviceName={chosenJobPost?.serviceId?.name}
+							serviceAddress={chosenJobPost?.contactInfo?.address}
+							domesticHelperId={chosenJobPost?.domesticHelperId}
+							avatar={
+								accounts?.find(
+									(acc) =>
+										String(acc._id) == String(chosenJobPost?.customerId)
+								)?.avatar
+							}
+							jobPostId={chosenJobPost?._id}
+							chosenfeedback={feedbacks.find(
+								(feedback) =>
+									String(feedback.jobPostId) === String(chosenJobPostId)
+							)}
+						/>
+					</div>
+				</div>
+			)}
+
 		</div>
 	);
 };

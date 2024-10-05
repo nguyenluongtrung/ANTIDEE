@@ -25,6 +25,7 @@ export const HistoryJobPostDetail = ({
 	accounts,
 	myAccountId,
 	getAllInitialJobList,
+	role
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
 	const [feedbacks, setFeedbacks] = useState([]);
@@ -213,7 +214,7 @@ export const HistoryJobPostDetail = ({
 										&nbsp;
 										{feedbacks?.findIndex(
 											(feedback) =>
-												String(feedback.jobPostId) === String(chosenJobPostId)
+												String(feedback.jobPostId) === String(chosenJobPostId) && feedback.feedbackFrom===role
 										) !== -1 ? (
 											<span
 												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
@@ -395,6 +396,7 @@ export const HistoryJobPostDetail = ({
 							serviceName={chosenJobPost?.serviceId?.name}
 							serviceAddress={chosenJobPost?.contactInfo?.address}
 							domesticHelperId={chosenJobPost?.domesticHelperId}
+							role={role}
 							avatar={
 								accounts?.find(
 									(acc) =>
