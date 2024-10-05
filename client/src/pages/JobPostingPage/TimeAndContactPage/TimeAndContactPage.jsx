@@ -21,7 +21,9 @@ export const TimeAndContactPage = () => {
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
 	const promoId = location?.state?.promoId;
 	const accountApoints= location?.state?.accountApoints;
-	console.log(accountApoints)
+	const promotionId = location?.state?.promotionId;
+	const promotionQuantity = location?.state?.promotionQuantity;
+	console.log("id",promotionId, "quantity:",promotionQuantity)
 	const {
 		register,
 		handleSubmit,
@@ -67,7 +69,9 @@ export const TimeAndContactPage = () => {
 				isChosenYourFav,
 				invitationCodeOwnerId,
 				promoId,
-				accountApoints
+				accountApoints,
+				promotionId,
+				promotionQuantity,
 			},
 		});
 	};

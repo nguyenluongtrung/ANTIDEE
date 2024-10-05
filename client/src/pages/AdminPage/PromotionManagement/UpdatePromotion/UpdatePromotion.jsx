@@ -281,11 +281,11 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
               <td>
                 <span className='font-bold'>Đã chọn:</span>
               </td>
-              <td className='py-1 pl-32'>
+              <td className='py-1 '>
                 <ul className="space-y-2" >
                   {selectedServices.map(selected => {
                     return (
-                      <li className="flex items-center whitespace-normal" key={selected._id}>
+                      <li className="flex items-center fled-wrap" key={selected._id}>
                       <span className='w-72'>{selected.name}</span>  
                       <button
                           type="button"

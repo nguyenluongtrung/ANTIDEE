@@ -58,6 +58,25 @@ export const updatePromotion = createAsyncThunk(
 		}
 	}
 );
+export const updatePromotionQuantity = createAsyncThunk(
+	'promotions/updatePromotionQuantity',
+	async ({promotionId, quantity}, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await promotionService.updatePromotionQuantity(token, promotionId, quantity);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 
 export const deletePromotion = createAsyncThunk(
 	'promotions/deletePromotion',
@@ -162,6 +181,21 @@ export const promotionSlice = createSlice({
                 ] = action.payload;
             })
             .addCase(updatePromotion.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updatePromotionQuantity.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updatePromotionQuantity.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions[
+                    state.promotions.findIndex((promotion) => promotion._id === action.payload._id)
+                ] = action.payload;
+            })
+            .addCase(updatePromotionQuantity.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
