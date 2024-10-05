@@ -30,13 +30,19 @@ export const CreatePromotion = ({
     formState: { errors },
     setError,
     clearErrors,
+    watch,
+    setValue,
   } = useForm();
 
   const dispatch = useDispatch();
 
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
+
+ 
   useEffect(() => {
-    formatDatePicker();
-  });
+    syncEndDateWithStartDate(startDate, endDate, setValue); 
+  }, [startDate, endDate, setValue]);
 
   useEffect(() => {
     if (!services || services.length === 0) {

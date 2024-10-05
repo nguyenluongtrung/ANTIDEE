@@ -1,3 +1,17 @@
+
+/**
+ * Hàm tự động cập nhật endDate nếu startDate lớn hơn endDate.
+ * @param {string} startDate - Ngày bắt đầu (định dạng chuỗi).
+ * @param {string} endDate - Ngày kết thúc (định dạng chuỗi).
+ * @param {function} setValue - Hàm để cập nhật giá trị trong form.
+ */
+export const syncEndDateWithStartDate = (startDate, endDate, setValue) => {
+  if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+    setValue('endDate', startDate); 
+  }
+};
+
+
 export const formatDate = (dateString) => {
 	const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
 	const formattedDate = new Date(dateString).toLocaleDateString(
@@ -94,23 +108,6 @@ export const validCurrentDate = () => {
 	return currentDate.toISOString().slice(0, 10);
 };
 
-export const formatDatePicker = () => {
-	const startDateInput = document.querySelector('input[name="startDate"]');
-	const endDateInput = document.querySelector('input[name="endDate"]');
-
-	startDateInput.addEventListener('change', function () {
-		endDateInput.min = this.value;
-		if (new Date(endDateInput.value) < new Date(this.value)) {
-			endDateInput.value = this.value;
-		}
-	});
-
-	endDateInput.addEventListener('change', function () {
-		if (new Date(this.value) < new Date(startDateInput.value)) {
-			endDateInput.value = startDateInput.value;
-		}
-	});
-};
 
 export const formatTime = (timestamp) => {
 	const date = new Date(timestamp);

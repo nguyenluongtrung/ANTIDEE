@@ -30,13 +30,11 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
     formState: { errors },
     setError,
     clearErrors,
+    watch,
+    setValue,
   } = useForm();
 
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   formatDatePicker();
-  // });
 
   useEffect(() => {
     dispatch(getAllServices());
@@ -121,6 +119,14 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
     });
   };
 
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
+
+  // UseEffect để kiểm tra và cập nhật endDate nếu startDate lớn hơn endDate
+  useEffect(() => {
+    syncEndDateWithStartDate(startDate, endDate, setValue); // Sử dụng hàm tái sử dụng
+  }, [startDate, endDate, setValue]);
+
   function formatInput(date) {
     if (!date) return "";
     const d = new Date(date);
@@ -129,6 +135,10 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
     const day = `0${d.getDate()}`.slice(-2);
     return `${year}-${month}-${day}`;
   }
+
+   
+
+
  
 
   if (promotionLoading || serviceLoading) {
@@ -195,7 +205,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
                 <input
                   type="date"
                   name='endDate'
-                  min={currentDate}
+                  min={startDate || currentDate}
                   {...register('endDate',rules.endDate)}
                   defaultValue={formatInput(chosenPromotion?.endDate)}
                   required
