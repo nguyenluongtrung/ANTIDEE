@@ -12,6 +12,16 @@ const login = async (accountData) => {
 	return response.data.data.account;
 };
 
+const loginWithGoogle = async (accountData) => {
+	const response = await axios.post(API_URL + 'login-with-google', accountData);
+
+	if (response.data) {
+		localStorage.setItem('account', JSON.stringify(response.data));
+	}
+
+	return response.data.data.account;
+};
+
 const register = async (accountData) => {
 	const response = await axios.post(API_URL + 'register', accountData);
 	return response.data.data.account;
@@ -309,6 +319,7 @@ const getTransactionHistory = async (token) => {
 
 const authService = {
 	login,
+	loginWithGoogle,
 	logout,
 	register,
 	getAllAccounts,

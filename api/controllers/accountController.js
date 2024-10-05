@@ -38,6 +38,20 @@ const login = asyncHandler(async (req, res) => {
 	}
 });
 
+const loginWithGoogle = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    const account = await Account.findOne({ email });
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            account,
+            token: generateToken(account._id),
+        },
+    });
+});
+
 const register = asyncHandler(async (req, res) => {
 	const { phoneNumber } = req.body;
 
@@ -729,6 +743,7 @@ const getAccountBalance = asyncHandler(async (req, res) => {
 module.exports = {
 	register,
 	login,
+	loginWithGoogle,
 	updateAccountInformation,
 	getAccountInformation,
 	getAllAccounts,
