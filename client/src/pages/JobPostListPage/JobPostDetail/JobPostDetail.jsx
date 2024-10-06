@@ -15,12 +15,12 @@ import {
 } from '../../../features/jobPosts/jobPostsSlice';
 import './JobPostDetail.css';
 import { LoginPage } from '../../LoginPage/LoginPage';
-import { useParams } from 'react-router-dom';
-import { getAccountInformation } from '../../../features/auth/authSlice';
+import { useLocation, useParams } from 'react-router-dom';
 
 export const JobPostDetail = React.memo(
 	({ setIsOpenJobPostDetail, handleGetAllJobPosts, jobPosts, isOpenJobPostDetail }) => {
 		const { jobPostId } = useParams();
+		const location = useLocation();
 		const [isChecked, setIsChecked] = useState(false);
 		const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 		const [chosenJobPost, setChosenJobPost] = useState();
@@ -120,7 +120,13 @@ export const JobPostDetail = React.memo(
 		};
 
 		useEffect(() => {
-			setChosenJobPost(jobPosts.find((post) => post._id == jobPostId))
+			if(jobPosts.length == 0){
+				const newJobPosts = location.state?.jobPosts
+				
+				setChosenJobPost(newJobPosts.find((post) => post._id == jobPostId))
+			} else{
+				setChosenJobPost(jobPosts.find((post) => post._id == jobPostId))
+			}
 		}, []);
 
 		useEffect(() => {
