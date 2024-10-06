@@ -19,7 +19,7 @@ const SignUpWithGoogle = ({ roleSignUp, googleAccount }) => {
     //Hỗ trợ cho nhập địa chỉ của người giúp việc
     const cityUrl = 'https://api.mysupership.vn/v1/partner/areas/province';
     const [cities, setCities] = useState([]);
-    const [cityCode, setCityCode] = useState("Thành phố Đà Nẵng");
+    const [cityCode, setCityCode] = useState("Thành phố Cần Thơ");
 
     //Nhập thông tin nói chung của 1 account bất kể phương thức đăng kí nào
     const [email, setEmail] = useState(googleAccount.email)
