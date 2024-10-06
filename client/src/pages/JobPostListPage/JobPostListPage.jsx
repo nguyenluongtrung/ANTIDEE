@@ -15,9 +15,10 @@ import {
 import './JobPostListPage.css';
 import Select from 'react-select';
 import { getAllServices } from '../../features/services/serviceSlice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const JobPostListPage = () => {
+	const location = useLocation();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const [isInMyLocation, setIsInMyLocation] = useState(false);
 	const [account, setAccount] = useState();
@@ -59,6 +60,10 @@ export const JobPostListPage = () => {
 	}, []);
 
 	useEffect(() => {
+		const isOpenJobPostDetail = location.state?.isOpenJobPostDetail;
+		if(isOpenJobPostDetail){
+			setIsOpenJobPostDetail(true)
+		}
 		initiateJobPosts();
 	}, []);
 
