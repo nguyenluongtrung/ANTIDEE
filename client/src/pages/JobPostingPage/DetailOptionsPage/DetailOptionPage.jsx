@@ -133,7 +133,7 @@ export const DetailOptionPage = () => {
       if (idService.includes(serviceId)) {
         setPromoValue(promotion.promotionValue);
         setPromotionId(promotion._id);
-        setPromotioQuantity(promotion.promotionQuantity);
+        setPromotionQuantity(promotion.promotionQuantity);
         toast.success(
           `Áp dụng khuyến mãi ${promoCode}: Giảm ${(promotion.promotionValue) * 100}%.`,
           successStyle
