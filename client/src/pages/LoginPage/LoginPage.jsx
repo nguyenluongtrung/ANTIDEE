@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { rules } from "../../utils/rules";
 import { auth } from "../../firebase";
-import { deleteUser, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { deleteUser, FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getAllAccounts, login, loginWithGoogle, reset } from "../../features/auth/authSlice";
 import { Spinner } from "../../components";
 import { useEffect, useState } from "react";
@@ -63,7 +63,7 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
   }, [account, isError, isSuccess, message, navigate, dispatch]);
 
   //Login with Google
-  const provider = new GoogleAuthProvider();
+  const googleAuthProvider = new GoogleAuthProvider();
 
   const checkExistEmailAccount = (newEmail) => {
     const listEmails = accounts.map((item) => item.email);
@@ -76,14 +76,14 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, googleAuthProvider);
 
       const emailExists = checkExistEmailAccount(result.user.email);
 
       if (!emailExists) {
         const currentUser = auth.currentUser;
         if (currentUser) {
-          await deleteUser(currentUser); // Xóa người dùng ngay lập tức khỏi Firebase Authentication
+          await deleteUser(currentUser);
         }
 
         toast.error(
@@ -104,6 +104,40 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
       const errorMessage = error.message;
       const email = error.customData.email;
       const credential = GoogleAuthProvider.credentialFromError(error);
+    }
+  };
+
+  //Login with Facebook
+  const fbAuthProvider = new FacebookAuthProvider();
+
+  const handleFacebookLogin = async () => {
+    try {
+      const facebookResult = await signInWithPopup(auth, fbAuthProvider);
+
+      const emailExists = checkExistEmailAccount(facebookResult.user.email);
+
+      if (!emailExists) {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          await deleteUser(currentUser);
+        }
+
+        toast.error(
+          "Email của facebook này chưa đăng kí tài khoản cho hệ thống Antidee, hãy sử dụng tài khoản khác",
+          errorStyle
+        );
+        return;
+      }
+
+      const account = { email: facebookResult.user.email }
+      
+      dispatch(loginWithGoogle(account));
+
+    } catch (error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const credential = FacebookAuthProvider.credentialFromError(error);
     }
   };
 
@@ -178,7 +212,9 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
             <p className="font-bold text-xs">Đăng nhập bằng Google</p>
             <div></div>
           </button>
-          <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between fea-item">
+          <button className="flex border border-gray-500 rounded-md mb-3 p-3 items-center justify-between fea-item"
+            onClick={() => handleFacebookLogin()}
+          >
             <BsFacebook className="mx-2 text-blue" />{" "}
             <p className="font-bold text-xs">Đăng nhập bằng Facebook</p>
             <div></div>

@@ -1,5 +1,5 @@
 import { auth } from "../../firebase";
-import { deleteUser, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { deleteUser, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { errorStyle } from "../../utils/toast-customize";
@@ -27,6 +27,9 @@ export const SignUpPage = () => {
   //Hỗ trợ phương thức đăng kí bằng google
   const [googleAccount, setGoogleAccount] = useState("")
 
+  //Hỗ trợ phương thức đăng kí bằng Facebook
+  const [facebookAccount, setFacebookAccount] = useState("")
+
   const checkExistEmailAccount = (newEmail) => {
     const listEmails = accounts.map((item) => item.email);
     if (listEmails.includes(newEmail)) {
@@ -38,11 +41,11 @@ export const SignUpPage = () => {
 
 
   //SignUp with Google
-  const provider = new GoogleAuthProvider();
+  const googleAuthProvider = new GoogleAuthProvider();
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, googleAuthProvider);
 
       const emailExists = checkExistEmailAccount(result.user.email);
 
@@ -70,6 +73,42 @@ export const SignUpPage = () => {
       const errorMessage = error.message;
       const email = error.customData.email;
       const credential = GoogleAuthProvider.credentialFromError(error);
+    }
+  };
+
+  //SignUp with Facebook
+  const fbAuthProvider = new FacebookAuthProvider();
+
+  const handleFacebookLogin = async () => {
+    try {
+      const facebookResult = await signInWithPopup(auth, fbAuthProvider);
+
+      const emailExists = checkExistEmailAccount(facebookResult.user.email);
+
+      if (emailExists) {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          await deleteUser(currentUser);
+        }
+
+        toast.error(
+          "Email của facebook này đã đăng kí tài khoản cho hệ thống Antidee, hãy sử dụng tài khoản khác",
+          errorStyle
+        );
+        return;
+      }
+
+      // const credential = FacebookAuthProvider.credentialFromResult(facebookResult);
+
+      setFacebookAccount(facebookResult.user);
+      setChoosenMethodLogin("Facebook");
+      setPageLoginMethod(false);
+
+    } catch (error) {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const credential = FacebookAuthProvider.credentialFromError(error);
     }
   };
 
@@ -153,7 +192,7 @@ export const SignUpPage = () => {
               </button>
 
               <button className="flex border border-gray rounded-md p-3 items-center justify-between fea-item hover:border-primary hover:text-primary"
-                onClick={() => { setChoosenMethodLogin("Facebook"), setPageLoginMethod(false) }}>
+                onClick={handleFacebookLogin}>
                 <BsFacebook className="mx-2" size={20} />{" "}
                 <p className="font-bold text-base">Đăng ký bằng Facebook</p>
                 <div></div>
@@ -164,7 +203,7 @@ export const SignUpPage = () => {
         {/* Phương thức đăng kí */}
         {choosenMethodLogin === "OTP" && <SignUpWithOTP roleSignUp={roleSignUp} />}
         {choosenMethodLogin === "Google" && <SignUpWithGoogle roleSignUp={roleSignUp} googleAccount={googleAccount} />}
-        {choosenMethodLogin === "Facebook" && <SignUpWithFacebook roleSignUp={roleSignUp} />}
+        {choosenMethodLogin === "Facebook" && <SignUpWithFacebook roleSignUp={roleSignUp} facebookAccount={facebookAccount}/>}
       </div>
     </section>
   );
