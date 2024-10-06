@@ -61,11 +61,26 @@ const updatePromotion = async (token, promotionData, promotionId) => {
 	return response.data.data.updatedPromotion;
 };
 
+const updatePromotionQuantity =async (token, promotionId, quantity)=>{
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.patch(
+		API_URL + `updateQuantity/${promotionId}`,
+		{quantity},
+		config
+	);
+	return response.data.data.updatedPromotion;
+}
+
 const promotionService = {
 	getAllPromotions,
 	deletePromotion,
 	createPromotion,
 	updatePromotion,
 	getPromotion,
+	updatePromotionQuantity,
 };
 export default promotionService;

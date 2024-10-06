@@ -32,6 +32,7 @@ export const DetailOptionPage = () => {
   const [isChosenYourFav, setIsChosenYourFav] = useState(false);
   const [isChosenYourself, setIsChosenYourself] = useState(false);
   const [agree, setAgree] = useState(false);
+
   const [inputOptions, setInputOptions] = useState([
     {
       optionName: "",
@@ -52,6 +53,11 @@ export const DetailOptionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+
+  const[promotionId, setPromotionId] = useState();
+  const[promotionQuantity, setPromotionQuantity]=useState();
+
+  console.log("id",promotionId, "quantity:",promotionQuantity)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,25 +114,33 @@ export const DetailOptionPage = () => {
       toast.error("Account information is not available!", errorStyle);
       return;
     }
+    
     const promotion = findPromotion(promoCode);
-
+  
     if (promotion) {
-      if (isExpired(promotion.endDate)) {
-        toast.error("Promotion này đã hết hạn!", errorStyle);
+      if (promotion.promotionQuantity === 0) {
+        toast.error("Mã ưu đãi này đã hết!", errorStyle);
         return;
       }
-
+  
+      if (isExpired(promotion.endDate)) {
+        toast.error("Mã ưu đãi này đã hết hạn!", errorStyle);
+        return;
+      }
+  
       const idService = promotion.serviceIds.map((service) => service._id);
-
+  
       if (idService.includes(serviceId)) {
         setPromoValue(promotion.promotionValue);
+        setPromotionId(promotion._id);
+        setPromotioQuantity(promotion.promotionQuantity);
         toast.success(
-          `Áp dụng promotion ${promoCode}: Giảm ${(promotion.promotionValue)*100}%`,
+          `Áp dụng khuyến mãi ${promoCode}: Giảm ${(promotion.promotionValue) * 100}%.`,
           successStyle
         );
       } else {
         toast.error(
-          "Promotion này không áp dụng được cho dịch vụ này!",
+          "Khuyến mãi này không áp dụng được cho dịch vụ này!",
           errorStyle
         );
       }
@@ -134,6 +148,7 @@ export const DetailOptionPage = () => {
       toast.error("Mã ưu đãi không hợp lệ!", errorStyle);
     }
   };
+  
 
   const {
     register,
@@ -448,6 +463,8 @@ export const DetailOptionPage = () => {
         invitationCodeOwnerId,
         promoValue,
         accountApoints,
+        promotionId,
+        promotionQuantity
       },
     });
   };

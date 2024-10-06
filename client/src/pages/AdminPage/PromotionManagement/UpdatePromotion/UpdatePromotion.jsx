@@ -8,7 +8,7 @@ import './UpdatePromotion.css';
 import { getAllPromotions, updatePromotion } from '../../../../features/promotions/promotionSlice';
 import { useEffect, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
-import { formatDatePicker, validCurrentDate } from '../../../../utils/format';
+import { syncEndDateWithStartDate, validCurrentDate } from '../../../../utils/format';
 import { FaTimes } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { rules } from '../../../../utils/rules';
@@ -30,13 +30,11 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
     formState: { errors },
     setError,
     clearErrors,
+    watch,
+    setValue,
   } = useForm();
 
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   formatDatePicker();
-  // });
 
   useEffect(() => {
     dispatch(getAllServices());
@@ -121,6 +119,13 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
     });
   };
 
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
+
+  useEffect(() => {
+    syncEndDateWithStartDate(startDate, endDate, setValue);
+  }, [startDate, endDate, setValue]);
+
   function formatInput(date) {
     if (!date) return "";
     const d = new Date(date);
@@ -129,6 +134,10 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
     const day = `0${d.getDate()}`.slice(-2);
     return `${year}-${month}-${day}`;
   }
+
+   
+
+
  
 
   if (promotionLoading || serviceLoading) {
@@ -195,7 +204,7 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
                 <input
                   type="date"
                   name='endDate'
-                  min={currentDate}
+                  min={startDate || currentDate}
                   {...register('endDate',rules.endDate)}
                   defaultValue={formatInput(chosenPromotion?.endDate)}
                   required
@@ -281,11 +290,11 @@ export const UpdatePromotion = ({ setIsOpenUpdatePromotion}) => {
               <td>
                 <span className='font-bold'>Đã chọn:</span>
               </td>
-              <td className='py-1 pl-32'>
+              <td className='py-1 '>
                 <ul className="space-y-2" >
                   {selectedServices.map(selected => {
                     return (
-                      <li className="flex items-center whitespace-normal" key={selected._id}>
+                      <li className="flex items-center fled-wrap" key={selected._id}>
                       <span className='w-72'>{selected.name}</span>  
                       <button
                           type="button"
