@@ -27,11 +27,8 @@ export default function AdminSidebar() {
     { name: "Đề thi", icon: <IoNewspaperOutline />, to: '/admin-exam' },
     { name: "Ngân hàng câu hỏi", icon: <MdOutlineQuestionMark />, to: '/admin-question' },
     { name: "Các chứng chỉ", icon: <BiCreditCardAlt />, to: '/admin-qualification' },
-    { name: "Thông Báo", icon: <BiNotification />, to: '' },
     { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
-    { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
-    { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
   ];

@@ -15,7 +15,7 @@ import {
 } from "firebase/storage";
 import { app } from "../../../../firebase";
 import { rules } from "../../../../utils/rules";
-import { formatDatePicker, validCurrentDate } from "../../../../utils/format";
+import { validCurrentDate } from "../../../../utils/format";
 import { getAllServices } from "../../../../features/services/serviceSlice";
 import { FaTimes } from "react-icons/fa";
 
@@ -37,10 +37,6 @@ export const CreateVoucher = ({
     },
   });
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    formatDatePicker();
-  });
 
   async function initiateServiceInformation() {
     let output = await dispatch(getAllServices());
