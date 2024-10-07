@@ -33,16 +33,10 @@ const getCourse = asyncHandler(async (req, res) => {
   });
 });
 const createCourse = asyncHandler(async (req, res) => {
-  const { lessons, ...courseData } = req.body; // Giả sử lessons là một mảng bài học
-  
-  // Tạo khóa học mới
+  const { lessons, ...courseData } = req.body; 
   const course = await Course.create(courseData);
-
-  // Thêm các bài học
   if (lessons && lessons.length > 0) {
     const createdLessons = await Lesson.insertMany(lessons);
-
-    // Cập nhật danh sách bài học trong khóa học
     course.lessons.push(...createdLessons.map(lesson => lesson._id));
     await course.save();
   }
@@ -148,7 +142,6 @@ const deleteCourse = asyncHandler(async (req, res) => {
 const getLessonByCourseAndLessonId = asyncHandler(async (req, res) => {
   const { courseId, lessonId } = req.params;
 
-  // Tìm khóa học
   const course = await Course.findById(courseId).populate('lessons');
 
   if (!course) {
@@ -156,7 +149,6 @@ const getLessonByCourseAndLessonId = asyncHandler(async (req, res) => {
     throw new Error("Không tìm thấy khóa học");
   }
 
-  // Tìm bài học trong danh sách bài học của khóa học
   const lesson = course.lessons.find(lesson => lesson._id.toString() === lessonId);
 
   if (!lesson) {
