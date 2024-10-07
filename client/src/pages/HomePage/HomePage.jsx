@@ -64,9 +64,9 @@ export const HomePage = () => {
 	useEffect(() => {
 		AOS.init({
 			duration: 600,
-			easing: 'ease-in-out', // Loại easing cho hiệu ứng
-			delay: 50, // Độ trễ trước khi hiệu ứng bắt đầu (ms)
-			once: true, // Chỉ chạy hiệu ứng một lần khi cuộn xuống
+			easing: 'ease-in-out',
+			delay: 50,
+			once: true, 
 		});
 	}, []);
 

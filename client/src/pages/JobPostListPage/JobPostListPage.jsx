@@ -223,11 +223,6 @@ export const JobPostListPage = () => {
 								<p className="text-brown font-bold mb-3">
 									{post?.serviceId?.name?.toUpperCase()}
 								</p>
-								{post?.repeatitiveDetails?.isRepeatitive && (
-									<button className="bg-yellow text-white py-1.5 px-1 absolute w-20 top-0 right-0 text-xs">
-										Lặp lại
-									</button>
-								)}
 								{post?.isUrgent && (
 									<div className="triangle-down absolute top-0 right-0"></div>
 								)}
@@ -236,6 +231,12 @@ export const JobPostListPage = () => {
 									<span className="text-brown">
 										{formatDate(post?.workingTime?.startingDate)}{' '}
 										{formatWorkingTime(post?.workingTime?.startingHour)}
+									</span>
+								</p>
+								<p className="text-gray mb-2">
+									Hết hạn lúc: {''}
+									<span className="text-brown">
+										{formatDate(post?.dueDate)}{' '}
 									</span>
 								</p>
 								<div className="border-2 border-gray  my-3">

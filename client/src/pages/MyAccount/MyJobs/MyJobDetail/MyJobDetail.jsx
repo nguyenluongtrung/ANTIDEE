@@ -43,7 +43,7 @@ export const MyJobDetail = ({
 			.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
 
 		return (
-			startingDate.toISOString() < new Date().toISOString() ||
+			startingDate.toDateString() < new Date().toDateString() ||
 			(startingDate.toDateString() == new Date().toDateString() &&
 				startingTime <= getCurrentTimeString())
 		);

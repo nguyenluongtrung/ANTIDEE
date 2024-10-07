@@ -63,6 +63,26 @@ export const JobPostDetail = ({
 			handleGetAllJobPosts();
 			return;
 		}
+		if (account.accountBalance < Math.round(0.3 * chosenJobPost.totalPrice)) {
+			toast.error(
+				`Bạn cần có ít nhất ${Math.round(
+					0.3 * chosenJobPost.totalPrice
+				)} trong tài khoản để nhận công việc này`,
+				errorStyle
+			);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+			return;
+		}
+		if (String(account._id) == String(chosenJobPost.customerId)) {
+			toast.error(
+				'Bạn không được nhận công việc của chính mình',
+				errorStyle
+			);
+			setIsOpenJobPostDetail(false);
+			handleGetAllJobPosts();
+			return;
+		}
 		let result;
 		if (chosenJobPost?.isChosenYourself) {
 			result = await dispatch(
@@ -135,6 +155,10 @@ export const JobPostDetail = ({
 							{formatWorkingTime(chosenJobPost?.workingTime?.startingHour)}
 						</span>
 					</p>
+					<p className="text-gray mb-2">
+						Hết hạn lúc: {''}
+						<span className="text-brown">{formatDate(chosenJobPost?.dueDate)} </span>
+					</p>
 					<div className="border-2 border-gray  my-3">
 						{chosenJobPost?.workload?.find(
 							(option) => String(option?.optionName) === 'Thời gian'
@@ -182,40 +206,6 @@ export const JobPostDetail = ({
 								</p>
 							);
 						})}
-						{chosenJobPost?.repeatitiveDetails?.isRepeatitive && (
-							<div>
-								<p className="text-black ml-10">
-									+ Lặp lại mỗi{' '}
-									{chosenJobPost?.repeatitiveDetails?.details?.every}{' '}
-									{chosenJobPost?.repeatitiveDetails?.details?.option}
-								</p>
-								<p className="text-black ml-10">
-									+ Kết thúc vào:{' '}
-									{formatDateInput(
-										chosenJobPost?.repeatitiveDetails?.details?.endDate
-									)}
-								</p>
-								<p className="text-black ml-10">
-									+ Gói làm việc bao gồm{' '}
-									{chosenJobPost?.repeatitiveDetails?.details?.finalTimes} lần
-									làm việc
-								</p>
-								{chosenJobPost?.repeatitiveDetails?.details?.chosenDays.length >
-									0 && (
-									<p className="text-black ml-10">
-										+ Làm việc vào các ngày:{' '}
-										{chosenJobPost?.repeatitiveDetails?.details?.chosenDays.map(
-											(day, index) =>
-												index + 1 !==
-												chosenJobPost?.repeatitiveDetails?.details?.chosenDays
-													.length
-													? day + ', '
-													: day + ''
-										)}
-									</p>
-								)}
-							</div>
-						)}
 					</p>
 					<p className="text-gray mb-3">
 						Ghi chú:{' '}

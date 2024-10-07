@@ -23,6 +23,10 @@ const jobPostSchema = mongoose.Schema(
 		note: {
 			type: String,
 		},
+		dueDate: {
+			type: Date,
+			required: true,
+		},
 		contactInfo: {
 			address: {
 				type: String,
@@ -92,34 +96,6 @@ const jobPostSchema = mongoose.Schema(
 		isChosenYourFav: {
 			type: Boolean,
 			default: false,
-		},
-		repeatitiveDetails: {
-			isRepeatitive: {
-				type: Boolean,
-				default: false,
-			},
-			details: {
-				finalTimes: {
-					type: Number,
-					default: 0,
-				},
-				every: {
-					type: Number,
-					default: 0,
-				},
-				option: {
-					type: String,
-					default: 'ngày',
-				},
-				endDate: {
-					type: Date,
-				},
-				chosenDays: [
-					{
-						type: String,
-					},
-				],
-			},
 		},
 		cancelDetails: {
 			isCanceled: {

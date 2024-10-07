@@ -1,42 +1,45 @@
 const mongoose = require('mongoose');
 
 const transactionSchema = mongoose.Schema({
-    amount: {
-        type: Number,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    fromAccountId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true
-    },
-    toAccountId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true
-    },
-    status: {
-        type: String,
-        enum: ['PENDING', 'COMPLETED', 'FAILED'],
-        default: 'PENDING'
-    },
-    createdDate: {
-        type: Date,
-        default: Date.now
-    },
-    updatedDate: {
-        type: Date,
-        default: Date.now
-    }
+	accountId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Account',
+		required: true,
+	},
+	jobId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'JobPost',
+	},
+	externalId: {
+		type: String,
+	},
+	paymentMethod: {
+		type: String,
+		enum: ['ZaloPay', 'Ví người dùng', 'Tiền mặt'],
+	},
+	message: {
+		type: String,
+	},
+	date: { type: Date, required: true },
+	amount: {
+		type: Number,
+		required: true,
+	},
+	category: {
+		type: String,
+		enum: [
+			'salary',
+			'commission_fee',
+			'job_income',
+			'refund',
+			'balance_income',
+		],
+	},
 });
 
-transactionSchema.pre('save', function(next) {
-    this.updatedDate = Date.now();
-    next();
+transactionSchema.pre('save', function (next) {
+	this.updatedDate = Date.now();
+	next();
 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);

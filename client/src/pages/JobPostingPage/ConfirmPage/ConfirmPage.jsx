@@ -5,17 +5,23 @@ import { formatDate, formatWorkingTime } from '../../../utils/format';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createJobPost } from '../../../features/jobPosts/jobPostsSlice';
-import { getAccountInformation, loadMoneyAfterUsingInvitationCode, updateAPoint, updateIsUsedVoucher } from '../../../features/auth/authSlice';
+import {
+	getAccountInformation,
+	loadMoneyAfterUsingInvitationCode,
+	updateAPoint,
+	updateIsUsedVoucher,
+} from '../../../features/auth/authSlice';
 import { Spinner } from '../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
 import { getAllServices } from '../../../features/services/serviceSlice';
+import { LoginPage } from '../../LoginPage/LoginPage';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
 	const [services, setServices] = useState([]);
+	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 	const [isChecked, setIsChecked] = useState(false);
-	const [customerId, setCustomerId] = useState();
 	const location = useLocation();
 	const address = location?.state?.address;
 	const contactInfo = location?.state?.contactInfo;
@@ -25,19 +31,20 @@ export const ConfirmPage = () => {
 	const isUrgent = location?.state?.isUrgent;
 	const isChosenYourself = location?.state?.isChosenYourself;
 	const isChosenYourFav = location?.state?.isChosenYourFav;
-	const repeatitiveDetails = location?.state?.repeatitiveDetails;
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
+	const dueDate = location?.state?.dueDate;
 
-	const promoId  = location?.state?.promoId;
-	const { account, isLoading: authLoading } = useSelector((state) => state.auth);
+	const promoId = location?.state?.promoId;
+	const accountApoints= location?.state?.accountApoints;
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	async function initiateAccountInformation() {
-		let output = await dispatch(getAccountInformation());
-
-		setCustomerId(output.payload._id);
+		const account = JSON.parse(localStorage.getItem('account'));
+		if(!account){
+			setIsOpenLoginForm(true)
+		}
 	}
 
 	async function initiateService() {
@@ -52,75 +59,109 @@ export const ConfirmPage = () => {
 	}, []);
 
 	const handleSubmitJobPost = async () => {
+		const account = JSON.parse(localStorage.getItem('account')).data.account;
+		if (
+			otherInfo?.paymentMethod == 'Ví người dùng' &&
+			account.accountBalance < Math.round(otherInfo?.totalPrice)
+		) {
+			toast.error(
+				'Tài khoản của bạn không đủ số dư để đăng công việc này',
+				errorStyle
+			);
+			return;
+		}
+		
 		const jobPostData = {
 			workingTime,
 			serviceId: serviceId,
 			note: otherInfo?.note,
 			contactInfo: {
-				address: address?.houseType + ', ' + address?.street + ', ' + address?.ward + ', ' + address?.district + ', ' + address?.province,
+				address:
+					'Đường ' +
+					address?.street +
+					', ' +
+					address?.ward +
+					', ' +
+					address?.district +
+					', ' +
+					address?.province,
 				email: contactInfo?.email,
 				phoneNumber: contactInfo?.phoneNumber,
 				fullName: contactInfo?.fullName,
 			},
 			workload: inputOptions,
-			customerId,
+			customerId: account._id,
 			paymentMethod: otherInfo?.paymentMethod,
 			totalPrice: otherInfo?.totalPrice,
+			dueDate,
 			isUrgent,
 			isChosenYourself,
 			isChosenYourFav,
-			repeatitiveDetails,
-		}
+		};
+
 		if (invitationCodeOwnerId) {
 			let ownerId = invitationCodeOwnerId;
-			await dispatch(loadMoneyAfterUsingInvitationCode(ownerId))
+			await dispatch(loadMoneyAfterUsingInvitationCode(ownerId));
 		}
 		const result = await dispatch(createJobPost(jobPostData));
 
 		if (result.type.endsWith('fulfilled')) {
-			
-			if(promoId){
-				const accountId = account._id;
-				console.log(accountId)
-				console.log(promoId)
-					await dispatch(updateIsUsedVoucher({ accountId, voucherId: promoId, isUsed: true }));
+			if (promoId) {
+				await dispatch(
+					updateIsUsedVoucher({ accountId: account._id, voucherId: promoId, isUsed: true })
+				);
 			}
 
-			await dispatch(getAccountInformation())
+			await dispatch(getAccountInformation());
 
 			navigate(`/congrats`, {
 				state: {
 					congratsMsg: 'Chúc mừng bạn đã đăng công việc thành công',
 					buttonContent: 'Quay về trang chủ',
-					navigateTo: '/home'
+					navigateTo: '/home',
 				},
 			});
-
-			const apoint = otherInfo?.totalPrice ? (Number(otherInfo.totalPrice) * 5) / 100 : 0;
+			let newApoints = 0;
+			if(!accountApoints){
+				newApoints = account.aPoints
+			} else{
+				newApoints = accountApoints
+			}
+			const apoint = otherInfo?.totalPrice
+				? (Number(otherInfo.totalPrice) * 5) / 100
+				: 0;
 			if (!isNaN(apoint)) {
 				if (account?._id) {
-					await dispatch(updateAPoint({ accountId: account._id, apoint, serviceId }));
+					const totalApoint = newApoints+apoint
+					console.log(apoint,totalApoint)
+					await dispatch(
+						updateAPoint({ accountId: account._id, aPoints:totalApoint, apoint, serviceId })
+					);
 				}
 			}
-
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-	}
+	};
 
-	if (authLoading || jobPostLoading) {
-		return <Spinner />
+	if (jobPostLoading) {
+		return <Spinner />;
 	}
 
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
+			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm}/>}
 
 			<div
 				className="confirm-form mx-auto py-7 px-16 rounded-xl border-2 mt-5 border-light_gray"
 				style={{ width: '70%' }}
 			>
-				<p className="font-extrabold text-brown mb-3">{services?.find((service) => String(service?._id) === String(serviceId))?.name?.toUpperCase()}</p>
+				<p className="font-extrabold text-brown mb-3">
+					{services
+						?.find((service) => String(service?._id) === String(serviceId))
+						?.name?.toUpperCase()}
+				</p>
 				<p className="custom-border-bottom pb-3 mb-3 font-semibold">
 					CHI TIẾT CÔNG VIỆC
 				</p>
@@ -132,8 +173,7 @@ export const ConfirmPage = () => {
 							</td>
 							<td style={{ paddingLeft: '150px' }}>
 								<p>
-									{address?.houseType +
-										', ' +
+									{'Đường ' +
 										address?.street +
 										', ' +
 										address?.ward +
@@ -163,7 +203,7 @@ export const ConfirmPage = () => {
 							</td>
 						</tr>
 						<tr>
-							<td className='w-36'>
+							<td className="w-36">
 								<p className="text-gray my-3">Khối lượng công việc</p>
 							</td>
 							<td style={{ paddingLeft: '150px' }}>
@@ -207,6 +247,14 @@ export const ConfirmPage = () => {
 								<p style={{ paddingLeft: '5px' }}>{contactInfo?.email}</p>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								<p className="text-gray my-3">Hạn chốt cho bài đăng</p>
+							</td>
+							<td className="pl-32">
+								<p style={{ paddingLeft: '5px' }}>{formatDate(dueDate)}</p>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<p className="custom-border-bottom pb-3 mb-3 font-semibold">
@@ -219,7 +267,9 @@ export const ConfirmPage = () => {
 								<p className="text-gray my-3">Giá tiền</p>
 							</td>
 							<td className="pl-32">
-								<p style={{ paddingLeft: '5px' }}>{otherInfo?.totalPrice} VND</p>
+								<p style={{ paddingLeft: '5px' }}>
+									{otherInfo?.totalPrice} VND
+								</p>
 							</td>
 						</tr>
 						<tr>
@@ -245,8 +295,9 @@ export const ConfirmPage = () => {
 
 			<div className="flex items-center justify-center">
 				<button
-					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${!isChecked ? 'bg-gray' : 'bg-green'
-						}`}
+					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${
+						!isChecked ? 'bg-gray' : 'bg-green'
+					}`}
 					disabled={!isChecked}
 					onClick={handleSubmitJobPost}
 				>

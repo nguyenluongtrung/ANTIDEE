@@ -1,24 +1,31 @@
-import toast, { Toaster, ToastBar } from 'react-hot-toast';
-import AdminSidebar from '../components/AdminSidebar/AdminSidebar';
-import './VoucherManagement.css'
-import { MdAddCircleOutline, MdOutlineRemoveRedEye } from 'react-icons/md';
-import { BiEdit, BiTrash } from 'react-icons/bi';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteVoucher, getAllVouchers } from '../../../features/vouchers/voucherSlice';
-import { Spinner } from '../../../components';
-import { VoucherDetail } from './VoucherDetail/VoucherDetail';
-import { UpdateVoucher } from './UpdateVoucher/UpdateVoucher';
-import { CreateVoucher } from './CreateVoucher/CreateVoucher';
-import { errorStyle, successStyle } from '../../../utils/toast-customize';
-import { IoAddOutline } from 'react-icons/io5';
+import toast, { Toaster, ToastBar } from "react-hot-toast";
+import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
+import "./VoucherManagement.css";
+import { MdAddCircleOutline, MdOutlineRemoveRedEye } from "react-icons/md";
+import { BiEdit, BiTrash } from "react-icons/bi";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    deleteVoucher,
+    getAllVouchers,
+    updateVoucher,
+} from "../../../features/vouchers/voucherSlice";
+import { Spinner } from "../../../components";
+import { VoucherDetail } from "./VoucherDetail/VoucherDetail";
+import { UpdateVoucher } from "./UpdateVoucher/UpdateVoucher";
+import { CreateVoucher } from "./CreateVoucher/CreateVoucher";
+import { errorStyle, successStyle } from "../../../utils/toast-customize";
+import { IoAddOutline } from "react-icons/io5";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const VoucherManagement = () => {
     const [isOpenCreateVoucher, setIsOpenCreateVoucher] = useState(false);
     const [isOpenUpdateVoucher, setIsOpenUpdateVoucher] = useState(false);
     const [isOpenDetailVoucher, setIsOpenDetailVoucher] = useState(false);
-    const [chosenVoucherId, setChosenVoucherId] = useState('');
+    const [chosenVoucherId, setChosenVoucherId] = useState("");
     const { vouchers, isLoading } = useSelector((state) => state.vouchers);
+    const navigate = useNavigate();
+    const { voucherId } = useParams();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -28,17 +35,52 @@ export const VoucherManagement = () => {
     // delete voucher
     const handleDeleteVoucher = async (id) => {
         const result = await dispatch(deleteVoucher(id));
-        if (result.type.endsWith('fulfilled')) {
-            toast.success('Xoá voucher thành công', successStyle);
-        } else if (result?.error?.message === 'Rejected') {
+        if (result.type.endsWith("fulfilled")) {
+            toast.success("Xoá voucher thành công", successStyle);
+        } else if (result?.error?.message === "Rejected") {
             toast.error(result?.payload, errorStyle);
+        }
+    };
+
+    const handleStatusChange = async (newStatus, voucher) => {
+        const updatedVoucherData = {
+            ...voucher,
+            status: newStatus,
+        };
+        const result = await dispatch(
+            updateVoucher({ voucherData: updatedVoucherData, id: voucher._id })
+        );
+        if (result.type.endsWith("fulfilled")) {
+            toast.success("Status đã được thay đổi !", successStyle);
+        } else {
+            toast.error("Có lỗi xảy ra khi thay đổi status !", errorStyle);
         }
     };
 
     const handleGetAllVouchers = () => {
         Promise.all([dispatch(getAllVouchers())]).catch((error) => {
-            console.error('Error during dispatch:', error);
+            console.error("Error during dispatch:", error);
         });
+    };
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname.includes("/voucher-detail/")) {
+            setIsOpenDetailVoucher(true);
+            setIsOpenUpdateVoucher(false); 
+        } else if (location.pathname.includes("/voucher-update/")) {
+            setIsOpenUpdateVoucher(true);
+            setIsOpenDetailVoucher(false);
+        }
+    }, [location.pathname]);
+
+    const handleOpenDetailVoucher = (voucherId) => {
+        navigate(`/admin-voucher/voucher-detail/${voucherId}`);
+    };
+
+    const handleOpenUpdateVoucher = (voucherId) => {
+        navigate(`/admin-voucher/voucher-update/${voucherId}`);
     };
 
     if (isLoading) {
@@ -55,8 +97,8 @@ export const VoucherManagement = () => {
                             style={{
                                 ...t.style,
                                 animation: t.visible
-                                    ? 'custom-enter 1s ease'
-                                    : 'custom-exit 1s ease',
+                                    ? "custom-enter 1s ease"
+                                    : "custom-exit 1s ease",
                             }}
                         />
                     )}
@@ -68,18 +110,10 @@ export const VoucherManagement = () => {
                     />
                 )}
                 {isOpenUpdateVoucher && (
-                    <UpdateVoucher
-                        setIsOpenUpdateVoucher={setIsOpenUpdateVoucher}
-                        handleGetAllVouchers={handleGetAllVouchers}
-                        chosenVoucherId={chosenVoucherId}
-                    />
+                    <UpdateVoucher setIsOpenUpdateVoucher={setIsOpenUpdateVoucher} />
                 )}
                 {isOpenDetailVoucher && (
-                    <VoucherDetail
-                        setIsOpenDetailVoucher={setIsOpenDetailVoucher}
-                        handleGetAllVouchers={handleGetAllVouchers}
-                        chosenVoucherId={chosenVoucherId}
-                    />
+                    <VoucherDetail setIsOpenDetailVoucher={setIsOpenDetailVoucher} />
                 )}
 
                 <div className="flex">
@@ -87,7 +121,7 @@ export const VoucherManagement = () => {
                         <span>Hiển thị </span>
                         <select
                             className="rounded-md p-1 mx-1 hover:cursor-pointer"
-                            style={{ backgroundColor: '#E0E0E0' }}
+                            style={{ backgroundColor: "#E0E0E0" }}
                         >
                             <option>10</option>
                             <option>20</option>
@@ -96,17 +130,14 @@ export const VoucherManagement = () => {
                         <span> hàng</span>
                     </div>
                     <button
-
                         className="bg-pink text-white rounded-md block mx-auto"
-                        style={{ width: '150px' }}
+                        style={{ width: "150px" }}
                         onClick={() => setIsOpenCreateVoucher(true)}
                     >
                         <div className="flex items-center">
-                            <IoAddOutline className='size-8 pl-2 mr-2' />
+                            <IoAddOutline className="size-8 pl-2 mr-2" />
                             <span className="text-sm pr-2">Thêm voucher</span>
                         </div>
-
-
                     </button>
                 </div>
                 <table className="w-full border-b border-gray mt-3">
@@ -114,10 +145,13 @@ export const VoucherManagement = () => {
                         <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
                             <td className="py-2 px-4 text-center font-bold">STT</td>
                             <td className="py-2 px-4 text-center font-bold">Tên voucher</td>
-                            <td className="py-2 px-4 text-center font-bold">Giá trị chiết khấu(%)</td>
+                            <td className="py-2 px-4 text-center font-bold">
+                                Giá trị chiết khấu(%)
+                            </td>
                             <td className="py-2 px-4 text-center font-bold">Điểm trao đổi</td>
                             <td className="py-2 px-4 text-center font-bold">Trạng thái</td>
-                            <td className="py-2 px-4 text-center font-bold">Thương hiệu</td>
+                            <td className="py-2 px-4 text-center font-bold">Loại voucher</td>
+                            <td className="py-2 px-4 text-center font-bold">Status</td>
                             <td className="py-2 px-4 text-center font-bold">Chi tiết</td>
                             <td className="py-2 px-4 text-center font-bold">Hành Động</td>
                         </tr>
@@ -131,7 +165,6 @@ export const VoucherManagement = () => {
                                     </td>
                                     <td className="font-medium text-center text-gray">
                                         <span>{voucher?.name}</span>
-
                                     </td>
                                     <td className="font-medium text-center text-gray">
                                         <span>{voucher?.discountValue}</span>
@@ -140,27 +173,56 @@ export const VoucherManagement = () => {
                                         <span>{voucher?.price}</span>
                                     </td>
                                     <td>
-                                        <span >
-                                            <div className={`text-center p-2 rounded-full font-semibold text-sm 
-                                        ${new Date(voucher?.endDate)?.getTime() >= new Date().getTime()
-                                                    ? 'bg-green bg-opacity-25 text-green'
-                                                    : 'bg-red bg-opacity-25 text-red'}`
-                                            }>
-                                                {new Date(voucher?.endDate)?.getTime() >= new Date().getTime() ? 'Đang hoạt động' : 'Đã hết hạn'}
+                                        <span>
+                                            <div
+                                                className={`text-center p-2 rounded-full font-semibold text-sm 
+                                                             ${new Date(
+                                                    voucher?.endDate
+                                                )?.getTime() <
+                                                        new Date().getTime()
+                                                        ? "bg-red bg-opacity-25 text-red"
+                                                        : "bg-green bg-opacity-25 text-green"
+                                                    }`}
+                                            >
+                                                {new Date(voucher?.endDate)?.getTime() <
+                                                    new Date().getTime()
+                                                    ? "Đã hết hạn"
+                                                    : "Đang hoạt động"}
                                             </div>
-
                                         </span>
                                     </td>
                                     <td className="font-medium text-center text-gray">
-                                        <span>{voucher?.brand}</span>
+                                        <span>{voucher?.couponType}</span>
                                     </td>
+                                    <td className="font-medium text-center text-gray">
+                                        <select
+                                            defaultValue={voucher?.status}
+                                            className={`border rounded px-2 py-1 ${voucher?.status === "Enable" ? "text-green" : "text-red"
+                                                }`}
+                                            onChange={(e) =>
+                                                handleStatusChange(e.target.value, voucher)
+                                            }
+                                        >
+                                            <option
+                                                value="Enable"
+                                                className="text-green font-semibold"
+                                            >
+                                                Enable
+                                            </option>
+                                            <option
+                                                value="Disable"
+                                                className="text-red font-semibold"
+                                            >
+                                                Disable
+                                            </option>
+                                        </select>
+                                    </td>
+
                                     <td className="font-medium text-center text-gray">
                                         <button
                                             className="hover:cursor-pointer text-xl pt-1.5"
-                                            onClick={() => {
-                                                setIsOpenDetailVoucher(true);
-                                                setChosenVoucherId(voucher._id);
-                                            }}>
+                                            onClick={() => handleOpenDetailVoucher(voucher?._id)}
+                                        >
                                             <MdOutlineRemoveRedEye className="block mx-auto" />
                                         </button>
                                     </td>
@@ -168,10 +230,7 @@ export const VoucherManagement = () => {
                                         <div className="flex items-center justify-center">
                                             <button
                                                 className="flex items-center justify-end py-3 pr-2 text-xl"
-                                                onClick={() => {
-                                                    setIsOpenUpdateVoucher(true);
-                                                    setChosenVoucherId(voucher._id);
-                                                }}
+                                                onClick={() => handleOpenUpdateVoucher(voucher?._id)}
                                             >
                                                 <BiEdit className="text-green" />
                                             </button>
@@ -190,6 +249,5 @@ export const VoucherManagement = () => {
                 </table>
             </div>
         </div>
-
     );
-}
+};

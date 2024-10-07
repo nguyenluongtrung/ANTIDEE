@@ -1,15 +1,6 @@
 const cron = require('node-cron');
 const JobPost = require('./../../models/jobPostModel');
 
-const getCurrentTimeString = () => {
-	const now = new Date();
-	const currentHour = now.getHours();
-	const currentMinute = now.getMinutes();
-	return `${currentHour.toString().padStart(2, '0')}:${currentMinute
-		.toString()
-		.padStart(2, '0')}`;
-};
-
 cron.schedule('*/1 * * * *', async () => {
 	const jobList = await JobPost.find({});
 
@@ -18,34 +9,15 @@ cron.schedule('*/1 * * * *', async () => {
 			jobPost?.cancelDetails?.isCanceled === false &&
 			jobPost?.hasCompleted?.customerConfirm === false &&
 			jobPost?.hasCompleted?.domesticHelperConfirm === false &&
-			jobPost?.domesticHelperId == null
+			(jobPost?.domesticHelperId == null ||
+				jobPost?.domesticHelperId == undefined)
 		) {
-			const startingDate = new Date(jobPost.workingTime.startingDate);
-			startingDate.setMinutes(
-				startingDate.getMinutes() - startingDate.getTimezoneOffset()
-			);
-			const startingHour = parseInt(
-				jobPost.workingTime.startingHour.split(':')[0]
-			);
-			const startingMinute = parseInt(
-				jobPost.workingTime.startingHour.split(':')[1]
-			);
+			const dueDate = new Date(jobPost.dueDate);
+			const now = new Date();
 
-			const startingTime = `${startingHour
-				.toString()
-				.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
-
-			console.log(
-				startingDate.toISOString(),
-				new Date().toISOString(),
-				startingDate.toISOString() < new Date().toISOString()
-			);
-
-			if (
-				startingDate.toISOString() < new Date().toISOString() ||
-				(startingDate.toDateString() == new Date().toDateString() &&
-					startingTime <= getCurrentTimeString())
-			) {
+			dueDate.setHours(0, 0, 0, 0);
+			now.setHours(0, 0, 0, 0);
+			if (dueDate < now) {
 				jobPost.cancelDetails.isCanceled = true;
 				jobPost.cancelDetails.reason = 'Không có người nhận việc';
 				await jobPost.save();
@@ -54,7 +26,4 @@ cron.schedule('*/1 * * * *', async () => {
 	});
 
 	await Promise.all(promises);
-	console.log('Job cancellation process completed.');
 });
-
-console.log('Cancellation task is called');
