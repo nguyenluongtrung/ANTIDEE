@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getLessonsByCourse } from "../../../features/courses/courseSlice";
 
 export const CourseDetail = () => {
   const [openLessons, setOpenLessons] = useState([]);
   const [selectedContent, setSelectedContent] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const dispatch = useDispatch();
+  const { courseId } = useParams();
 
-  const lessons = [
-    {
-      id: 1,
-      title: "Khái niệm kỹ thuật cần biết",
-      duration: "23:09",
-      contents: [
-        { id: "1.1", type: "video", title: "Giới thiệu về kỹ thuật", duration: "5:00", url: "https://via.placeholder.com/1920x1080.png?text=Video+1" },
-        { id: "1.2", type: "quiz", title: "Bài kiểm tra kỹ thuật", duration: "10:00" },
-      ],
-    },
-    {
-      id: 2,
-      title: "Cách chăm sóc trẻ em",
-      duration: "11:35",
-      contents: [
-        { id: "2.1", type: "video", title: "Video hướng dẫn chăm sóc trẻ em", duration: "3:00", url: "https://via.placeholder.com/1920x1080.png?text=Video+2" },
-        { id: "2.2", type: "quiz", title: "Kiểm tra", duration: "4:00" },
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchLessons = async () => {
+      const response = await dispatch(getLessonsByCourse(courseId)); 
+      setLessons(response.payload); 
+    };
+    fetchLessons();
+  }, [courseId, dispatch]); 
 
   const toggleLesson = (lessonId) => {
     if (openLessons.includes(lessonId)) {
@@ -45,12 +38,12 @@ export const CourseDetail = () => {
       setSelectedContent(lessons[0].contents[0]);
       setOpenLessons([lessons[0].id]);
     }
-  }, []);
+  }, [lessons]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 pt-14 mb-28">
       <div className="bg-white shadow-lg p-6 top-0 z-10">
-        <h1 className="text-3xl font-bold text-gray-900">Khóa học: Kiến thức chăm sóc trẻ em</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Nội dung khóa học</h1>
       </div>
 
       <div className="flex flex-grow">
