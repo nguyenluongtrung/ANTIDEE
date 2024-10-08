@@ -119,26 +119,6 @@ const accountSchema = mongoose.Schema(
 			minLength: [8, 'Account password contains more than 8 characters'],
 			select: false,
 		},
-		examResults: [
-			{
-				examId: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Exam',
-				},
-				totalScore: {
-					type: Number,
-				},
-				duration: {
-					type: Number,
-				},
-				isPassed: {
-					type: Boolean,
-				},
-				takingDate: {
-					type: Date,
-				},
-			},
-		],
 		resume: [
 			{
 				qualifications: [
@@ -224,11 +204,12 @@ const accountSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		hiddenPost: [{
-			type:mongoose.Schema.Types.ObjectId,
-			ref: 'ForumPost',
-		}],
-		
+		hiddenPost: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'ForumPost',
+			},
+		],
 	},
 	{
 		timestamps: true,

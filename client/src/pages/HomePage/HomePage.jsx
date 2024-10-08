@@ -76,64 +76,68 @@ export const HomePage = () => {
 
 	async function initiateJobPosts() {
 		let output = await dispatch(getAllJobPosts());
+		console.log(output);
+		if (output.type.endsWith('fulfilled')) {
+			const filteredJobPosts = output.payload
+				?.filter(
+					(jobPost) =>
+						jobPost.domesticHelperId == null &&
+						jobPost?.cancelDetails?.isCanceled === false
+				)
+				?.filter((jobPost) => {
+					const startingDate = new Date(jobPost.workingTime.startingDate);
+					startingDate.setMinutes(
+						startingDate.getMinutes() - startingDate.getTimezoneOffset()
+					);
+					const startingHour = parseInt(
+						jobPost.workingTime.startingHour.split(':')[0]
+					);
+					const startingMinute = parseInt(
+						jobPost.workingTime.startingHour.split(':')[1]
+					);
+					const startingTime = `${startingHour
+						.toString()
+						.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
 
-		const filteredJobPosts = output.payload
-			?.filter(
-				(jobPost) =>
-					jobPost.domesticHelperId == null &&
-					jobPost?.cancelDetails?.isCanceled === false
-			)
-			?.filter((jobPost) => {
-				const startingDate = new Date(jobPost.workingTime.startingDate);
-				startingDate.setMinutes(
-					startingDate.getMinutes() - startingDate.getTimezoneOffset()
-				);
-				const startingHour = parseInt(
-					jobPost.workingTime.startingHour.split(':')[0]
-				);
-				const startingMinute = parseInt(
-					jobPost.workingTime.startingHour.split(':')[1]
-				);
-				const startingTime = `${startingHour
-					.toString()
-					.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
-
-				if (startingDate.toISOString() > new Date().toISOString()) {
-					return true;
-				} else if (
-					startingDate.toDateString() === new Date().toDateString() &&
-					startingTime >= getCurrentTimeString()
-				) {
-					return true;
-				} else {
-					return false;
-				}
-			})
-			?.filter((jobPost) => {
-				const createdDate = new Date(jobPost.createdAt);
-				const currentDate = new Date();
-				const thirtyMinutesInMs = 30 * 60 * 1000;
-				const createdDatePlus30Minutes = new Date(
-					createdDate.getTime() + thirtyMinutesInMs
-				);
-				if (
-					jobPost.isChosenYourFav === true &&
-					currentDate <= createdDatePlus30Minutes
-				) {
-					if (
-						accounts
-							.find((acc) => String(acc._id) === String(jobPost.customerId))
-							?.favoriteList?.find(
-								(fav) => String(fav.domesticHelperId) === String(account._id)
-							)
+					if (startingDate.toISOString() > new Date().toISOString()) {
+						return true;
+					} else if (
+						startingDate.toDateString() === new Date().toDateString() &&
+						startingTime >= getCurrentTimeString()
 					) {
 						return true;
+					} else {
+						return false;
 					}
-				} else {
-					return true;
-				}
-			});
-		setJobPosts(filteredJobPosts);
+				})
+				?.filter((jobPost) => {
+					const createdDate = new Date(jobPost.createdAt);
+					const currentDate = new Date();
+					const thirtyMinutesInMs = 30 * 60 * 1000;
+					const createdDatePlus30Minutes = new Date(
+						createdDate.getTime() + thirtyMinutesInMs
+					);
+					if (
+						jobPost.isChosenYourFav === true &&
+						currentDate <= createdDatePlus30Minutes
+					) {
+						if (
+							accounts
+								.find((acc) => String(acc._id) === String(jobPost.customerId))
+								?.favoriteList?.find(
+									(fav) => String(fav.domesticHelperId) === String(account._id)
+								)
+						) {
+							return true;
+						}
+					} else {
+						return true;
+					}
+				});
+			setJobPosts(filteredJobPosts);
+		} else {
+			setJobPosts([]);
+		}
 	}
 
 	useEffect(() => {

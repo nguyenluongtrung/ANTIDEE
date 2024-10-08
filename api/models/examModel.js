@@ -64,26 +64,6 @@ const examSchema = mongoose.Schema(
 			type: Number,
 			required: true,
 		},
-		examResults: [
-			{
-				accountId: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Account',
-				},
-				totalScore: {
-					type: Number,
-				},
-				duration: {
-					type: Number,
-				},
-				isPassed: {
-					type: Boolean,
-				},
-				takingDate: {
-					type: Date,
-				},
-			},
-		],
 		name: {
 			type: String,
 			required: true,
