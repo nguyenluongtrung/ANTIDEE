@@ -70,7 +70,11 @@ export const ChatForm = () => {
   async function initialAccountList() {
     let output = await dispatch(getAllAccounts());
 
-    setAccounts(output.payload);
+    if(output.type.endsWith('fulfilled')){
+      setAccounts(output.payload);
+    }else{
+      setAccounts([]);
+    }
   }
   async function initialChatting() {
     let output = await dispatch(getAllChats());
@@ -136,6 +140,8 @@ export const ChatForm = () => {
       }
     );
   };
+
+  console.log(accounts)
 
   //lọc tìm kiếm theo role
   const filteredUsers =

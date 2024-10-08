@@ -80,7 +80,6 @@ export const EntryExamPage = () => {
 				totalScore,
 				duration: Math.round((new Date().getTime() - startTime) / 1000),
 				isPassed: totalScore >= chosenExam?.passGrade,
-				takingDate: new Date(),
 			};
 			dispatch(saveExamResult({ examResult, examId: chosenExam?._id }));
 		}

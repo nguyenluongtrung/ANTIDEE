@@ -105,6 +105,26 @@ export const deleteExam = createAsyncThunk(
 	}
 );
 
+export const getMyExamResults = createAsyncThunk(
+	'exams/getMyExamResults',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await examService.getMyExamResults(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	exams: [],
 	isError: false,
@@ -135,6 +155,19 @@ export const examSlice = createSlice({
 				state.exams = action.payload;
 			})
 			.addCase(getAllExams.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.exams = null;
+			})
+			.addCase(getMyExamResults.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getMyExamResults.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(getMyExamResults.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
