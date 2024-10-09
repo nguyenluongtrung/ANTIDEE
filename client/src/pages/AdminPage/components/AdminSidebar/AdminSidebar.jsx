@@ -1,12 +1,10 @@
 import {
   BiCreditCardAlt,
   BiUser,
-  BiNotification,
   BiMessage,
   BiVideo
 } from "react-icons/bi";
 import { IoMdLogOut } from "react-icons/io";
-import { BsTicket } from "react-icons/bs";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { MdCleaningServices, MdOutlineQuestionMark } from "react-icons/md";
@@ -32,6 +30,7 @@ export default function AdminSidebar() {
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
+    { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
   ];
 
   const onLogout = () => {
