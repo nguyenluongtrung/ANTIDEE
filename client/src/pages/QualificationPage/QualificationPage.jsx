@@ -66,7 +66,7 @@ export const QualificationPage = () => {
 					</div>
 				));
 			} else {
-				navigate('/entry-exam', { state: { id: exam._id } });
+				navigate(`/entry-exam/${exam._id}`);
 			}
 		} else {
 			const foundExam = exams.find(
@@ -80,7 +80,7 @@ export const QualificationPage = () => {
 					errorStyle
 				);
 			} else {
-				navigate('/entry-exam', { state: { id: foundExam._id } });
+				navigate(`/entry-exam/${foundExam._id}`);
 			}
 		}
 	};

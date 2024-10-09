@@ -123,7 +123,7 @@ export const CourseManagement = () => {
 										<span>{course.duration} phút</span>
 									</td>
 									<td className="font-medium text-center text-gray">
-										<span>{course.lessons.length}</span>
+										<span>{course.lessons}</span>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<button

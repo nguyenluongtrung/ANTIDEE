@@ -72,7 +72,7 @@ export const MyCourses = () => {
                     </div>
                     <button
                       onClick={() => {
-                        navigate(`/courses/lessons/${course._id}`);
+                        navigate(`/lessons/${course._id}`);
                       }}
                       className={`flex justify-center items-center w-32 px-2 py-1 text-sm rounded-lg shadow-md transition-all`}
                     >

@@ -25,14 +25,11 @@ const deleteCourse = async (token, id) => {
 };
 
 const getLessonsByCourse = async (courseId) => {
-	const course = await Course.findById(courseId).populate('lessons');
-  
-	if (!course) {
-	  throw new Error("Không tìm thấy khóa học");
-	}
-  
-	return course.lessons;
-  };
+	console.log(API_URL + `${courseId}/lessons`);
+	const response = await axios.get(API_URL + `${courseId}/lessons`);
+	console.log(response);
+	return response.data.data.lessons;
+};
 
 const courseService = {
 	getAllCourse,
