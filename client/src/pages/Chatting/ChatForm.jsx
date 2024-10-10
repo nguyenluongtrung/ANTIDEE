@@ -141,8 +141,6 @@ export const ChatForm = () => {
     );
   };
 
-  console.log(accounts)
-
   //lọc tìm kiếm theo role
   const filteredUsers =
     accounts

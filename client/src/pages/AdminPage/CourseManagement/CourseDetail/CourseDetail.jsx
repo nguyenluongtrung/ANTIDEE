@@ -72,7 +72,7 @@ export const CoursesDetail = ({
 							</td>
 							<td className="pl-6 py-1 w-80">
 								<p className="text-center" style={{ width: '100%' }}>
-									{chosenCourse?.lessons.lenght} bài
+									{/* {chosenCourse?.lessons} bài */}
 								</p>
 							</td>
 						</tr>

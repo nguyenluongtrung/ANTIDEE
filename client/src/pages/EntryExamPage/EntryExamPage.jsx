@@ -1,6 +1,6 @@
 import './EntryExamPage.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from './../../components';
 import { useEffect, useState, useRef } from 'react';
 import { getAllExams, saveExamResult } from '../../features/exams/examSlice';
@@ -15,18 +15,17 @@ export const EntryExamPage = () => {
 	const [answers, setAnswers] = useState([]);
 	const [isSubmit, setIsSubmit] = useState(false);
 	const [isOpenScoreNotification, setIsOpenScoreNotification] = useState(false);
-	const [finishTime, setFinishTime] = useState(0);
 	const [startTime, setStartTime] = useState(null);
 	const questionRefs = useRef([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const location = useLocation();
+	const { examId } = useParams();
 
 	useEffect(() => {
 		const asyncFn = async () => {
 			const result = await dispatch(getAllExams());
 			const chosenExam = result.payload.find(
-				(exam) => exam._id === location.state.id
+				(exam) => exam._id == examId
 			);
 			setChosenExam(chosenExam);
 			setStartTime(new Date().getTime());
