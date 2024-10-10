@@ -57,6 +57,30 @@ export const AccumulatePoint = () => {
   };
 
   const paginationItems = getPaginationItems();
+ const formatDateTimeHistory = (dateString) => {
+    const daysOfWeek = [
+      'Chủ nhật',
+      'Thứ 2',
+      'Thứ 3',
+      'Thứ 4',
+      'Thứ 5',
+      'Thứ 6',
+      'Thứ 7',
+    ];
+    const date = new Date(dateString);
+    date.setUTCHours(date.getUTCHours() + 7);
+  
+    const dayOfWeek = daysOfWeek[date.getUTCDay()];
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  
+    const formattedDate = `${dayOfWeek}, ${day}/${month}/${year} ${hours}:${minutes}`;
+  
+    return formattedDate;
+  };
 
   return (
     <div className="flex flex-col md:flex-row px-4 md:px-16 pt-10 md:pt-20">
@@ -98,7 +122,7 @@ export const AccumulatePoint = () => {
                 <span>{historyItem?.serviceId?.name}</span>
               </td>
               <td className="font-medium text-center text-gray py-2 px-1 md:px-3">
-                <span>{formatDateTime(historyItem?.update)}</span>
+                <span>{formatDateTimeHistory(historyItem?.update)}</span>
               </td>
             </tr>
           ))}
