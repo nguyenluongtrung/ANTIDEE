@@ -175,15 +175,61 @@ const getLessonByCourseAndLessonId = asyncHandler(async (req, res) => {
 		},
 	});
 });
+const deleteLesson = asyncHandler(async (req, res) => {
+  const { courseId, lessonId } = req.params;
 
+  // Tìm khóa học
+  const course = await Course.findById(courseId);
+  if (!course) {
+    res.status(404);
+    throw new Error("Không tìm thấy khóa học");
+  } 
+  const lessonIndex = course.lessons.indexOf(lessonId);
+  if (lessonIndex === -1) {
+    res.status(404);
+    throw new Error("Không tìm thấy bài học trong khóa học");
+  } 
+  await Lesson.findByIdAndDelete(lessonId); 
+  course.lessons.splice(lessonIndex, 1);
+  await course.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Đã xóa bài học",
+  });
+});
+ 
+const updateLesson = asyncHandler(async (req, res) => {
+  const { lessonId } = req.params; 
+  const updatedLesson = await Lesson.findByIdAndUpdate(
+    lessonId,
+    req.body,
+    { new: true }
+  );
+
+  if (!updatedLesson) {
+    res.status(404);
+    throw new Error("Không tìm thấy bài học");
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedLesson,
+    },
+  });
+});
 module.exports = {
-	getAllCourses,
-	getCourse,
-	createCourse,
-	updateCourse,
-	deleteCourse,
-	getLessonsByCourse,
-	getLessonByCourseAndLessonId,
-	createLesson,
-	getAllLessons,
+  getAllCourses,
+  getCourse,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+  getLessonsByCourse,
+  getLessonByCourseAndLessonId,
+  createLesson,
+  getAllLessons,
+  deleteLesson,  
+  updateLesson,
 };
+
