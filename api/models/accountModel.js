@@ -98,10 +98,16 @@ const accountSchema = mongoose.Schema(
 					type: mongoose.Schema.Types.ObjectId,
 					ref: 'Service',
 				},
+				operationType: {
+					type: String,
+					enum: ['add', 'subtract'],
+					required: true,
+				},
 				update: {
 					type: Date,
 					default: Date.now,
 				},
+				
 			},
 		],
 		accountBalance: {

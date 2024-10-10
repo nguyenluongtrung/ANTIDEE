@@ -6,6 +6,8 @@ const {
   deletePromotion,
   getPromotion,
   updatePromotionQuantity,
+  createAccountPromotion,
+  getAllAccountPromotion,
 } = require("../controllers/promotionController");
 const { protect, restrict } = require("../middleware/accountMiddleware");
 const router = express.Router();
@@ -22,5 +24,8 @@ router
 router
   .route("/updateQuantity/:promotionId")
   .patch(protect, updatePromotionQuantity);
+
+  router.route("/account-promotion").post(protect,createAccountPromotion);
+  router.route("/account-promotion/:accountId").get(getAllAccountPromotion);
 
 module.exports = router;

@@ -78,6 +78,44 @@ export const updatePromotionQuantity = createAsyncThunk(
 	}
 );
 
+export const createAccountPromotion = createAsyncThunk(
+	'promotions/createAccountPromotion',
+	async ({accountId, promotionId, serviceId}, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await promotionService.createAccountPromotion(token, accountId, promotionId, serviceId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const getAllAccountPromotion = createAsyncThunk(
+	'promotions/getAllAccountPromotion',
+	async (accountId, thunkAPI) => {
+		try {
+			return await promotionService.getAllAccountPromotion(accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const deletePromotion = createAsyncThunk(
 	'promotions/deletePromotion',
 	async (id, thunkAPI) => {
@@ -97,6 +135,8 @@ export const deletePromotion = createAsyncThunk(
 		}
 	}
 );
+
+
 
 const initialState = {
 	promotions: null,
@@ -199,6 +239,33 @@ export const promotionSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
+            })
+            .addCase(createAccountPromotion.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createAccountPromotion.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions.push(action.payload);
+            })
+            .addCase(createAccountPromotion.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getAllAccountPromotion.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllAccountPromotion.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.promotions = action.payload;
+            })
+            .addCase(getAllAccountPromotion.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                state.promotions = null;
             });
     },
 });

@@ -75,6 +75,25 @@ const updatePromotionQuantity =async (token, promotionId, quantity)=>{
 	return response.data.data.updatedPromotion;
 }
 
+const createAccountPromotion = async(token, accountId, promotionId, serviceId)=>{
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.post(
+		API_URL + "account-promotion",
+		{accountId, promotionId, serviceId},
+		config
+	);
+	return response.data.data.newAccountPromotion;
+};
+
+const getAllAccountPromotion = async (accountId) => {
+	const response = await axios.get(API_URL + `account-promotion/${accountId}`);
+	return response.data.data.accountPromotions;
+  };
+
 const promotionService = {
 	getAllPromotions,
 	deletePromotion,
@@ -82,5 +101,7 @@ const promotionService = {
 	updatePromotion,
 	getPromotion,
 	updatePromotionQuantity,
+	createAccountPromotion,
+	getAllAccountPromotion,
 };
 export default promotionService;

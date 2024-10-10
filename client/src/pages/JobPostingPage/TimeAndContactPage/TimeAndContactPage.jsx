@@ -21,9 +21,10 @@ export const TimeAndContactPage = () => {
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
 	const promoId = location?.state?.promoId;
 	const accountApoints= location?.state?.accountApoints;
+	const isUsedPoint = location?.state?.isUsedPoint;
 	const promotionId = location?.state?.promotionId;
 	const promotionQuantity = location?.state?.promotionQuantity;
-	console.log("id",promotionId, "quantity:",promotionQuantity)
+
 	const {
 		register,
 		handleSubmit,
@@ -70,6 +71,7 @@ export const TimeAndContactPage = () => {
 				invitationCodeOwnerId,
 				promoId,
 				accountApoints,
+				isUsedPoint,
 				promotionId,
 				promotionQuantity,
 			},

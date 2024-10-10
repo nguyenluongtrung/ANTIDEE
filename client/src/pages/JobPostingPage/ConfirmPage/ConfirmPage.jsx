@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
 import { getAllServices } from '../../../features/services/serviceSlice';
 import { LoginPage } from '../../LoginPage/LoginPage';
-import { updatePromotionQuantity } from '../../../features/promotions/promotionSlice';
+import { createAccountPromotion, updatePromotionQuantity } from '../../../features/promotions/promotionSlice';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
@@ -36,10 +36,11 @@ export const ConfirmPage = () => {
 	const dueDate = location?.state?.dueDate;
 
 	const promoId = location?.state?.promoId;
-	const accountApoints= location?.state?.accountApoints;
+	const accountApoints = location?.state?.accountApoints;
+	const isUsedPoint = location?.state?.isUsedPoint;
 	const promotionId = location?.state?.promotionId;
 	const promotionQuantity = location?.state?.promotionQuantity;
-	console.log("id",promotionId, "quantity:",promotionQuantity)
+
 
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
@@ -47,7 +48,7 @@ export const ConfirmPage = () => {
 
 	async function initiateAccountInformation() {
 		const account = JSON.parse(localStorage.getItem('account'));
-		if(!account){
+		if (!account) {
 			setIsOpenLoginForm(true)
 		}
 	}
@@ -65,6 +66,7 @@ export const ConfirmPage = () => {
 
 	const handleSubmitJobPost = async () => {
 		const account = JSON.parse(localStorage.getItem('account')).data.account;
+
 		if (
 			otherInfo?.paymentMethod == 'Ví người dùng' &&
 			account.accountBalance < Math.round(otherInfo?.totalPrice)
@@ -75,7 +77,7 @@ export const ConfirmPage = () => {
 			);
 			return;
 		}
-		
+
 		const jobPostData = {
 			workingTime,
 			serviceId: serviceId,
@@ -127,24 +129,68 @@ export const ConfirmPage = () => {
 				},
 			});
 
-			const quantity = promotionQuantity-1;
-			await dispatch(updatePromotionQuantity({promotionId, quantity}));
+			
+
+			if (promotionQuantity !== undefined) {
+				const quantity = promotionQuantity - 1;
+				await dispatch(updatePromotionQuantity({ promotionId, quantity }));
+				await dispatch(createAccountPromotion({ accountId: account._id, promotionId, serviceId }))
+			}
+
 
 			let newApoints = 0;
-			if(!accountApoints){
+
+			if (!accountApoints) {
 				newApoints = account.aPoints
-			} else{
+			} else {
 				newApoints = accountApoints
+
 			}
 			const apoint = otherInfo?.totalPrice
-				? (Number(otherInfo.totalPrice) * 5) / 100
+				? Math.floor((Number(otherInfo.totalPrice) * 5) / 100)
 				: 0;
+
 			if (!isNaN(apoint)) {
-				if (account?._id) {
-					const totalApoint = newApoints+apoint
-					await dispatch(
-						updateAPoint({ accountId: account._id, aPoints:totalApoint, apoint, serviceId })
-					);
+
+
+				if (!isNaN(apoint)) {
+					// Trường hợp apoint = 0
+					if (apoint === 0) {
+						await dispatch(
+							updateAPoint({
+								accountId: account._id,
+								aPoints: accountApoints, // Không thay đổi điểm
+								apoint: 0, // Không áp dụng điểm mới
+								serviceId,
+								operationType: "add", // Bạn có thể định nghĩa một operationType tùy chỉnh
+							})
+						);
+					} else {
+						// Thực hiện trừ điểm trước
+						if (isUsedPoint && isUsedPoint > 0 && apoint > 0) {
+							await dispatch(
+								updateAPoint({
+									accountId: account._id,
+									aPoints: accountApoints - isUsedPoint, // Trừ số điểm đã áp dụng
+									apoint: isUsedPoint,
+									serviceId,
+									operationType: "subtract",
+								})
+							);
+						}
+						// Thực hiện cộng điểm sau khi trừ điểm hoàn tất
+						if (apoint > 0) {
+							await dispatch(
+								updateAPoint({
+									accountId: account._id,
+									aPoints: accountApoints + apoint, // Cộng thêm điểm mới
+									apoint: apoint,
+									serviceId,
+									operationType: "add",
+								})
+							);
+						}
+					}
 				}
 			}
 		} else if (result?.error?.message === 'Rejected') {
@@ -159,7 +205,7 @@ export const ConfirmPage = () => {
 	return (
 		<div className="w-full px-20">
 			<StepBar serviceId={serviceId} />
-			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm}/>}
+			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 
 			<div
 				className="confirm-form mx-auto py-7 px-16 rounded-xl border-2 mt-5 border-light_gray"
@@ -303,9 +349,8 @@ export const ConfirmPage = () => {
 
 			<div className="flex items-center justify-center">
 				<button
-					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${
-						!isChecked ? 'bg-gray' : 'bg-green'
-					}`}
+					className={`mt-10 w-[200px] mb-10 py-3 rounded-full text-white hover:opacity-70 ${!isChecked ? 'bg-gray' : 'bg-green'
+						}`}
 					disabled={!isChecked}
 					onClick={handleSubmitJobPost}
 				>
