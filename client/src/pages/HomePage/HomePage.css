@@ -1,7 +1,9 @@
 .container .blob {
   border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
-  width: 500px;
-  height: 500px;
+  width: 50vw;  
+  height: 50vw; 
+  max-width: 500px; 
+  max-height: 500px; 
   background: rgb(0, 255, 98);
   background-image: linear-gradient(45deg, #dba629 0%, rgb(241, 108, 20) 100%);
   box-shadow: -10vmin 10vmin 0 rgba(255, 255, 255, 0.07);
@@ -22,6 +24,6 @@
   }
 }
 
-.body-homepage{
+.body-homepage {
   background: #f1f4fc;
 }
