@@ -146,7 +146,7 @@ export const Header = () => {
 						<>
 							<Link to={'/deposit'} className="hide-on-mobile">
 								<span className="navbar-menu flex text-primary normal-text mr-3 pt-2">
-									Số dư: {accountBalance} VND
+									Số dư: {Intl.NumberFormat().format(accountBalance)} VND
 								</span>
 							</Link>
 							<button

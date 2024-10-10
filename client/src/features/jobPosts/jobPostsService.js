@@ -121,6 +121,8 @@ const getAJob = async (token, jobPostId, accountId, receivedAt) => {
 		{ receivedAt },
 		config
 	);
+
+	console.log(response);
 	return response.data.data.jobPost;
 };
 
