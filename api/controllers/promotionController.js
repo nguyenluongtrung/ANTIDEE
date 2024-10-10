@@ -210,10 +210,10 @@ const getAllAccountPromotion = async (req, res) => {
 
 		// Check if promotions are found
 		if (!accountPromotions.length) {
-			return res.status(404).json({
-				success: false,
-				message: "No promotions found for this account.",
-			});
+			return res.status(200).json({
+        success: true,
+        data: { accountPromotions: [] },
+      });
 		}
 		res.status(200).json({
 			success: true,
