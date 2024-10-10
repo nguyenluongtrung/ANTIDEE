@@ -13,6 +13,7 @@ import { TbReportSearch } from "react-icons/tb";
 import { RiDiscountPercentLine } from "react-icons/ri";
 import { logout, reset } from "../../../../features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { GiBookPile } from "react-icons/gi";
 
 export default function AdminSidebar() {
   const location = useLocation();
@@ -22,11 +23,11 @@ export default function AdminSidebar() {
   const menu = [
     { name: "Dashboard", icon: <LuLayoutDashboard />, to: '/admin-dashboard' },
     { name: "Sự kiện khuyến mãi", icon: <RiDiscountPercentLine />, to: '/admin-promotion' },
+    { name: "Khoá học", icon: <GiBookPile />, to: '/admin-course' },
     { name: "Đề thi", icon: <IoNewspaperOutline />, to: '/admin-exam' },
     { name: "Ngân hàng câu hỏi", icon: <MdOutlineQuestionMark />, to: '/admin-question' },
     { name: "Các chứng chỉ", icon: <BiCreditCardAlt />, to: '/admin-qualification' },
     { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
-    { name: "Khóa học", icon: <IoNewspaperOutline />, to: '/admin-course' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},

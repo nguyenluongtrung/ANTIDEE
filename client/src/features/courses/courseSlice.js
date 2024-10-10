@@ -21,6 +21,26 @@ export const getAllCourse = createAsyncThunk(
 	}
 );
 
+export const createCourse = createAsyncThunk(
+	'courses/createCourse',
+	async (courseData, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await courseService.createCourse(token, courseData);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const deleteCourse = createAsyncThunk(
 	'courses/deleteCourse',
 	async (id, thunkAPI) => {
@@ -93,6 +113,19 @@ export const courseSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.courses = null;
+			})
+			.addCase(createCourse.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(createCourse.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.courses.push(action.payload);
+			})
+			.addCase(createCourse.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
 			})
 			.addCase(deleteCourse.pending, (state) => {
 				state.isLoading = true;
