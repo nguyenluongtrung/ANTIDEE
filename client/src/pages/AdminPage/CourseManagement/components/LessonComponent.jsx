@@ -2,7 +2,7 @@ import React from 'react';
 import ContentComponent from './ContentComponent';
 
 const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData, formData }) => {
-    // Hàm thay đổi dữ liệu bài học
+
     const handleLessonChange = (field, value) => {
         const updatedLessons = [...formData.lessons];
         updatedLessons[lessonIndex] = {
@@ -34,7 +34,7 @@ const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData,
                     onChange={e => handleLessonChange('title', e.target.value)}
                 />
             </div>
-            {/* Hiển thị các nội dung trong bài học */}
+
             <div className="mt-4">
                 <h3 className="text-lg font-semibold">Nội dung bài học</h3>
                 {lesson.content?.map((content, contentIndex) => (
@@ -48,7 +48,7 @@ const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData,
                     />
                 ))}
 
-                {/* Thêm nội dung cho bài học */}
+
                 <button
                     onClick={handleAddContent}
                     className="bg-blue text-white p-2 rounded mt-4"
@@ -57,7 +57,7 @@ const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData,
                 </button>
             </div>
 
-            {/* Xóa bài học */}
+
             <button
                 onClick={() => handleRemoveLesson(lessonIndex)}
                 className="bg-red text-white p-2 rounded mt-2"

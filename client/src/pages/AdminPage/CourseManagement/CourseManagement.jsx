@@ -145,7 +145,8 @@ export const CourseManagement = () => {
                                         <div className="flex items-center justify-center">
                                             <Link to={`/admin-course/update-course/${course._id}`}>
                                                 <button
-                                                    className="flex items-center justify-end py-3 pr-2 text-xl"
+                                                    className="flex items-center justify-end py-3 pr-2 text-xl cursor-no-drop"
+                                                    disabled
                                                 >
                                                     <BiEdit className="text-green" />
                                                 </button>
