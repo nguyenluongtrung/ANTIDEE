@@ -107,7 +107,7 @@ const AppContent = () => {
             <Route path="/update-dw" element={<UpdateProfileForDW />} />
             <Route path="/qualifications" element={<QualificationPage />} />
             <Route path="/deposit" element={<DepositPage />} />
-            <Route path="/courses" element={<MyCourses />}>
+            <Route path="/courses" element={<MyCourses />}/>
             <Route path="/lessons/:courseId" element={<LessonsPage />} />
 
 
