@@ -14,7 +14,7 @@ export const DepositPage = () => {
 
     const handleDeposit = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/antidee/api/payment/payment', { 
+            const response = await axios.post('https://antidee.onrender.com/antidee/api/payment/payment', { 
                 amount: parseInt(amount.replace(/,/g, '')),  
                 userId: account._id 
             });
@@ -33,7 +33,7 @@ export const DepositPage = () => {
 
     const updateBalance = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/antidee/api/payment/updateBalance', { 
+            const response = await axios.post('https://antidee.onrender.com/antidee/api/payment/updateBalance', { 
                 amount: parseInt(amount.replace(/,/g, '')),
                 userId: account._id
             });
@@ -54,7 +54,7 @@ export const DepositPage = () => {
         }
 
         try {
-            const response = await axios.post(`http://localhost:5000/antidee/api/payment/orderStatus/${appTransId}`); 
+            const response = await axios.post(`https://antidee.onrender.com/antidee/api/payment/orderStatus/${appTransId}`); 
             if (response.data.return_code === 1) {
                 await updateBalance();  
             } else {
