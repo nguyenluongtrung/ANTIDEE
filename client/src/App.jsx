@@ -82,33 +82,34 @@ const App = () => {
 const AppContent = () => {
 	const { pathname } = useLocation();
 
-	const isAdminPage = pathname.startsWith('/admin');
-	return (
-		<div className="app-container select-none bg-white">
-			{!isAdminPage && (
-				<div className="sidebar-container z-50">
-					<Sidebar />
-				</div>
-			)}
-			<ChatForm />
-			<div className="content-container select-none">
-				<Routes>
-					<Route path="/" element={<Layout />}>
-						<Route path="/" element={<HomePage />} />
-						<Route path="/home" element={<HomePage />} />
-						<Route path="/register" element={<RegisterPage />} />
-						<Route path="/login" element={<LoginPage />} />
-						<Route path="/my-account" element={<MyAccount />} />
-						<Route path="/entry-exam/:examId" element={<EntryExamPage />} />
-						<Route path="/invite-friend" element={<InviteFriendPage />} />
-						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
-						<Route path="/congrats" element={<CongratsPage />} />
-						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
-						<Route path="/update-dw" element={<UpdateProfileForDW />} />
-						<Route path="/qualifications" element={<QualificationPage />} />
-						<Route path="/deposit" element={<DepositPage />} />
-						<Route path="/courses" element={<MyCourses />} />
-						<Route path="/lessons/:courseId" element={<LessonsPage />} />
+  const isAdminPage = pathname.startsWith("/admin");
+  return (
+    <div className="app-container select-none bg-white">
+      {!isAdminPage && (
+        <div className="sidebar-container z-50">
+          
+        </div>
+      )}
+      <ChatForm />
+      <div className="content-container select-none">
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/my-account" element={<MyAccount />} />
+            <Route path="/entry-exam" element={<EntryExamPage />} />
+            <Route path="/invite-friend" element={<InviteFriendPage />} />
+            <Route path="/become-helper" element={<WannaBecomeHelperPage />} />
+            <Route path="/congrats" element={<CongratsPage />} />
+            <Route path="/weather-forecast" element={<WeatherForecastPage />} />
+            <Route path="/update-dw" element={<UpdateProfileForDW />} />
+            <Route path="/qualifications" element={<QualificationPage />} />
+            <Route path="/deposit" element={<DepositPage />} />
+            <Route path="/courses" element={<MyCourses />}>
+            <Route path="/lessons/:courseId" element={<LessonsPage />} />
+
 
 						<Route
 							path="/transaction-history"
