@@ -40,6 +40,7 @@ export const CourseManagement = () => {
         } else if (result?.error?.message === 'Rejected') {
             toast.error(result?.payload, errorStyle);
         }
+        handleGetAllCourse()
     };
 
 
