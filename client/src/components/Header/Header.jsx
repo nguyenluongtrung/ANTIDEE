@@ -75,14 +75,12 @@ export const Header = () => {
 			{isOpenRegisterForm && (
 				<RegisterPage setIsOpenRegisterForm={setIsOpenRegisterForm} setIsOpenLoginForm={setIsOpenLoginForm} />
 			)}
-	
-			{/* Navbar */}
+
 			<div className={`navbar-container flex justify-between px-4 py-3 ${showHeader ? 'header-background' : ''}`}>
-				{/* Sidebar toggle button */}
 				<div className="menuicon pt-2">
-				<FaBars size={24} className="text-primary cursor-pointer" onClick={() => setIsMobileMenuVisible(true)} />
+					<FaBars size={24} className="text-primary cursor-pointer" onClick={() => setIsMobileMenuVisible(true)} />
 				</div>
-				
+
 				<Link to="/home">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>
@@ -167,8 +165,7 @@ export const Header = () => {
 					)}
 				</div>
 			</div>
-	
-			{/* Sidebar for Mobile */}
+
 			<Sidebar
 				sidebarVisible={isMobileMenuVisible}
 				setSidebarVisible={setIsMobileMenuVisible}
@@ -177,9 +174,9 @@ export const Header = () => {
 				isServicesOpen={isServicesOpen}
 				setIsServicesOpen={setIsServicesOpen}
 			/>
-	
+
 			<hr className="hr-header" />
 		</div>
 	);
-	
+
 };
