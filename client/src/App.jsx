@@ -20,7 +20,6 @@ import { QualificationManagement } from './pages/AdminPage/QualificationManageme
 import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
 import { WeatherForecastPage } from './pages/WeatherForecastPage';
-import { VoucherManagement } from './pages/AdminPage/VoucherManagement/VoucherManagement';
 import { AppFeedbackManagement } from './pages/AdminPage/AppFeedbackManagement/AppFeedbackManagement';
 import { ServiceManagement } from './pages/AdminPage/ServiceManagement/ServiceManagement';
 import { Sidebar } from './components';
@@ -68,8 +67,6 @@ import { MyCourses } from './pages/CoursesPage';
 import { CourseDetail } from './pages/CoursesPage/LessonsPage/LessonsPage';
 import { VoucherDetail } from './pages/HistoryVoucher/VoucherDetail/VoucherDetail';
 import { JobPostDetail } from './pages/JobPostListPage/JobPostDetail/JobPostDetail';
-import { UpdateVoucher } from './pages/AdminPage/VoucherManagement/UpdateVoucher/UpdateVoucher';
-import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 import { PromotionDetail } from './pages/AdminPage/PromotionManagement/PromotionDetail/PromotionDetail';
 import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePromotion/UpdatePromotion';
 

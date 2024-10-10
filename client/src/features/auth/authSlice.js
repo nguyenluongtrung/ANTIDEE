@@ -496,7 +496,7 @@ export const getDomesticHelpersTotalWorkingHours = createAsyncThunk(
 
 export const updateAPoint = createAsyncThunk(
 	'auth/updateApoint',
-	async ({ accountId, aPoints, apoint, serviceId }, thunkAPI) => {
+	async ({ accountId, aPoints, apoint, serviceId, operationType }, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
@@ -506,6 +506,7 @@ export const updateAPoint = createAsyncThunk(
 				aPoints,
 				apoint,
 				serviceId,
+				operationType,
 				token
 			);
 		} catch (error) {

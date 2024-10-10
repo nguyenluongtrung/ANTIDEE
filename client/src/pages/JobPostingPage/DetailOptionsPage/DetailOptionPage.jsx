@@ -16,7 +16,10 @@ import {
   checkInvitationCode,
   getAccountInformation,
 } from "../../../features/auth/authSlice";
-import { getAllPromotions } from "../../../features/promotions/promotionSlice";
+import {
+  getAllAccountPromotion,
+  getAllPromotions,
+} from "../../../features/promotions/promotionSlice";
 import { ConfirmModal } from "../../../components/ConfirmModal/ConfirmModal";
 
 export const DetailOptionPage = () => {
@@ -49,16 +52,16 @@ export const DetailOptionPage = () => {
   const [accountApoints, setAccountApoints] = useState();
   const [openConfirmWorkingHoursModal, setOpenConfirmWorkingHoursModal] =
     useState(false);
-  const { account } = useSelector((state) => state.auth);
+  const [accountId, setAccountId] = useState();
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const[promotionId, setPromotionId] = useState();
-  const[promotionQuantity, setPromotionQuantity]=useState();
+  const [promotionId, setPromotionId] = useState();
+  const [promotionQuantity, setPromotionQuantity] = useState();
 
-  console.log("id",promotionId, "quantity:",promotionQuantity)
-
+  const [accountPromotion, setAccountPromotion] = useState([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       const promoOutput = await dispatch(getAllPromotions());
@@ -71,36 +74,58 @@ export const DetailOptionPage = () => {
 
   async function initiateAccountInformation() {
     let output = await dispatch(getAccountInformation());
-
+    setAccountId(output.payload._id); 
     setAccountApoints(output.payload.aPoints);
+   
   }
 
   useEffect(() => {
     initiateAccountInformation();
   }, []);
 
+  async function initiateAccountPromotion() {
+    if(accountId){
+      let output = await dispatch(getAllAccountPromotion(accountId));
+      setAccountPromotion(output.payload);
+    }
+  }
+
+  useEffect(() => {
+    if(accountId){
+      initiateAccountPromotion();
+    }
+  }, [accountId]);
+
   const [initialPrice, setInitialPrice] = useState(totalPrice);
   const [initialPoints, setInitialPoints] = useState(accountApoints);
+  const [isUsedPoint, setIsUsedPoint] = useState();
 
   const handleApplyApoints = () => {
     const equivalentVND = accountApoints * 1;
 
+    let usedPoints = 0;
+
     if (equivalentVND >= totalPrice) {
+      usedPoints = totalPrice;
       setTotalPrice(0);
       toast.success(
         `Bạn đã áp dụng thành công ${totalPrice} điểm (tương đương với ${totalPrice}đ).`,
         successStyle
       );
-      setAccountApoints(equivalentVND - totalPrice);
+      // setAccountApoints(equivalentVND - totalPrice);
+      setAccountApoints(accountApoints - usedPoints);
     } else {
+      usedPoints = equivalentVND;
       const updatedPrice = totalPrice - equivalentVND;
       setTotalPrice(updatedPrice);
       toast.success(
-        `Bạn đã áp dụng thành công ${accountApoints} điểm (tương đương với ${equivalentVND}đ).`,
+        `Bạn đã áp dụng thành công ${usedPoints} điểm (tương đương với ${usedPoints}đ).`,
         successStyle
       );
+
       setAccountApoints(0);
     }
+    setIsUsedPoint(usedPoints);
   };
 
   const isExpired = (date) => date && new Date(date) < new Date();
@@ -108,34 +133,57 @@ export const DetailOptionPage = () => {
   const findPromotion = (code) =>
     promotionList.find((promo) => promo.promotionCode === code);
 
+  const [isUsedPromotion, setIsUsedPromotion] = useState(false);
+
+
+
+  const hasUsedPromotionForService = (promotionId, serviceId) => {
+    return accountPromotion.some(
+      (promo) =>
+        promo.promotionId === promotionId && promo.serviceId === serviceId
+    );
+  };
+
   const handleCheckPromo = (e) => {
     e.preventDefault();
-    if (!account || !account.accountVouchers) {
-      toast.error("Account information is not available!", errorStyle);
+
+    if (isUsedPromotion) {
+      toast.error("Mỗi lần chỉ sử dụng được một mã ưu đãi!", errorStyle);
       return;
     }
-    
     const promotion = findPromotion(promoCode);
-  
+    
+
     if (promotion) {
+ 
       if (promotion.promotionQuantity === 0) {
         toast.error("Mã ưu đãi này đã hết!", errorStyle);
         return;
       }
-  
+
       if (isExpired(promotion.endDate)) {
         toast.error("Mã ưu đãi này đã hết hạn!", errorStyle);
         return;
       }
-  
+
+      if (hasUsedPromotionForService(promotion?._id, serviceId)) {
+        toast.error(
+          "Bạn đã sử dụng mã ưu đãi này cho dịch vụ này rồi!",
+          errorStyle
+        );
+        return;
+      }
+
       const idService = promotion.serviceIds.map((service) => service._id);
-  
+
       if (idService.includes(serviceId)) {
         setPromoValue(promotion.promotionValue);
         setPromotionId(promotion._id);
-        setPromotioQuantity(promotion.promotionQuantity);
+        setPromotionQuantity(promotion.promotionQuantity);
         toast.success(
-          `Áp dụng khuyến mãi ${promoCode}: Giảm ${(promotion.promotionValue) * 100}%.`,
+          `Áp dụng khuyến mãi ${promoCode}: Giảm ${
+            promotion.promotionValue * 100
+          }%.`,
           successStyle
         );
       } else {
@@ -147,8 +195,15 @@ export const DetailOptionPage = () => {
     } else {
       toast.error("Mã ưu đãi không hợp lệ!", errorStyle);
     }
+    setIsUsedPromotion(true);
   };
-  
+
+  useEffect(() => {
+    if (promoValue !== null) {
+      const discountFactor = 1 - promoValue;
+      setTotalPrice((prevPrice) => Math.round(prevPrice * discountFactor));
+    }
+  }, [promoValue]);
 
   const {
     register,
@@ -325,13 +380,6 @@ export const DetailOptionPage = () => {
     }
   }, [startingHour, totalPrice, hasChangedPrice]);
 
-  useEffect(() => {
-    if (promoValue !== null) {
-      const discountFactor = 1 - promoValue;
-      setTotalPrice((prevPrice) => Math.round(prevPrice * discountFactor));
-    }
-  }, [promoValue]);
-
   const handleTimeChange = (e) => {
     const { value } = e.target;
     const min = getOneHourLaterTimeString();
@@ -463,8 +511,9 @@ export const DetailOptionPage = () => {
         invitationCodeOwnerId,
         promoValue,
         accountApoints,
+        isUsedPoint,
         promotionId,
-        promotionQuantity
+        promotionQuantity,
       },
     });
   };
@@ -772,6 +821,7 @@ export const DetailOptionPage = () => {
                           } else {
                             setAccountApoints(initialPoints);
                             setTotalPrice(initialPrice);
+                            setIsUsedPoint(0);
                           }
                         }}
                       >

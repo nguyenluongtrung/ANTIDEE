@@ -681,12 +681,12 @@ const receiveGiftHistory = asyncHandler(async (req, res) => {
 
 const updateAPoint = asyncHandler(async (req, res) => {
 	const { accountId } = req.params;
-	const { aPoints, apoint, serviceId } = req.body;
+	const { aPoints, apoint, serviceId, operationType } = req.body;
 
-	if (!accountId || !apoint) {
+	if (!accountId) {
 		return res
 			.status(400)
-			.json({ message: 'Account ID and points are required' });
+			.json({ message: 'Account ID are required' });
 	}
 
 	try {
@@ -695,12 +695,12 @@ const updateAPoint = asyncHandler(async (req, res) => {
 		if (!account) {
 			return res.status(404).json({ message: 'Account not found' });
 		}
-		// account.aPoints = Number(account.aPoints) + Number(apoint);
 		account.aPoints = aPoints;
 
 		account.aPointHistory.push({
 			apoint,
 			serviceId,
+			operationType,
 		});
 
 		await account.save();
