@@ -191,18 +191,6 @@ const AppContent = () => {
 							<Route path="/admin-dashboard" element={<Dashboard />} />
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
-
-							{/* <Route path="/admin-voucher" element={<VoucherManagement />}>
-								<Route
-									path="/admin-voucher/voucher-detail/:voucherId"
-									element={<VoucherDetail />}
-								/>
-								<Route
-									path="/admin-voucher/voucher-update/:voucherId"
-									element={<UpdateVoucher />}
-								/>
-							</Route> */}
-
 							<Route
 								path="/admin-course"
 								element={<CourseManagement />}>
@@ -237,12 +225,6 @@ const AppContent = () => {
 							<Route path="/admin-video" element={<VideoManagement />} />
 							<Route path="/admin-account" element={<AccountManagement />} />
 							<Route path="/admin-role" element={<UpdateAccountRole />} />
-							{/* <Route path="/admin-course" element={<CourseManagement />}>
-								<Route
-									path="/admin-course/detail-course/:courseId"
-									element={<CoursesDetail />}
-								></Route>
-							</Route> */}
 						</>
 					)}
 				</Routes>

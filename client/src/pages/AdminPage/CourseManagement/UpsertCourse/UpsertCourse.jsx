@@ -25,7 +25,7 @@ export const UpsertCourse = () => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        duration: 60, // Đang để default
+        duration: 60,
         qualificationId: qualifications ? qualifications[0]._id : '',
         lessons: [
             {
@@ -35,31 +35,25 @@ export const UpsertCourse = () => {
         ],
     })
 
-    //Làm update =====================
     useEffect(() => {
         const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MzFlMzJhN2JkNjhiNGEwMWIyZjM2MyIsImlhdCI6MTcyODUwMjU0NSwiZXhwIjoxNzMxMDk0NTQ1fQ._eCMxgkgQpLKt3pyHMxzqpJiFhqC0m5_P4oJCChyIl0" // Lấy token từ localStorage (hoặc thay thế bằng cách bạn lưu token)
 
         if (!token) {
             console.error('No token found!');
-            return; // Ngăn việc gọi API nếu không có token
+            return;
         }
 
-        // Gọi API lấy thông tin khóa học theo id
         fetch(`http://localhost:5173/antidee/api/course/${params.courseId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Truyền token vào header
+                'Authorization': `Bearer ${token}`
             }
         })
             .then((response) => response.json())
             .then((data) => {
-                // console.log('Data when fetch', data);
                 if (data.status === 'success') {
                     const course = data.data.course;
-                    // console.log("Check fetch Data course: ", course);
-
-                    // Cập nhật formData từ dữ liệu API
                     setFormData({
                         name: course.name,
                         description: course.description,
@@ -72,12 +66,11 @@ export const UpsertCourse = () => {
                 console.error("Error fetching course:", error);
             });
 
-        // Gọi API để lấy danh sách lessons của khóa học
         fetch(`http://localhost:5173/antidee/api/course/${params.courseId}/lessons`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Truyền token vào header
+                'Authorization': `Bearer ${token}`
             }
         })
             .then((response) => response.json())
@@ -96,7 +89,6 @@ export const UpsertCourse = () => {
             });
 
     }, [params.courseId]);
-    //==================================
 
 
     const handleFormChange = (field, value) => {
@@ -132,9 +124,6 @@ export const UpsertCourse = () => {
     const handleCreateCourse = async (e) => {
         e.preventDefault();
 
-        console.log("True or False", validateForm())
-
-        //Thêm vadidate
         if (!validateForm()) {
             toast.error('Vui lòng kiểm tra lại thông tin.');
             return;
@@ -144,18 +133,15 @@ export const UpsertCourse = () => {
 
         const resultCreateCourse = await dispatch(createCourse(courseData));
 
-        console.log("Result", resultCreateCourse)
         if (resultCreateCourse.type.endsWith('fulfilled')) {
             navigate("/admin-course");
             toast.success('Thêm bài kiểm tra thành công');
         } else if (resultCreateCourse?.error?.message === 'Rejected') {
-            console.log("Result", resultCreateCourse?.payload)
             toast.error(resultCreateCourse?.payload);
         }
     }
 
 
-    //Validate ========================================================
 
     const [errors, setErrors] = useState({
         name: '',
@@ -198,7 +184,6 @@ export const UpsertCourse = () => {
 
         return !hasErrors;
     }
-    //=================================================================
 
     return (
         <div className='w-full min-h-screen bg-white flex flex-row'>
@@ -208,10 +193,8 @@ export const UpsertCourse = () => {
             <Toaster />
             {/* Content */}
             <div className='w-full p-10'>
-                {/* <h1 className='flex items-center mb-10 text-2xl font-bold'>Đang {params.courseId ? <p>Cập nhật {params.courseId}</p> : <p>Tạo</p>}  Khoá học </h1> */}
                 <div className='flex items-center mb-10 text-2xl font-bold'>Đang <p className='text-primary text-2xl px-2'>{params.courseId ? 'Cập nhật' : 'Tạo mới'}</p>  Khoá học </div>
                 <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-x-10 '>
-                    {/* Nhập tên khoá học */}
                     <div className="flex flex-col w-full col-span-1 lg:col-span-4">
                         <div className="text-gray mb-2">Nhập tên khoá học</div>
                         <input
@@ -220,7 +203,6 @@ export const UpsertCourse = () => {
                             onChange={e => handleFormChange('name', e.target.value)} // Thay đổi key 'name'
                         />
                         <div className='h-4 mb-6'>
-                            {/* <div className="text-red mt-2 text-sm px-2">Error</div> */}
                             {errors.name && (
                                 <div className="text-red mt-2 text-sm px-2">
                                     {errors.name}
@@ -229,7 +211,6 @@ export const UpsertCourse = () => {
                         </div>
                     </div>
 
-                    {/* Lựa chọn chứng chỉ */}
                     <div className='w-full col-span-1 lg:col-span-4'>
                         <div className="text-gray mb-2">Chứng chỉ khoá học</div>
                         <select
@@ -241,7 +222,6 @@ export const UpsertCourse = () => {
                         </select>
                     </div>
 
-                    {/* Nhập tên khoá học */}
                     <div className="flex flex-col w-full col-span-1 lg:col-span-4">
                         <div className="text-gray mb-2">Thời gian ước tính hoàn thành</div>
                         <input
@@ -250,7 +230,6 @@ export const UpsertCourse = () => {
                             onChange={e => handleFormChange('duration', e.target.value)} // Thay đổi key 'name'
                         />
                         <div className='h-4 mb-6'>
-                            {/* <div className="text-red mt-2 text-sm px-2">Error</div> */}
                             {errors.duration && (
                                 <div className="text-red mt-2 text-sm px-2">
                                     {errors.duration}
@@ -259,7 +238,6 @@ export const UpsertCourse = () => {
                         </div>
                     </div>
 
-                    {/* Nhập mô tả khoá học */}
                     <div className="flex flex-col w-full col-span-1 lg:col-span-8">
                         <div className="text-gray mb-2">Nhập mô tả khoá học</div>
                         <textarea
@@ -277,7 +255,6 @@ export const UpsertCourse = () => {
                     </div>
 
 
-                    {/* Chèn ảnh khoá học vào */}
                     <div className='w-full col-span-1 lg:col-span-4'>
                         <div className="text-gray mb-2">Upload hình ảnh khoá học</div>
                         <button
@@ -300,10 +277,8 @@ export const UpsertCourse = () => {
                 </div>
 
                 <div className=''>
-                    {/* Button thêm bài học */}
                     <button onClick={addLesson} className='bg-primary p-2 rounded text-white font-bold w-[200px] mb-4'>Thêm bài học</button>
 
-                    {/* Hiển thị các bài học */}
                     <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-10 mb-4'>
                         {formData.lessons?.map((lesson, index) => (
                             <div key={index} className="flex flex-col w-full col-span-1 lg:col-span-4">
@@ -324,7 +299,6 @@ export const UpsertCourse = () => {
                         ))}
                     </div>
 
-                    {/* Button lưu khóa học */}
                     <button onClick={handleCreateCourse} className='bg-primary p-2 rounded text-white font-bold w-[200px] mb-4'>Lưu khóa học</button>
                 </div>
             </div>
