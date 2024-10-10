@@ -71,6 +71,8 @@ import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePro
 import { CourseManagement } from './pages/AdminPage/CourseManagement/CourseManagement';
 import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 import { VideoDetail } from './pages/VideoDetail/VideoDetail';
+import { UpsertCourse } from './pages/AdminPage/CourseManagement/UpsertCourse/UpsertCourse';
+
 const App = () => {
 	return (
 		<Router>
@@ -201,6 +203,18 @@ const AppContent = () => {
 								/>
 							</Route> */}
 
+							<Route
+								path="/admin-course"
+								element={<CourseManagement />}>
+							</Route>
+							<Route
+								path="/admin-course/create-course"
+								element={<UpsertCourse />}
+							/>
+							<Route
+								path="/admin-course/update-course/:courseId"
+								element={<UpsertCourse />}
+							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
 									path="/admin-promotion/detail-promotion/:promotionId"
@@ -223,12 +237,12 @@ const AppContent = () => {
 							<Route path="/admin-video" element={<VideoManagement />} />
 							<Route path="/admin-account" element={<AccountManagement />} />
 							<Route path="/admin-role" element={<UpdateAccountRole />} />
-							<Route path="/admin-course" element={<CourseManagement />}>
+							{/* <Route path="/admin-course" element={<CourseManagement />}>
 								<Route
 									path="/admin-course/detail-course/:courseId"
 									element={<CoursesDetail />}
 								></Route>
-							</Route>
+							</Route> */}
 						</>
 					)}
 				</Routes>

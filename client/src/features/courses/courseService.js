@@ -13,6 +13,18 @@ const getAllCourse = async (token) => {
 	return response.data.data.courses;
 };
 
+const createCourse = async (token, courseData) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.post(API_URL, courseData, config);
+	// return response.data.data.course;
+	return;
+};
+
 const deleteCourse = async (token, id) => {
 	const config = {
 		headers: {
@@ -33,6 +45,7 @@ const getLessonsByCourse = async (courseId) => {
 
 const courseService = {
 	getAllCourse,
+	createCourse,
 	deleteCourse,
 	getLessonsByCourse,
 };
