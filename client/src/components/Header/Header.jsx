@@ -5,14 +5,11 @@ import { LoginPage } from '../../pages/LoginPage/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	getAccountInformation,
-	logout,
-	reset,
-} from '../../features/auth/authSlice';
+import { getAccountInformation, logout, reset } from '../../features/auth/authSlice';
 import { getAllServices } from '../../features/services/serviceSlice';
-import { FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight, FaBars } from 'react-icons/fa';
 import { Spinner } from '../Spinner/Spinner';
+import { Sidebar } from '../Sidebar/Sidebar';
 
 export const Header = () => {
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
@@ -20,11 +17,11 @@ export const Header = () => {
 	const [services, setServices] = useState([]);
 	const [showHeader, setShowHeader] = useState(true);
 	const [lastScrollY, setLastScrollY] = useState(0);
+	const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
+	const [isServicesOpen, setIsServicesOpen] = useState(false); // State for dropdown
 
 	const { account } = useSelector((state) => state.auth);
-	const accountBalance = useSelector(
-		(state) => state.auth.account?.accountBalance
-	);
+	const accountBalance = useSelector((state) => state.auth.account?.accountBalance);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -35,7 +32,6 @@ export const Header = () => {
 
 	async function initiateServices() {
 		let output = await dispatch(getAllServices());
-
 		setServices(output.payload);
 	}
 
@@ -55,10 +51,8 @@ export const Header = () => {
 
 	const handleScroll = () => {
 		if (window.scrollY > lastScrollY) {
-			// Scrolling down
 			setShowHeader(false);
 		} else {
-			// Scrolling up
 			setShowHeader(true);
 		}
 		setLastScrollY(window.scrollY);
@@ -66,7 +60,6 @@ export const Header = () => {
 
 	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
-
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 		};
@@ -80,20 +73,20 @@ export const Header = () => {
 		<div className={`mb-7 ${showHeader ? 'header-visible' : 'header-hidden'}`}>
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 			{isOpenRegisterForm && (
-				<RegisterPage
-					setIsOpenRegisterForm={setIsOpenRegisterForm}
-					setIsOpenLoginForm={setIsOpenLoginForm}
-				/>
+				<RegisterPage setIsOpenRegisterForm={setIsOpenRegisterForm} setIsOpenLoginForm={setIsOpenLoginForm} />
 			)}
-			<div
-				className={`navbar-container flex justify-between px-16 py-3 ${
-					showHeader ? 'header-background' : ''
-				}`}
-			>
+	
+			{/* Navbar */}
+			<div className={`navbar-container flex justify-between px-4 py-3 ${showHeader ? 'header-background' : ''}`}>
+				{/* Sidebar toggle button */}
+				<div className="menuicon pt-2">
+				<FaBars size={24} className="text-primary cursor-pointer" onClick={() => setIsMobileMenuVisible(true)} />
+				</div>
+				
 				<Link to="/home">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>
-				<ul className="navbar-menu flex text-gray normal-text pt-2">
+				<ul className="navbar-menu flex text-gray normal-text pt-2 hide-on-mobile">
 					<li className="mr-5 dropdown">
 						<Link to={''}>
 							<span className="dropbtn">
@@ -108,17 +101,11 @@ export const Header = () => {
 										onClick={() => navigateToServicePage(service?._id)}
 									>
 										<div className="relative grid gap-6 bg-white px-5 py-3 sm:gap-8 sm:p-8 hover:bg-light_primary hover:text-white">
-											<a
-												href="#"
-												className="-m-3 p-0.5 flex items-start rounded-lg hover:bg-gray-50"
-											>
+											<a href="#" className="-m-3 p-0.5 flex items-start rounded-lg hover:bg-gray-50">
 												<div className="ml-4 flex">
 													<p className="text-base font-medium text-gray-900">
 														{service.name}
-														<FaArrowRight
-															className="ml-3 custom-icon inline-block"
-															size={13}
-														/>
+														<FaArrowRight className="ml-3 custom-icon inline-block" size={13} />
 													</p>
 												</div>
 											</a>
@@ -158,7 +145,7 @@ export const Header = () => {
 				<div className="flex">
 					{account ? (
 						<>
-							<Link to={'/deposit'}>
+							<Link to={'/deposit'} className="hide-on-mobile">
 								<span className="navbar-menu flex text-primary normal-text mr-3 pt-2">
 									Số dư: {accountBalance} VND
 								</span>
@@ -171,26 +158,28 @@ export const Header = () => {
 							</button>
 						</>
 					) : (
-						<>
-							<button
-								className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 border-primary border-2"
-								onClick={() => setIsOpenLoginForm(true)}
-							>
-								<span>Đăng nhập</span>
-							</button>
-							<Link to={'/sign-up'}>
-								<button
-									className="header-register-btn text-white text-center rounded-2xl font-medium w-28 ml-5 bg-primary"
-									// onClick={() => setIsOpenRegisterForm(true)}
-								>
-									<span>Đăng ký</span>
-								</button>
-							</Link>
-						</>
+						<button
+							className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 border-primary border-2"
+							onClick={() => setIsOpenLoginForm(true)}
+						>
+							<span>Đăng nhập</span>
+						</button>
 					)}
 				</div>
 			</div>
-			<hr className="hr-header"></hr>
+	
+			{/* Sidebar for Mobile */}
+			<Sidebar
+				sidebarVisible={isMobileMenuVisible}
+				setSidebarVisible={setIsMobileMenuVisible}
+				services={services}
+				account={account}
+				isServicesOpen={isServicesOpen}
+				setIsServicesOpen={setIsServicesOpen}
+			/>
+	
+			<hr className="hr-header" />
 		</div>
 	);
+	
 };

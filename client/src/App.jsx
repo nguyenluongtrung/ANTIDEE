@@ -90,7 +90,7 @@ const AppContent = () => {
     <div className="app-container select-none bg-white">
       {!isAdminPage && (
         <div className="sidebar-container z-50">
-          <Sidebar />
+          
         </div>
       )}
       <ChatForm />
