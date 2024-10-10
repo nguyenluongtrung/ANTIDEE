@@ -169,7 +169,7 @@ export const JobPostDetail = React.memo(
 									<div>
 										<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
 										<p className="text-center text-brown font-bold mb-3">
-											{chosenJobPost?.totalPrice} VND
+											{Intl.NumberFormat().format(chosenJobPost?.totalPrice)} VND
 										</p>
 									</div>
 								) : (
@@ -193,7 +193,7 @@ export const JobPostDetail = React.memo(
 												Số tiền:{' '}
 											</p>
 											<p className="text-center text-brown font-bold mb-3">
-												{chosenJobPost?.totalPrice} VND
+												{Intl.NumberFormat().format(chosenJobPost?.totalPrice)} VND
 											</p>
 										</div>
 									</div>

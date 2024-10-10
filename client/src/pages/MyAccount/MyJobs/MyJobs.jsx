@@ -182,7 +182,7 @@ export const MyJobs = () => {
 														Số tiền:{' '}
 													</p>
 													<p className="text-center text-brown font-bold mb-3">
-														{post?.totalPrice} VND
+														{Intl.NumberFormat().format(post?.totalPrice)} VND
 													</p>
 												</div>
 											) : (
@@ -206,7 +206,7 @@ export const MyJobs = () => {
 															Số tiền:{' '}
 														</p>
 														<p className="text-center text-brown font-bold mb-3">
-															{post?.totalPrice} VND
+															{Intl.NumberFormat().format(post?.totalPrice)} VND
 														</p>
 													</div>
 												</div>
