@@ -157,12 +157,22 @@ export const Header = () => {
 							</button>
 						</>
 					) : (
+						<>
 						<button
-							className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 border-primary border-2"
+							className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 mr-3 border-primary border-2"
 							onClick={() => setIsOpenLoginForm(true)}
 						>
 							<span>Đăng nhập</span>
 						</button>
+						<Link to={'/sign-up'}>
+						<button
+							className="header-register-btn text-white text-center rounded-2xl font-medium w-28 p-2  bg-primary"
+							// onClick={() => setIsOpenRegisterForm(true)}
+						>
+							<span>Đăng ký</span>
+						</button>
+					</Link>
+				</>
 					)}
 				</div>
 			</div>

@@ -2,10 +2,10 @@
 	font-size: 14px;
 }
 
-.header-login-btn,
-.header-register-btn {
-	padding: 3px 0 5px 0;
-}
+	.header-login-btn,
+	.header-register-btn {
+		padding: 3px 0 5px 0;
+	}
 
 .logo-text {
 	font-size: 16px;
@@ -99,12 +99,18 @@
 	color: var(--primary-color);
 	font-weight: medium;
 	text-align: center;
-	margin-right: 1.25rem; /* Updated to add spacing */
+	margin-right: 1.25rem;  
 	margin-top: auto;
 	margin-bottom: auto;
 }
 @media (max-width: 768px) {
     .hide-on-mobile {
-        display: none !important; /* Ẩn các phần tử khi màn hình nhỏ hơn 768px */
+        display: none !important; 
     }
+	.header-login-btn, .header-register-btn{
+		margin-left: 10px;
+	}
+	.header-register-btn{
+		margin-left: -5px;
+	}
 }
