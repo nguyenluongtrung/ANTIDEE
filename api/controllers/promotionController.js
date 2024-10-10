@@ -6,10 +6,7 @@ const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
 
 const getAllPromotions = asyncHandler(async (req, res) => {
-	const promotions = await Promotion.find({
-		startDate: { $lte: Date.now() },
-		endDate: { $gte: Date.now() },
-	}).populate('serviceIds', 'name description');
+	const promotions = await Promotion.find({}).populate('serviceIds', 'name description');
 
 	res.status(200).json({
 		status: 'success',
@@ -98,6 +95,28 @@ const deletePromotion = asyncHandler(async (req, res) => {
 	});
 });
 
+const updatePromotionQuantity = async (req, res) => {
+    try {
+        const promotion = await Promotion.findById(req.params.promotionId);
+        if (!promotion) {
+            return res.status(404).json({ message: 'Promotion not found' });
+        }
+        const quantity = req.body.quantity;
+        promotion.promotionQuantity = quantity;
+        await promotion.save();
+
+        // Return a success response
+        return res.status(200).json({
+            message: 'Promotion quantity updated successfully',
+            updatedPromotion: promotion
+        });
+    } catch (error) {
+        // Handle any errors
+        return res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
 const createPromotion = async (req, res) => {
 	try {
 		const { serviceIds } = req.body;
@@ -155,4 +174,5 @@ module.exports = {
 	updatePromotion,
 	deletePromotion,
 	createPromotion,
+	updatePromotionQuantity,
 };

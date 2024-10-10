@@ -15,7 +15,7 @@ import {
 } from "firebase/storage";
 import { app } from "../../../../firebase";
 import { rules } from "../../../../utils/rules";
-import { formatDatePicker, validCurrentDate } from "../../../../utils/format";
+import { validCurrentDate } from "../../../../utils/format";
 import { getAllServices } from "../../../../features/services/serviceSlice";
 import { FaTimes } from "react-icons/fa";
 
@@ -37,10 +37,6 @@ export const CreateVoucher = ({
     },
   });
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    formatDatePicker();
-  });
 
   async function initiateServiceInformation() {
     let output = await dispatch(getAllServices());
@@ -64,9 +60,7 @@ export const CreateVoucher = ({
             image:
               "https://static8.depositphotos.com/1010338/959/i/450/depositphotos_9597931-stock-photo-team-gear-3d-isolated-characters.jpg",
           };
-console.log(voucherData)
     const result = await dispatch(createVoucher(voucherData));
-    console.log(result);
     if (result.type.endsWith("fulfilled")) {
       toast.success("Thêm voucher thành công", successStyle);
     } else if (result?.error?.message === "Rejected") {

@@ -15,10 +15,11 @@ import {
 import './JobPostListPage.css';
 import Select from 'react-select';
 import { getAllServices } from '../../features/services/serviceSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const JobPostListPage = () => {
+	const location = useLocation();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
-	const [chosenJobPostId, setChosenJobPostId] = useState(null);
 	const [isInMyLocation, setIsInMyLocation] = useState(false);
 	const [account, setAccount] = useState();
 	const [accounts, setAccounts] = useState();
@@ -31,6 +32,7 @@ export const JobPostListPage = () => {
 	const dispatch = useDispatch();
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 
+	const navigate = useNavigate()
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
 
@@ -45,7 +47,6 @@ export const JobPostListPage = () => {
 
 	async function initiateJobPosts() {
 		let output = await dispatch(getAllJobPosts());
-
 		setJobPosts(output.payload);
 		setAllJobPosts(output.payload);
 	}
@@ -59,6 +60,10 @@ export const JobPostListPage = () => {
 	}, []);
 
 	useEffect(() => {
+		const isOpenJobPostDetail = location.state?.isOpenJobPostDetail;
+		if(isOpenJobPostDetail){
+			setIsOpenJobPostDetail(true)
+		}
 		initiateJobPosts();
 	}, []);
 
@@ -113,9 +118,10 @@ export const JobPostListPage = () => {
 		<div className="px-16 pt-20 mb-10">
 			{isOpenJobPostDetail && (
 				<JobPostDetail
-					chosenJobPostId={chosenJobPostId}
-					handleGetAllJobPosts={handleGetAllJobPosts}
 					setIsOpenJobPostDetail={setIsOpenJobPostDetail}
+					handleGetAllJobPosts={handleGetAllJobPosts}
+					jobPosts={jobPosts}
+					isOpenJobPostDetail={isOpenJobPostDetail}
 				/>
 			)}
 			<div className="filter-jobs bg-light py-7 px-32 mb-8">
@@ -280,7 +286,7 @@ export const JobPostListPage = () => {
 								</div>
 								<p className="text-gray mb-2 ">
 									Tại:{' '}
-									<span className="text-black">
+									<span className={`text-black ${!JSON.parse(localStorage.getItem('account')) && 'blur-text'}`}>
 										{post?.contactInfo?.address}
 									</span>
 								</p>
@@ -296,7 +302,7 @@ export const JobPostListPage = () => {
 										style={{ width: '70%' }}
 										onClick={() => {
 											setIsOpenJobPostDetail(true);
-											setChosenJobPostId(post?._id);
+											navigate(`/job-posts/${post?._id}`)
 										}}
 									>
 										<p className="text-center">Xem chi tiết công việc</p>

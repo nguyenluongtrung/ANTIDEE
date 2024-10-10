@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { errorStyle } from '../../../utils/toast-customize';
 import { getAllServices } from '../../../features/services/serviceSlice';
 import { LoginPage } from '../../LoginPage/LoginPage';
+import { updatePromotionQuantity } from '../../../features/promotions/promotionSlice';
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
@@ -36,6 +37,10 @@ export const ConfirmPage = () => {
 
 	const promoId = location?.state?.promoId;
 	const accountApoints= location?.state?.accountApoints;
+	const promotionId = location?.state?.promotionId;
+	const promotionQuantity = location?.state?.promotionQuantity;
+	console.log("id",promotionId, "quantity:",promotionQuantity)
+
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -121,6 +126,10 @@ export const ConfirmPage = () => {
 					navigateTo: '/home',
 				},
 			});
+
+			const quantity = promotionQuantity-1;
+			await dispatch(updatePromotionQuantity({promotionId, quantity}));
+
 			let newApoints = 0;
 			if(!accountApoints){
 				newApoints = account.aPoints
@@ -133,7 +142,6 @@ export const ConfirmPage = () => {
 			if (!isNaN(apoint)) {
 				if (account?._id) {
 					const totalApoint = newApoints+apoint
-					console.log(apoint,totalApoint)
 					await dispatch(
 						updateAPoint({ accountId: account._id, aPoints:totalApoint, apoint, serviceId })
 					);

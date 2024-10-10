@@ -1,6 +1,7 @@
 const express = require('express');
 const {
 	login,
+	loginWithGoogle,
 	register,
 	updateAccountInformation,
 	getAccountInformation,
@@ -25,11 +26,13 @@ const {
 	updateRole,
 	getAllReports,
 	getAccountBalance,
+	updateRatingCustomer,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
 
 router.route('/login').post(login);
+router.route('/login-with-google').post(loginWithGoogle);
 router.route('/register').post(register);
 router.route('/block/:accountId').patch(blockAccount);
 router.route('/update-role/:accountId').patch(updateRole);
@@ -51,9 +54,14 @@ router
 router
 	.route('/rating/:domesticHelperId')
 	.patch(protect, updateRatingDomesticHelper);
+
+	router
+	.route('/rating-customer/:customerId')
+	.patch(protect, updateRatingCustomer);
 router
 	.route('/ranking-domestic-helper')
 	.get(protect, getDomesticHelpersRanking);
+	
 router
 	.route('/journey-working/:domesticHelperId')
 	.get(getDomesticHelpersTotalWorkingHours);

@@ -7,14 +7,19 @@ import './PromotionDetail.css';
 import { useEffect, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
 import {formatDate} from '../../../../utils/format'
-export const PromotionDetail = ({ chosenPromotionId, setIsOpenDetailPromotion, handleGetAllPromotions }) => {
+import { useNavigate, useParams } from 'react-router-dom';
+export const PromotionDetail = ({ setIsOpenDetailPromotion }) => {
+	const { promotionId } = useParams();
+	const navigate = useNavigate();
 	const { promotions, isLoading: promotionLoading } = useSelector((state) => state.promotions);
 	const { services, isLoading: serviceLoading } = useSelector(
 		(state) => state.services
 	);
 	const [chosenPromotion, setChosenPromotion] = useState(
-		promotions[promotions.findIndex((promotion) => String(promotion._id) == String(chosenPromotionId))]
+		promotions[promotions.findIndex((promotion) => String(promotion._id) == String(promotionId))]
 	);
+
+	
 
 	const dispatch = useDispatch();
 
@@ -32,7 +37,9 @@ export const PromotionDetail = ({ chosenPromotionId, setIsOpenDetailPromotion, h
 			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => {setIsOpenDetailPromotion(false) ; handleGetAllPromotions()}}
+					onClick={() => {setIsOpenDetailPromotion(false) 
+						navigate('/admin-promotion')
+					}}
 				/>
 				<p className="grid text-green font-bold text-xl justify-center">
 					XEM CHI TIẾT MÃ GIẢM GIÁ

@@ -23,6 +23,7 @@ export const DomesticHelper = ({
 	domesticHelperId,
 	avatar,
 	jobPostId,
+	role
 }) => {
 	const { account, isLoading: isAuthLoading } = useSelector(
 		(state) => state.auth
@@ -50,6 +51,7 @@ export const DomesticHelper = ({
 			...data,
 			jobPostId,
 			customerId: account?._id,
+			feedbackFrom:role
 		};
 		const result = await dispatch(createFeedback(feedbackData));
 		console.log(result);

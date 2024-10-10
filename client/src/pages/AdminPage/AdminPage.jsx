@@ -80,7 +80,6 @@ export const AdminPage = () => {
 	];
 
 	const pages = [1, 2, 3, 4, 5];
-	//Cột Trạng Thái ==================================
 	function getStatusColor(status) {
 		let backgroundColor = '';
 		if (status === 'Thành Công') {
@@ -104,7 +103,6 @@ export const AdminPage = () => {
 			</div>
 		);
 	}
-	//==============================================
 
 	return (
 		<div className="w-full min-h-screen bg-white flex flex-row">

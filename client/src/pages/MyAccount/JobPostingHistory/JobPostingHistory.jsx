@@ -15,6 +15,7 @@ import { HistoryJobPostDetail } from './HistoryJobPostDetail/HistoryJobPostDetai
 
 export const JobPostingHistory = () => {
 	const [myAccountId, setMyAccountId] = useState();
+	const [myAccountRole, setMyAccountRole] = useState();
 	const [accounts, setAccounts] = useState([]);
 	const [myJobHistory, setMyJobHistory] = useState([]);
 	const [chosenJobPostId, setChosenJobPostId] = useState();
@@ -28,6 +29,7 @@ export const JobPostingHistory = () => {
 		let output = await dispatch(getAccountInformation());
 
 		setMyAccountId(output.payload._id);
+		setMyAccountRole(output.payload.role);
 	}
 
 	async function getInitialHistoryJobList(filterOption) {
@@ -120,6 +122,7 @@ export const JobPostingHistory = () => {
 						accounts={accounts}
 						myAccountId={myAccountId}
 						getAllInitialJobList={getAllInitialJobList}
+						role={myAccountRole}
 					/>
 				)}
 				<div

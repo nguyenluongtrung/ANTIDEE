@@ -147,6 +147,13 @@ export const Header = () => {
 							</Link>
 						</li>
 					)}
+					{!account && (
+						<li className="mr-5">
+							<Link to={'/job-posts'}>
+								<span>Danh sách công việc</span>
+							</Link>
+						</li>
+					)}
 				</ul>
 				<div className="flex">
 					{account ? (

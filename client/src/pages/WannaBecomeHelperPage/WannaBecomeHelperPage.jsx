@@ -39,8 +39,8 @@ export const WannaBecomeHelperPage = () => {
                     <h2 className=' grid justify-center font-semibold p-5 text-sm'>ĐÀO TẠO KỸ NĂNG</h2>
                     <p className='font-normal text-xs'>Khóa đào tạo kỹ năng bao gồm các video và bài kiểm tra cho từng video tương ứng,
                         giúp bạn chuẩn bị một hành trang tốt cho công việc sắp tới.</p>
-                    <div className='grid justify-center'>
-                        <Link className='bg-gray text-center text-white w-28 p-1 rounded-full' to={'/courses'}>Vào học</Link>
+                    <div className='grid justify-center mt-3'>
+                        <Link className='bg-green text-center text-white w-28 p-1 rounded-full' to={'/courses'}>Vào học</Link>
                     </div>
                 </div>
 
@@ -54,7 +54,7 @@ export const WannaBecomeHelperPage = () => {
                         chúng ta sẽ cùng nhau gặt hái được nhiều thành công.</p>
 
                     <div className='grid justify-center'>
-                        <Link className='bg-gray flex text-center text-white w-28 mt-3 p-1 rounded-full' to={'/update-dw'}><p className='pl-5 !text-center'>Cập nhật</p></Link>
+                        <Link className='bg-green flex text-center text-white w-28 mt-3 p-1 rounded-full' to={'/update-dw'}><p className='pl-5 !text-center'>Cập nhật</p></Link>
                     </div>
                 </div>
             </div>

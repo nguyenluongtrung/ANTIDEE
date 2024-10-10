@@ -14,7 +14,6 @@ import {
 } from "firebase/storage";
 import { app } from "../../../../firebase";
 import { useEffect, useRef, useState } from "react";
-import { formatDateInput, formatDatePicker } from "../../../../utils/format";
 import { rules } from "../../../../utils/rules";
 import { getAllServices } from "../../../../features/services/serviceSlice";
 import { FaTimes } from "react-icons/fa";
@@ -56,10 +55,6 @@ export const UpdateVoucher = ({
   useEffect(() => {
     initiateServiceInformation();
   }, []);
-
-  useEffect(() => {
-    formatDatePicker();
-  });
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -202,7 +197,7 @@ export const UpdateVoucher = ({
                   hidden
                   onChange={(e) => {
                     setFile(e.target.files[0]);
-                    setFileUploadError(""); // Reset error state on file change
+                    setFileUploadError("");
                   }}
                 />
                 <p className="text-sm self-center pl-2">

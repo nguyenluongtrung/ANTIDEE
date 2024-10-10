@@ -12,6 +12,16 @@ const login = async (accountData) => {
 	return response.data.data.account;
 };
 
+const loginWithGoogle = async (accountData) => {
+	const response = await axios.post(API_URL + 'login-with-google', accountData);
+
+	if (response.data) {
+		localStorage.setItem('account', JSON.stringify(response.data));
+	}
+
+	return response.data.data.account;
+};
+
 const register = async (accountData) => {
 	const response = await axios.post(API_URL + 'register', accountData);
 	return response.data.data.account;
@@ -180,6 +190,21 @@ const updateRatingDomesticHelper = async (
 	return response.data.data.account;
 };
 
+const updateRatingCustomer = async (ratingData, customerId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(
+		API_URL + 'rating-customer/' + customerId,
+		ratingData,
+		config
+	);
+	return response.data.data.account;
+};
+
 const checkInvitationCode = async (invitationCode, token) => {
 	const config = {
 		headers: {
@@ -224,7 +249,7 @@ const updateAPoint = async (accountId, aPoints, apoint, serviceId, token) => {
 	};
 	const response = await axios.patch(
 		API_URL + `update-apoints/${accountId}`,
-		{aPoints, apoint, serviceId },
+		{ aPoints, apoint, serviceId },
 		config
 	);
 	return response.data.data.account;
@@ -309,6 +334,7 @@ const getTransactionHistory = async (token) => {
 
 const authService = {
 	login,
+	loginWithGoogle,
 	logout,
 	register,
 	getAllAccounts,
@@ -335,6 +361,7 @@ const authService = {
 	getAllReports,
 	getTransactionHistory,
 	getAccountBalance,
+	updateRatingCustomer,
 };
 
 export default authService;

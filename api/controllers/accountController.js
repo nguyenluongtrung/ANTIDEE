@@ -38,6 +38,20 @@ const login = asyncHandler(async (req, res) => {
 	}
 });
 
+const loginWithGoogle = asyncHandler(async (req, res) => {
+	const { email } = req.body;
+
+	const account = await Account.findOne({ email });
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			account,
+			token: generateToken(account._id),
+		},
+	});
+});
+
 const register = asyncHandler(async (req, res) => {
 	const { phoneNumber } = req.body;
 
@@ -463,7 +477,10 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 		throw new Error('Account not found!');
 	}
 
-	const feedbacks = await DomesticHelperFeedback.find({ domesticHelperId });
+	const feedbacks = await DomesticHelperFeedback.find({
+		domesticHelperId,
+		feedbackFrom: 'Khách hàng',
+	});
 	const numberOfRatings = feedbacks.length;
 
 	if (numberOfRatings === 0) {
@@ -476,6 +493,43 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 		account.rating.domesticHelperRating = (
 			totalRating / numberOfRatings
 		).toFixed(1);
+	}
+
+	await account.save();
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			account,
+		},
+	});
+});
+
+const updateRatingCustomer = asyncHandler(async (req, res) => {
+	const { customerId } = req.params;
+	const { rating } = req.body;
+
+	const account = await Account.findById(customerId);
+
+	if (!account) {
+		res.status(404);
+		throw new Error('Account not found!');
+	}
+
+	const feedbacks = await DomesticHelperFeedback.find({
+		customerId,
+		feedbackFrom: 'Người giúp việc',
+	});
+	const numberOfRatings = feedbacks.length;
+
+	if (numberOfRatings === 0) {
+		account.rating.customerRating = rating;
+	} else {
+		const totalRating = feedbacks.reduce(
+			(sum, feedback) => sum + feedback.rating,
+			0
+		);
+		account.rating.customerRating = (totalRating / numberOfRatings).toFixed(1);
 	}
 
 	await account.save();
@@ -642,8 +696,8 @@ const updateAPoint = asyncHandler(async (req, res) => {
 			return res.status(404).json({ message: 'Account not found' });
 		}
 		// account.aPoints = Number(account.aPoints) + Number(apoint);
-		account.aPoints= aPoints
-		
+		account.aPoints = aPoints;
+
 		account.aPointHistory.push({
 			apoint,
 			serviceId,
@@ -729,6 +783,7 @@ const getAccountBalance = asyncHandler(async (req, res) => {
 module.exports = {
 	register,
 	login,
+	loginWithGoogle,
 	updateAccountInformation,
 	getAccountInformation,
 	getAllAccounts,
@@ -752,4 +807,5 @@ module.exports = {
 	updateRole,
 	getAllReports,
 	getAccountBalance,
+	updateRatingCustomer,
 };

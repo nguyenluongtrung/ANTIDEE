@@ -72,7 +72,7 @@ export const Sidebar = () => {
         onMouseLeave={handleSidebarMouseLeave}
       >
         <div className="flex flex-col items-center justify-center h-full">
-          {account &&
+          {account && account?.role !== "Admin" &&
             menu.map((item, index) => {
               return (
                 <div

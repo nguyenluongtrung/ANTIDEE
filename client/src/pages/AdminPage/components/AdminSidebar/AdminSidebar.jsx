@@ -1,39 +1,43 @@
 import {
-  BiHomeAlt,
-  BiGridAlt,
   BiCreditCardAlt,
   BiUser,
-  BiCalculator,
-  BiNotification,
   BiMessage,
   BiVideo
 } from "react-icons/bi";
-import { BsTicket } from "react-icons/bs";
+import { IoMdLogOut } from "react-icons/io";
 import { LuLayoutDashboard } from "react-icons/lu";
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { MdCleaningServices, MdOutlineQuestionMark } from "react-icons/md";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { TbReportSearch } from "react-icons/tb";
 import { RiDiscountPercentLine } from "react-icons/ri";
+import { logout, reset } from "../../../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function AdminSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const menu = [
-    { name: "Trang Chủ", icon: <BiHomeAlt />, to: '/' },
     { name: "Dashboard", icon: <LuLayoutDashboard />, to: '/admin-dashboard' },
     { name: "Sự kiện khuyến mãi", icon: <RiDiscountPercentLine />, to: '/admin-promotion' },
     { name: "Đề thi", icon: <IoNewspaperOutline />, to: '/admin-exam' },
     { name: "Ngân hàng câu hỏi", icon: <MdOutlineQuestionMark />, to: '/admin-question' },
     { name: "Các chứng chỉ", icon: <BiCreditCardAlt />, to: '/admin-qualification' },
-    { name: "Thông Báo", icon: <BiNotification />, to: '' },
     { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
+    { name: "Khóa học", icon: <IoNewspaperOutline />, to: '/admin-course' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
-    { name: "Vouchers", icon:<BsTicket/>, to: '/admin-voucher'},
-    { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
+    { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
   ];
+
+  const onLogout = () => {
+		navigate('/home');
+		dispatch(logout());
+		dispatch(reset());
+	};
 
   return (
     <div className="border-r border-opacity-50 border-gray w-64 px-9 pt-5">
@@ -58,6 +62,12 @@ export default function AdminSidebar() {
                 </li>
               );
             })}
+            <button
+								className="flex items-center justify-center text-primary hover:bg-primary hover:text-white text-center rounded-2xl p-1.5 font-medium w-28 border-primary border-2"
+								onClick={onLogout}
+							>
+								<IoMdLogOut size={20}/><span>Đăng xuất</span>
+							</button>
           </ul>
         </div>
       </div>

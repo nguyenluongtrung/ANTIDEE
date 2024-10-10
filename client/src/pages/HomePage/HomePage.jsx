@@ -10,9 +10,18 @@ import AOS from 'aos';
 import { PiArrowBendDownRightBold } from 'react-icons/pi';
 import features2 from '../../assets/img/features2.jpg';
 import features3 from '../../assets/img/features3.jpg';
+import { getAllJobPosts } from '../../features/jobPosts/jobPostsSlice';
+import {
+	formatDate,
+	formatWorkingTime,
+	getCurrentTimeString,
+} from '../../utils/format';
+import { JobPostDetail } from '../JobPostListPage/JobPostDetail/JobPostDetail';
 
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
+	const [jobPosts, setJobPosts] = useState([]);
+	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const topRef = useRef();
 	const serviceRef = useRef();
 	const { isLoading } = useSelector((state) => state.services);
@@ -62,11 +71,81 @@ export const HomePage = () => {
 	}, []);
 
 	useEffect(() => {
+		initiateJobPosts();
+	}, []);
+
+	async function initiateJobPosts() {
+		let output = await dispatch(getAllJobPosts());
+		console.log(output);
+		if (output.type.endsWith('fulfilled')) {
+			const filteredJobPosts = output.payload
+				?.filter(
+					(jobPost) =>
+						jobPost.domesticHelperId == null &&
+						jobPost?.cancelDetails?.isCanceled === false
+				)
+				?.filter((jobPost) => {
+					const startingDate = new Date(jobPost.workingTime.startingDate);
+					startingDate.setMinutes(
+						startingDate.getMinutes() - startingDate.getTimezoneOffset()
+					);
+					const startingHour = parseInt(
+						jobPost.workingTime.startingHour.split(':')[0]
+					);
+					const startingMinute = parseInt(
+						jobPost.workingTime.startingHour.split(':')[1]
+					);
+					const startingTime = `${startingHour
+						.toString()
+						.padStart(2, '0')}:${startingMinute.toString().padStart(2, '0')}`;
+
+					if (startingDate.toISOString() > new Date().toISOString()) {
+						return true;
+					} else if (
+						startingDate.toDateString() === new Date().toDateString() &&
+						startingTime >= getCurrentTimeString()
+					) {
+						return true;
+					} else {
+						return false;
+					}
+				})
+				?.filter((jobPost) => {
+					const createdDate = new Date(jobPost.createdAt);
+					const currentDate = new Date();
+					const thirtyMinutesInMs = 30 * 60 * 1000;
+					const createdDatePlus30Minutes = new Date(
+						createdDate.getTime() + thirtyMinutesInMs
+					);
+					if (
+						jobPost.isChosenYourFav === true &&
+						currentDate <= createdDatePlus30Minutes
+					) {
+						if (
+							accounts
+								.find((acc) => String(acc._id) === String(jobPost.customerId))
+								?.favoriteList?.find(
+									(fav) => String(fav.domesticHelperId) === String(account._id)
+								)
+						) {
+							return true;
+						}
+					} else {
+						return true;
+					}
+				});
+			setJobPosts(filteredJobPosts);
+		} else {
+			setJobPosts([]);
+		}
+	}
+
+	useEffect(() => {
 		AOS.init({
 			duration: 600,
 			easing: 'ease-in-out',
 			delay: 50,
-			once: true, 
+			once: true,
 		});
 	}, []);
 
@@ -91,7 +170,7 @@ export const HomePage = () => {
 			<div
 				className="fixed mr-3 mb-10 rounded-full p-5 hover:cursor-pointer bottom-0 right-10 bg-light_purple hover:border-0 hover:opacity-80"
 				onClick={scrolLWithUseRef}
-				style={{zIndex: '10000'}}
+				style={{ zIndex: '10000' }}
 			>
 				<FaArrowUp className="text-pink" />
 			</div>
@@ -141,7 +220,7 @@ export const HomePage = () => {
 				<div className="background absolute"></div>
 			</main>
 
-			<div className="mt-20" ref={serviceRef}>
+			<div className="py-20 bg-white" ref={serviceRef}>
 				<div
 					className="ml-[120px] mt-7 text-4xl font-bold text-center mb-16"
 					data-aos="fade-down"
@@ -177,6 +256,128 @@ export const HomePage = () => {
 						</Marquee>
 					</div>
 				</div>
+			</div>
+
+			<div className="mt-20 px-28 ">
+				<div
+					className="ml-[120px] mt-7 text-4xl font-bold text-center mb-16"
+					data-aos="fade-down"
+					data-aos-offset="200"
+				>
+					Công việc dành cho bạn
+				</div>
+
+				<div className="grid grid-cols-3 gap-28">
+					{jobPosts.slice(0, 3)?.map((post) => {
+						return (
+							<div
+								className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${
+									post?.isUrgent && 'bg-light_pink'
+								}`}
+								style={{ height: '350px' }}
+							>
+								<p className="text-brown font-bold mb-3">
+									{post?.serviceId?.name?.toUpperCase()}
+								</p>
+								{post?.isUrgent && (
+									<div className="triangle-down absolute top-0 right-0"></div>
+								)}
+								<p className="text-gray mb-2">
+									Bắt đầu lúc:{' '}
+									<span className="text-brown">
+										{formatDate(post?.workingTime?.startingDate)}{' '}
+										{formatWorkingTime(post?.workingTime?.startingHour)}
+									</span>
+								</p>
+								<p className="text-gray mb-2">
+									Hết hạn lúc: {''}
+									<span className="text-brown">
+										{formatDate(post?.dueDate)}{' '}
+									</span>
+								</p>
+								<div className="border-2 border-gray  my-3">
+									{post?.workload?.find(
+										(option) => String(option?.optionName) === 'Thời gian'
+									)?.optionValue == undefined ? (
+										<div>
+											<p className="text-gray mb-2 text-center mt-3">
+												Số tiền:{' '}
+											</p>
+											<p className="text-center text-brown font-bold mb-3">
+												{post?.totalPrice} VND
+											</p>
+										</div>
+									) : (
+										<div className="grid grid-cols-2">
+											<div className="border-r-2 border-gray">
+												<p className="text-gray mb-2 text-center mt-3">
+													Làm trong:{' '}
+												</p>
+												<p className="text-center text-brown font-bold mb-3">
+													{
+														post?.workload?.find(
+															(option) =>
+																String(option?.optionName) === 'Thời gian'
+														)?.optionValue
+													}{' '}
+													giờ
+												</p>
+											</div>
+											<div>
+												<p className="text-gray mb-2 text-center mt-3">
+													Số tiền:{' '}
+												</p>
+												<p className="text-center text-brown font-bold mb-3">
+													{post?.totalPrice} VND
+												</p>
+											</div>
+										</div>
+									)}
+								</div>
+								<p className="text-gray mb-2 ">
+									Tại:{' '}
+									<span
+										className={`text-black ${
+											!JSON.parse(localStorage.getItem('account')) &&
+											'blur-text'
+										}`}
+									>
+										{post?.contactInfo?.address}
+									</span>
+								</p>
+								<p className="text-gray mb-3">
+									Ghi chú:{' '}
+									<span className="text-black">
+										{post?.note ? post?.note : 'Không có'}
+									</span>
+								</p>
+								<div className="flex flex-col items-center absolute bottom-5 left-12 w-72">
+									<button
+										className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
+										style={{ width: '70%' }}
+										onClick={() => {
+											navigate(`/job-posts/${post?._id}`, {
+												state: { isOpenJobPostDetail: true, jobPosts },
+											});
+										}}
+									>
+										<p className="text-center">Xem chi tiết công việc</p>
+									</button>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+				{jobPosts.length > 3 && (
+					<div className="mx-auto mt-8 w-[150px]">
+						<button
+							className="rounded-sm border-[2px] py-2 px-4 text-center hover:bg-yellow"
+							onClick={() => navigate('/job-posts')}
+						>
+							Xem thêm
+						</button>
+					</div>
+				)}
 			</div>
 
 			<div className="mt-20 flex flex-col bg-white gap-y-28">
@@ -313,82 +514,82 @@ export const HomePage = () => {
 				</div>
 			</div>
 
-      <div className="mt-16">
-        <div className="relative px-60 flex">
-          <div
-            className="w-1/2"
-            data-aos="fade-right"
-            data-aos-delay="100"
-            data-aos-offset="400"
-          >
-            <img className="" src={features2} alt="" />
-          </div>
+			<div className="mt-16">
+				<div className="relative px-60 flex">
+					<div
+						className="w-1/2"
+						data-aos="fade-right"
+						data-aos-delay="100"
+						data-aos-offset="400"
+					>
+						<img className="" src={features2} alt="" />
+					</div>
 
-          <div className=" flex flex-col gap-y-4 bottom-1 w-1/2 mx-12">
-            <h1
-              className="absolute text-[62px] text-primary leading-[62px] font-extrabold top-0 left-[600px] w-[600px]"
-              data-aos="fade-up"
-              data-aos-delay="700"
-              data-aos-offset="400"
-            >
-              Xin chào chúng tôi là Antidee
-            </h1>
-            <div className="flex flex-col gap-y-4 pt-32">
-              <h2 className="text-xl text-start font-secondary font-medium text-four">
-                Luôn sẵn sàng hỗ trợ khách hàng
-              </h2>
-              <span className="text-lg">
-                Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
-                hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
-                để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào
-                mang đến dịch vụ dọn dẹp nhà chuyên nghiệp và tận tâm nhất. Đội
-                ngũ nhân viên của chúng tôi đều được đào tạo kỹ lưỡng, có lý
-                lịch rõ ràng và luôn cam kết mang lại không gian sống sạch sẽ,
-                thoáng mát cho bạn và gia đình. Dù bạn cần dọn dẹp nhà cửa hàng
-                tuần, vệ sinh tổng thể hay chỉ là một số công việc nhỏ lẻ, chúng
-                tôi luôn sẵn sàng hỗ trợ bạn một cách nhanh chóng và hiệu quả
-                nhất.
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="relative px-60 mt-16 flex">
-          <div className=" flex flex-col justify-center w-1/2">
-            <div className="flex flex-col gap-y-4 justify-center">
-              <h2 className="text-xl font-secondary font-medium">
-                Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
-              </h2>
-              <span className="text-lg ">
-                Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
-                cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
-                hảo từ đầu đến cuối. Trang web của chúng tôi được thiết kế thân
-                thiện và dễ sử dụng, giúp bạn dễ dàng đặt lịch, quản lý các yêu
-                cầu dịch vụ và theo dõi tiến độ công việc chỉ trong vài bước đơn
-                giản. Với sự đa dạng trong các gói dịch vụ, từ dọn dẹp thường
-                xuyên đến vệ sinh công nghiệp, chúng tôi luôn sẵn sàng đáp ứng
-                mọi nhu cầu của bạn. Hãy để chúng tôi trở thành người bạn đồng
-                hành tin cậy trong việc chăm sóc tổ ấm của bạn, mang lại cho bạn
-                nhiều thời gian hơn để tận hưởng cuộc sống.
-              </span>
+					<div className=" flex flex-col gap-y-4 bottom-1 w-1/2 mx-12">
+						<h1
+							className="absolute text-[62px] text-primary leading-[62px] font-extrabold top-0 left-[600px] w-[600px]"
+							data-aos="fade-up"
+							data-aos-delay="700"
+							data-aos-offset="400"
+						>
+							Xin chào chúng tôi là Antidee
+						</h1>
+						<div className="flex flex-col gap-y-4 pt-32">
+							<h2 className="text-xl text-start font-secondary font-medium text-four">
+								Luôn sẵn sàng hỗ trợ khách hàng
+							</h2>
+							<span className="text-lg">
+								Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
+								hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
+								để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào
+								mang đến dịch vụ dọn dẹp nhà chuyên nghiệp và tận tâm nhất. Đội
+								ngũ nhân viên của chúng tôi đều được đào tạo kỹ lưỡng, có lý
+								lịch rõ ràng và luôn cam kết mang lại không gian sống sạch sẽ,
+								thoáng mát cho bạn và gia đình. Dù bạn cần dọn dẹp nhà cửa hàng
+								tuần, vệ sinh tổng thể hay chỉ là một số công việc nhỏ lẻ, chúng
+								tôi luôn sẵn sàng hỗ trợ bạn một cách nhanh chóng và hiệu quả
+								nhất.
+							</span>
+						</div>
+					</div>
+				</div>
+				<div className="relative px-60 mt-16 flex">
+					<div className=" flex flex-col justify-center w-1/2">
+						<div className="flex flex-col gap-y-4 justify-center">
+							<h2 className="text-xl font-secondary font-medium">
+								Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
+							</h2>
+							<span className="text-lg ">
+								Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
+								cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
+								hảo từ đầu đến cuối. Trang web của chúng tôi được thiết kế thân
+								thiện và dễ sử dụng, giúp bạn dễ dàng đặt lịch, quản lý các yêu
+								cầu dịch vụ và theo dõi tiến độ công việc chỉ trong vài bước đơn
+								giản. Với sự đa dạng trong các gói dịch vụ, từ dọn dẹp thường
+								xuyên đến vệ sinh công nghiệp, chúng tôi luôn sẵn sàng đáp ứng
+								mọi nhu cầu của bạn. Hãy để chúng tôi trở thành người bạn đồng
+								hành tin cậy trong việc chăm sóc tổ ấm của bạn, mang lại cho bạn
+								nhiều thời gian hơn để tận hưởng cuộc sống.
+							</span>
 
-              <div className="text-xl font-bold hover:text-primary animate-bounce cursor-pointer">
-                <PiArrowBendDownRightBold
-                  size={60}
-                  className="absolute -bottom-3 -left-20 animate-bounce"
-                />
-                Liên Hệ với chúng tôi nếu bạn cần hỗ trợ !!!
-              </div>
-            </div>
-          </div>
-          <div
-            className="w-1/2 ml-10"
-            data-aos="fade-left"
-            data-aos-offset="400"
-          >
-            <img className="" src={features3} alt="" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+							<div className="text-xl font-bold hover:text-primary animate-bounce cursor-pointer">
+								<PiArrowBendDownRightBold
+									size={60}
+									className="absolute -bottom-3 -left-20 animate-bounce"
+								/>
+								Liên Hệ với chúng tôi nếu bạn cần hỗ trợ !!!
+							</div>
+						</div>
+					</div>
+					<div
+						className="w-1/2 ml-10"
+						data-aos="fade-left"
+						data-aos-offset="400"
+					>
+						<img className="" src={features3} alt="" />
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
