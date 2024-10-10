@@ -22,7 +22,6 @@ import { QuestionManagement } from './pages/AdminPage/QuestionManagement/Questio
 import { WeatherForecastPage } from './pages/WeatherForecastPage';
 import { AppFeedbackManagement } from './pages/AdminPage/AppFeedbackManagement/AppFeedbackManagement';
 import { ServiceManagement } from './pages/AdminPage/ServiceManagement/ServiceManagement';
-import { Sidebar } from './components';
 import { UpdateProfileForDW } from './pages/UpdateProfileForDW/UpdateProfileForDW';
 import { QualificationPage } from './pages/QualificationPage';
 import { JobPostListPage } from './pages/JobPostListPage/JobPostListPage';
@@ -82,35 +81,29 @@ const App = () => {
 const AppContent = () => {
 	const { pathname } = useLocation();
 
-  const isAdminPage = pathname.startsWith("/admin");
-  return (
-    <div className="app-container select-none bg-white">
-      {!isAdminPage && (
-        <div className="sidebar-container z-50">
-          
-        </div>
-      )}
-      <ChatForm />
-      <div className="content-container select-none">
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/my-account" element={<MyAccount />} />
-            <Route path="/entry-exam" element={<EntryExamPage />} />
-            <Route path="/invite-friend" element={<InviteFriendPage />} />
-            <Route path="/become-helper" element={<WannaBecomeHelperPage />} />
-            <Route path="/congrats" element={<CongratsPage />} />
-            <Route path="/weather-forecast" element={<WeatherForecastPage />} />
-            <Route path="/update-dw" element={<UpdateProfileForDW />} />
-            <Route path="/qualifications" element={<QualificationPage />} />
-            <Route path="/deposit" element={<DepositPage />} />
-            <Route path="/courses" element={<MyCourses />}>
-            <Route path="/lessons/:courseId" element={<LessonsPage />} />
-
-
+	const isAdminPage = pathname.startsWith('/admin');
+	return (
+		<div className="app-container select-none bg-white">
+			{!isAdminPage && <div className="sidebar-container z-50"></div>}
+			<ChatForm />
+			<div className="content-container select-none">
+				<Routes>
+					<Route path="/" element={<Layout />}>
+						<Route path="/" element={<HomePage />} />
+						<Route path="/home" element={<HomePage />} />
+						<Route path="/register" element={<RegisterPage />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route path="/my-account" element={<MyAccount />} />
+						<Route path="/entry-exam/:examId" element={<EntryExamPage />} />
+						<Route path="/invite-friend" element={<InviteFriendPage />} />
+						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
+						<Route path="/congrats" element={<CongratsPage />} />
+						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
+						<Route path="/update-dw" element={<UpdateProfileForDW />} />
+						<Route path="/qualifications" element={<QualificationPage />} />
+						<Route path="/deposit" element={<DepositPage />} />
+						<Route path="/courses" element={<MyCourses />} />
+						<Route path="/lessons/:courseId" element={<LessonsPage />} />
 						<Route
 							path="/transaction-history"
 							element={<TransactionHistory />}
@@ -190,18 +183,6 @@ const AppContent = () => {
 							<Route path="/admin-dashboard" element={<Dashboard />} />
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
-
-							{/* <Route path="/admin-voucher" element={<VoucherManagement />}>
-								<Route
-									path="/admin-voucher/voucher-detail/:voucherId"
-									element={<VoucherDetail />}
-								/>
-								<Route
-									path="/admin-voucher/voucher-update/:voucherId"
-									element={<UpdateVoucher />}
-								/>
-							</Route> */}
-
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
 									path="/admin-promotion/detail-promotion/:promotionId"
