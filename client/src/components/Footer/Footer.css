@@ -1,0 +1,39 @@
+ 
+.bg-primary {
+    background-color: #007bff;  
+}
+
+.text-white {
+    color: #fff;  
+}
+
+@media (max-width: 768px) {
+    .grid-cols-2 {
+        grid-template-columns: repeat(1, 1fr);  
+    }
+}
+@media (max-width: 640px) {
+    .services {
+        display: none;  
+    }
+    .about-us, .contact {
+        grid-column: span 1;  
+        display: flex;
+        flex-direction: column;  
+    }
+}
+ 
+@media (min-width: 640px) {
+    .about-us,
+    .contact {
+        display: flex;  
+        flex-direction: row;  
+        justify-content: space-between;  
+    }
+}
+
+@media (max-width: 576px) {
+    .p-5 {
+        padding: 10px; 
+    }
+}
