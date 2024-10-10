@@ -30,6 +30,7 @@ export const Sidebar = ({ sidebarVisible, setSidebarVisible, services, account, 
 	];
  
 	const domesticMenu = [
+		{ name: "Tài khoản", to: "/my-account", icon: <BiUser /> },
 		{ name: "Công Việc", icon: <MdPostAdd />, to: "/job-posts" },
 		{ name: "Hành Trình", icon: <GiJourney />, to: "/journey" },
 		{ name: "Lịch làm việc", icon: <GrSchedules />, to: "/job-schedule" },

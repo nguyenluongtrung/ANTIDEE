@@ -77,13 +77,14 @@ export const Header = () => {
 			)}
 
 			<div className={`navbar-container flex justify-between px-4 py-3 ${showHeader ? 'header-background' : ''}`}>
-				<div className="menuicon pt-2">
+				<div className="menuicon pt-2 flex items-center gap-2">
 					<FaBars size={24} className="text-primary cursor-pointer" onClick={() => setIsMobileMenuVisible(true)} />
-				</div>
-
-				<Link to="/home">
+					<Link to="/home">
 					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
 				</Link>
+				</div>
+
+				
 				<ul className="navbar-menu flex text-gray normal-text pt-2 hide-on-mobile">
 					<li className="mr-5 dropdown">
 						<Link to={''}>
