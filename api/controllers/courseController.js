@@ -1,8 +1,9 @@
 const asyncHandler = require('express-async-handler');
 
-const Account = require('../models/accountModel');
 const { Course } = require('../models/courseModel');
 const { Lesson } = require('../models/courseModel');
+const AccountExam = require('../models/accountExamModel');
+
 const getAllCourses = asyncHandler(async (req, res) => {
 	const courses = await Course.find({});
 
@@ -71,6 +72,7 @@ const getAllLessons = asyncHandler(async (req, res) => {
 		},
 	});
 });
+
 const updateCourse = asyncHandler(async (req, res) => {
 	const course = await Course.findById(req.params.courseId);
 
@@ -79,9 +81,25 @@ const updateCourse = asyncHandler(async (req, res) => {
 		throw new Error('Không tìm thấy khóa học');
 	}
 
+	await Promise.all(
+		course.lessons.map(async (lessonId) => {
+			await Lesson.findByIdAndDelete(lessonId);
+		})
+	);
+
+	const courseData = req.body;
+	const lessonIds = await Promise.all(
+		courseData.lessons.map(async (lesson) => {
+			const createdLesson = await Lesson.create(lesson);
+			return createdLesson._id;
+		})
+	);
+
+	const newCourseData = { ...courseData, lessons: lessonIds };
+
 	const updatedCourse = await Course.findByIdAndUpdate(
 		req.params.courseId,
-		req.body,
+		newCourseData,
 		{
 			new: true,
 		}
@@ -120,10 +138,44 @@ const getLessonsByCourse = asyncHandler(async (req, res) => {
 		throw new Error('Không tìm thấy khóa học');
 	}
 
+	let numOfContent = 0;
+	let numOfPassedContent = 0;
+
+	const newLessons = await Promise.all(
+		course.lessons.map(async (lesson) => {
+			const updatedContent = await Promise.all(
+				lesson.content.map(async (content) => {
+					if (content.contentType === 'Exam') {
+						const examByAccountId = await AccountExam.findOne({
+							accountId: req.account._id,
+							examId: content.examId,
+						});
+
+						if (examByAccountId && examByAccountId.isPassed) {
+							numOfPassedContent += 1;
+						}
+
+						return {
+							...content.toObject(),
+							isPassed: examByAccountId ? examByAccountId.isPassed : false,
+						};
+					}
+					return content;
+				})
+			);
+			numOfContent += updatedContent.length;
+			return {
+				...lesson.toObject(),
+				content: updatedContent,
+			};
+		})
+	);
+
 	res.status(200).json({
 		status: 'success',
 		data: {
-			lessons: course.lessons,
+			lessons: newLessons,
+			learningProgress: (100.0 * numOfPassedContent) / numOfContent || 0,
 		},
 	});
 });
@@ -149,6 +201,7 @@ const deleteCourse = asyncHandler(async (req, res) => {
 		},
 	});
 });
+
 const getLessonByCourseAndLessonId = asyncHandler(async (req, res) => {
 	const { courseId, lessonId } = req.params;
 
@@ -168,68 +221,82 @@ const getLessonByCourseAndLessonId = asyncHandler(async (req, res) => {
 		throw new Error('Không tìm thấy bài học trong khóa học');
 	}
 
+	const newContent = await Promise.all(
+		lesson.content.map(async (content) => {
+			if (content.contentType === 'Exam') {
+				const examByAccountId = await AccountExam.findOne({
+					accountId: req.account._id,
+					examId: content.examId,
+				});
+
+				return {
+					...content.toObject(),
+					isPassed: examByAccountId ? examByAccountId.isPassed : false,
+				};
+			}
+			return content;
+		})
+	);
+
 	res.status(200).json({
 		status: 'success',
 		data: {
-			lesson,
+			lesson: { ...lesson.toObject(), content: newContent },
 		},
 	});
 });
+
 const deleteLesson = asyncHandler(async (req, res) => {
-  const { courseId, lessonId } = req.params;
+	const { courseId, lessonId } = req.params;
 
-  // Tìm khóa học
-  const course = await Course.findById(courseId);
-  if (!course) {
-    res.status(404);
-    throw new Error("Không tìm thấy khóa học");
-  } 
-  const lessonIndex = course.lessons.indexOf(lessonId);
-  if (lessonIndex === -1) {
-    res.status(404);
-    throw new Error("Không tìm thấy bài học trong khóa học");
-  } 
-  await Lesson.findByIdAndDelete(lessonId); 
-  course.lessons.splice(lessonIndex, 1);
-  await course.save();
+	const course = await Course.findById(courseId);
+	if (!course) {
+		res.status(404);
+		throw new Error('Không tìm thấy khóa học');
+	}
+	const lessonIndex = course.lessons.indexOf(lessonId);
+	if (lessonIndex === -1) {
+		res.status(404);
+		throw new Error('Không tìm thấy bài học trong khóa học');
+	}
+	await Lesson.findByIdAndDelete(lessonId);
+	course.lessons.splice(lessonIndex, 1);
+	await course.save();
 
-  res.status(200).json({
-    status: "success",
-    message: "Đã xóa bài học",
-  });
+	res.status(200).json({
+		status: 'success',
+		message: 'Đã xóa bài học',
+	});
 });
- 
+
 const updateLesson = asyncHandler(async (req, res) => {
-  const { lessonId } = req.params; 
-  const updatedLesson = await Lesson.findByIdAndUpdate(
-    lessonId,
-    req.body,
-    { new: true }
-  );
+	const { lessonId } = req.params;
+	const updatedLesson = await Lesson.findByIdAndUpdate(lessonId, req.body, {
+		new: true,
+	});
 
-  if (!updatedLesson) {
-    res.status(404);
-    throw new Error("Không tìm thấy bài học");
-  }
+	if (!updatedLesson) {
+		res.status(404);
+		throw new Error('Không tìm thấy bài học');
+	}
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      updatedLesson,
-    },
-  });
+	res.status(200).json({
+		status: 'success',
+		data: {
+			updatedLesson,
+		},
+	});
 });
 module.exports = {
-  getAllCourses,
-  getCourse,
-  createCourse,
-  updateCourse,
-  deleteCourse,
-  getLessonsByCourse,
-  getLessonByCourseAndLessonId,
-  createLesson,
-  getAllLessons,
-  deleteLesson,  
-  updateLesson,
+	getAllCourses,
+	getCourse,
+	createCourse,
+	updateCourse,
+	deleteCourse,
+	getLessonsByCourse,
+	getLessonByCourseAndLessonId,
+	createLesson,
+	getAllLessons,
+	deleteLesson,
+	updateLesson,
 };
-

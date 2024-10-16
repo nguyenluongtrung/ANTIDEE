@@ -65,7 +65,9 @@ export const getLessonsByCourse = createAsyncThunk(
 	'courses/getLessonsByCourse',
 	async (courseId, thunkAPI) => {
 		try {
-			return await courseService.getLessonsByCourse(courseId);
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await courseService.getLessonsByCourse(token, courseId);
 		} catch (error) {
 			const message =
 				(error.response &&

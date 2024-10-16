@@ -68,7 +68,6 @@ import { JobPostDetail } from './pages/JobPostListPage/JobPostDetail/JobPostDeta
 import { PromotionDetail } from './pages/AdminPage/PromotionManagement/PromotionDetail/PromotionDetail';
 import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePromotion/UpdatePromotion';
 import { CourseManagement } from './pages/AdminPage/CourseManagement/CourseManagement';
-import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 import { VideoDetail } from './pages/VideoDetail/VideoDetail';
 import { UpsertCourse } from './pages/AdminPage/CourseManagement/UpsertCourse/UpsertCourse';
 
@@ -105,7 +104,7 @@ const AppContent = () => {
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/deposit" element={<DepositPage />} />
 						<Route path="/courses" element={<MyCourses />} />
-						<Route path="/lessons/:courseId" element={<LessonsPage />} />
+						<Route path="/course/:courseId" element={<LessonsPage />} />
 						<Route
 							path="/transaction-history"
 							element={<TransactionHistory />}
