@@ -142,7 +142,11 @@ export const UpsertCourse = () => {
 
         const courseData = { ...formData, img: imageUrl }
 
+<<<<<<< Updated upstream
         console.log(courseData)
+=======
+        console.log("Data truyền khi Update, Create", courseData)
+>>>>>>> Stashed changes
 
         const resultCreateCourse = await dispatch(createCourse(courseData));
 

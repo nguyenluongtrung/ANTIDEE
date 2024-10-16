@@ -18,8 +18,8 @@ export const StepBar = ({ nowJourney }) => {
   ];
 
   return (
-    <div className="mx-auto pt-20">
-      <ul className="relative flex flex-row gap-x-2 px-10 z-10">
+    <div className="mx-auto">
+      <ul className="relative flex flex-row gap-x-2 sm:px-0 md:px-10 z-10">
         {viewInfo.map((info, index) => {
           const isCurrentPath = nowJourney === info.to;
           const isPreviousPath =
@@ -57,7 +57,7 @@ export const StepBar = ({ nowJourney }) => {
               </div>
               <div className="mt-3">
                 <span
-                  className="block text-sm font-bold overflow-hidden whitespace-nowrap text-ellipsis"
+                  className="sm:block text-sm font-bold overflow-hidden whitespace-nowrap text-ellipsis hidden"
                   style={{ marginLeft: viewInfo[index].marginLeftPx }}
                 >
                   {info.name}
