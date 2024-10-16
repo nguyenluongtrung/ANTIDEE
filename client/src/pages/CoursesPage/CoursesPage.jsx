@@ -1,40 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getAllCourse } from "../../features/courses/courseSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const MyCourses = () => {
-  const [activeTab, setActiveTab] = useState("Tất cả"); // Keep activeTab for UI purposes
-  const [courses, setCourses] = useState([]); // Initialize courses as an empty array
+  const [activeTab, setActiveTab] = useState("Tất cả");
+  const [courses, setCourses] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleGetAllCourse = async () => {
     const response = await dispatch(getAllCourse());
     let result = response.payload;
-    setCourses(result); // Set the courses data
+    setCourses(result); 
   };
 
   useEffect(() => {
     handleGetAllCourse();
   }, []);
 
-  // const filteredCourses = courses.filter((course) => {
-  //   if (activeTab === "Tất cả") return true;
-  //   return course.status === activeTab;
-  // });
-
   return (
     <div className="min-h-screen p-6 pt-20">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Main Content */}
           <div className="md:col-span-3">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">
               CÁC KHÓA HỌC
             </h2>
 
-            {/* Tab Navigation */}
             <div className="mb-6">
               <nav className="flex space-x-4">
                 {["Tất cả", "đang học", "đã hoàn thành"].map((tab) => (
@@ -53,7 +46,6 @@ export const MyCourses = () => {
               </nav>
             </div>
 
-            {/* Course List */}
             <ul>
               {courses.map((course, index) => (
                 <li
@@ -72,7 +64,7 @@ export const MyCourses = () => {
                     </div>
                     <button
                       onClick={() => {
-                        navigate(`/lessons/${course._id}`);
+                        navigate(`/course/${course._id}`);
                       }}
                       className={`flex justify-center items-center w-32 px-2 py-1 text-sm rounded-lg shadow-md transition-all`}
                     >
@@ -84,7 +76,6 @@ export const MyCourses = () => {
             </ul>
           </div>
 
-          {/* Sidebar */}
           <div className="bg-white shadow-lg rounded-lg p-6 h-80">
             <div className="flex items-center mb-6">
               <img

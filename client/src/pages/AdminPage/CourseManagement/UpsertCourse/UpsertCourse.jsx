@@ -142,6 +142,8 @@ export const UpsertCourse = () => {
 
         const courseData = { ...formData, img: imageUrl }
 
+        console.log(courseData)
+
         const resultCreateCourse = await dispatch(createCourse(courseData));
 
         console.log("Result", resultCreateCourse)

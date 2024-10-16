@@ -23,9 +23,8 @@ export const CourseManagement = () => {
 
     const handleGetAllCourse = async () => {
         const response = await dispatch(getAllCourse())
-        let result = response.payload
         console.log(response.payload)
-        setCourses(result)
+        setCourses(response.payload)
     };
 
     useEffect(() => {
@@ -129,7 +128,7 @@ export const CourseManagement = () => {
                                         <span>{course.duration} phút</span>
                                     </td>
                                     <td className="font-medium text-center text-gray">
-                                        <span>{course.lessons.length}</span>
+                                        <span>{course.lessons ? course.lessons.length : 0}</span>
                                     </td>
                                     <td className="font-medium text-center text-gray">
                                         <button

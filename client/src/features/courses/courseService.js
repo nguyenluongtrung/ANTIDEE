@@ -21,8 +21,7 @@ const createCourse = async (token, courseData) => {
 	};
 
 	const response = await axios.post(API_URL, courseData, config);
-	// return response.data.data.course;
-	return;
+	return response.data.data.course;
 };
 
 const deleteCourse = async (token, id) => {
@@ -36,11 +35,15 @@ const deleteCourse = async (token, id) => {
 	return response.data.data.id;
 };
 
-const getLessonsByCourse = async (courseId) => {
-	console.log(API_URL + `${courseId}/lessons`);
-	const response = await axios.get(API_URL + `${courseId}/lessons`);
-	console.log(response);
-	return response.data.data.lessons;
+const getLessonsByCourse = async (token, courseId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(API_URL + `${courseId}/lessons`, config);
+	return response.data.data;
 };
 
 const courseService = {
