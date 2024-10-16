@@ -68,6 +68,25 @@ const forumPostSchema = mongoose.Schema(
 				ref: 'Account',
 			},
 		],
+		hiddenDetails: {
+			status: {
+				type: Boolean,
+				default:'false'
+			},
+			reasons: [{
+				accountId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Account',
+				},
+				content:{
+					type: String,
+				},
+				update: {
+					type: Date,
+					default: Date.now,
+				},
+			}]
+		}
 	},
 	{
 		timestamps: true,

@@ -18,9 +18,7 @@ export const PromotionManagement = () => {
     const [isOpenCreatePromotion, setIsOpenCreatePromotion] = useState(false);
     const [isOpenUpdatePromotion, setIsOpenUpdatePromotion] = useState(false);
     const [isOpenDetailPromotion, setIsOpenDetailPromotion] = useState(false);
-    const [chosenPromotionId, setChosenPromotionId] = useState('');
     const { promotions, isLoading } = useSelector((state) => state.promotions);
-    console.log(promotions)
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

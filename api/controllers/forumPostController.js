@@ -297,6 +297,33 @@ const unReactToForumPost = asyncHandler(async (req, res) => {
 	}
 });
 
+const updateHiddenDetails = async (req, res) => {
+	const { postId } = req.params; 
+	const { accountId, reasonContent, status } = req.body; 
+
+	try {
+		const post = await ForumPost.findById(postId);
+		if (!post) {
+			return res.status(404).json({ message: 'Post not found' });
+		}
+
+		post.hiddenDetails.reasons.push({
+			accountId: accountId,
+			content: reasonContent,
+			update: new Date(),
+		});
+		post.hiddenDetails.status = status !==undefined ? status:false;
+
+		await post.save();
+
+		return res.status(200).json({ message: 'Hidden details updated successfully', post });
+	} catch (error) {
+		return res.status(500).json({ message: 'Error updating hidden details', error });
+	}
+};
+
+
+
 module.exports = {
 	createForumPost,
 	deleteForumPost,
@@ -310,4 +337,5 @@ module.exports = {
 	commentForumPost,
 	reactToForumPost,
 	unReactToForumPost,
+	updateHiddenDetails
 };
