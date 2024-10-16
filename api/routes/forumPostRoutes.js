@@ -13,6 +13,7 @@ const {
 	commentForumPost,
 	reactToForumPost,
 	unReactToForumPost,
+	updateHiddenDetails,
 } = require('../controllers/forumPostController');
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.route('/un-react/:forumPostId').patch(protect, unReactToForumPost);
 router.route('/save-forum-post/:forumPostId').post(protect, saveForumPost);
 router.route('/:forumPostId/hide').patch(protect, hideForumPost);
 router.patch('/:forumPostId/unhide', protect, unhideForumPost);
+router.patch('/:postId/hidden-details', protect, updateHiddenDetails);
 
 module.exports = router;

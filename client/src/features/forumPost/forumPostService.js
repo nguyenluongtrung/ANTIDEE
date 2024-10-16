@@ -184,6 +184,22 @@ export const commentForumPost = async (commentData, forumPostId, token) => {
 	return response.data.data.comments;
 };
 
+export const updateHiddenDetails = async (accountId, reasonContent, status, postId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const requestBody = {
+		accountId,
+		reasonContent,
+		status
+	};
+
+	const response = await axios.patch(API_URL + postId + '/hidden-details', requestBody, config);
+	return response.data.data;
+}
+
 const forumPostService = {
 	getAllForumPosts,
 	deleteForumPost,
@@ -195,5 +211,6 @@ const forumPostService = {
 	commentForumPost,
 	reactToForumPost,
 	unReactToForumPost,
+	updateHiddenDetails
 };
 export default forumPostService;

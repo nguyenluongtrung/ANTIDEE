@@ -70,6 +70,8 @@ import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePro
 import { CourseManagement } from './pages/AdminPage/CourseManagement/CourseManagement';
 import { VideoDetail } from './pages/VideoDetail/VideoDetail';
 import { UpsertCourse } from './pages/AdminPage/CourseManagement/UpsertCourse/UpsertCourse';
+import { ReportPostForum } from './pages/AdminPage/ReportPostForum/ReportPostForum';
+import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/ReportDetail';
 
 const App = () => {
 	return (
@@ -216,6 +218,12 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
+							<Route path="/admin-report-forum" element={<ReportPostForum />}>
+							<Route
+									path="/admin-report-forum/report-detail/:reportId"
+									element={<ReportDetail />}
+								/>
+							</Route>
 							<Route path="/admin-account" element={<AccountManagement />} />
 							<Route path="/admin-role" element={<UpdateAccountRole />} />
 						</>

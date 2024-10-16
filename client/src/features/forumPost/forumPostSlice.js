@@ -235,6 +235,33 @@ export const commentForumPost = createAsyncThunk(
 	}
 );
 
+export const updateHiddenDetails = createAsyncThunk(
+	'forumPosts/updateHiddenDetails',
+	async ({ accountId, reasonContent, status, postId }, thunkAPI) => {
+		try {
+			const storedUser = JSON.parse(localStorage.getItem('account'));
+			const token = storedUser.data.token;
+			return await forumPostService.updateHiddenDetails(
+				accountId,
+				reasonContent,
+				status,
+				postId,
+				token
+			);
+
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	forumPosts: [],
 	repositories: [],

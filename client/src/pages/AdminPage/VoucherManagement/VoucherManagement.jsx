@@ -30,7 +30,7 @@ export const VoucherManagement = () => {
         dispatch(getAllVouchers());
     }, []);
 
-    // delete voucher
+    
     const handleDeleteVoucher = async (id) => {
         const result = await dispatch(deleteVoucher(id));
         if (result.type.endsWith("fulfilled")) {
