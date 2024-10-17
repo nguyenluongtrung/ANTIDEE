@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import toast from "react-hot-toast";
+import React, { useState, useRef } from "react";
 import YouTube from "react-youtube";
+import { finishVideoByAccount } from "../../features/videos/videoSlice";
+import { useDispatch } from "react-redux";
 
-const VideoPlayer = ({ videoId }) => {
+const VideoPlayer = ({ videoUrl, videoId }) => {
   const [isWatchedEnough, setIsWatchedEnough] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [showWarning, setShowWarning] = useState(false);
   const playerRef = useRef(null);
-  const lastTimeRef = useRef(0);
+  const dispatch = useDispatch()
 
   const onPlayerReady = (event) => {
     playerRef.current = event.target;
@@ -22,28 +22,6 @@ const VideoPlayer = ({ videoId }) => {
     } else if (event.data === 2 || event.data === 0) {
       // When paused or ended
       clearInterval(playerRef.current.intervalId);
-    } else if (event.data === 3) {
-      // When buffering
-      checkForSkip();
-    }
-  };
-
-  useEffect(() => {
-    if (showWarning) {
-      toast.error("Bạn không được phép tua video quá 30 giây");
-      setShowWarning(false);
-    }
-  }, [showWarning]);
-
-  const checkForSkip = () => {
-    const currentTime = playerRef.current.getCurrentTime();
-    if (currentTime - lastTimeRef.current > 30) {
-      // If skipped more than 60 seconds
-      setShowWarning(true);
-      playerRef.current.seekTo(lastTimeRef.current); // Seek back to last time
-    } else {
-      lastTimeRef.current = currentTime;
-      setShowWarning(false);
     }
   };
 
@@ -51,12 +29,21 @@ const VideoPlayer = ({ videoId }) => {
     playerRef.current.intervalId = setInterval(() => {
       const currentTime = playerRef.current.getCurrentTime();
       setCurrentTime(currentTime);
-      lastTimeRef.current = currentTime;
-      if (currentTime >= duration * 0.8) {
+
+      if (currentTime >= duration * 0.8 && !isWatchedEnough) {
         setIsWatchedEnough(true);
+		handleFinishVideoByAccount(videoId);
         clearInterval(playerRef.current.intervalId);
       }
     }, 1000);
+  };
+
+  const handleFinishVideoByAccount = async (videoId) => {
+	try {
+	  await dispatch(finishVideoByAccount(videoId));
+	} catch (error) {
+	  console.error('Error finishing video:', error);
+	}
   };
 
   const opts = {
@@ -76,7 +63,7 @@ const VideoPlayer = ({ videoId }) => {
   return (
     <div className="">
       <YouTube
-        videoId={videoId}
+        videoId={videoUrl}
         opts={opts}
         onReady={onPlayerReady}
         onStateChange={onPlayerStateChange}

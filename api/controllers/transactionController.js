@@ -1,6 +1,5 @@
 const Transaction = require('../models/transactionModel');
 
-
 const addNewTransaction = async (
 	amount,
 	accountId,
@@ -20,24 +19,23 @@ const addNewTransaction = async (
 			jobId,
 			externalId,
 			paymentMethod,
-		}); 
+		});
 		return newTransaction;
-		
 	} catch (error) {
 		throw error;
 	}
 };
 const getTransactions = async (req, res) => {
-    try {
-        const transactions = await Transaction.find({ accountId: req.account._id })
-            .populate('accountId', 'name accountBalance');
-        res.json(transactions);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch transactions' });
-    }
+	try {
+		const transactions = await Transaction.find({
+			accountId: req.account._id,
+		}).populate('accountId', 'name accountBalance');
+		res.json(transactions);
+	} catch (error) {
+		res.status(500).json({ error: 'Failed to fetch transactions' });
+	}
 };
 module.exports = {
 	addNewTransaction,
 	getTransactions,
-	 
 };
