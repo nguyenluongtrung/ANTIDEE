@@ -332,6 +332,16 @@ const getTransactionHistory = async (token) => {
 	return response.data;
 };
 
+const getAccountSalary = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.get(API_URL + '/get-housekeeper-salary', config);
+	return response.data.data.monthlySalary;
+};
+
 const authService = {
 	login,
 	loginWithGoogle,
@@ -362,6 +372,7 @@ const authService = {
 	getTransactionHistory,
 	getAccountBalance,
 	updateRatingCustomer,
+	getAccountSalary,
 };
 
 export default authService;

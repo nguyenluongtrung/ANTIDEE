@@ -596,6 +596,25 @@ export const getAccountBalance = createAsyncThunk(
 	}
 );
 
+export const getAccountSalary = createAsyncThunk(
+	'auth/getMonthlySalary',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			const response = await authService.getAccountSalary(token);
+			return response.data;
+		} catch (error) {
+			const message =
+				(error.response && error.response.data && error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	account: account || null,
 	accounts: [],
@@ -968,6 +987,20 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.account = null;
+			})
+			.addCase(getAccountSalary.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAccountSalary.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.monthlySalary = action.payload;
+			})
+			.addCase(getAccountSalary.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.monthlySalary = null;
 			});
 	},
 });

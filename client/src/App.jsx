@@ -54,7 +54,7 @@ import { AccumulatePoint } from './pages/MyAccount/AccumulatePoint/AccumulatePoi
 import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountManagement';
 import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
 import { TransactionHistory } from './pages/TransactionHistory/TransactionHistory';
-import { IncomeDomesticHelper } from './pages/MyAccount/IncomeDomesticHelper/IncomeDomesticHelper';
+import { AccountSalary } from './pages/MyAccount/AccountSalary/AccountSalary';
 import { ForumLayout } from './pages/ForumPage/layout';
 import { ForumDiscussions } from './pages/ForumPage/ForumDiscussions';
 import { ForumRepositories } from './pages/ForumPage/ForumRepositories';
@@ -115,7 +115,7 @@ const AppContent = () => {
 							element={<JobPostingHistory />}
 						/>
 						<Route path="/my-jobs" element={<MyJobs />} />
-						<Route path="/account-balance" element={<IncomeDomesticHelper />} />
+						<Route path="/account-salary" element={<AccountSalary />} />
 						<Route
 							path="/exam-result-history"
 							element={<ExamResultHistory />}
