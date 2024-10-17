@@ -3,14 +3,78 @@ const asyncHandler = require('express-async-handler');
 const { Course } = require('../models/courseModel');
 const { Lesson } = require('../models/courseModel');
 const AccountExam = require('../models/accountExamModel');
+const AccountVideo = require('../models/accountVideoModel');
 
 const getAllCourses = asyncHandler(async (req, res) => {
-	const courses = await Course.find({});
+	const courses = await Course.find({})
+		.populate('lessons')
+		.populate({
+			path: 'lessons',
+			populate: {
+				path: 'content.examId',
+				model: 'Exam',
+			},
+		})
+		.populate({
+			path: 'lessons',
+			populate: {
+				path: 'content.videoId',
+				model: 'Video',
+			},
+		});
+
+	const updatedCourses = await Promise.all(
+		courses.map(async (course) => {
+			const updatedLessons = await Promise.all(
+				course.lessons.map(async (lesson) => {
+					const updatedContent = await Promise.all(
+						lesson.content.map(async (content) => {
+							if (content.contentType === 'Exam') {
+								const examByAccountId = await AccountExam.findOne({
+									accountId: req.account._id,
+									examId: content.examId,
+								});
+
+								return {
+									...content.toObject(),
+									isPassed: examByAccountId ? examByAccountId.isPassed : false,
+								};
+							} else {
+								const videoByAccountId = await AccountVideo.findOne({
+									accountId: req.account._id,
+									videoId: content.videoId,
+								});
+
+								return {
+									...content.toObject(),
+									isPassed: videoByAccountId ? true : false,
+								};
+							}
+						})
+					);
+					return {
+						...lesson.toObject(),
+						content: updatedContent,
+					};
+				})
+			);
+
+			const isCoursePassed = updatedLessons.every((lesson) =>
+				lesson.content.every((content) => content.isPassed)
+			);
+
+			return {
+				...course.toObject(),
+				lessons: updatedLessons,
+				passed: course.lessons.length > 0 ? isCoursePassed : false,
+			};
+		})
+	);
 
 	res.status(200).json({
 		status: 'success',
 		data: {
-			courses,
+			courses: updatedCourses,
 		},
 	});
 });
@@ -159,8 +223,21 @@ const getLessonsByCourse = asyncHandler(async (req, res) => {
 							...content.toObject(),
 							isPassed: examByAccountId ? examByAccountId.isPassed : false,
 						};
+					} else {
+						const videoByAccountId = await AccountVideo.findOne({
+							accountId: req.account._id,
+							videoId: content.videoId,
+						});
+
+						if (videoByAccountId) {
+							numOfPassedContent += 1;
+						}
+
+						return {
+							...content.toObject(),
+							isPassed: videoByAccountId ? true : false,
+						};
 					}
-					return content;
 				})
 			);
 			numOfContent += updatedContent.length;

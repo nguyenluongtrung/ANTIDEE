@@ -10,8 +10,6 @@ export const VideoDetail = () => {
 	const { videoId } = useParams();
 	const [video, setVideo] = useState();
 
-  console.log(videoId)
-
 	useEffect(() => {
     const fetchVideo = async () => {
       const response = await dispatch(getAllVideos());
@@ -34,7 +32,7 @@ export const VideoDetail = () => {
 				{video.title}
 			</h1>
 			<div className="flex items-center justify-center">
-				<VideoPlayer videoId={video.url} />
+				<VideoPlayer videoUrl={video.url} videoId={video._id}/>
 			</div>
 			<div className="flex items-center justify-center">
 				Mô tả video: {video.description}

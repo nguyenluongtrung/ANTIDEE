@@ -10,6 +10,7 @@ const getAllCourse = async (token) => {
 	};
 
 	const response = await axios.get(API_URL, config);
+	console.log(response.data.data.courses);
 	return response.data.data.courses;
 };
 

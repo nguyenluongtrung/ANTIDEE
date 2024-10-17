@@ -18,7 +18,7 @@ const router = express.Router();
 router
 	.route('/')
 	.post(protect, restrict('Admin'), createCourse)
-	.get(getAllCourses);
+	.get(protect, getAllCourses);
 
 router
 	.route('/:courseId')
