@@ -1,56 +1,95 @@
 import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { useDispatch } from 'react-redux';
-import { getAccountSalary } from '../../../../../features/auth/authSlice';
+
+const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0'];
 
 const MonthlySalaryChart = ({ monthlySalary }) => {
-    
-    const dispatch = useDispatch();
-    const { monthlySalary, status, error } = useSelector((state) => state.salary);
-  
-    useEffect(() => {
-      if (status === 'idle') {
-        dispatch(getAccountSalary());
-      }
-    }, [status, dispatch]);
-  
-    const chartOptions = {
-      chart: {
-        type: 'bar',
-      },
-      xaxis: {
-        categories: [
-          'January', 'February', 'March', 'April', 'May', 'June', 
-          'July', 'August', 'September', 'October', 'November', 'December'
+	const [state, setState] = useState({
+		series: [
+			{
+				data: [],
+			},
+		],
+		options: {
+			chart: {
+				height: 350,
+				type: 'bar',
+				events: {
+					click: function (chart, w, e) {},
+				},
+			},
+			colors: colors,
+			plotOptions: {
+				bar: {
+					columnWidth: '30%',
+					distributed: true,
+				},
+			},
+			dataLabels: {
+				enabled: false,
+			},
+			legend: {
+				show: false,
+			},
+			tooltip: {
+				custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+					return (
+						'<div class="arrow_box">' +
+						'<span style="padding-y: 1rem, font-weight: bold">' +
+						series[seriesIndex][dataPointIndex] +
+						'</span>' +
+						'<span style="paddingY: 1rem">' +
+						`${isCustomerMode ? ' công việc' : ' điểm'}` +
+						'</span>' +
+						'</div>'
+					);
+				},
+			},
+			xaxis: {
+				categories: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+				labels: {
+					style: {
+						colors: colors,
+						fontSize: '12px',
+					},
+				},
+			},
+		},
+	});
+
+	useEffect(() => {
+    if(monthlySalary){
+      setState((prevState) => ({
+        ...prevState,
+        series: [
+          {
+            data: monthlySalary,
+          },
         ],
-      },
-      title: {
-        text: 'Monthly Salary',
-      },
-      colors: ['#34D399'],
-    };
-  
-    const chartSeries = [
-      {
-        name: 'Salary',
-        data: monthlySalary,
-      },
-    ];
-  
-    return (
-      <div className="max-w-lg mx-auto mt-8">
-        {status === 'loading' && <p>Loading...</p>}
-        {status === 'failed' && <p>Error: {error}</p>}
-        {status === 'succeeded' && (
-          <Chart 
-            options={chartOptions} 
-            series={chartSeries} 
-            type="bar" 
-            height={350} 
-          />
-        )}
-      </div>
-    );
-  };
+        options: {
+          ...prevState.options,
+          xaxis: {
+            ...prevState.options.xaxis,
+            categories: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+          },
+        },
+      }));
+    }
+				
+	}, [monthlySalary]);
+
+	return (
+		<div>
+			<div id="chart" className="w-[30vw]">
+				<ReactApexChart
+					options={state?.options}
+					series={state?.series}
+					type="bar"
+					height={350}
+				/>
+			</div>
+		</div>
+	);
+};
 
 export default MonthlySalaryChart;

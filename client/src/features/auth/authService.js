@@ -241,7 +241,14 @@ const getDomesticHelpersRanking = async (token) => {
 	return response.data.data.accountsWithRankingCriteria;
 };
 
-const updateAPoint = async (accountId, aPoints, apoint, serviceId, operationType, token) => {
+const updateAPoint = async (
+	accountId,
+	aPoints,
+	apoint,
+	serviceId,
+	operationType,
+	token
+) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -249,7 +256,7 @@ const updateAPoint = async (accountId, aPoints, apoint, serviceId, operationType
 	};
 	const response = await axios.patch(
 		API_URL + `update-apoints/${accountId}`,
-		{ aPoints, apoint, serviceId, operationType},
+		{ aPoints, apoint, serviceId, operationType },
 		config
 	);
 	return response.data.data.account;
@@ -339,6 +346,7 @@ const getAccountSalary = async (token) => {
 		},
 	};
 	const response = await axios.get(API_URL + '/get-housekeeper-salary', config);
+	console.log(response.data.data.monthlySalary);
 	return response.data.data.monthlySalary;
 };
 
