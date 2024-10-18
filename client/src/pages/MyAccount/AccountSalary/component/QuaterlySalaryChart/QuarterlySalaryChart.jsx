@@ -1,63 +1,44 @@
-import React from 'react';
-import { Pie } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    ArcElement,
-} from 'chart.js';
+import React, { useEffect, useState } from 'react';
+import ReactApexChart from 'react-apexcharts';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    ArcElement
-);
-
-const QuarterlySalaryChart = ({ monthlySalary }) => {
-    
-    const quarterlySalary = [
-        monthlySalary.slice(0, 3).reduce((acc, val) => acc + val, 0),  // Q1
-        monthlySalary.slice(3, 6).reduce((acc, val) => acc + val, 0),  // Q2
-        monthlySalary.slice(6, 9).reduce((acc, val) => acc + val, 0),  // Q3
-        monthlySalary.slice(9, 12).reduce((acc, val) => acc + val, 0), // Q4
-    ];
-
-    const data = {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-        datasets: [
-            {
-                label: 'Quarterly Salary',
-                data: quarterlySalary,
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+const QuarterlySalaryChart = ({ quarterlySalary = [] }) => {
+    const [state, setState] = useState({
+        series: [],
+        options: {
+            chart: {
+                type: 'pie',
+                height: 350,
             },
-        ],
-    };
-
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
+            labels: ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4'],
+            colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560'],
+            dataLabels: {
+                enabled: true,
             },
-            title: {
-                display: true,
-                text: 'Salary by Quarter',
+            tooltip: {
+                y: {
+                    formatter: (val) => `${val.toLocaleString()} VNĐ`,
+                },
             },
         },
-    };
+    });
+
+    useEffect(() => {
+        if (quarterlySalary.length > 0) {
+            setState((prevState) => ({
+                ...prevState,
+                series: quarterlySalary,
+            }));
+        }
+    }, [quarterlySalary]);
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Quarterly Salary</h2>
-            <Pie data={data} options={options} />
+        <div>
+            <ReactApexChart
+                options={state.options}
+                series={state.series}
+                type="pie"
+                height={350}
+            />
         </div>
     );
 };
