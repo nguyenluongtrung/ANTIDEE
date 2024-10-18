@@ -108,7 +108,7 @@ export const Sidebar = ({ account }) => {
 			{account?.role === 'Người giúp việc' && (
 				<div
 					className="mb-2.5 hover:text-primary hover:cursor-pointer"
-					onClick={() => navigate('/account-balance')}
+					onClick={() => navigate('/account-salary')}
 				>
 					<BsFillSendArrowDownFill className="inline w-4 mr-2" />
 					<span>Thu nhập</span>

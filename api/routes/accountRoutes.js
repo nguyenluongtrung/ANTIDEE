@@ -27,6 +27,7 @@ const {
 	getAllReports,
 	getAccountBalance,
 	updateRatingCustomer,
+	getAccountSalary,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -82,4 +83,5 @@ router.route('/isUsed/:voucherId').patch(updateIsUsedVoucher);
 
 router.route('/update-apoints/:accountId').patch(updateAPoint);
 router.route('/report').get(protect, restrict('Admin'), getAllReports);
+router.route('/get-housekeeper-salary').get(protect, getAccountSalary);
 module.exports = router;

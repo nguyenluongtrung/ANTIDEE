@@ -3,6 +3,7 @@ const Account = require('./../models/accountModel');
 const Service = require('./../models/serviceModel');
 const DomesticHelperFeedback = require('./../models/domesticHelper_FeedbackModel');
 const JobPost = require('./../models/jobPostModel');
+const Transaction = require('./../models/transactionModel'); 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -780,6 +781,58 @@ const getAccountBalance = asyncHandler(async (req, res) => {
 	});
 });
 
+const getAccountSalary = asyncHandler(async (req, res) => {
+    const accountId = req.account._id;
+    const account = await Account.findById(accountId);
+    if (!account) {
+        res.status(404);
+        throw new Error('Account not found');
+    }
+
+    try {
+        const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+        const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+
+        const monthlySalary = await Transaction.aggregate([
+            {
+                $match: {
+                    accountId: accountId,
+                    category: 'salary',
+                    date: {
+                        $gte: startOfYear,
+                        $lt: endOfYear,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: { $month: '$date' },
+                    totalSalary: { $sum: '$amount' },
+                },
+            },
+            {
+                $sort: { _id: 1 },
+            },
+        ]);
+
+        const salaries = new Array(12).fill(0);
+
+        monthlySalary.forEach(item => {
+            salaries[item._id - 1] = item.totalSalary;
+        });
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                monthlySalary: salaries,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred while fetching the salary.' });
+    }
+});
+
 module.exports = {
 	register,
 	login,
@@ -808,4 +861,5 @@ module.exports = {
 	getAllReports,
 	getAccountBalance,
 	updateRatingCustomer,
+	getAccountSalary,
 };
