@@ -3,10 +3,13 @@ import { useDispatch } from 'react-redux';
 import { getAllCourse } from '../../features/courses/courseSlice';
 import { useNavigate } from 'react-router-dom';
 import { getAccountInformation } from '../../features/auth/authSlice';
+import inprogressIcon from '../../assets/img/inprogress.png';
+import finishIcon from '../../assets/img/finish-course.png';
 
 export const MyCourses = () => {
 	const [activeTab, setActiveTab] = useState('Tất cả');
-	const [courses, setCourses] = useState([]);
+	const [initialCourses, setInitialCourses] = useState([]);
+	const [filteredCourses, setFilteredCourses] = useState([])
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [avatarUrl, setAvatarUrl] = useState('');
@@ -14,7 +17,8 @@ export const MyCourses = () => {
 	const handleGetAllCourse = async () => {
 		const response = await dispatch(getAllCourse());
 		let result = response.payload;
-		setCourses(result);
+		setInitialCourses(result);
+		setFilteredCourses(result);
 	};
 
 	useEffect(() => {
@@ -33,13 +37,26 @@ export const MyCourses = () => {
 
 	const getNumOfFinishedCourses = () => {
 		let numOfFinishedCourses = 0;
-		courses.forEach((course) => {
+		initialCourses.forEach((course) => {
 			if (course.passed) {
 				numOfFinishedCourses += 1;
 			}
 		});
 		return numOfFinishedCourses;
 	};
+
+	const handleFilterCourses = (tab) => {
+		let filteredCourses = []
+		if(tab == 'đang học') {
+			filteredCourses = initialCourses.filter((course) => !course.passed)
+		} else if(tab == 'đã hoàn thành'){
+			filteredCourses = initialCourses.filter((course) => course.passed)
+		} else{
+			filteredCourses = [...initialCourses]
+		}
+		setFilteredCourses(filteredCourses);
+		setActiveTab(tab)
+	}
 
 	return (
 		<div className="min-h-screen p-6 pt-20">
@@ -55,11 +72,11 @@ export const MyCourses = () => {
 								{['Tất cả', 'đang học', 'đã hoàn thành'].map((tab) => (
 									<button
 										key={tab}
-										onClick={() => setActiveTab(tab)}
+										onClick={() => handleFilterCourses(tab)}
 										className={`py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
 											activeTab === tab
-												? 'bg-primary shadow-lg'
-												: ' text-gray hover:bg-primary'
+												? 'bg-primary shadow-lg text-white'
+												: ' text-primary hover:bg-primary hover:text-white'
 										}`}
 									>
 										{tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -69,10 +86,10 @@ export const MyCourses = () => {
 						</div>
 
 						<ul>
-							{courses.map((course, index) => (
+							{filteredCourses.map((course, index) => (
 								<li
 									key={index}
-									className="bg-white shadow-lg rounded-lg p-6 mb-6 transition-transform transform hover:scale-105"
+									className={`shadow-lg rounded-lg p-6 mb-6 transition-transform transform hover:scale-105 ${course.passed ? 'bg-[#f0da6c]' : 'bg-[#f77ca3]'}`}
 								>
 									<div className="flex items-center">
 										<img
@@ -86,11 +103,11 @@ export const MyCourses = () => {
 										</div>
 										<button
 											onClick={() => {
-												navigate(`/course/${course._id}`);
+												navigate(`/course/${course._id}`, { state: { qualificationId: course.qualificationId._id } });
 											}}
 											className={`${
 												course.passed ? 'bg-green' : 'bg-yellow'
-											} flex justify-center items-center w-32 px-2 py-1 text-sm rounded-lg shadow-md transition-all`}
+											} flex justify-center text-white items-center w-32 px-2 py-1 text-sm rounded-lg shadow-md transition-all`}
 										>
 											{course.passed ? 'Đã hoàn thành' : 'Xem chi tiết'}
 										</button>
@@ -100,7 +117,7 @@ export const MyCourses = () => {
 						</ul>
 					</div>
 
-					<div className="bg-white shadow-lg rounded-lg p-6 h-80">
+					<div className="bg-light_primary shadow-lg rounded-lg p-6 h-56">
 						<div className="flex items-center mb-6 gap-5">
 							<div>
 								<img
@@ -109,28 +126,35 @@ export const MyCourses = () => {
 								/>
 							</div>
 							<div>
-								<h4 className="font-bold text-xl text-gray-800">
-									Thông tin của bạn
+								<h4 className="font-bold text-xl text-green">
+									Thành tích của tôi
 								</h4>
 								<p className="text-gray-500"></p>
 							</div>
 						</div>
 						<div className="grid grid-cols-2 gap-4 text-center">
-							<div className="bg-gray-100 p-4 rounded-lg shadow-md">
-								<h5 className="text-2xl font-semibold text-gray-800">
-									{getNumOfFinishedCourses()}
-								</h5>
-								<p className="text-sm text-gray-600">Đã hoàn thành</p>
+							<div className="bg-light_pink p-4 rounded-lg shadow-md">
+								<div className="flex gap-2 justify-center">
+									<h5 className="text-2xl font-semibold text-gray-800">
+										{getNumOfFinishedCourses()}
+									</h5>
+									<div>
+										<img className="w-[30px]" src={finishIcon} alt="" />
+									</div>
+								</div>
+								<p className="text-sm text-green">Đã hoàn thành</p>
 							</div>
-							<div className="bg-gray-100 p-4 rounded-lg shadow-md">
-								<h5 className="text-2xl font-semibold text-gray-800">14</h5>
-								<p className="text-sm text-gray-600">Khóa học</p>
-							</div>
-							<div className="bg-gray-100 p-4 rounded-lg shadow-md">
-								<h5 className="text-2xl font-semibold text-gray-800">
-									{courses.length - getNumOfFinishedCourses()}
-								</h5>
-								<p className="text-sm text-gray-600">Đang học</p>
+							<div className="bg-light_green p-4 rounded-lg shadow-md">
+								<div className="flex gap-2 justify-center">
+									<h5 className="text-2xl font-semibold text-gray-800">
+										{initialCourses.length - getNumOfFinishedCourses()}
+									</h5>
+									<div>
+										<img className="w-[30px]" src={inprogressIcon} alt="" />
+									</div>
+								</div>
+
+								<p className="text-sm text-yellow">Đang học</p>
 							</div>
 						</div>
 					</div>

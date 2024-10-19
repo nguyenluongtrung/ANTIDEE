@@ -46,11 +46,27 @@ const deleteQualification = async (token, id) => {
 	return response.data.data.id;
 };
 
+const checkQualificationReceived = async (accountId, qualificationId) => {
+	const response = await axios.get(
+		API_URL + `receive/${qualificationId}/${accountId}`
+	);
+	return response.data.status;
+};
+
+const receiveNewQualification = async (accountId, qualificationId) => {
+	const response = await axios.post(
+		API_URL + `receive/${qualificationId}/${accountId}`
+	);
+	return response.data.status;
+};
+
 const qualificationService = {
 	getAllQualifications,
 	createQualification,
 	updateQualification,
 	deleteQualification,
+	receiveNewQualification,
+	checkQualificationReceived,
 };
 
 export default qualificationService;

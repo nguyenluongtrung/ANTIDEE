@@ -86,6 +86,50 @@ export const deleteQualification = createAsyncThunk(
 	}
 );
 
+export const receiveNewQualification = createAsyncThunk(
+	'qualifications/receiveNewQualification',
+	async (qualificationId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			return await qualificationService.receiveNewQualification(
+				storedAccount.data.account._id,
+				qualificationId
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const checkQualificationReceived = createAsyncThunk(
+	'qualifications/checkQualificationReceived',
+	async (qualificationId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			return await qualificationService.checkQualificationReceived(
+				storedAccount.data.account._id,
+				qualificationId
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	qualifications: null,
 	isError: false,
@@ -163,6 +207,30 @@ export const qualificationSlice = createSlice({
 				);
 			})
 			.addCase(deleteQualification.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(checkQualificationReceived.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(checkQualificationReceived.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(checkQualificationReceived.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(receiveNewQualification.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(receiveNewQualification.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(receiveNewQualification.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

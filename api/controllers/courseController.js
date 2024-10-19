@@ -7,7 +7,7 @@ const AccountVideo = require('../models/accountVideoModel');
 
 const getAllCourses = asyncHandler(async (req, res) => {
 	const courses = await Course.find({})
-		.populate('lessons')
+		.populate('lessons qualificationId')
 		.populate({
 			path: 'lessons',
 			populate: {

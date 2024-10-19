@@ -1,4 +1,3 @@
-// src/components/Popup.js
 import React, { useState } from "react";
 import Confetti from "react-confetti";
 
