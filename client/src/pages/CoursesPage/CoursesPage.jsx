@@ -45,10 +45,20 @@ export const MyCourses = () => {
 		return numOfFinishedCourses;
 	};
 
+	const getNumOfInProgressCourses = () => {
+		let numOfInProgressCourses = 0;
+		initialCourses.forEach((course) => {
+			if (!course.passed && course.isEligible) {
+				numOfInProgressCourses += 1;
+			}
+		});
+		return numOfInProgressCourses;
+	};
+
 	const handleFilterCourses = (tab) => {
 		let filteredCourses = []
 		if(tab == 'đang học') {
-			filteredCourses = initialCourses.filter((course) => !course.passed)
+			filteredCourses = initialCourses.filter((course) => !course.passed && course.isEligible)
 		} else if(tab == 'đã hoàn thành'){
 			filteredCourses = initialCourses.filter((course) => course.passed)
 		} else{
@@ -89,7 +99,7 @@ export const MyCourses = () => {
 							{filteredCourses.map((course, index) => (
 								<li
 									key={index}
-									className={`shadow-lg rounded-lg p-6 mb-6 transition-transform transform hover:scale-105 ${course.passed ? 'bg-[#f0da6c]' : 'bg-[#f77ca3]'}`}
+									className={`shadow-lg rounded-lg p-6 mb-6 transition-transform transform hover:scale-105 ${course.passed ? 'bg-[#f0da6c]' :  course.isEligible ? 'bg-[#f77ca3]' : 'bg-[#b0d6fc]'}`}
 								>
 									<div className="flex items-center">
 										<img
@@ -103,13 +113,15 @@ export const MyCourses = () => {
 										</div>
 										<button
 											onClick={() => {
-												navigate(`/course/${course._id}`, { state: { qualificationId: course.qualificationId._id } });
+												if(course.isEligible){
+													navigate(`/course/${course._id}`, { state: { qualificationId: course.qualificationId._id } });
+												}
 											}}
 											className={`${
-												course.passed ? 'bg-green' : 'bg-yellow'
-											} flex justify-center text-white items-center w-32 px-2 py-1 text-sm rounded-lg shadow-md transition-all`}
+												course.passed ? 'bg-[#eacc32] w-32' : course.isEligible ? 'bg-[#fb3272] w-32' : 'bg-[#338ee8] w-44'
+											} flex justify-center text-white items-center  px-2 py-1 text-sm rounded-lg shadow-md transition-all`}
 										>
-											{course.passed ? 'Đã hoàn thành' : 'Xem chi tiết'}
+											{course.passed ? 'Đã hoàn thành' : course.isEligible ? 'Xem chi tiết': 'Không đủ điều kiện học'}
 										</button>
 									</div>
 								</li>
@@ -147,7 +159,7 @@ export const MyCourses = () => {
 							<div className="bg-light_green p-4 rounded-lg shadow-md">
 								<div className="flex gap-2 justify-center">
 									<h5 className="text-2xl font-semibold text-gray-800">
-										{initialCourses.length - getNumOfFinishedCourses()}
+										{getNumOfInProgressCourses()}
 									</h5>
 									<div>
 										<img className="w-[30px]" src={inprogressIcon} alt="" />
