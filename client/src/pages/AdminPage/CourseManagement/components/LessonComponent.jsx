@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentComponent from './ContentComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllExams } from '../../../../features/exams/examSlice';
 
 const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData, formData }) => {
-    // Hàm thay đổi dữ liệu bài học
+
+    // const { exams } = useSelector((state) => state.exams);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchExam = async () => {
+            const resultFetchExam = await dispatch(getAllExams())
+            console.log("F5 có list này không", resultFetchExam.payload)
+            setListExams(resultFetchExam.payload)
+        }
+        fetchExam()
+    }, [dispatch]);
+
     const handleLessonChange = (field, value) => {
         const updatedLessons = [...formData.lessons];
         updatedLessons[lessonIndex] = {
@@ -22,6 +37,16 @@ const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData,
             ...prevState,
             lessons: updatedLessons
         }));
+    };
+
+    const [listExams, setListExams] = useState([])
+
+    //BB Vấn đề còn tồn đọng là việc xoá mẹ data rồi thì value mô ra
+    const filterListExams = () => {
+        const selectedExams = formData.lessons.flatMap(lesson => 
+            lesson.content.filter(content => content.contentType === 'Exam').map(content => content.examId)
+        );
+        return listExams.filter(exam => !selectedExams.includes(exam._id));
     };
 
     return (
@@ -45,10 +70,12 @@ const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData,
                         contentIndex={contentIndex}
                         setFormData={setFormData}
                         formData={formData}
+                        listExams={listExams}
+                        // listExams={filterListExams()}
                     />
                 ))}
 
-                {/* Thêm nội dung cho bài học */}
+
                 <button
                     onClick={handleAddContent}
                     className="bg-blue text-white p-2 rounded mt-4"
