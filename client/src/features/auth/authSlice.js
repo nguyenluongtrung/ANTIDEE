@@ -496,7 +496,10 @@ export const getDomesticHelpersTotalWorkingHours = createAsyncThunk(
 
 export const updateAPoint = createAsyncThunk(
 	'auth/updateApoint',
-	async ({ accountId, aPoints, apoint, serviceId, operationType }, thunkAPI) => {
+	async (
+		{ accountId, aPoints, apoint, serviceId, operationType },
+		thunkAPI
+	) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
@@ -583,6 +586,27 @@ export const getAccountBalance = createAsyncThunk(
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
 			return await authService.getAccountBalance(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const getAccountSalary = createAsyncThunk(
+	'auth/getMonthlySalary',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			const response = await authService.getAccountSalary(token);
+			return response;
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -968,6 +992,19 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.account = null;
+			})
+			.addCase(getAccountSalary.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAccountSalary.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(getAccountSalary.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.monthlySalary = null;
 			});
 	},
 });
