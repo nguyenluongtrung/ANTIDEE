@@ -22,6 +22,14 @@ const getAllCourses = asyncHandler(async (req, res) => {
 				model: 'Video',
 			},
 		});
+	const results = await AccountExam.find({
+		accountId: req.account._id,
+		isPassed: true,
+	}).populate('examId');
+
+	const entryExamResults = results.filter(
+		(exam) => exam.examId.category == 'Kiểm tra đầu vào'
+	);
 
 	const updatedCourses = await Promise.all(
 		courses.map(async (course) => {
@@ -62,11 +70,17 @@ const getAllCourses = asyncHandler(async (req, res) => {
 			const isCoursePassed = updatedLessons.every((lesson) =>
 				lesson.content.every((content) => content.isPassed)
 			);
+			const isEligible = entryExamResults.find(
+				(result) =>
+					String(result.examId.qualificationId) ==
+					String(course.qualificationId._id)
+			);
 
 			return {
 				...course.toObject(),
 				lessons: updatedLessons,
 				passed: course.lessons.length > 0 ? isCoursePassed : false,
+				isEligible: isEligible ? true : false,
 			};
 		})
 	);
