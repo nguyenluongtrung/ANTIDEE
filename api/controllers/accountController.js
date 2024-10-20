@@ -793,32 +793,50 @@ const getAccountSalary = asyncHandler(async (req, res) => {
         const startOfYear = new Date(new Date().getFullYear(), 0, 1);
         const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
 
-        const monthlySalary = await Transaction.aggregate([
-            {
-                $match: {
-                    accountId: accountId,
-                    category: 'salary',
-                    date: {
-                        $gte: startOfYear,
-                        $lt: endOfYear,
-                    },
-                },
-            },
-            {
-                $group: {
-                    _id: { $month: '$date' },
-                    totalSalary: { $sum: '$amount' },
-                },
-            },
-            {
-                $sort: { _id: 1 },
-            },
-        ]);
+		const monthlySalary = await Transaction.aggregate([
+			{
+				$match: {
+					accountId: accountId,
+					category: { $in: ['salary', 'commission_fee'] },
+					date: {
+						$gte: startOfYear,
+						$lt: endOfYear,
+					},
+				},
+			},
+			{
+				$group: {
+					_id: { $month: '$date' },
+					totalSalary: {
+						$sum: { 
+							$cond: { if: { $eq: ['$category', 'salary'] }, then: '$amount', else: 0 }
+						},
+					},
+					totalCommission: {
+						$sum: {
+							$cond: { if: { $eq: ['$category', 'commission_fee'] }, then: '$amount', else: 0 }
+						},
+					},
+				},
+			},
+			{
+				$project: {
+					totalSalary: 1,
+					totalCommission: 1,
+					totalSalaryAfterDeductions: {
+						$subtract: ['$totalSalary', '$totalCommission'],
+					},
+				},
+			},
+			{
+				$sort: { _id: 1 },
+			},
+		]);		
 
         const salaries = new Array(12).fill(0);
 
         monthlySalary.forEach(item => {
-            salaries[item._id - 1] = item.totalSalary;
+            salaries[item._id - 1] = item.totalSalaryAfterDeductions;
         });
 
         res.status(200).json({
@@ -829,7 +847,7 @@ const getAccountSalary = asyncHandler(async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'An error occurred while fetching the salary.' });
+        res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy dữ liệu lương.' });
     }
 });
 

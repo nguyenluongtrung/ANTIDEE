@@ -43,7 +43,7 @@ export const AccountSalary = () => {
 
   return (
     <div className="flex flex-col md:flex-row px-4 md:px-16 pt-10 md:pt-20">
-      <div className="md:pr-24 pt-3 md:w-1/4 w-full">
+      <div className="md:pr-24 pt-3 md:w-1/3 w-full">
         <Sidebar account={account} />
       </div>
       <div className="container mx-auto p-6">

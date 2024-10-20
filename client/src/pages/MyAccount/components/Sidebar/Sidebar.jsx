@@ -1,5 +1,6 @@
 import { IoIosArrowForward } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 import { BsFillSendArrowUpFill } from 'react-icons/bs';
 import { BsFillSendArrowDownFill } from 'react-icons/bs';
 import { FaHistory } from "react-icons/fa";
@@ -12,7 +13,8 @@ import lucide_list from '../../../../assets/img/lucide_list-x.png'
 import mdi_gift from '../../../../assets/img/mdi_gift.png'
 import vaadin_piggy from '../../../../assets/img/vaadin_piggy-bank-coin.png'
 
-export const Sidebar = ({ account }) => {
+export const Sidebar = () => {
+	const account = useSelector((state) => state.auth.account);
 	const navigate = useNavigate();
 	return (
 		<div>
