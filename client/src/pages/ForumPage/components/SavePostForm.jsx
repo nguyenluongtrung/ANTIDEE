@@ -11,7 +11,6 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 
 export const SavePostForm = ({
 	setOpenSavePostForm,
-	setChosenForumPostId,
 	chosenForumPostId,
 }) => {
 	const [createNewRepo, setCreateNewRepo] = useState(false);
@@ -29,9 +28,7 @@ export const SavePostForm = ({
 		} else if (response?.error?.message === 'Rejected') {
 			toast.error(response?.payload, errorStyle);
 		}
-		setChosenForumPostId(undefined);
 		setOpenSavePostForm(false);
-		return response;
 	};
 
 	useEffect(() => {

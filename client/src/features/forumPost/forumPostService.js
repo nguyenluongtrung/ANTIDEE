@@ -17,6 +17,16 @@ const getAllForumPosts = async (token) => {
 		throw error;
 	}
 };
+const getForumPost = async (token, forumPostId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(`${API_URL}${forumPostId}`, config);
+	return response.data.data.forumPost;
+};
 
 const createForumPost = async (forumPostData, token) => {
 	const config = {
@@ -184,7 +194,13 @@ export const commentForumPost = async (commentData, forumPostId, token) => {
 	return response.data.data.comments;
 };
 
-export const updateHiddenDetails = async (accountId, reasonContent, status, postId, token) => {
+export const updateHiddenDetails = async (
+	accountId,
+	reasonContent,
+	status,
+	postId,
+	token
+) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -193,12 +209,16 @@ export const updateHiddenDetails = async (accountId, reasonContent, status, post
 	const requestBody = {
 		accountId,
 		reasonContent,
-		status
+		status,
 	};
 
-	const response = await axios.patch(API_URL + postId + '/hidden-details', requestBody, config);
+	const response = await axios.patch(
+		API_URL + postId + '/hidden-details',
+		requestBody,
+		config
+	);
 	return response.data.data;
-}
+};
 
 const forumPostService = {
 	getAllForumPosts,
@@ -211,6 +231,7 @@ const forumPostService = {
 	commentForumPost,
 	reactToForumPost,
 	unReactToForumPost,
-	updateHiddenDetails
+	updateHiddenDetails,
+	getForumPost,
 };
 export default forumPostService;

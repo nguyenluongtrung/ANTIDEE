@@ -18,7 +18,7 @@ export const PopularTopics = () => {
 				</button>
 				<div className="flex items-center p-3 rounded-md gap-2 hover:bg-primary transition duration-300 cursor-pointer hvr-shutter-in-horizontal">
 					<MdFiberNew className="text-white bg-red rounded-full w-7 h-7 p-1 " />
-					<div className="font-semibold">Các bài mới nhất </div>
+					<div className="font-semibold" onClick={() => navigate('/forum/discussions')}>Các bài mới nhất </div>
 				</div>
 				<div
 					className="flex items-center p-3 rounded-md gap-2 hover:bg-primary  transition duration-300 cursor-pointer hvr-shutter-in-horizontal"
