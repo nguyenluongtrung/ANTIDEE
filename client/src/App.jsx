@@ -69,9 +69,10 @@ import { PromotionDetail } from './pages/AdminPage/PromotionManagement/Promotion
 import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePromotion/UpdatePromotion';
 import { CourseManagement } from './pages/AdminPage/CourseManagement/CourseManagement';
 import { VideoDetail } from './pages/VideoDetail/VideoDetail';
-import { UpsertCourse } from './pages/AdminPage/CourseManagement/UpsertCourse/UpsertCourse';
 import { ReportPostForum } from './pages/AdminPage/ReportPostForum/ReportPostForum';
 import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/ReportDetail';
+import { UpdateCourse } from './pages/AdminPage/CourseManagement/UpdateCourse/UpdateCourse';
+import { CreateCourse } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourse';
 
 const App = () => {
 	return (
@@ -192,11 +193,11 @@ const AppContent = () => {
 							</Route>
 							<Route
 								path="/admin-course/create-course"
-								element={<UpsertCourse />}
+								element={<CreateCourse />}
 							/>
 							<Route
 								path="/admin-course/update-course/:courseId"
-								element={<UpsertCourse />}
+								element={<UpdateCourse />}
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route

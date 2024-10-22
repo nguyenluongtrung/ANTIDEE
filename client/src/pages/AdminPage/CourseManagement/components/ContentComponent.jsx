@@ -4,7 +4,7 @@ import { getAllVideos } from '../../../../features/videos/videoSlice';
 import { getAllExams } from '../../../../features/exams/examSlice';
 import { MdDeleteOutline } from 'react-icons/md';
 
-const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, formData }) => {
+const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, formData, listExams }) => {
 
     const { videos, isLoading } = useSelector((state) => state.videos);
     const { exams } = useSelector((state) => state.exams);
@@ -16,7 +16,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
         dispatch(getAllExams());
     }, []);
 
-    // Hàm thay đổi dữ liệu của nội dung
+
     const handleContentChange = (field, value) => {
         const updatedLessons = [...formData.lessons];
         updatedLessons[lessonIndex].content[contentIndex] = {
@@ -29,7 +29,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
         }));
     };
 
-    // Hàm xóa nội dung khỏi bài học
+
     const handleRemoveContent = () => {
         const updatedLessons = [...formData.lessons];
         updatedLessons[lessonIndex].content.splice(contentIndex, 1);
@@ -41,7 +41,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
 
     return (
         <div className="rounded mt-2">
-            {/* Chọn loại nội dung */}
+            {/* {console.log("xem list được filter chưa?: ", filterListExams())} */}
             <div className='flex gap-x-2'>
                 <div className=''>
                     <select
@@ -49,13 +49,13 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                         onChange={e => handleContentChange('contentType', e.target.value)}
                         className="border rounded "
                     >
-                        {/* <option value="">Nội dung</option> */}
+
                         <option value="Exam">Exam</option>
                         <option value="Video">Video</option>
                     </select>
                 </div>
-                {/* Chọn câu hỏi cho Exam */}
-                {content.contentType === 'Exam' && (
+                
+                {/* {content.contentType === 'Exam' && (
                     <div className="flex flex-col w-full">
                         <select
                             value={content.examId ? content.examId._id : ''}
@@ -63,8 +63,35 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                             className="border rounded"
                         >
                             <option value="">Chọn câu hỏi</option>
-                            {/* Thay thế arrayOfQuestions bằng danh sách câu hỏi thực tế */}
-                            {exams?.map(exam => (
+
+                            {exams?.filter(exam =>
+                                exam.category === "Kiểm tra training" &&
+                                String(exam.qualificationId._id) === String(formData.qualificationId)
+                            ).map(exam => (
+                                <option key={exam._id} value={exam._id}>
+                                    {exam.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )} */}
+
+
+                {content.contentType === 'Exam' && (
+                    <div className="flex flex-col w-full">
+                        <select
+                            value={content.examId ? content.examId._id : ''}
+                            onChange={e => {
+                                handleContentChange('examId', e.target.value)
+                            }}
+                            className="border rounded"
+                        >
+                            <option value="">Chọn câu hỏi</option>
+
+                            {listExams.filter(exam =>
+                                exam.category === "Kiểm tra training" &&
+                                String(exam.qualificationId._id) === String(formData.qualificationId)
+                            ).map(exam => (
                                 <option key={exam._id} value={exam._id}>
                                     {exam.name}
                                 </option>
@@ -73,7 +100,8 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                     </div>
                 )}
 
-                {/* Chọn URL cho Video */}
+
+
                 {content.contentType === 'Video' && (
                     <div className="flex flex-col w-full">
                         <select
@@ -82,7 +110,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                             className="border rounded"
                         >
                             <option value="">Chọn URL Video</option>
-                            {/* Thay thế arrayOfVideoUrls bằng danh sách URL video thực tế */}
+
                             {videos?.map(videoUrl => (
                                 <option key={videoUrl._id} value={videoUrl._id}>
                                     {videoUrl.title}

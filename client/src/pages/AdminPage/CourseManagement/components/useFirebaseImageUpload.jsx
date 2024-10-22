@@ -40,9 +40,10 @@ export const useFirebaseImageUpload = () => {
     }, [file]);
 
     return {
-        setFile,    // Để set file từ component khác
-        filePerc,   // Phần trăm tải lên
-        fileUploadError, // Kiểm tra lỗi tải lên
-        imageUrl    // URL ảnh sau khi tải lên thành công
+        setFile,
+        filePerc,
+        fileUploadError,
+        imageUrl,
+        setImageUrl
     };
 };
