@@ -269,7 +269,6 @@ const updateRole = async (accountId, token) => {
 		},
 	};
 
-	console.log(API_URL + 'update-role/' + accountId);
 	const response = await axios.patch(
 		API_URL + 'update-role/' + accountId,
 		{},
@@ -345,9 +344,13 @@ const getAccountSalary = async (token) => {
 			Authorization: `Bearer ${token}`,
 		},
 	};
-	const response = await axios.get(API_URL + '/get-housekeeper-salary', config);
-	console.log(response.data.data.monthlySalary);
+	const response = await axios.get(API_URL + 'get-housekeeper-salary', config);
 	return response.data.data.monthlySalary;
+};
+
+const getAllEligibleAccounts = async () => {
+	const response = await axios.get(API_URL + 'eligible-accounts');
+	return response.data.data.eligibleAccounts;
 };
 
 const authService = {
@@ -381,6 +384,7 @@ const authService = {
 	getAccountBalance,
 	updateRatingCustomer,
 	getAccountSalary,
+	getAllEligibleAccounts,
 };
 
 export default authService;

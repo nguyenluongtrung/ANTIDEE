@@ -25,7 +25,7 @@ export const ImageDetail = ({ chosenAccountId, setIsOpenImageDetail, accounts })
             <span className='font-bold'>Ảnh mặt trước CCCD</span>
             <div className="justify-center" style={{ width: '100%' }}>
                 <img className="mx-auto"
-                    src={chosenAccount?.resume[0]?.frontIdCard}
+                    src={chosenAccount?.resume?.frontIdCard}
                 />
             </div>
         </div>
@@ -33,7 +33,7 @@ export const ImageDetail = ({ chosenAccountId, setIsOpenImageDetail, accounts })
             <span className='font-bold'>Ảnh mặt sau CCCD</span>
             <div className="justify-center" style={{ width: '100%' }}>
                 <img className="mx-auto"
-                    src={chosenAccount?.resume[0]?.backIdCard}
+                    src={chosenAccount?.resume?.backIdCard}
                 />
             </div>
         </div>
@@ -41,7 +41,7 @@ export const ImageDetail = ({ chosenAccountId, setIsOpenImageDetail, accounts })
             <span className='font-bold'>Ảnh mặt trước CCCD</span>
             <div className="justify-center" style={{ width: '100%' }}>
                 <img className="mx-auto"
-                    src={chosenAccount?.resume[0]?.curriculumVitae}
+                    src={chosenAccount?.resume?.curriculumVitae}
  
                 />
             </div>
@@ -50,7 +50,7 @@ export const ImageDetail = ({ chosenAccountId, setIsOpenImageDetail, accounts })
             <span className='font-bold'>Ảnh mặt trước CCCD</span>
             <div className="justify-center" style={{ width: '100%' }}>
                 <img className="mx-auto"
-                    src={chosenAccount?.resume[0]?.certificateOfResidence}
+                    src={chosenAccount?.resume?.certificateOfResidence}
 
                 />
             </div>

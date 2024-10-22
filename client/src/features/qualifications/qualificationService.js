@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = '/antidee/api/qualifications/';
 
-const getAllQualifications = async (token) => {
+const getAllQualifications = async () => {
 	const response = await axios.get(API_URL);
 	return response.data.data.qualifications;
 };
@@ -60,6 +60,13 @@ const receiveNewQualification = async (accountId, qualificationId) => {
 	return response.data.status;
 };
 
+const getAccountQualifications = async (accountId) => {
+	const response = await axios.get(
+		API_URL + `get-account-qualifications/${accountId}`
+	);
+	return response.data.data.qualifications;
+};
+
 const qualificationService = {
 	getAllQualifications,
 	createQualification,
@@ -67,6 +74,7 @@ const qualificationService = {
 	deleteQualification,
 	receiveNewQualification,
 	checkQualificationReceived,
+	getAccountQualifications,
 };
 
 export default qualificationService;

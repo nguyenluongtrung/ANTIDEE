@@ -124,6 +124,19 @@ const checkQualificationReceived = asyncHandler(async (req, res) => {
 	}
 });
 
+const getAccountQualifications = asyncHandler(async (req, res) => {
+	const qualifications = await AccountQualification.find({
+		accountId: req.params.accountId,
+	}).populate('qualificationId');
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			qualifications,
+		},
+	});
+});
+
 module.exports = {
 	updateQualification,
 	deleteQualification,
@@ -132,4 +145,5 @@ module.exports = {
 	createQualification,
 	receiveNewQualification,
 	checkQualificationReceived,
+	getAccountQualifications,
 };

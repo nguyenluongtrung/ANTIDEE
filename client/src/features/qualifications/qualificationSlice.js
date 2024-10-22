@@ -130,6 +130,24 @@ export const checkQualificationReceived = createAsyncThunk(
 	}
 );
 
+export const getAccountQualifications = createAsyncThunk(
+	'qualifications/getAccountQualifications',
+	async (accountId, thunkAPI) => {
+		try {
+			return await qualificationService.getAccountQualifications(accountId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	qualifications: null,
 	isError: false,
@@ -164,6 +182,18 @@ export const qualificationSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.qualifications = null;
+			})
+			.addCase(getAccountQualifications.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getAccountQualifications.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(getAccountQualifications.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
 			})
 			.addCase(createQualification.pending, (state) => {
 				state.isLoading = true;

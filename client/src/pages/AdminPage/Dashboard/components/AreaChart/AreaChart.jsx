@@ -12,7 +12,6 @@ const AreaChart = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const result = await dispatch(getRevenueByMonths());
-			console.log(result.payload)
 			setMonths(result.payload.months);
 			setRevenues(result.payload.revenues);
 		};

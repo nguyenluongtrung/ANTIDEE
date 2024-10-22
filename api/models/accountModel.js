@@ -45,22 +45,6 @@ const accountSchema = mongoose.Schema(
 			},
 		},
 		accountLevel: {
-			customerLevel: {
-				name: {
-					type: String,
-					enum: ['Đồng', 'Bạc', 'Vàng', 'Kim cương'],
-					default: 'Đồng',
-				},
-				description: {
-					type: String,
-				},
-				requirements: {
-					type: String,
-				},
-				privilege: {
-					type: String,
-				},
-			},
 			domesticHelperLevel: {
 				name: {
 					type: String,
@@ -122,28 +106,24 @@ const accountSchema = mongoose.Schema(
 			minLength: [8, 'Account password contains more than 8 characters'],
 			select: false,
 		},
-		resume: [
-			{
-				qualifications: [
-					{
-						type: mongoose.Schema.Types.ObjectId,
-						ref: 'Qualification',
-					},
-				],
-				frontIdCard: {
-					type: String,
-				},
-				backIdCard: {
-					type: String,
-				},
-				curriculumVitae: {
-					type: String,
-				},
-				certificateOfResidence: {
-					type: String,
-				},
+		resume: {
+			frontIdCard: {
+				type: String,
 			},
-		],
+			backIdCard: {
+				type: String,
+			},
+			curriculumVitae: {
+				type: String,
+			},
+			certificateOfResidence: {
+				type: String,
+			},
+		},
+		isEligible: {
+			type: Boolean,
+			default: false,
+		},
 		accountVouchers: [
 			{
 				voucherId: {

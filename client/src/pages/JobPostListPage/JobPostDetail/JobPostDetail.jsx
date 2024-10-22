@@ -1,12 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-import { Spinner } from '../../../components';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-	formatDate,
-	formatDateInput,
-	formatWorkingTime,
-} from '../../../utils/format';
+import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import {
@@ -61,16 +55,16 @@ export const JobPostDetail = React.memo(
 			}
 			const requiredQualification =
 				chosenJobPost?.serviceId?.requiredQualification;
-			const myQualifications = account?.resume[0]?.qualifications;
-			if (!myQualifications?.includes(requiredQualification)) {
-				toast.error(
-					'Bạn không có chứng chỉ phù hợp cho công việc này',
-					errorStyle
-				);
-				setIsOpenJobPostDetail(false);
-				handleGetAllJobPosts();
-				return;
-			}
+			// const myQualifications = account?.resume[0]?.qualifications;
+			// if (!myQualifications?.includes(requiredQualification)) {
+			// 	toast.error(
+			// 		'Bạn không có chứng chỉ phù hợp cho công việc này',
+			// 		errorStyle
+			// 	);
+			// 	setIsOpenJobPostDetail(false);
+			// 	handleGetAllJobPosts();
+			// 	return;
+			// }
 			if (account.accountBalance < Math.round(0.3 * chosenJobPost.totalPrice)) {
 				toast.error(
 					`Bạn cần có ít nhất ${Math.round(
