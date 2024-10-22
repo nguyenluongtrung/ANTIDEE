@@ -96,7 +96,6 @@ const ColumnChart = ({ isCustomerMode }) => {
 					totalJobPosts.push(Number(customer.totalJobPosts));
 					accountNames.push(customer.accountName);
 				});
-				console.log(accountNames, totalJobPosts);
 				setState((prevState) => ({
 					...prevState,
 					series: [

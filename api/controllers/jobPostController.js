@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const JobPost = require('../models/jobPostModel');
 const Account = require('../models/accountModel');
+const AccountQualification = require('../models/accountQualificationModel');
 const Service = require('../models/serviceModel');
 const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
@@ -14,6 +15,9 @@ const createJobPost = asyncHandler(async (req, res) => {
 	const customer = accounts.find(
 		(acc) => String(acc._id) == String(jobPost.customerId)
 	);
+	const qualifications = await AccountQualification.find({
+		accountId: req.params.accountId,
+	});
 
 	if (jobPost.paymentMethod == 'Ví người dùng') {
 		customer.accountBalance = Math.round(
@@ -36,9 +40,8 @@ const createJobPost = asyncHandler(async (req, res) => {
 	if (isUrgent) {
 		for (let account of accounts) {
 			if (
-				account?.resume[0]?.qualifications?.includes(
-					service.requiredQualification
-				) &&
+				qualifications?.includes(service.requiredQualification) &&
+				account.isEligible &&
 				account?.role === 'Người giúp việc'
 			) {
 				let email = {
@@ -63,15 +66,13 @@ const createJobPost = asyncHandler(async (req, res) => {
 	if (isChosenYourFav) {
 		for (let account of accounts) {
 			if (
-				account?.resume[0]?.qualifications?.includes(
-					service.requiredQualification
-				) &&
+				qualifications?.includes(service.requiredQualification) &&
 				account?.role === 'Người giúp việc' &&
+				account.isEligible &&
 				customer?.favoriteList?.findIndex(
 					(tasker) => String(tasker.domesticHelperId) == String(account._id)
 				) !== -1
 			) {
-				console.log(account);
 				let email = {
 					toEmail: account.email,
 					subject: 'BẠN CÓ CÔNG VIỆC MỚI TỪ KHÁCH HÀNG CŨ',

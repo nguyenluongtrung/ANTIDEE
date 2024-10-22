@@ -8,6 +8,7 @@ const {
 	updateQualification,
 	receiveNewQualification,
 	checkQualificationReceived,
+	getAccountQualifications,
 } = require('../controllers/qualificationController');
 
 const router = express.Router();
@@ -20,6 +21,9 @@ router
 	.route('/receive/:qualificationId/:accountId')
 	.get(checkQualificationReceived)
 	.post(receiveNewQualification);
+router
+	.route('/get-account-qualifications/:accountId')
+	.get(getAccountQualifications);
 router
 	.route('/:qualificationId')
 	.get(protect, restrict('Admin'), getQualification)

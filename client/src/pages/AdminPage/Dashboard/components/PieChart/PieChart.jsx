@@ -20,7 +20,6 @@ const DonutChart = () => {
                     value: data[i+5]
                 })
             }
-            console.log(result)
 			setChartData(result);
 		};
 

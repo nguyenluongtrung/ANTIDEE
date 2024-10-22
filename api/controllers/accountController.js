@@ -1,9 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const Account = require('./../models/accountModel');
+const AccountQualification = require('./../models/accountQualificationModel');
 const Service = require('./../models/serviceModel');
 const DomesticHelperFeedback = require('./../models/domesticHelper_FeedbackModel');
 const JobPost = require('./../models/jobPostModel');
-const Transaction = require('./../models/transactionModel'); 
+const Transaction = require('./../models/transactionModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -96,12 +97,43 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const getAllAccounts = asyncHandler(async (req, res) => {
-	const accounts = await Account.find({}).populate('resume.qualifications');
+	const accounts = await Account.find({});
 
 	res.status(200).json({
 		status: 'success',
 		data: {
 			accounts,
+		},
+	});
+});
+
+const getAllEligibleAccounts = asyncHandler(async (req, res) => {
+	const accounts = await Account.find({});
+	const accountQualifications = await AccountQualification.find({});
+	const eligibleAccounts = [];
+	accounts.forEach((acc) => {
+		if (
+			accountQualifications.find(
+				(account) => String(account.accountId) == String(acc._id)
+			)
+		) {
+			if (
+				acc.resume.frontIdCard &&
+				acc.resume.backIdCard &&
+				acc.resume.curriculumVitae &&
+				acc.resume.certificateOfResidence &&
+				!acc.isEligible &&
+				acc.role === 'Người giúp việc'
+			) {
+				eligibleAccounts.push(acc);
+			}
+		}
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			eligibleAccounts,
 		},
 	});
 });
@@ -661,7 +693,6 @@ const receiveGiftHistory = asyncHandler(async (req, res) => {
 		);
 	}
 
-	// Cập nhật trạng thái isReceived thành true
 	giftLevel.isReceived = true;
 
 	await account.save();
@@ -685,9 +716,7 @@ const updateAPoint = asyncHandler(async (req, res) => {
 	const { aPoints, apoint, serviceId, operationType } = req.body;
 
 	if (!accountId) {
-		return res
-			.status(400)
-			.json({ message: 'Account ID are required' });
+		return res.status(400).json({ message: 'Account ID are required' });
 	}
 
 	try {
@@ -744,7 +773,7 @@ const updateIsUsedVoucher = asyncHandler(async (req, res) => {
 
 const updateRole = asyncHandler(async (req, res) => {
 	const updatedAccount = await Account.findByIdAndUpdate(req.params.accountId, {
-		role: 'Người giúp việc',
+		isEligible: true,
 	});
 	res.status(200).json({
 		status: 'success',
@@ -782,55 +811,57 @@ const getAccountBalance = asyncHandler(async (req, res) => {
 });
 
 const getAccountSalary = asyncHandler(async (req, res) => {
-    const accountId = req.account._id;
-    const account = await Account.findById(accountId);
-    if (!account) {
-        res.status(404);
-        throw new Error('Account not found');
-    }
+	const accountId = req.account._id;
+	const account = await Account.findById(accountId);
+	if (!account) {
+		res.status(404);
+		throw new Error('Account not found');
+	}
 
-    try {
-        const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-        const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+	try {
+		const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+		const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
 
-        const monthlySalary = await Transaction.aggregate([
-            {
-                $match: {
-                    accountId: accountId,
-                    category: 'salary',
-                    date: {
-                        $gte: startOfYear,
-                        $lt: endOfYear,
-                    },
-                },
-            },
-            {
-                $group: {
-                    _id: { $month: '$date' },
-                    totalSalary: { $sum: '$amount' },
-                },
-            },
-            {
-                $sort: { _id: 1 },
-            },
-        ]);
+		const monthlySalary = await Transaction.aggregate([
+			{
+				$match: {
+					accountId: accountId,
+					category: 'salary',
+					date: {
+						$gte: startOfYear,
+						$lt: endOfYear,
+					},
+				},
+			},
+			{
+				$group: {
+					_id: { $month: '$date' },
+					totalSalary: { $sum: '$amount' },
+				},
+			},
+			{
+				$sort: { _id: 1 },
+			},
+		]);
 
-        const salaries = new Array(12).fill(0);
+		const salaries = new Array(12).fill(0);
 
-        monthlySalary.forEach(item => {
-            salaries[item._id - 1] = item.totalSalary;
-        });
+		monthlySalary.forEach((item) => {
+			salaries[item._id - 1] = item.totalSalary;
+		});
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                monthlySalary: salaries,
-            },
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'An error occurred while fetching the salary.' });
-    }
+		res.status(200).json({
+			status: 'success',
+			data: {
+				monthlySalary: salaries,
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		res
+			.status(500)
+			.json({ message: 'An error occurred while fetching the salary.' });
+	}
 });
 
 module.exports = {
@@ -862,4 +893,5 @@ module.exports = {
 	getAccountBalance,
 	updateRatingCustomer,
 	getAccountSalary,
+	getAllEligibleAccounts,
 };

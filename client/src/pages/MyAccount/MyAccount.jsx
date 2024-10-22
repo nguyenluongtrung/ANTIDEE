@@ -256,16 +256,6 @@ export const MyAccount = () => {
 									</tr>
 									<tr>
 										<td className="py-1.5">
-											<span className="text-gray">Hạng khách hàng</span>
-										</td>
-										<td>
-											<span className="pl-10">
-												{account?.accountLevel?.customerLevel?.name}
-											</span>
-										</td>
-									</tr>
-									<tr>
-										<td className="py-1.5">
 											<span className="text-gray">Hạng giúp việc</span>
 										</td>
 										<td>

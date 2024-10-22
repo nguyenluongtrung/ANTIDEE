@@ -34,7 +34,6 @@ export const UpdateProfileForDW = () => {
 	const [certificateOfResidenceUrl, setCertificateOfResidenceUrl] =
 		useState('');
 
-	const [filePerc, setFilePerc] = useState(0);
 	const [fileUploadError, setFileUploadError] = useState(false);
 	const frontIdCardRef = useRef(null);
 	const backIdCardRef = useRef(null);
@@ -46,11 +45,11 @@ export const UpdateProfileForDW = () => {
 	async function initiateAccountInformation() {
 		const output = await dispatch(getAccountInformation());
 		setCertificateOfResidenceUrl(
-			output?.payload?.resume[0]?.certificateOfResidence
+			output?.payload?.resume?.certificateOfResidence
 		);
-		setFrontIdCardUrl(output?.payload?.resume[0]?.frontIdCard);
-		setCurriculumVitaeUrl(output?.payload?.resume[0]?.curriculumVitae);
-		setBackIdCardUrl(output?.payload?.resume[0]?.backIdCard);
+		setFrontIdCardUrl(output?.payload?.resume?.frontIdCard);
+		setCurriculumVitaeUrl(output?.payload?.resume?.curriculumVitae);
+		setBackIdCardUrl(output?.payload?.resume?.backIdCard);
 	}
 
 	useEffect(() => {
@@ -109,16 +108,14 @@ export const UpdateProfileForDW = () => {
 	};
 
 	const onSubmit = async () => {
-		const updatedResume = [
+		const updatedResume = 
 			{
-				...accountData?.resume[0],
 				frontIdCard: frontIdCardUrl,
 				backIdCard: backIdCardUrl,
 				curriculumVitae: curriculumVitaeUrl,
 				certificateOfResidence: certificateOfResidenceUrl,
-			},
-			...accountData?.resume.slice(1),
-		];
+			}
+		;
 		const account = { ...accountData, resume: updatedResume };
 		const result = await dispatch(updateAccountInformation(account));
 
@@ -279,18 +276,18 @@ export const UpdateProfileForDW = () => {
 				<button
 					onClick={onSubmit}
 					className={`w-72 p-1 mb-5 rounded-full text-white ${
-						!curriculumVitae ||
-						!frontIdCard ||
-						!backIdCard ||
-						!certificateOfResidence
+						curriculumVitaeUrl == '' ||
+						frontIdCardUrl == ''  ||
+						backIdCardUrl == ''  ||
+						certificateOfResidenceUrl == '' 
 							? 'bg-gray'
 							: 'bg-green'
 					}`}
 					disabled={
-						!curriculumVitae ||
-						!frontIdCard ||
-						!backIdCard ||
-						!certificateOfResidence
+						curriculumVitaeUrl == '' ||
+						frontIdCardUrl == '' ||
+						backIdCardUrl == '' ||
+						certificateOfResidenceUrl == ''
 					}
 				>
 					Cập nhật hồ sơ
