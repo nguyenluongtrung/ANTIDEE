@@ -28,7 +28,9 @@ export const getForumPost = createAsyncThunk(
 	'forumPosts/getForumPost',
 	async (postId, thunkAPI) => {
 		try {
-			return await forumPostService.getForumPost(postId);
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount?.data?.token;
+			return await forumPostService.getForumPost(token, postId);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -248,7 +250,6 @@ export const updateHiddenDetails = createAsyncThunk(
 				postId,
 				token
 			);
-
 		} catch (error) {
 			const message =
 				(error.response &&
