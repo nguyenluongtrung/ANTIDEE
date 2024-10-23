@@ -14,11 +14,13 @@ const {
 	reactToForumPost,
 	unReactToForumPost,
 	updateHiddenDetails,
+	getTopDiscussions,
 } = require('../controllers/forumPostController');
 const router = express.Router();
 
 router.route('/').get(protect, getAllForumPosts).post(protect, createForumPost);
 router.route('/repositories').get(protect, getForumRepositories);
+router.route('/top-discussions').get(getTopDiscussions);
 router
 	.route('/:forumPostId')
 	.get(getForumPost)
