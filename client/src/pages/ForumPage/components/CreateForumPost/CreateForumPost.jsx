@@ -55,7 +55,12 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
         }
         return false;
     };
-
+    const handleRemoveImage = () => {
+        setImagesUrl('');
+        setFile(undefined);  
+        setFilePerc(0);
+        setFileUploadError('');  
+    };
     const onSubmit = async (formData) => {
         if (imagesUrl || !formData.images) {
             try {
@@ -271,6 +276,13 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                 {imagesUrl && (
                     <div className="mt-3 image-preview">
                         <img src={imagesUrl} alt="Preview" className="w-[40%] max-h-96 object-contain" />
+                        <button
+            type="button"
+            onClick={() => handleRemoveImage()}
+            className="absolute mt-[-80px] font-bold right-6 p-1 text-primary rounded-full  "
+        >
+            X
+        </button>
                     </div>
                 )}
                 <div className="flex mt-3 justify-center">
