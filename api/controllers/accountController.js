@@ -811,57 +811,85 @@ const getAccountBalance = asyncHandler(async (req, res) => {
 });
 
 const getAccountSalary = asyncHandler(async (req, res) => {
-	const accountId = req.account._id;
-	const account = await Account.findById(accountId);
-	if (!account) {
-		res.status(404);
-		throw new Error('Account not found');
-	}
+    const accountId = req.account._id;
+    const account = await Account.findById(accountId);
+    if (!account) {
+        res.status(404);
+        throw new Error('Account not found');
+    }
 
-	try {
-		const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-		const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+    try {
+        const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+        const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
 
-		const monthlySalary = await Transaction.aggregate([
-			{
-				$match: {
-					accountId: accountId,
-					category: 'salary',
-					date: {
-						$gte: startOfYear,
-						$lt: endOfYear,
-					},
-				},
-			},
-			{
-				$group: {
-					_id: { $month: '$date' },
-					totalSalary: { $sum: '$amount' },
-				},
-			},
-			{
-				$sort: { _id: 1 },
-			},
-		]);
+        const completedJobs = await JobPost.find({
+            'hasCompleted.customerConfirm': true,
+            'hasCompleted.domesticHelperConfirm': true,
+            'hasCompleted.completedAt': { 
+                $gte: startOfYear, 
+                $lt: endOfYear 
+            }
+        });
 
-		const salaries = new Array(12).fill(0);
+        const jobIds = completedJobs.map((job) => job._id);
 
-		monthlySalary.forEach((item) => {
-			salaries[item._id - 1] = item.totalSalary;
-		});
+        const monthlySalary = await Transaction.aggregate([
+            {
+                $match: {
+                    accountId: accountId,
+                    jobId: { $in: jobIds },
+                    category: { $in: ['salary', 'commission_fee'] },
+                    date: {
+                        $gte: startOfYear,
+                        $lt: endOfYear,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: { $month: '$date' },
+                    totalSalary: {
+                        $sum: { 
+                            $cond: { if: { $eq: ['$category', 'salary'] }, then: '$amount', else: 0 }
+                        },
+                    },
+                    totalCommission: {
+                        $sum: {
+                            $cond: { if: { $eq: ['$category', 'commission_fee'] }, then: '$amount', else: 0 }
+                        },
+                    },
+                },
+            },
+            {
+                $project: {
+                    totalSalary: 1,
+                    totalCommission: 1,
+                    totalSalaryAfterDeductions: {
+                        $subtract: ['$totalSalary', '$totalCommission'],
+                    },
+                },
+            },
+            {
+                $sort: { _id: 1 },
+            },
+        ]);		
 
-		res.status(200).json({
-			status: 'success',
-			data: {
-				monthlySalary: salaries,
-			},
-		});
-	} catch (error) {
-		console.error(error);
-		res
-			.status(500)
-			.json({ message: 'An error occurred while fetching the salary.' });
-	}
+        const salaries = new Array(12).fill(0);
+
+        monthlySalary.forEach(item => {
+            salaries[item._id - 1] = item.totalSalaryAfterDeductions;
+        });
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                monthlySalary: salaries,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy dữ liệu lương.' });
+    }
 });
 
 module.exports = {
