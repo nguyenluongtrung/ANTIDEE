@@ -10,12 +10,6 @@ const commentSchema = mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Account',
 		},
-		likes: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Account',
-			},
-		],
 	},
 	{
 		timestamps: true,
@@ -71,22 +65,24 @@ const forumPostSchema = mongoose.Schema(
 		hiddenDetails: {
 			status: {
 				type: Boolean,
-				default:'false'
+				default: 'false',
 			},
-			reasons: [{
-				accountId: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Account',
+			reasons: [
+				{
+					accountId: {
+						type: mongoose.Schema.Types.ObjectId,
+						ref: 'Account',
+					},
+					content: {
+						type: String,
+					},
+					update: {
+						type: Date,
+						default: Date.now,
+					},
 				},
-				content:{
-					type: String,
-				},
-				update: {
-					type: Date,
-					default: Date.now,
-				},
-			}]
-		}
+			],
+		},
 	},
 	{
 		timestamps: true,

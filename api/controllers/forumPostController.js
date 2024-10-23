@@ -22,6 +22,31 @@ const createForumPost = asyncHandler(async (req, res) => {
 	}
 });
 
+const getTopDiscussions = asyncHandler(async (req, res) => {
+	const topDiscussions = await ForumPost.aggregate([
+		{
+			$addFields: {
+				commentsCount: { $size: '$comments' },
+				likesCount: { $size: '$likes' },
+			},
+		},
+		{
+			$sort: { commentsCount: -1, likesCount: -1 },
+		},
+		{
+			$limit: 5,
+		},
+		{
+			$project: {
+				forumPostId: '$_id',
+				commentsCount: 1,
+			},
+		},
+	]);
+
+	res.status(200).json(topDiscussions);
+});
+
 const deleteForumPost = asyncHandler(async (req, res) => {
 	const { forumPostId } = req.params;
 
@@ -298,8 +323,8 @@ const unReactToForumPost = asyncHandler(async (req, res) => {
 });
 
 const updateHiddenDetails = async (req, res) => {
-	const { postId } = req.params; 
-	const { accountId, reasonContent, status } = req.body; 
+	const { postId } = req.params;
+	const { accountId, reasonContent, status } = req.body;
 
 	try {
 		const post = await ForumPost.findById(postId);
@@ -312,17 +337,19 @@ const updateHiddenDetails = async (req, res) => {
 			content: reasonContent,
 			update: new Date(),
 		});
-		post.hiddenDetails.status = status !==undefined ? status:false;
+		post.hiddenDetails.status = status !== undefined ? status : false;
 
 		await post.save();
 
-		return res.status(200).json({ message: 'Hidden details updated successfully', post });
+		return res
+			.status(200)
+			.json({ message: 'Hidden details updated successfully', post });
 	} catch (error) {
-		return res.status(500).json({ message: 'Error updating hidden details', error });
+		return res
+			.status(500)
+			.json({ message: 'Error updating hidden details', error });
 	}
 };
-
-
 
 module.exports = {
 	createForumPost,
@@ -337,5 +364,6 @@ module.exports = {
 	commentForumPost,
 	reactToForumPost,
 	unReactToForumPost,
-	updateHiddenDetails
+	updateHiddenDetails,
+	getTopDiscussions,
 };
