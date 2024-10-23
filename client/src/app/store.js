@@ -13,6 +13,7 @@ import appFeedbackReducer from './../features/appFeedbacks/appFeedbackSlice';
 import chatReducer from './../features/chatting/chattingSlice';
 import messageReducer from './../features/message/messageSlice';
 import forumPostReducer from './../features/forumPost/forumPostSlice';
+import topicReducer from './../features/topics/topicSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -30,5 +31,6 @@ export const store = configureStore({
 		chatting: chatReducer,
 		messages: messageReducer,
 		forumPosts:forumPostReducer,
+		topics:topicReducer,
 	},
 });

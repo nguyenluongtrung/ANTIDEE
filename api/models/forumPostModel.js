@@ -48,6 +48,15 @@ const postRepositorySchema = mongoose.Schema(
 
 const forumPostSchema = mongoose.Schema(
 	{
+		title: {
+			type: String, 
+		}, 
+		topic:[
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Topic',
+			},
+		],
 		content: {
 			type: String,
 			required: true,
@@ -71,27 +80,30 @@ const forumPostSchema = mongoose.Schema(
 		hiddenDetails: {
 			status: {
 				type: Boolean,
-				default:'false'
+				default: 'false',
 			},
-			reasons: [{
-				accountId: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Account',
-				},
-				content:{
-					type: String,
-				},
-				update: {
-					type: Date,
-					default: Date.now,
-				},
-			}]
-		}
+			reasons: [
+				{
+					accountId: {
+						type: mongoose.Schema.Types.ObjectId,
+						ref: 'Account',
+					},
+					content: {
+						type: String,
+					},
+					update: {
+						type: Date,
+						default: Date.now,
+					},
+				}
+			],
+		},
 	},
 	{
 		timestamps: true,
 	}
 );
+
 
 module.exports = {
 	ForumPost: mongoose.model('ForumPost', forumPostSchema),

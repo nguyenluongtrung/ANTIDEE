@@ -112,12 +112,11 @@ const hideForumPost = async (forumPostId, token) => {
 			response.data &&
 			response.data.status === 'success' &&
 			response.data.data
-		) {
-			// Kiểm tra nếu có ID của bài viết đã bị ẩn
+		) { 
 			if (Array.isArray(response.data.data) && response.data.data.length > 0) {
-				return response.data.data[0].id; // Trả về ID của bài viết đầu tiên
+				return response.data.data[0].id;  
 			} else if (response.data.data.id) {
-				return response.data.data.id; // Trả về ID nếu tồn tại
+				return response.data.data.id;  
 			} else {
 				throw new Error('Data structure does not contain post ID');
 			}

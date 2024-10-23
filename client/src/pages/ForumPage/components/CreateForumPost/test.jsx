@@ -3,12 +3,12 @@ import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createForumPost, getAllForumPosts } from '../../../../features/forumPost/forumPostSlice';
+import { getAllTopics } from '../../../../features/topics/topicSlice';
 import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateForumPost.css';
-import { getAllTopics } from '../../../../features/topics/topicSlice';
 import {
     getDownloadURL,
     getStorage,
@@ -55,7 +55,12 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
         }
         return false;
     };
-
+    const handleRemoveImage = () => {
+        setImagesUrl('');
+        setFile(undefined);  
+        setFilePerc(0);
+        setFileUploadError('');  
+    };
     const onSubmit = async (formData) => {
         if (imagesUrl || !formData.images) {
             try {
@@ -71,7 +76,6 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                     });
 
                     const data = response.data;
-                    console.log(data);
 
                     const thresholds = {
                         nudity: 0.2,
@@ -132,9 +136,11 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                 setIsCheckingImage(false);
                 const forumPostData = {
                     ...formData,
-                    topic: Array.isArray(formData.topic) ? formData.topic : [formData.topic],
+                    topic: formData.topic ? [formData.topic] : [],
                     images: imagesUrl || formData.images,
                 };
+
+                console.log('Forum Post Data:', forumPostData);
                 const result = await dispatch(createForumPost(forumPostData));
                 if (result.type.endsWith('fulfilled')) {
                     toast.success('Đăng bài thành công', successStyle);
@@ -234,20 +240,16 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                     {errors.content && <p className="text-red text-center">{errors.content.message}</p>}
                 </div>
                 <div className="mt-3">
-                    <select
-                        {...register('topic', { required: 'Vui lòng chọn ít nhất một chủ đề' })}
-                        className="w-full text-primary border rounded-md p-2"
-                        multiple
-                    >
+                    <select {...register('topic', { required: 'Vui lòng chọn một chủ đề' })} className="w-full text-primary border rounded-md p-2">
+                        <option value="">Chọn chủ đề...</option>
                         {topics.map((topic) => (
-                            <option key={topic._id} value={topic._id}>
+                            <option key={topic.id} value={topic.id}>
                                 {topic.topicName}
                             </option>
                         ))}
                     </select>
                     {errors.topic && <p className="text-red text-center">{errors.topic.message}</p>}
                 </div>
-
                 <div className="mt-3">
 
                     <span
@@ -269,10 +271,17 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                     {fileUploadError && <p className="text-red">{fileUploadError}</p>}
                 </div>
                 {imagesUrl && (
-                    <div className="mt-3 image-preview">
-                        <img src={imagesUrl} alt="Preview" className="w-[40%] max-h-96 object-contain" />
-                    </div>
-                )}
+    <div className="relative mt-3 image-preview">
+        <img src={imagesUrl} alt="Preview" className="w-[40%] max-h-96 object-contain" />
+        <button
+            type="button"
+            onClick={() => handleRemoveImage()}
+            className="absolute top-1 font-bold right-7 p-1 text-primary rounded-full  "
+        >
+            X
+        </button>
+    </div>
+)}
                 <div className="flex mt-3 justify-center">
                     <button
                         className="btn-submit bg-primary w-full h-10 text-white p-2 rounded-md hover:bg-primary-dark"
