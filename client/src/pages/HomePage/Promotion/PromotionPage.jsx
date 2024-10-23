@@ -10,15 +10,19 @@ import "slick-carousel/slick/slick-theme.css";
 const PromotionPage = () => {
     const [promotionList, setPromotionList] = useState([]);
     const dispatch = useDispatch();
-
-
+    
     const isPromotionActive = (promotion) => {
         const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const startDate = new Date(promotion.startDate);
         const endDate = new Date(promotion.endDate);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
+    
+      
         return startDate <= today && endDate >= today;
     };
-
+    
 
     async function initialPromotionList() {
         try {
@@ -39,7 +43,7 @@ const PromotionPage = () => {
 
     const settings = {
         dots: true,
-        infinite: true,
+        infinite: promotionList.length > 1,
         speed: 800,
         slidesToShow: 1,
         slidesToScroll: 1,
