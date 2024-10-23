@@ -112,12 +112,11 @@ const hideForumPost = async (forumPostId, token) => {
 			response.data &&
 			response.data.status === 'success' &&
 			response.data.data
-		) {
-			// Kiểm tra nếu có ID của bài viết đã bị ẩn
+		) {c
 			if (Array.isArray(response.data.data) && response.data.data.length > 0) {
-				return response.data.data[0].id; // Trả về ID của bài viết đầu tiên
+				return response.data.data[0].id; 
 			} else if (response.data.data.id) {
-				return response.data.data.id; // Trả về ID nếu tồn tại
+				return response.data.data.id;  
 			} else {
 				throw new Error('Data structure does not contain post ID');
 			}
@@ -149,9 +148,9 @@ export const unhideForumPost = async (forumPostId, token) => {
 
 		if (response.data && response.data.status === 'success') {
 			if (Array.isArray(response.data.data) && response.data.data.length > 0) {
-				return response.data.data[0]; // Trả về bài viết đầu tiên trong mảng nếu có nhiều
+				return response.data.data[0];  
 			} else if (response.data.data && response.data.data._id) {
-				return response.data.data; // Trả về bài viết đã được khôi phục
+				return response.data.data;  
 			} else {
 				console.warn(
 					'Unhide action successful but no valid post data returned.'

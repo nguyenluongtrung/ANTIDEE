@@ -6,7 +6,7 @@ export const getAllForumPosts = createAsyncThunk(
 	async (_, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount?.data?.token; // Safely retrieve the token
+			const token = storedAccount?.data?.token;  
 			if (!token) {
 				throw new Error('No token found');
 			}

@@ -98,7 +98,8 @@ const getAllForumPosts = asyncHandler(async (req, res) => {
 			.populate({
 				path: 'comments.author',
 				select: 'avatar name',
-			});
+			})
+			.populate('topic');
 		res.status(200).json({
 			success: true,
 			data: { forumPosts },
@@ -118,7 +119,8 @@ const getForumPost = asyncHandler(async (req, res) => {
 	const forumPost = await ForumPost.findById(forumPostId).populate({
 		path: 'author',
 		select: 'name avatar role',
-	});
+	})
+	.populate('topic');
 
 	if (!forumPost) {
 		res.status(404);
