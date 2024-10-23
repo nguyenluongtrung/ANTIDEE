@@ -5,6 +5,7 @@ const Service = require('../models/serviceModel');
 const sendMail = require('../config/emailConfig');
 const emailTemplate = require('../utils/sampleEmailForm');
 const { addNewTransaction } = require('./transactionController');
+const Transaction = require('./../models/transactionModel');
 
 const createJobPost = asyncHandler(async (req, res) => {
 	const jobPost = await JobPost.create(req.body);
@@ -524,58 +525,88 @@ const countNumberOfJobPostByAccountId = asyncHandler(async (req, res) => {
 });
 
 const getRevenueByCurrentMonth = asyncHandler(async (req, res) => {
-	const jobPosts = await JobPost.find({});
-	const currentMonth = new Date().getMonth();
-	let revenueByCurrentMonth = 0;
-	jobPosts.map((job) => {
-		if (
-			job.hasCompleted.customerConfirm &&
-			job.hasCompleted.domesticHelperConfirm &&
-			new Date(job.hasCompleted.completedAt).getMonth() === currentMonth
-		) {
-			revenueByCurrentMonth += Math.round(job.totalPrice * 0.25);
-		}
-	});
+    const currentMonth = new Date().getMonth();
 
-	res.status(200).json({
-		success: true,
-		data: {
-			revenueByCurrentMonth,
-		},
-	});
+    const completedJobs = await JobPost.find({
+        'hasCompleted.customerConfirm': true,
+        'hasCompleted.domesticHelperConfirm': true,
+    });
+
+    const jobIds = completedJobs.map((job) => job._id);
+
+    const transactions = await Transaction.find({
+        jobId: { $in: jobIds },
+    });
+
+    let revenueByCurrentMonth = 0;
+
+    transactions.forEach((transaction) => {
+        const transactionMonth = new Date(transaction.date).getMonth();
+        if (transactionMonth === currentMonth) {
+            if (transaction.category === 'job_income' || transaction.category === 'commission_fee') {
+                revenueByCurrentMonth += transaction.amount;
+            } else if (transaction.category === 'refund' || transaction.category === 'salary') {
+                revenueByCurrentMonth -= transaction.amount;
+            }
+        }
+    });
+
+    res.status(200).json({
+        success: true,
+        data: {
+            revenueByCurrentMonth,
+        },
+    });
 });
 
 const getRevenueByMonths = asyncHandler(async (req, res) => {
-	const jobPosts = await JobPost.find({});
-	const currentYear = new Date().getFullYear();
-	let revenueByMonths = Array.from({ length: 12 }, (_, index) => ({
-		month: index + 1,
-		revenue: 0,
-	}));
-	jobPosts.map((job) => {
-		if (
-			job.hasCompleted.customerConfirm &&
-			job.hasCompleted.domesticHelperConfirm &&
-			new Date(job.hasCompleted.completedAt).getFullYear() === currentYear
-		) {
-			const monthIndex = new Date(job.hasCompleted.completedAt).getMonth();
-			revenueByMonths[monthIndex].revenue += Math.round(job.totalPrice * 0.25);
-		}
-	});
-	let months = [];
-	let revenues = [];
-	revenueByMonths.map((revenue) => {
-		months.push('T' + revenue.month);
-		revenues.push(revenue.revenue);
-	});
+    const currentYear = new Date().getFullYear();
+    
+    let revenueByMonths = Array.from({ length: 12 }, (_, index) => ({
+        month: index + 1,
+        revenue: 0,
+    }));
 
-	res.status(200).json({
-		success: true,
-		data: {
-			months,
-			revenues,
-		},
-	});
+    const completedJobs = await JobPost.find({
+        'hasCompleted.customerConfirm': true,
+        'hasCompleted.domesticHelperConfirm': true,
+        'hasCompleted.completedAt': { 
+            $gte: new Date(currentYear, 0, 1), 
+            $lt: new Date(currentYear + 1, 0, 1) 
+        }
+    });
+
+    const jobIds = completedJobs.map((job) => job._id);
+
+    const transactions = await Transaction.find({
+        jobId: { $in: jobIds },
+        date: { 
+            $gte: new Date(currentYear, 0, 1), 
+            $lt: new Date(currentYear + 1, 0, 1) 
+        }
+    });
+
+    transactions.forEach((transaction) => {
+        const transactionDate = new Date(transaction.date);
+        const transactionMonth = transactionDate.getMonth();
+
+        if (transaction.category === 'job_income' || transaction.category === 'commission_fee') {
+            revenueByMonths[transactionMonth].revenue += transaction.amount;
+        } else if (transaction.category === 'refund' || transaction.category === 'salary') {
+            revenueByMonths[transactionMonth].revenue -= transaction.amount;
+        }
+    });
+
+    let months = revenueByMonths.map(revenue => 'T' + revenue.month);
+    let revenues = revenueByMonths.map(revenue => revenue.revenue);
+
+    res.status(200).json({
+        success: true,
+        data: {
+            months,
+            revenues,
+        },
+    });
 });
 
 module.exports = {
