@@ -14,10 +14,7 @@ import {
 import ColumnChart from "./components/ColumnChart/ColumnChart";
 import DonutChart from "./components/PieChart/PieChart";
 import AreaChart from "./components/AreaChart/AreaChart";
-import {
-	getRevenueByCurrentMonth,
-	getRevenueByMonths,
-} from "../../../features/jobPosts/jobPostsSlice";
+import { getRevenueByCurrentMonth } from "../../../features/jobPosts/jobPostsSlice";
 
 export const Dashboard = () => {
 	const [numOfServices, setNumOfServices] = useState();
@@ -25,8 +22,6 @@ export const Dashboard = () => {
 	const [numOfJobPosts, setNumOfJobPosts] = useState();
 	const [ranking, setRanking] = useState([]);
 	const [revenueByCurrentMonth, setRevenueByCurrentMonth] = useState();
-	const [revenues, setRevenues] = useState([]);
-	const [percentageDifference, setPercentageDifference] = useState(0);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -54,23 +49,6 @@ export const Dashboard = () => {
 		};
 		fetchData();
 	}, []);
-
-	useEffect(() => {
-		const currentMonth = new Date().getMonth();
-	  
-		if (revenues.length > 0) {
-		  const currentMonthRevenue = revenues[currentMonth] || 0;
-		  const previousMonthRevenue = revenues[currentMonth - 1] || 0;
-	  
-		  const calculatePercentageDifference = (current, previous) => {
-			if (previous === 0) return current > 0 ? 100 : -100; 
-			return ((current - previous) / previous) * 100;
-		  };
-	  
-		  const percentageDifference = calculatePercentageDifference(currentMonthRevenue, previousMonthRevenue);
-		  setPercentageDifference(percentageDifference);
-		}
-	  }, [revenues]);
 
 	return (
 		<>
@@ -100,10 +78,6 @@ export const Dashboard = () => {
 									{revenueByCurrentMonth} VND
 								</p>
 								<p>Doanh thu</p>
-								<p className="text-xs text-blue">
-									{percentageDifference > 0 ? "+" : ""}
-									{percentageDifference.toFixed(2)}% so với tháng trước
-								</p>
 							</div>
 							<div
 								className="rounded-lg p-5 mb-3 w-48"
@@ -117,7 +91,6 @@ export const Dashboard = () => {
 								</div>
 								<p className="font-bold text-xl mb-2">{numOfJobPosts}</p>
 								<p>Công việc được đăng</p>
-								<p className="text-xs text-blue">+1.2% so với tháng trước</p>
 							</div>
 							<div
 								className="rounded-lg p-5 mb-3 w-48"
@@ -131,7 +104,6 @@ export const Dashboard = () => {
 								</div>
 								<p className="font-bold text-xl mb-2">{numOfServices}</p>
 								<p>Dịch vụ</p>
-								<p className="text-xs text-blue">+1.2% so với tháng trước</p>
 							</div>
 							<div
 								className="rounded-lg p-5 mb-3 w-48"
@@ -145,7 +117,6 @@ export const Dashboard = () => {
 								</div>
 								<p className="font-bold text-xl mb-2">{numOfAccounts}</p>
 								<p>Tài khoản</p>
-								<p className="text-xs text-blue">+1.2% so với tháng trước</p>
 							</div>
 						</div>
 					</div>
