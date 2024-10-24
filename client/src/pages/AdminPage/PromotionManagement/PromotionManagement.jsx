@@ -13,14 +13,30 @@ import { UpdatePromotion } from './UpdatePromotion/UpdatePromotion';
 import { PromotionDetail } from './PromotionDetail/PromotionDetail';
 import { formatDate } from '../../../utils/format';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 
 export const PromotionManagement = () => {
     const [isOpenCreatePromotion, setIsOpenCreatePromotion] = useState(false);
     const [isOpenUpdatePromotion, setIsOpenUpdatePromotion] = useState(false);
     const [isOpenDetailPromotion, setIsOpenDetailPromotion] = useState(false);
-    const { promotions, isLoading } = useSelector((state) => state.promotions);
+    const { isLoading } = useSelector((state) => state.promotions);
+    const [promotions, setPromotions] = useState([]);
+  
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+
+
+    async function initiatePromotions() {
+        let output = await dispatch(getAllPromotions());
+        setPromotions(output.payload);
+    }
+
+    useEffect(() => {
+        initiatePromotions();
+    }, []);
 
     useEffect(() => {
         dispatch(getAllPromotions());
@@ -66,6 +82,23 @@ export const PromotionManagement = () => {
         navigate(`/admin-promotion/update-promotion/${promotionId}`);
     };
 
+    const handleRowsPerPageChange = (e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1);
+    };
+
+
+    const totalPages = calculateTotalPages(promotions.length, rowsPerPage);
+    const selectedPromotions = getPageItems(promotions, currentPage, rowsPerPage);
+
+    const handleNextPage = () => {
+        setCurrentPage(nextPage(currentPage, totalPages));
+    };
+
+    const handlePreviousPage = () => {
+        setCurrentPage(previousPage(currentPage));
+    };
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -96,7 +129,9 @@ export const PromotionManagement = () => {
                 <div className="flex justify-between items-center">
                     <div className="flex-1 pt-2">
                         <span>Hiển thị </span>
-                        <select className="rounded-md p-1 mx-1 hover:cursor-pointer bg-gray-200">
+                        <select className="rounded-md p-1 mx-1 hover:cursor-pointer bg-light_purple"
+                            value={rowsPerPage}
+                            onChange={handleRowsPerPageChange}>
                             <option>10</option>
                             <option>20</option>
                             <option>30</option>
@@ -114,7 +149,8 @@ export const PromotionManagement = () => {
 
                 <table className="w-full border-b border-gray mt-3">
                     <thead>
-                        <tr className="text-sm font-medium text-gray-700 border-b">
+                        <tr className="text-sm font-medium text-gray border-b">
+                            <td className="py-2 px-1 text-center font-bold">STT</td>
                             <td className="py-2 px-1 text-center font-bold">Tên mã giảm giá</td>
                             <td className="py-2 px-1 text-center font-bold">Thời gian bắt đầu</td>
                             <td className="py-2 px-1 text-center font-bold">Thời gian kết thúc</td>
@@ -127,23 +163,25 @@ export const PromotionManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {promotions?.map((promotion) => {
+                        {selectedPromotions.map((promotion, index) => {
                             const currentDate = new Date();
                             const endDate = new Date(promotion?.endDate);
                             const isExpired = endDate < currentDate;
                             const statusText = isExpired ? 'Đã hết hạn' : 'Đang hoạt động';
                             const statusClass = isExpired ? 'text-red font-bold bg-red bg-opacity-15 border-red border-2' : 'text-green font-bold bg-green bg-opacity-15 border-green border-2';
 
-
                             return (
-                                <tr key={promotion?._id} className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer bg-opacity- ">
-                                    <td className="font-medium text-center text-gray p-3">{promotion?.promotionName}</td>
+                                <tr key={promotion?._id} className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
+                                    <td className="font-medium text-center text-gray p-3">{index + 1}</td>
+                                    <td className="font-medium text-center text-gray">{promotion?.promotionName}</td>
                                     <td className="font-medium text-center text-gray">{formatDate(promotion?.startDate)}</td>
                                     <td className="font-medium text-center text-gray">{formatDate(promotion?.endDate)}</td>
                                     <td className="font-medium text-center text-gray">{promotion?.promotionValue * 100} %</td>
                                     <td className="font-medium text-center text-gray">{promotion?.promotionCode}</td>
                                     <td className="font-medium text-center text-gray">{promotion?.promotionQuantity}</td>
-                                    <td> <p className={`font-medium text-center rounded-full p-1 ${statusClass}`}>{statusText}</p></td>
+                                    <td>
+                                        <p className={`font-medium text-center rounded-full p-1 ${statusClass}`}>{statusText}</p>
+                                    </td>
                                     <td className="font-medium text-center text-gray">
                                         <button
                                             className="hover:cursor-pointer text-xl pt-1.5"
@@ -174,6 +212,24 @@ export const PromotionManagement = () => {
                     </tbody>
 
                 </table>
+                <div className="flex justify-center items-center mt-4 space-x-2">
+					<button 
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === 1}
+						onClick={handlePreviousPage}
+					>
+						&#9664;
+					</button>
+					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === totalPages}
+						onClick={handleNextPage}
+					>
+						&#9654;
+					</button>
+				</div>
+
             </div>
         </div>
     );

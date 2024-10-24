@@ -12,6 +12,7 @@ import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { UpdateExam } from './UpdateExam/UpdateExam';
 import { ExamDetail } from './ExamDetail/ExamDetail';
 import { IoAddOutline } from 'react-icons/io5';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 export const ExamManagement = () => {
 	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
 	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
@@ -19,6 +20,9 @@ export const ExamManagement = () => {
 	const [chosenExamId, setChosenExamId] = useState('');
 	const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
+
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
 
 	useEffect(() => {
 		dispatch(getAllExams());
@@ -38,6 +42,23 @@ export const ExamManagement = () => {
 			console.error('Error during dispatch:', error);
 		});
 	};
+
+	const handleRowsPerPageChange = (e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1);
+    };
+
+
+    const totalPages = calculateTotalPages(exams.length, rowsPerPage);
+    const selectedExams = getPageItems(exams, currentPage, rowsPerPage);
+
+	const handleNextPage = () => {
+        setCurrentPage(nextPage(currentPage, totalPages));
+    };
+
+    const handlePreviousPage = () => {
+        setCurrentPage(previousPage(currentPage));
+    };
 
 	if (isLoading) {
 		return <Spinner />;
@@ -86,8 +107,10 @@ export const ExamManagement = () => {
 					<div className="flex-1 pt-2">
 						<span>Hiển thị </span>
 						<select
-							className="rounded-md p-1 mx-1 hover:cursor-pointer"
-							style={{ backgroundColor: '#E0E0E0' }}
+							className="rounded-md p-1 mx-1 hover:cursor-pointer bg-light_purple"
+
+							value={rowsPerPage}
+                            onChange={handleRowsPerPageChange}
 						>
 							<option>10</option>
 							<option>20</option>
@@ -120,7 +143,7 @@ export const ExamManagement = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{exams?.map((exam, index) => {
+						{selectedExams?.map((exam, index) => {
 							return (
 								<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
 									<td className="font-medium text-center text-gray p-3">
@@ -183,6 +206,23 @@ export const ExamManagement = () => {
 						})}
 					</tbody>
 				</table>
+				<div className="flex justify-center items-center mt-4 space-x-2">
+					<button 
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === 1}
+						onClick={handlePreviousPage}
+					>
+						&#9664;
+					</button>
+					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === totalPages}
+						onClick={handleNextPage}
+					>
+						&#9654;
+					</button>
+				</div>
 			</div>
 		</div>
 	);

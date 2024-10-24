@@ -12,6 +12,7 @@ import {
 	formatWorkingTime,
 } from '../../../utils/format';
 import { HistoryJobPostDetail } from './HistoryJobPostDetail/HistoryJobPostDetail';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 
 export const JobPostingHistory = () => {
 	const [myAccountId, setMyAccountId] = useState();
@@ -24,6 +25,9 @@ export const JobPostingHistory = () => {
 	const dispatch = useDispatch();
 	const { isLoading: accountLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
+
+	const [rowsPerPage, setRowsPerPage] = useState(6);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
@@ -105,8 +109,15 @@ export const JobPostingHistory = () => {
 	}, []);
 
 	useEffect(() => {
+		setCurrentPage(1);
 		getInitialHistoryJobList(filterOption);
 	}, [filterOption, myAccountId]);
+
+	const totalPages = calculateTotalPages(myJobHistory.length, rowsPerPage);
+	const selectedJobs = getPageItems(myJobHistory, currentPage, rowsPerPage);
+  
+	const handleNextPage = () => setCurrentPage(nextPage(currentPage, totalPages));
+	const handlePreviousPage = () => setCurrentPage(previousPage(currentPage));
 
 	if (jobPostLoading || accountLoading) {
 		return <Spinner />;
@@ -191,12 +202,11 @@ export const JobPostingHistory = () => {
 					</div>
 				) : (
 					<div className="grid grid-cols-3 gap-28">
-						{myJobHistory?.map((post) => {
+						{selectedJobs?.map((post) => {
 							return (
 								<div
-									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
-										post?.isUrgent && 'bg-light_pink'
-									}`}
+									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
+										}`}
 								>
 									<p className="text-brown font-bold mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
@@ -212,7 +222,7 @@ export const JobPostingHistory = () => {
 										</span>
 									</p>
 									{post?.hasCompleted?.customerConfirm &&
-									post?.hasCompleted?.domesticHelperConfirm ? (
+										post?.hasCompleted?.domesticHelperConfirm ? (
 										<p className="text-gray mb-2">
 											Hoàn thành lúc: {''}
 											<span className="text-brown">
@@ -232,7 +242,7 @@ export const JobPostingHistory = () => {
 												</span>
 											</p>
 											<p className="text-gray mb-2">
-											 	Hết hạn lúc: {''}
+												Hết hạn lúc: {''}
 												<span className="text-brown">
 													{formatDate(post?.dueDate)}{' '}
 												</span>
@@ -308,6 +318,24 @@ export const JobPostingHistory = () => {
 						})}
 					</div>
 				)}
+
+				<div className="flex justify-center items-center mt-4 space-x-2">
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === 1}
+						onClick={handlePreviousPage}
+					>
+						&#9664;
+					</button>
+					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === totalPages}
+						onClick={handleNextPage}
+					>
+						&#9654;
+					</button>
+				</div>
 			</div>
 		</div>
 	);

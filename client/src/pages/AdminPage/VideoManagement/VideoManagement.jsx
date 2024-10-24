@@ -1,7 +1,6 @@
 import toast, { Toaster, ToastBar } from "react-hot-toast";
 import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
 import "./VideoManagement.css";
-// import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { errorStyle, successStyle } from "../../../utils/toast-customize";
 import { BiEdit, BiTrash } from "react-icons/bi";
 import { useEffect, useState } from "react";
@@ -13,6 +12,12 @@ import { CreateVideo } from "./CreateVideo/CreateVideo";
 import { UpdateVideo } from "./UpdateVideo/UpdateVideo";
 
 import { IoAddOutline } from "react-icons/io5";
+import {
+  calculateTotalPages,
+  getPageItems,
+  nextPage,
+  previousPage,
+} from "../../../utils/pagination";
 
 export const VideoManagement = () => {
   //Create Video
@@ -21,9 +26,22 @@ export const VideoManagement = () => {
   const [isOpenUpdateVideo, setIsOpenUpdateVideo] = useState(false);
   const [chosenVideoId, setChosenVideoId] = useState("");
 
-  const { videos, isLoading } = useSelector((state) => state.videos);
+  const { isLoading } = useSelector((state) => state.videos);
+  const [videos, setVideos] = useState([]);
 
   const dispatch = useDispatch();
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  async function initiateVideos() {
+    let output = await dispatch(getAllVideos());
+    setVideos(output.payload);
+  }
+
+  useEffect(() => {
+    initiateVideos();
+  }, []);
 
   useEffect(() => {
     dispatch(getAllVideos());
@@ -43,11 +61,26 @@ export const VideoManagement = () => {
     return <Spinner />;
   }
 
-  //Get All Video
   const handleGetAllVideos = () => {
     Promise.all([dispatch(getAllVideos())]).catch((error) => {
       console.error("Error during dispatch:", error);
     });
+  };
+
+  const handleRowsPerPageChange = (e) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const totalPages = calculateTotalPages(videos.length, rowsPerPage);
+  const selectedVideos = getPageItems(videos, currentPage, rowsPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage(nextPage(currentPage, totalPages));
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage(previousPage(currentPage));
   };
 
   return (
@@ -87,6 +120,8 @@ export const VideoManagement = () => {
             <select
               className="rounded-md p-1 mx-1 hover:cursor-pointer"
               style={{ backgroundColor: "#E0E0E0" }}
+              value={rowsPerPage}
+              onChange={handleRowsPerPageChange}
             >
               <option>10</option>
               <option>20</option>
@@ -116,7 +151,7 @@ export const VideoManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {videos?.map((video, index) => {
+            {selectedVideos?.map((video, index) => {
               return (
                 <tr className="hover:bg-primary hover:bg-opacity-25 transition-colors odd:bg-light_pink  hover:cursor-pointer">
                   <td className="font-medium text-center text-gray p-3">
@@ -155,6 +190,25 @@ export const VideoManagement = () => {
             })}
           </tbody>
         </table>
+        <div className="flex justify-center items-center mt-4 space-x-2">
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={handlePreviousPage}
+          >
+            &#9664;
+          </button>
+          <span className="text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+          >
+            &#9654;
+          </button>
+        </div>
       </div>
     </div>
   );

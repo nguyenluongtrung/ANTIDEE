@@ -13,14 +13,27 @@ import { Spinner } from '../../../components';
 import { CreateQuestion } from './CreateQuestion/CreateQuestion';
 import { QuestionDetail } from './QuestionDetail/QuestionDetail';
 import { UpdateQuestion } from './UpdateQuestion/UpdateQuestion';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 
 export const QuestionManagement = () => {
 	const [isOpenCreateQuestion, setIsOpenCreateQuestion] = useState(false);
 	const [isOpenDetailQuestion, setIsOpenDetailQuestion] = useState(false);
 	const [isOpenUpdateQuestion, setIsOpenUpdateQuestion] = useState(false);
 	const [chosenQuestionId, setChosenQuestionId] = useState('');
-	const { questions, isLoading } = useSelector((state) => state.questions);
+	const { isLoading } = useSelector((state) => state.questions);
+	const [questions, setQuestions] = useState([]);
 	const dispatch = useDispatch();
+
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	async function initialQuestions() {
+		let output = await dispatch(getAllQuestions());
+		setQuestions(output.payload);
+	}
+	useEffect(() => {
+		initialQuestions();
+	}, [])
 
 	useEffect(() => {
 		dispatch(getAllQuestions());
@@ -39,6 +52,23 @@ export const QuestionManagement = () => {
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+	};
+
+	const handleRowsPerPageChange = (e) => {
+		setRowsPerPage(Number(e.target.value));
+		setCurrentPage(1);
+	};
+
+
+	const totalPages = calculateTotalPages(questions.length, rowsPerPage);
+	const selectedQuestions = getPageItems(questions, currentPage, rowsPerPage);
+
+	const handleNextPage = () => {
+		setCurrentPage(nextPage(currentPage, totalPages));
+	};
+
+	const handlePreviousPage = () => {
+		setCurrentPage(previousPage(currentPage));
 	};
 
 	if (isLoading) {
@@ -92,6 +122,8 @@ export const QuestionManagement = () => {
 						<select
 							className="rounded-md p-1 mx-1 hover:cursor-pointer"
 							style={{ backgroundColor: '#E0E0E0' }}
+							value={rowsPerPage}
+							onChange={handleRowsPerPageChange}
 						>
 							<option>10</option>
 							<option>20</option>
@@ -119,7 +151,7 @@ export const QuestionManagement = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{questions && questions
+						{selectedQuestions && selectedQuestions
 							.filter((question) => question != undefined)
 							?.map((question, index) => {
 								return (
@@ -171,6 +203,24 @@ export const QuestionManagement = () => {
 							})}
 					</tbody>
 				</table>
+				<div className="flex justify-center items-center mt-4 space-x-2">
+					<button 
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === 1}
+						onClick={handlePreviousPage}
+					>
+						&#9664;
+					</button>
+					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === totalPages}
+						onClick={handleNextPage}
+					>
+						&#9654;
+					</button>
+				</div>
+
 			</div>
 		</div>
 	);

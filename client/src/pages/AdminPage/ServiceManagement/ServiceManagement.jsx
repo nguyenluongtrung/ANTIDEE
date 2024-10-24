@@ -15,13 +15,26 @@ import { UpdateService } from './UpdateService/UpdateService';
 import { ServiceDetail } from './ServiceDetail/ServiceDetail';
 import { CreateService } from './CreateService/CreateService';
 import { IoAddOutline } from 'react-icons/io5';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 export const ServiceManagement = () => {
 	const [isOpenCreateService, setIsOpenCreateService] = useState(false);
 	const [isOpenUpdateService, setIsOpenUpdateService] = useState(false);
 	const [isOpenDetailService, setIsOpenDetailService] = useState(false);
 	const [chosenServiceId, setChosenServiceId] = useState('');
-	const { services, isLoading } = useSelector((state) => state.services);
+	const[services, setServices]=useState([])
 	const dispatch = useDispatch();
+
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+
+	async function initiateServices() {
+        let output = await dispatch(getAllServices());
+        setServices(output.payload);
+    }
+
+    useEffect(() => {
+        initiateServices();
+    }, []);
 
 	useEffect(() => {
 		dispatch(getAllServices());
@@ -42,6 +55,23 @@ export const ServiceManagement = () => {
 			console.error('Error during dispatch:', error);
 		});
 	};
+
+	const handleRowsPerPageChange = (e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1);
+    };
+
+
+    const totalPages = calculateTotalPages(services.length, rowsPerPage);
+    const selectedServices = getPageItems(services, currentPage, rowsPerPage);
+
+    const handleNextPage = () => {
+        setCurrentPage(nextPage(currentPage, totalPages));
+    };
+
+    const handlePreviousPage = () => {
+        setCurrentPage(previousPage(currentPage));
+    };
 
 	return (
 		<div className="w-full min-h-screen bg-white flex flex-row">
@@ -120,7 +150,7 @@ export const ServiceManagement = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{services?.map((services, index) => {
+						{selectedServices?.map((services, index) => {
 							return (
 								<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
 									<td className="font-medium text-center text-gray p-3">
@@ -174,6 +204,23 @@ export const ServiceManagement = () => {
 						})}
 					</tbody>
 				</table>
+				<div className="flex justify-center items-center mt-4 space-x-2">
+					<button 
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === 1}
+						onClick={handlePreviousPage}
+					>
+						&#9664;
+					</button>
+					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === totalPages}
+						onClick={handleNextPage}
+					>
+						&#9654;
+					</button>
+				</div>
 			</div>
 		</div>
 	);
