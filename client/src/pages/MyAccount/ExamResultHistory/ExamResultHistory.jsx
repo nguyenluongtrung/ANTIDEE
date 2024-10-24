@@ -6,11 +6,21 @@ import { getMyExamResults } from '../../../features/exams/examSlice';
 import { VscPass } from 'react-icons/vsc';
 import { VscError } from 'react-icons/vsc';
 import { getAccountInformation } from '../../../features/auth/authSlice';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 
 export const ExamResultHistory = () => {
 	const [account, setAccount] = useState();
 	const [results, setResults] = useState();
 	const dispatch = useDispatch();
+
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const totalPages = calculateTotalPages(results, rowsPerPage);
+	const selectedResults= getPageItems(results, currentPage, rowsPerPage);
+
+	const handleNextPage = () => setCurrentPage(nextPage(currentPage, totalPages));
+	const handlePreviousPage = () => setCurrentPage(previousPage(currentPage));
 
 	async function initiateAccountInformation() {
 		const output = await dispatch(getAccountInformation());
@@ -52,7 +62,7 @@ export const ExamResultHistory = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{results?.map((result, index) => {
+						{selectedResults?.map((result, index) => {
 							return (
 								<tr className="hover:bg-primary hover:bg-opacity-25 transition-colors odd:bg-light_pink  hover:cursor-pointer">
 									<td className="font-medium text-center text-gray p-3">
@@ -98,6 +108,23 @@ export const ExamResultHistory = () => {
 						})}
 					</tbody>
 				</table>
+				<div className="flex justify-center items-center mt-4 space-x-2">
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === 1}
+						onClick={handlePreviousPage}
+					>
+						&#9664;
+					</button>
+					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
+					<button
+						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+						disabled={currentPage === totalPages}
+						onClick={handleNextPage}
+					>
+						&#9654;
+					</button>
+				</div>
 			</div>
 		</div>
 	);

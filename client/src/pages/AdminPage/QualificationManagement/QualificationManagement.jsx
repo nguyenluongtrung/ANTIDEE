@@ -14,12 +14,12 @@ import {
 import { CreateQualification } from "./CreateQualification/CreateQualification";
 import { UpdateQualification } from "./UpdateQualification/UpdateQualification";
 import { IoAddOutline } from "react-icons/io5";
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from "../../../utils/pagination";
 
 export const QualificationManagement = () => {
-  //Create   Qualification
   const [isOpenCreateQualification, setIsOpenCreateQualification] =
     useState(false);
-  //Update Qualification
+
   const [isOpenUpdateQualification, setIsOpenUpdateQualification] =
     useState(false);
   const [chosenQualificationId, setChosenQualificationId] = useState("");
@@ -29,11 +29,13 @@ export const QualificationManagement = () => {
   );
   const dispatch = useDispatch();
 
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     dispatch(getAllQualifications());
   }, []);
 
-  //Delete Qualification
   const handleDeleteQualification = async (id) => {
     const result = await dispatch(deleteQualification(id));
     console.log("***", result);
@@ -47,11 +49,27 @@ export const QualificationManagement = () => {
     return <Spinner />;
   }
 
-  //Get All Qualification
   const handleGetAllQualifications = () => {
     Promise.all([dispatch(getAllQualifications())]).catch((error) => {
       console.error("Error during dispatch:", error);
     });
+  };
+
+  const handleRowsPerPageChange = (e) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+
+  const totalPages = calculateTotalPages(qualifications.length, rowsPerPage);
+  const selectedQualifications = getPageItems(qualifications, currentPage, rowsPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage(nextPage(currentPage, totalPages));
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage(previousPage(currentPage));
   };
 
   return (
@@ -86,11 +104,13 @@ export const QualificationManagement = () => {
         )}
 
         <div className="flex items-center justify-center">
-          <div className="flex-1 pt-2" style={{paddingRight: '70%'}}>
+          <div className="flex-1 pt-2" style={{ paddingRight: "70%" }}>
             <span>Hiển thị </span>
             <select
               className="rounded-md p-1 mx-1 hover:cursor-pointer"
               style={{ backgroundColor: "#E0E0E0" }}
+              value={rowsPerPage}
+              onChange={handleRowsPerPageChange}
             >
               <option>10</option>
               <option>20</option>
@@ -99,15 +119,15 @@ export const QualificationManagement = () => {
             <span> hàng</span>
           </div>
           <button
-						className="bg-pink text-white rounded-md block mx-auto py-0.5"
-						style={{ width: '170px' }}
-						onClick={() => setIsOpenCreateQualification(true)}
-					>
-						<div className="flex items-center">
-                            <IoAddOutline className='size-8 pl-2 mr-2' />
-                            <span className="text-sm pr-2">Thêm chứng chỉ</span>
-                        </div>
-					</button>
+            className="bg-pink text-white rounded-md block mx-auto py-0.5"
+            style={{ width: "170px" }}
+            onClick={() => setIsOpenCreateQualification(true)}
+          >
+            <div className="flex items-center">
+              <IoAddOutline className="size-8 pl-2 mr-2" />
+              <span className="text-sm pr-2">Thêm chứng chỉ</span>
+            </div>
+          </button>
         </div>
         <table className="w-full border-b border-gray mt-3">
           <thead>
@@ -119,7 +139,7 @@ export const QualificationManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {qualifications?.map((qualification, index) => {
+            {selectedQualifications?.map((qualification, index) => {
               return (
                 <tr className="hover:bg-primary hover:bg-opacity-25 transition-colors odd:bg-light_pink  hover:cursor-pointer">
                   <td className="font-medium text-center text-gray p-3">
@@ -157,6 +177,25 @@ export const QualificationManagement = () => {
             })}
           </tbody>
         </table>
+        <div className="flex justify-center items-center mt-4 space-x-2">
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={handlePreviousPage}
+          >
+            &#9664;
+          </button>
+          <span className="text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+          >
+            &#9654;
+          </button>
+        </div>
       </div>
     </div>
   );
