@@ -40,6 +40,7 @@ const getTopDiscussions = asyncHandler(async (req, res) => {
 			$project: {
 				forumPostId: '$_id',
 				commentsCount: 1,
+				title: 1,
 			},
 		},
 	]);
@@ -141,11 +142,12 @@ const getAllForumPosts = asyncHandler(async (req, res) => {
 const getForumPost = asyncHandler(async (req, res) => {
 	const { forumPostId } = req.params;
 
-	const forumPost = await ForumPost.findById(forumPostId).populate({
-		path: 'author',
-		select: 'name avatar role',
-	})
-	.populate('topic');
+	const forumPost = await ForumPost.findById(forumPostId)
+		.populate({
+			path: 'author',
+			select: 'name avatar role',
+		})
+		.populate('topic');
 
 	if (!forumPost) {
 		res.status(404);
