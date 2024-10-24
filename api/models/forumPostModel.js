@@ -41,7 +41,15 @@ const postRepositorySchema = mongoose.Schema(
 );
 
 const forumPostSchema = mongoose.Schema(
-	{
+	{	title: {
+		type: String, 
+	}, 
+	topic:[
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Topic',
+		},
+	],
 		content: {
 			type: String,
 			required: true,

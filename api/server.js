@@ -42,6 +42,7 @@ app.use('/antidee/api/transactions', require('./routes/transactionRoutes'));
 app.use('/antidee/api/payment', require('./routes/paymentRoutes'));
 app.use('/antidee/api/forumPosts', require('./routes/forumPostRoutes'));
 app.use('/antidee/api/course', require('./routes/courseRoutes'));
+app.use('/antidee/api/topics', require('./routes/topicRoutes'));
 
 app.use(express.static(path.join(__dir, '/client/dist')));
 
