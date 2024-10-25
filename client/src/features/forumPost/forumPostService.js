@@ -17,6 +17,23 @@ const getAllForumPosts = async (token) => {
 		throw error;
 	}
 };
+
+const getTopDiscussionForumPosts = async (token) => {
+	try {
+		const response = await axios.get(API_URL + 'top-discussions', {
+			headers: { Authorization: `Bearer ${token}` },
+		});
+		if (response.data) {
+			return response.data;
+		} else {
+			throw new Error('Unexpected response structure');
+		}
+	} catch (error) {
+		console.error('Error fetching all top discussions forum posts:', error);
+		throw error;
+	}
+};
+
 const getForumPost = async (token, forumPostId) => {
 	const config = {
 		headers: {
@@ -221,6 +238,7 @@ export const updateHiddenDetails = async (
 
 const forumPostService = {
 	getAllForumPosts,
+	getTopDiscussionForumPosts,
 	deleteForumPost,
 	saveForumPost,
 	getForumRepositories,

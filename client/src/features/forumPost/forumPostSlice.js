@@ -24,6 +24,28 @@ export const getAllForumPosts = createAsyncThunk(
 	}
 );
 
+export const getTopDiscussionForumPosts = createAsyncThunk(
+	'forumPosts/getTopDiscussionForumPosts',
+	async (_, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount?.data?.token;  
+			if (!token) {
+				throw new Error('No token found');
+			}
+			return await forumPostService.getTopDiscussionForumPosts(token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 export const getForumPost = createAsyncThunk(
 	'forumPosts/getForumPost',
 	async (postId, thunkAPI) => {
@@ -295,6 +317,20 @@ export const forumPostSlice = createSlice({
 				state.forumPosts = action.payload;
 			})
 			.addCase(getAllForumPosts.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.forumPosts = null;
+			})
+			.addCase(getTopDiscussionForumPosts.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getTopDiscussionForumPosts.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.forumPosts = action.payload;
+			})
+			.addCase(getTopDiscussionForumPosts.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
