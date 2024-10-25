@@ -19,10 +19,8 @@ import {
   previousPage,
 } from "../../../utils/pagination";
 
-export const VideoManagement = () => {
-  //Create Video
-  const [isOpenCreateVideo, setIsOpenCreateVideo] = useState(false);
-  //Update Video
+export const VideoManagement = () => { 
+  const [isOpenCreateVideo, setIsOpenCreateVideo] = useState(false); 
   const [isOpenUpdateVideo, setIsOpenUpdateVideo] = useState(false);
   const [chosenVideoId, setChosenVideoId] = useState("");
 
@@ -164,8 +162,25 @@ export const VideoManagement = () => {
                     <span>{video.description}</span>
                   </td>
                   <td className="font-medium text-center text-gray">
-                    <span>{video.url}</span>
+                    {video.url.includes("firebase") ? (
+                      <button
+                        onClick={() => window.open(video.url, "_blank")}
+                        className="text-blue-600 underline"
+                      >
+                        Xem video
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          window.open(`https://www.youtube.com/watch?v=${video.url}`, "_blank")
+                        }
+                        className="text-blue-600 underline"
+                      >
+                        Xem video
+                      </button>
+                    )}
                   </td>
+
                   <td className="">
                     <div className="flex items-center justify-center">
                       <button className="flex items-center justify-end py-3 pr-2 text-xl group">
