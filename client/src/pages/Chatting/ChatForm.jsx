@@ -24,7 +24,7 @@ import ChatBox from "./ChatBox";
 import ChatList from "./ChatList";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsFillChatDotsFill } from "react-icons/bs";
-const socket = io("http://localhost:5000");
+const socket = io("https://antidee.onrender.com/");
 
 export const ChatForm = () => {
   const dispatch = useDispatch();
