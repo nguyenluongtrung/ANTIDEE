@@ -18,7 +18,7 @@ import { io } from "socket.io-client";
 import moment from 'moment';
 moment.locale('vi');
 
-const socket = io("http://localhost:5000");
+const socket = io("https://antidee.onrender.com/");
 
 const ChatBox = ({
   chosenChatBox,
