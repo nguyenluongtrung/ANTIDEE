@@ -44,7 +44,8 @@ export const CourseManagement = () => {
             toast.error(result?.payload, errorStyle);
         }
         handleGetAllCourse()
-    };
+    };  
+    
 
     const handleRowsPerPageChange = (e) => {
         setRowsPerPage(Number(e.target.value));
