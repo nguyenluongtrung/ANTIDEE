@@ -18,10 +18,11 @@ import {
   nextPage,
   previousPage,
 } from "../../../utils/pagination";
-import Pagination from "../../../components/Pagination/Pagination";
 
 export const VideoManagement = () => {
+  //Create Video
   const [isOpenCreateVideo, setIsOpenCreateVideo] = useState(false);
+  //Update Video
   const [isOpenUpdateVideo, setIsOpenUpdateVideo] = useState(false);
   const [chosenVideoId, setChosenVideoId] = useState("");
 
@@ -163,25 +164,8 @@ export const VideoManagement = () => {
                     <span>{video.description}</span>
                   </td>
                   <td className="font-medium text-center text-gray">
-                    {video.url.includes("firebase") ? (
-                      <button
-                        onClick={() => window.open(video.url, "_blank")}
-                        className="text-blue-600 underline"
-                      >
-                        Xem video
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() =>
-                          window.open(`https://www.youtube.com/watch?v=${video.url}`, "_blank")
-                        }
-                        className="text-blue-600 underline"
-                      >
-                        Xem video
-                      </button>
-                    )}
+                    <span>{video.url}</span>
                   </td>
-
                   <td className="">
                     <div className="flex items-center justify-center">
                       <button className="flex items-center justify-end py-3 pr-2 text-xl group">
@@ -206,26 +190,24 @@ export const VideoManagement = () => {
             })}
           </tbody>
         </table>
-        <div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray">
-                Hiển thị <span className="font-medium">{(currentPage - 1) * rowsPerPage + 1}</span> đến{' '}
-                <span className="font-medium">
-                  {Math.min(currentPage * rowsPerPage, videos.length)}
-                </span>{' '}
-                trong <span className="font-medium">{videos.length}</span> kết quả
-              </p>
-            </div>
-            <div>
-              <Pagination totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={(page) => setCurrentPage(page)}
-                onNextPage={handleNextPage}
-                onPreviousPage={handlePreviousPage}
-                rowsPerPage={rowsPerPage} />
-            </div>
-          </div>
+        <div className="flex justify-center items-center mt-4 space-x-2">
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={handlePreviousPage}
+          >
+            &#9664;
+          </button>
+          <span className="text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+          >
+            &#9654;
+          </button>
         </div>
       </div>
     </div>

@@ -2,17 +2,11 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../../../components";
 import toast from "react-hot-toast";
-import { errorStyle } from "../../../../utils/toast-customize";
+import { errorStyle, successStyle } from "../../../../utils/toast-customize";
 import { AiOutlineClose } from "react-icons/ai";
+import { useState } from "react";
 import { updateVideo } from "../../../../features/videos/videoSlice";
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../../../../firebase';
+
 export const UpdateVideo = ({
   setIsOpenUpdateVideo,
   handleGetAllVideos,
@@ -20,111 +14,53 @@ export const UpdateVideo = ({
 }) => {
   const { videos, isLoading } = useSelector((state) => state.videos);
   const [chosenVideo, setChosenVideo] = useState(
-    videos[videos.findIndex((video) => video._id === chosenVideoId)]
+    videos[videos.findIndex((video) => video._id == chosenVideoId)]
   );
-
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [videoFile, setVideoFile] = useState(null);
-  const [videoUrl, setVideoUrl] = useState(chosenVideo?.url);
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
+
   const dispatch = useDispatch();
-  const fileRef = useRef(null);
-  const [file, setFile] = useState(undefined);
-  const [filePerc, setFilePerc] = useState(0);
-  const [fileUploadError, setFileUploadError] = useState('');
-  useEffect(() => {
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, [file]);
-
-  const handleFileUpload = (file) => {
-    if (file.size > 50 * 1024 * 1024) {
-      setFileUploadError('Dung lượng video phải nhỏ hơn 50MB');
-      setFilePerc(0);
-      return;
-    }
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, `videos/${fileName}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
-        setFileUploadError('');
-      },
-      (error) => {
-        setFileUploadError(`Tải video lên thất bại: ${error.message}`);
-        setFilePerc(0);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setVideoUrl(downloadURL);
-          setFilePerc(100);
-          setFileUploadError('');
-        });
-      }
-    );
-  };
-
-  const title = watch("title");
-  const url = watch("url");
-  const description = watch("description");
-
-  const validateForm = () => {
-    const isValid =
-      title && title.trim().length > 0 &&
-      videoUrl && videoUrl.trim().length > 0 &&
-      description && description.trim().length > 0 &&
-      !/\s{2,}/.test(title) &&
-      !/\s{2,}/.test(videoUrl) &&
-      !/\s{2,}/.test(description);
-    setIsFormValid(isValid);
-  };
-
-  useEffect(() => {
-    validateForm();
-  }, [title, videoUrl, description]);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setVideoFile(file);
-    }
-  };
-
-  const uploadVideo = async () => {
-    if (!videoFile) return;
-
-    const videoRef = ref(storage, `videos/${videoFile.name}`);
-    await uploadBytes(videoRef, videoFile);
-    const url = await getDownloadURL(videoRef);
-    setVideoUrl(url);
-  };
 
   const onSubmit = async (data) => {
-     
- 
-    if (videoFile) {
-      await uploadVideo();
-    }
-
     const videoData = {
       title: data.title.trim(),
-      url: videoUrl || chosenVideo.url,
+      url: data.url.trim(),
       description: data.description.trim(),
     };
 
-    if (videoData.url !== chosenVideo.url) {
-      if (checkExistUrl(videoData.url)) {
+    const { title, url, description } = videoData;
+
+    if (!title.trim()) {
+      toast.error('Vui lòng nhập "Tiêu Đề"', errorStyle);
+      return;
+    }
+    if (/ {2,}/.test(title)) {
+      toast.error("Tiêu đề không được chứa khoảng trắng !!!", errorStyle);
+      return;
+    }
+    if (!url.trim()) {
+      toast.error('Vui lòng nhập "Đường dẫn Youtube"', errorStyle);
+      return;
+    }
+    if (/ {2,}/.test(url)) {
+      toast.error("Đường dẫn không được chứa khoảng trắng !!!", errorStyle);
+      return;
+    }
+    if (!description.trim()) {
+      toast.error('Vui lòng nhập "Mô tả" video', errorStyle);
+      return;
+    }
+    if (/ {2,}/.test(description)) {
+      toast.error("Mô tả không được chứa khoảng trắng !!!", errorStyle);
+      return;
+    }
+
+    if (url !== chosenVideo.url) {
+      if (checkExistUrl(url)) {
         toast.error("Đường dẫn đã tồn tại", errorStyle);
         return;
       }
@@ -136,29 +72,28 @@ export const UpdateVideo = ({
         id: chosenVideoId,
       })
     );
-
     if (result.type.endsWith("fulfilled")) {
       toast.success("Cập nhật Video thành công");
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
-
     setIsOpenUpdateVideo(false);
     handleGetAllVideos();
   };
 
-
-
-
   const checkExistUrl = (newUrl) => {
     const listUrls = videos.map((item) => item.url);
-    return listUrls.includes(newUrl);
+    if (listUrls.includes(newUrl)) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   if (isLoading) {
     return <Spinner />;
   }
-  const urlValue = watch("url");
+
   return (
     <div className="popup active">
       <div className="overlay"></div>
@@ -197,50 +132,14 @@ export const UpdateVideo = ({
                 <input
                   type="text"
                   {...register("url")}
-                  value={videoUrl}
-                  readOnly
+                  defaultValue={chosenVideo?.url}
                   className="create-exam-input text-center"
                 />
               </td>
             </tr>
             <tr>
               <td>
-                <span className="font-bold">Video ưu đãi</span>
-              </td>
-              <td className="pl-[30px] py-2 grid justify-center">
-                <span
-                  className="rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer" // Loại bỏ điều kiện vô hiệu hóa
-                  onClick={(e) => {
-                    e.preventDefault();
-                    fileRef.current.click();
-                  }}
-                >
-                  <span>Chọn video ưu đãi</span>
-                </span>
-
-                <input
-                  type="file"
-                  ref={fileRef}
-                  hidden
-                  accept="video/*"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-                <p className="text-sm self-center pl-2">
-                  {fileUploadError ? (
-                    <span className="text-red">{fileUploadError}</span>
-                  ) : filePerc > 0 && filePerc < 100 ? (
-                    <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
-                  ) : filePerc === 100 ? (
-                    <span className="text-green">Tải video lên thành công!</span>
-                  ) : (
-                    ''
-                  )}
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span>Mô tả</span>
+                <span className="">Mô tả</span>
               </td>
               <td className="pl-6 py-1">
                 <textarea
@@ -256,16 +155,8 @@ export const UpdateVideo = ({
           </tbody>
         </table>
         <button
-          type="button" // Use a button to upload the video
-          onClick={uploadVideo}
-          className="block bg-secondary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
-        >
-          Tải video lên
-        </button>
-        <button
           type="submit"
-          className={`block ${isFormValid ? "bg-primary" : "bg-gray-300"} text-white text-center rounded-md p-2 font-medium mb-1 mt-3`}
-          disabled={!isFormValid}
+          className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
         >
           Cập nhật video
         </button>
