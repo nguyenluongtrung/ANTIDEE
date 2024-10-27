@@ -431,9 +431,6 @@ export const DetailedForumPost = ({
 										<span className="ml-2">Lưu</span>
 									</div>
 								</div>
-								<div className="cursor-pointer">
-									<PiShareFat />
-								</div>
 							</div>
 							{post?.comments && (
 								<div className="px-4 py-4">
