@@ -15,7 +15,6 @@ import { CreateQualification } from "./CreateQualification/CreateQualification";
 import { UpdateQualification } from "./UpdateQualification/UpdateQualification";
 import { IoAddOutline } from "react-icons/io5";
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from "../../../utils/pagination";
-import Pagination from "../../../components/Pagination/Pagination";
 
 export const QualificationManagement = () => {
   const [isOpenCreateQualification, setIsOpenCreateQualification] =
@@ -25,24 +24,13 @@ export const QualificationManagement = () => {
     useState(false);
   const [chosenQualificationId, setChosenQualificationId] = useState("");
 
-  const { isLoading } = useSelector(
+  const { qualifications, isLoading } = useSelector(
     (state) => state.qualifications
   );
-
-  const [qualifications, setQualifications]=useState([]);
   const dispatch = useDispatch();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-
-  async function initiateQualifications() {
-    let output = await dispatch(getAllQualifications());
-    setQualifications(output.payload);
-}
-
-useEffect(() => {
-  initiateQualifications();
-}, []);
 
   useEffect(() => {
     dispatch(getAllQualifications());
@@ -189,26 +177,24 @@ useEffect(() => {
             })}
           </tbody>
         </table>
-        <div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray">
-                Hiển thị <span className="font-medium">{(currentPage - 1) * rowsPerPage + 1}</span> đến{' '}
-                <span className="font-medium">
-                  {Math.min(currentPage * rowsPerPage, qualifications.length)}
-                </span>{' '}
-                trong <span className="font-medium">{qualifications.length}</span> kết quả
-              </p>
-            </div>
-            <div>
-              <Pagination totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={(page) => setCurrentPage(page)}
-                onNextPage={handleNextPage}
-                onPreviousPage={handlePreviousPage}
-                rowsPerPage={rowsPerPage} />
-            </div>
-          </div>
+        <div className="flex justify-center items-center mt-4 space-x-2">
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={handlePreviousPage}
+          >
+            &#9664;
+          </button>
+          <span className="text-sm font-semibold">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+          >
+            &#9654;
+          </button>
         </div>
       </div>
     </div>

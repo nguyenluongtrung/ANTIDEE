@@ -24,6 +24,7 @@ export const Sidebar = ({ sidebarVisible, setSidebarVisible, services, account, 
 		{ name: "Trang chủ", to: "/", icon: <BiHomeAlt /> },
 		{ name: "Tài khoản", to: "/my-account", icon: <BiUser /> },
 		{ name: "Mời bạn bè", to: "/invite-friend", icon: <FaUserFriends /> },
+		{ name: "Khuyến mại", to: "/vouchers", icon: <FaTags /> },
 		{ name: "Lịch sử giao dịch", to: "/transaction-history", icon: <FaMoneyBillWave /> },
 		{ name: "Diễn Đàn", to: "/forum/discussions", icon: <BiCreditCardAlt />, },
 	];
