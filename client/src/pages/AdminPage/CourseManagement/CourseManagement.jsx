@@ -28,7 +28,6 @@ export const CourseManagement = () => {
 
     const handleGetAllCourse = async () => {
         const response = await dispatch(getAllCourse())
-        console.log(response.payload)
         setCourses(response.payload)
     };
 
