@@ -174,6 +174,7 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum }) => {
 				const forumPostData = {
 					...formData,
 					images: imagesUrl || formData.images,
+					topic: selectedTopics
 				};
 				const result = await dispatch(createForumPost(forumPostData));
 				if (result.type.endsWith('fulfilled')) {
