@@ -383,8 +383,11 @@ export const DetailedForumPost = ({
 							</div>
 
 							<div>
-								<div className="my-2 px-4 py-2">
-									<p className="text-black text-base">{post?.content}</p>
+							<div className="px-4">
+									<p className="font-semibold text-[20px] text-[#2b2b2b]">{post?.title}</p>
+								</div>
+								<div className="mb-2 px-4">
+									<p className="text-[14px]">{post?.content}</p>
 								</div>
 
 								{post?.images?.map((image, index) => (

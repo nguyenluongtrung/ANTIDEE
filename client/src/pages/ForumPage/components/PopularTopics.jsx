@@ -1,35 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BsPostcardHeartFill } from 'react-icons/bs';
-import { FaUser } from 'react-icons/fa6';
 import { GiVacuumCleaner } from 'react-icons/gi';
 import { MdCleaningServices, MdDryCleaning, MdFiberNew } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { CreatePostForum } from './CreateForumPost/CreateForumPost';
 
 export const PopularTopics = () => {
 	const navigate = useNavigate();
+	const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
+	const handleGetAllForumPosts = async () => {
+		let output = await dispatch(getAllForumPosts());
+		let sortedPosts = [...output.payload].sort(
+			(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+		);
+		setForumPost(sortedPosts);
+	};
+
 	return (
 		<div className="p-4">
+			{isOpenCreatePostForum && (
+				<CreatePostForum setIsOpenCreatePostForum={setIsOpenCreatePostForum} />
+			)}
 			<div className={`bg-white rounded-lg shadow-md p-4 space-y-2`}>
 				<button
 					className="bg-primary text-white rounded-xl px-5 py-2 w-full font-semibold	hover:bg-primary_dark fea-item"
-					//   onClick={() => setIsCreateDiscussionOpen(true)}
+					onClick={() => setIsOpenCreatePostForum(true)}
 				>
 					Tạo thảo luận
 				</button>
-				<div className="flex items-center p-3 rounded-md gap-2 hover:bg-primary transition duration-300 cursor-pointer hvr-shutter-in-horizontal">
-					<MdFiberNew className="text-white bg-red rounded-full w-7 h-7 p-1 " />
-					<div className="font-semibold" onClick={() => navigate('/forum/discussions')}>Các bài mới nhất </div>
-				</div>
 				<div
 					className="flex items-center p-3 rounded-md gap-2 hover:bg-primary  transition duration-300 cursor-pointer hvr-shutter-in-horizontal"
 					onClick={() => navigate('/forum/repositories')}
 				>
 					<BsPostcardHeartFill className="text-white bg-green rounded-full w-7 h-7 p-1" />
 					<div className="font-semibold">Bài viết đã lưu</div>
-				</div>
-				<div className="flex items-center p-3 rounded-md gap-2 hover:bg-primary  transition duration-300 cursor-pointer hvr-shutter-in-horizontal">
-					<FaUser className="text-white bg-blue rounded-full w-7 h-7 p-1" />
-					<div className="font-semibold">Đang theo dõi</div>
 				</div>
 			</div>
 
