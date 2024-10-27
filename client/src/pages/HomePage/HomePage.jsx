@@ -350,8 +350,62 @@ export const HomePage = () => {
 				)}
 			</div>
 
+			<div className="px-60 py-10 mt-10 bg-white">
+				<h1 className="text-2xl font-bold mb-6">Công việc theo địa điểm</h1>
+				<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+					<div className="col-span-2 relative group cursor-pointer">
+						<img src="https://www.quangbinhtravel.vn/wp-content/uploads/2021/08/cau-vang-da-nang.jpg" className="w-full h-full object-cover rounded-lg" />
+						<div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-lg"></div>
+						<div className="absolute bottom-4 left-4 text-white">
+							<h2 className="text-xl font-bold ">Đà Nẵng</h2>
+							<p>29.296 công việc</p>
+						</div>
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-2">
+						<div className="relative group cursor-pointer">
+							<img src="https://vcdn1-dulich.vnecdn.net/2022/05/12/Hanoi2-1652338755-3632-1652338809.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=NxMN93PTvOTnHNryMx3xJw" className="w-full h-full object-cover rounded-lg" />
+							<div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-lg"></div>
+							<div className="absolute bottom-4 left-4 text-white">
+								<h2 className="text-lg font-bold">Hà Nội</h2>
+								<p>14.330 công việc</p>
+							</div>
+						</div>
+						<div className="relative group cursor-pointer">
+							<img src="https://cdn.thuvienphapluat.vn/uploads/tintuc/2024/01/26/tphcm-co-bao-nhieu-quan-huyen-va-thanh-pho.jpg" className="w-full h-full object-cover rounded-lg" />
+							<div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-lg"></div>
+							<div className="absolute bottom-4 left-4 text-white">
+								<h2 className="text-lg font-bold">TP. Hồ Chí Minh</h2>
+								<p>672 công việc</p>
+							</div>
+						</div>
+						<div className="relative group cursor-pointer">
+							<img src="https://hoiana.com/wp-content/uploads/2024/09/hoi-an-lantern-festival-4.jpg" className="w-full h-full object-cover rounded-lg" />
+							<div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-lg"></div>
+							<div className="absolute bottom-4 left-4 text-white">
+								<h2 className="text-lg font-bold">Hội An</h2>
+								<p>1.428 công việc</p>
+							</div>
+						</div>
+						<div className="relative group cursor-pointer">
+							<img src="https://scontent.iocvnpt.com/resources/portal/Images/CTO/tktest/tintuc/1_637128653739614809.jpg" className="w-full h-full object-cover rounded-lg" />
+							<div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-lg"></div>
+							<div className="absolute bottom-4 left-4 text-white hover:text-primary">
+								<h2 className="text-lg font-bold">Cần Thơ</h2>
+								<p>500 công việc</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="flex flex-wrap gap-2 mt-6">
+					<span className="bg-gray text-white px-4 py-2 rounded-full">Hải Châu</span>
+					<span className="bg-gray text-white px-4 py-2 rounded-full">Thuận Phước</span>
+					<span className="bg-gray text-white px-4 py-2 rounded-full">Sơn Trà</span>
+					<span className="bg-gray text-white px-4 py-2 rounded-full">Cẩm Lệ</span>
+					<span className="bg-gray text-white px-4 py-2 rounded-full">Thạch Thang</span>
+				</div>
+			</div>
 
-			<div className="mt-20 flex flex-col bg-white gap-y-16 sm:gap-y-8 lg:gap-y-28">
+			<div className="flex flex-col bg-white gap-y-16 sm:gap-y-8 lg:gap-y-28">
 				<div
 					className="mx-auto mt-8 text-2xl sm:text-2xl md:text-4xl font-bold text-center"
 					data-aos="fade-down"
