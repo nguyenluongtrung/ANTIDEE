@@ -14,9 +14,7 @@ import { Link } from 'react-router-dom'
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
 
-
 export const CourseManagement = () => {
-
     const [isOpenDetailCourse, setIsOpenDetailCourse] = useState(false);
     const [chosenCourseId, setChosenCourseId] = useState('');
     const [courses, setCourses] = useState('');
@@ -111,7 +109,7 @@ export const CourseManagement = () => {
                     <Link to="/admin-course/create-course">
                         <button
                             className="bg-pink text-white rounded-md block mx-auto"
-                            style={{ width: '150px' }}
+                            style={{ width: '170px' }}
                         >
                             <div className="flex items-center">
                                 <IoAddOutline className="size-10 pl-2 mr-2" />
