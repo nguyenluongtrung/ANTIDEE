@@ -8,14 +8,31 @@ import {
 import { DetailedForumPost } from './components/DetailedForumPost';
 import { errorStyle, successStyle } from '../../utils/toast-customize';
 import toast from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
+import { getAllForumPostsByTopic } from '../../features/topics/topicSlice';
 
 export const ForumDiscussions = () => {
 	const dispatch = useDispatch();
 	const [forumPost, setForumPost] = useState([]);
-	
-	async function initialForumPostList() {
+	const {topicId} = useParams();
+	console.log(forumPost);
+
+	async function fetchForumPosts() {
 		try {
-			let output = await dispatch(getAllForumPosts());
+			let output;
+			if (topicId) {
+				output = await dispatch(getAllForumPostsByTopic(topicId));
+				if (output.payload) {
+					let sortedPosts = [...output.payload].sort(
+						(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+					);
+					setForumPost(sortedPosts);
+				} else {
+					console.error('No posts found.');
+				}
+			} else {
+				output = await dispatch(getAllForumPosts());
+			}
 			if (output.payload) {
 				let sortedPosts = [...output.payload].sort(
 					(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -28,11 +45,12 @@ export const ForumDiscussions = () => {
 			console.error('Error fetching posts:', error);
 		}
 	}
-
-	useEffect(() => {
-		initialForumPostList();
-	}, []);
 	
+	useEffect(() => {
+		fetchForumPosts();
+	}, [topicId]);
+	
+
 
 	const handleUpdateCommentLocal = (forumPostId) => {
 		setForumPost((prevPosts) => {
@@ -57,19 +75,19 @@ export const ForumDiscussions = () => {
 	};
 
 	return (
-			<div className="p-4">
-				{forumPost?.map((post) => {
-					return (
-						<DetailedForumPost
-							postContent={post}
-							handleDeleteForumPost={() => handleDeleteForumPost(post._id)}
-							handleUpdateCommentLocal={() =>
-								handleUpdateCommentLocal(post._id)
-							}
-							setForumPost={setForumPost}
-						/>
-					);
-				})}
-			</div>
+		<div className="p-4">
+			{forumPost?.map((post) => {
+				return (
+					<DetailedForumPost
+						postContent={post}
+						handleDeleteForumPost={() => handleDeleteForumPost(post._id)}
+						handleUpdateCommentLocal={() =>
+							handleUpdateCommentLocal(post._id)
+						}
+						setForumPost={setForumPost}
+					/>
+				);
+			})}
+		</div>
 	);
 };

@@ -62,8 +62,32 @@ const getMostPopularTopics = asyncHandler(async (req, res) => {
 	res.status(200).json(popularTopics);
 });
 
+const getAllForumPostsByTopic = asyncHandler(async (req, res) => {
+	const { topicId } = req.params;
+
+	const forumPosts = await ForumPost.find({ topic: topicId })
+		.populate('topic')
+		.populate({
+			path: 'author',
+			select: 'name avatar role',
+		})
+		.populate({
+			path: 'comments.author', 
+			select: 'name avatar',
+		});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			forumPosts,
+		},
+	});
+});
+
+
 module.exports = {
 	createTopic,
 	getAllTopics,
 	getMostPopularTopics,
+	getAllForumPostsByTopic
 };

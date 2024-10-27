@@ -169,7 +169,12 @@ const AppContent = () => {
 						<Route path="/ranking" element={<RankingPage />} />
 						<Route path="/job-schedule" element={<JobSchedulePage />} />
 						<Route path="/forum" element={<ForumLayout />}>
-							<Route path="discussions" element={<ForumDiscussions />} />
+							<Route path="discussions" element={<ForumDiscussions />}>
+								<Route path="topic/:topicId" element={<ForumDiscussions />} />
+							</Route>
+
+
+
 							<Route path="repositories" element={<ForumRepositories />} />
 							<Route
 								path="repositories/:repositoryId"
@@ -220,7 +225,7 @@ const AppContent = () => {
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
 							<Route path="/admin-report-forum" element={<ReportPostForum />}>
-							<Route
+								<Route
 									path="/admin-report-forum/report-detail/:reportId"
 									element={<ReportDetail />}
 								/>

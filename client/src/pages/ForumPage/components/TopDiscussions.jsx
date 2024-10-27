@@ -14,7 +14,6 @@ export const TopDiscussions = () => {
 			const resultFetchTopDiscussionsPosts = await dispatch(
 				getTopDiscussionForumPosts()
 			);
-			console.log('Xem data', resultFetchTopDiscussionsPosts.payload);
 			setListTopDiscussions(resultFetchTopDiscussionsPosts.payload);
 		};
 
