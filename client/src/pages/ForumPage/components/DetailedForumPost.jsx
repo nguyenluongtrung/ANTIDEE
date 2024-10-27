@@ -52,6 +52,7 @@ export const DetailedForumPost = ({
 	const [isOpenReport, setIsOpenReport] = useState(false);
 	const [reportPostId, setReportPostId] = useState();
 	const [_selectedReason, setSelectedReason] = useState(null);
+	const [expandedCommentIndex, setExpandedCommentIndex] = useState(null);
 
 	const handleShowPostOptions = (postId) => {
 		setShowPostOptions((prevState) => (prevState === postId ? null : postId));
@@ -70,6 +71,7 @@ export const DetailedForumPost = ({
 		}
 	}, [postContent, postId]);
 
+	  
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -204,6 +206,12 @@ export const DetailedForumPost = ({
 			toast.error('Có lỗi xảy ra. Vui lòng thử lại!', errorStyle);
 		}
 	};
+
+	const toggleExpandComment = (index) => {
+		setExpandedCommentIndex(expandedCommentIndex === index ? null : index);
+	  };
+
+
 
 	return (
 		<div>
@@ -436,25 +444,40 @@ export const DetailedForumPost = ({
 								<div className="px-4 py-4">
 									{post.comments
 										.slice(0, showAllComments ? post.comments.length : 3)
-										.map((comment, index) => (
-											<div key={index} className="flex mb-4">
-												<img
-													className="h-8 w-8 rounded-full object-cover mt-3"
-													src={comment?.author?.avatar}
-													alt="Commenter avatar"
-												/>
-												<div className="ml-2 bg-gray-100 rounded-lg px-3 py-2">
-													<div className="bg-[#f0efef] p-2 w-full rounded-xl">
-														<div className="text-sm font-semibold text-gray-900 flex justify-between">
-															{comment?.author?.name}
+										.map((comment, index) => {
+											const isExpanded = expandedCommentIndex === index;
+											const commentContent = isExpanded || comment?.content?.length <= 100
+												? comment?.content
+												: comment?.content?.slice(0, 100) + '...';
+
+											return (
+												<div key={index} className="flex mb-4">
+													<img
+														className="h-8 w-8 rounded-full object-cover mt-3"
+														src={comment?.author?.avatar}
+														alt="Commenter avatar"
+													/>
+													<div className="ml-2 rounded-lg px-3 py-2">
+														<div className="bg-[#f0efef] p-2 w-full rounded-xl">
+															<div className="text-sm font-semibold text-black flex justify-between">
+																{comment?.author?.name}
+															</div>
+															<p className="text-sm text-gray-700">{commentContent}</p>
+															{comment?.content?.length > 100 && (
+																<button
+																	onClick={() => toggleExpandComment(index)}
+																	className="text-blue text-xs "
+																>
+																	{isExpanded ? 'Ẩn bớt' : 'Xem thêm'}
+																</button>
+															)}
 														</div>
-														<p className="text-sm text-gray-700">
-															{comment?.content}
-														</p>
+														<p>{formatDateForumPost(comment?.createdAt)}</p>
 													</div>
 												</div>
-											</div>
-										))}
+											);
+										})}
+
 									<div className="flex items-center mt-5 h-10">
 										{myAvatar ? (
 											<img

@@ -21,7 +21,7 @@ import {
 import { app } from '../../../../firebase';
 import { FiUploadCloud } from 'react-icons/fi';
 
-export const CreatePostForum = ({ setIsOpenCreatePostForum }) => {
+export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPosts }) => {
 	const { isLoading: forumPostLoading, forumPosts } = useSelector(
 		(state) => state.forumPosts
 	);
@@ -180,6 +180,7 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum }) => {
 				if (result.type.endsWith('fulfilled')) {
 					toast.success('Đăng bài thành công', successStyle);
 					setIsOpenCreatePostForum(false);
+					handleGetAllForumPosts();
 				} else if (result?.error?.message === 'Rejected') {
 					toast.error(result?.payload, errorStyle);
 				}
