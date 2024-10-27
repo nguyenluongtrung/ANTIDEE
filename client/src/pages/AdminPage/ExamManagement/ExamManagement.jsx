@@ -13,6 +13,7 @@ import { UpdateExam } from './UpdateExam/UpdateExam';
 import { ExamDetail } from './ExamDetail/ExamDetail';
 import { IoAddOutline } from 'react-icons/io5';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
+import Pagination from '../../../components/Pagination/Pagination';
 export const ExamManagement = () => {
 	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
 	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
@@ -206,23 +207,27 @@ export const ExamManagement = () => {
 						})}
 					</tbody>
 				</table>
-				<div className="flex justify-center items-center mt-4 space-x-2">
-					<button 
-						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
-						disabled={currentPage === 1}
-						onClick={handlePreviousPage}
-					>
-						&#9664;
-					</button>
-					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
-					<button
-						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
-						disabled={currentPage === totalPages}
-						onClick={handleNextPage}
-					>
-						&#9654;
-					</button>
-				</div>
+				<div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
+                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                        <div>
+                            <p className="text-sm text-gray">
+                                Hiển thị <span className="font-medium">{(currentPage - 1) * rowsPerPage + 1}</span> đến{' '}
+                                <span className="font-medium">
+                                    {Math.min(currentPage * rowsPerPage, exams.length)}
+                                </span>{' '}
+                                trong <span className="font-medium">{exams.length}</span> kết quả
+                            </p>
+                        </div>
+                        <div>
+                            <Pagination totalPages={totalPages}
+                                currentPage={currentPage}
+                                onPageChange={(page) => setCurrentPage(page)}
+                                onNextPage={handleNextPage}
+                                onPreviousPage={handlePreviousPage}
+                                rowsPerPage={rowsPerPage} />
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
 	);

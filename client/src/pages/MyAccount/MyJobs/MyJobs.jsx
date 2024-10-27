@@ -9,6 +9,8 @@ import {
 	formatWorkingTime,
 } from '../../../utils/format';
 import { MyJobDetail } from './MyJobDetail/MyJobDetail';
+import Pagination from '../../../components/Pagination/Pagination';
+import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 
 export const MyJobs = () => {
 	const [myAccountId, setMyAccountId] = useState();
@@ -21,6 +23,15 @@ export const MyJobs = () => {
 	const dispatch = useDispatch();
 	const { isLoading: accountLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
+	const [rowsPerPage, setRowsPerPage] = useState(6);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const totalPages = calculateTotalPages(myJobs.length, rowsPerPage);
+	const selectedJobs = getPageItems(myJobs, currentPage, rowsPerPage);
+
+	const handleNextPage = () => setCurrentPage(nextPage(currentPage, totalPages));
+	const handlePreviousPage = () => setCurrentPage(previousPage(currentPage));
+
 
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
@@ -137,7 +148,7 @@ export const MyJobs = () => {
 					</div>
 				) : (
 					<div className="grid grid-cols-3 gap-28">
-						{myJobs
+						{selectedJobs
 							?.filter((job) => String(job.domesticHelperId) === myAccountId)
 							?.filter((job) => job?.cancelDetails?.isCanceled === false)
 							?.map((post) => {
@@ -241,6 +252,27 @@ export const MyJobs = () => {
 							})}
 					</div>
 				)}
+				<div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
+					<div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+						<div>
+							<p className="text-sm text-gray">
+								Hiển thị <span className="font-medium">{(currentPage - 1) * rowsPerPage + 1}</span> đến{' '}
+								<span className="font-medium">
+									{Math.min(currentPage * rowsPerPage, myJobs?.length)}
+								</span>{' '}
+								trong <span className="font-medium">{myJobs?.length}</span> kết quả
+							</p>
+						</div>
+						<div>
+							<Pagination totalPages={totalPages}
+								currentPage={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+								onNextPage={handleNextPage}
+								onPreviousPage={handlePreviousPage}
+								rowsPerPage={rowsPerPage} />
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
