@@ -37,10 +37,19 @@ const getTopDiscussions = asyncHandler(async (req, res) => {
 			$limit: 5,
 		},
 		{
+			$lookup: {
+				from: 'topics',
+				localField: 'topic',
+				foreignField: '_id',
+				as: 'topicDetails',
+			},
+		},
+		{
 			$project: {
 				forumPostId: '$_id',
 				commentsCount: 1,
 				title: 1,
+				'topicDetails.topicName': 1,
 			},
 		},
 	]);
