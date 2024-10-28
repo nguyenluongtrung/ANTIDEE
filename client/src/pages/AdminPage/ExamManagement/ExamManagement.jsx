@@ -4,23 +4,19 @@ import './ExamManagement.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteExam, getAllExams } from '../../../features/exams/examSlice';
 import { Spinner } from '../../../components';
-import { CreateExam } from './CreateExam/CreateExam';
 import toast, { Toaster, ToastBar } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
-import { UpdateExam } from './UpdateExam/UpdateExam';
-import { ExamDetail } from './ExamDetail/ExamDetail';
 import { IoAddOutline } from 'react-icons/io5';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
+import { useNavigate } from 'react-router-dom';
+
 export const ExamManagement = () => {
-	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
-	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
-	const [isOpenDetailExam, setIsOpenDetailExam] = useState(false);
-	const [chosenExamId, setChosenExamId] = useState('');
 	const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [rowsPerPage, setRowsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -38,17 +34,10 @@ export const ExamManagement = () => {
 		}
 	};
 
-	const handleGetAllExams = () => {
-		Promise.all([dispatch(getAllExams())]).catch((error) => {
-			console.error('Error during dispatch:', error);
-		});
-	};
-
 	const handleRowsPerPageChange = (e) => {
         setRowsPerPage(Number(e.target.value));
         setCurrentPage(1);
     };
-
 
     const totalPages = calculateTotalPages(exams.length, rowsPerPage);
     const selectedExams = getPageItems(exams, currentPage, rowsPerPage);
@@ -83,27 +72,6 @@ export const ExamManagement = () => {
 					)}
 				</Toaster>
 
-				{isOpenCreateExam && (
-					<CreateExam
-						setIsOpenCreateExam={setIsOpenCreateExam}
-						handleGetAllExams={handleGetAllExams}
-					/>
-				)}
-				{isOpenUpdateExam && (
-					<UpdateExam
-						setIsOpenUpdateExam={setIsOpenUpdateExam}
-						handleGetAllExams={handleGetAllExams}
-						chosenExamId={chosenExamId}
-					/>
-				)}
-				{isOpenDetailExam && (
-					<ExamDetail
-						setIsOpenDetailExam={setIsOpenDetailExam}
-						handleGetAllExams={handleGetAllExams}
-						chosenExamId={chosenExamId}
-					/>
-				)}
-
 				<div className="flex">
 					<div className="flex-1 pt-2">
 						<span>Hiển thị </span>
@@ -122,7 +90,7 @@ export const ExamManagement = () => {
 					<button
 						className="bg-pink text-white rounded-md block mx-auto"
 						style={{ width: '150px' }}
-						onClick={() => setIsOpenCreateExam(true)}
+						onClick={() => navigate('create')}
 					>
 						<div className="flex items-center">
 							<IoAddOutline className="size-8 pl-2 mr-2" />
@@ -175,10 +143,7 @@ export const ExamManagement = () => {
 									<td className="font-medium text-center text-gray">
 										<button
 											className="hover:cursor-pointer text-xl pt-1.5"
-											onClick={() => {
-												setIsOpenDetailExam(true);
-												setChosenExamId(exam._id);
-											}}
+											
 										>
 											<MdOutlineRemoveRedEye className="block mx-auto" />
 										</button>
@@ -187,10 +152,7 @@ export const ExamManagement = () => {
 										<div className="flex items-center justify-center">
 											<button
 												className="flex items-center justify-end py-3 pr-2 text-xl"
-												onClick={() => {
-													setIsOpenUpdateExam(true);
-													setChosenExamId(exam._id);
-												}}
+												onClick={() => navigate(`update/${exam._id}`)}
 											>
 												<BiEdit className="text-green" />
 											</button>

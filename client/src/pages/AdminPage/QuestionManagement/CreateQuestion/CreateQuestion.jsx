@@ -13,12 +13,12 @@ import { extractOptions } from '../../../../utils';
 import { saveAs } from 'file-saver';
 import { FiDownloadCloud } from 'react-icons/fi';
 import { FiUploadCloud } from 'react-icons/fi';
+import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
+import { useNavigate } from 'react-router-dom';
 
-export const CreateQuestion = ({
-	setIsOpenCreateQuestion,
-	handleGetAllQuestions,
-}) => {
+export const CreateQuestion = () => {
 	const [data, setData] = useState([]);
+	const navigate = useNavigate();
 	const fileRef = useRef(null);
 	const { isLoading: questionLoading } = useSelector(
 		(state) => state.questions
@@ -74,11 +74,10 @@ export const CreateQuestion = ({
 		const result = await dispatch(createQuestions(newQuestionList));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm câu hỏi thành công', successStyle);
+			navigate('/admin-question')
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-		setIsOpenCreateQuestion(false);
-		handleGetAllQuestions();
 	};
 
 	const handleFileUpload = (e) => {
@@ -99,85 +98,85 @@ export const CreateQuestion = ({
 	}
 
 	return (
-		<div className="popup active">
-			<div className="overlay"></div>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleSubmitQuestionList(data);
-				}}
-				className="content rounded-md p-5"
-				style={{ width: '60vw' }}
-			>
-				<AiOutlineClose
-					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => setIsOpenCreateQuestion(false)}
-				/>
-
-				<p className="grid text-green font-bold text-xl justify-center">
-					TẠO CÂU HỎI
-				</p>
-				<div className="flex gap-3">
-					<button
-						className="bg-yellow text-white py-2 rounded-md  flex gap-2 justify-center items-center mb-3"
-						style={{ width: '150px' }}
-						onClick={handleDownload}
-					>
-						<FiDownloadCloud size={20} />
-						Tải file mẫu
-					</button>
-					<div>
-						<button
-							className="bg-purple text-white py-2 rounded-md mb-3 flex gap-2 justify-center items-center"
-							style={{ width: '170px' }}
-							onClick={(e) => {e.preventDefault(); fileRef.current.click()}}
-						>
-							<FiUploadCloud size={20} /> Upload file lên
-						</button>
-					</div>
+		<div className="w-full min-h-screen bg-white flex flex-row">
+			<AdminSidebar />
+			<div className="w-full p-10">
+				<div className="flex mb-10 text-2xl font-bold">
+					Đang <p className="text-primary text-2xl px-2">Tạo mới</p> câu hỏi{' '}
 				</div>
-				<div>
-					<input
-						type="file"
-						ref={fileRef}
-						hidden
-						accept=".xlsx, .xls"
-						onChange={handleFileUpload}
-					/>
-				</div>
-				<div className=' max-h-80 overflow-y-auto'>
-				{data.length > 0 && (
-					<table className="table">
-						<thead>
-							<tr>
-								{Object.keys(data[0]).map((key) => (
-									<th key={key}>{key}</th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							{data.map((row, index) => (
-								<tr key={index}>
-									{Object.values(row).map((value, index) => (
-										<td key={index} className='text-center'>{value}</td>
-									))}
-								</tr>
-							))}
-						</tbody>
-					</table>
-				)}
-				</div>
-				
-				<button
-					type="submit"
-					className={`block  text-white text-center rounded-md p-2 font-medium mb-1 mt-3 ${
-						data.length == 0 ? 'bg-gray' : 'bg-primary'
-					}`}
-					disabled={data.length == 0}
+				<form
+					onSubmit={() => {
+						handleSubmitQuestionList(data);
+					}}
+					className="content"
 				>
-					Tạo câu hỏi
-				</button>
-			</form>
+					<div className="flex gap-3">
+						<button
+							className="bg-yellow text-white py-2 rounded-md  flex gap-2 justify-center items-center mb-3"
+							style={{ width: '150px' }}
+							onClick={handleDownload}
+						>
+							<FiDownloadCloud size={20} />
+							Tải file mẫu
+						</button>
+						<div>
+							<button
+								className="bg-purple text-white py-2 rounded-md mb-3 flex gap-2 justify-center items-center"
+								style={{ width: '170px' }}
+								onClick={(e) => {
+									e.preventDefault();
+									fileRef.current.click();
+								}}
+							>
+								<FiUploadCloud size={20} /> Upload file lên
+							</button>
+						</div>
+					</div>
+					<div>
+						<input
+							type="file"
+							ref={fileRef}
+							hidden
+							accept=".xlsx, .xls"
+							onChange={handleFileUpload}
+						/>
+					</div>
+					<div className=" max-h-80 overflow-y-auto">
+						{data.length > 0 && (
+							<table className="table">
+								<thead>
+									<tr>
+										{Object.keys(data[0]).map((key) => (
+											<th key={key}>{key}</th>
+										))}
+									</tr>
+								</thead>
+								<tbody>
+									{data.map((row, index) => (
+										<tr key={index}>
+											{Object.values(row).map((value, index) => (
+												<td key={index} className="text-center">
+													{value}
+												</td>
+											))}
+										</tr>
+									))}
+								</tbody>
+							</table>
+						)}
+					</div>
+
+					<button
+						type="submit"
+						className={`block w-[200px] text-white text-center rounded-md p-2 font-medium mb-1 mt-3 ${
+							data.length == 0 ? 'bg-gray' : 'bg-primary'
+						}`}
+						disabled={data.length == 0}
+					>
+						Tạo câu hỏi
+					</button>
+				</form>
+			</div>
 		</div>
 	);
 };

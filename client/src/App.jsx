@@ -16,6 +16,7 @@ import { InviteFriendPage } from './pages/InviteFriendPage';
 import { WannaBecomeHelperPage } from './pages/WannaBecomeHelperPage';
 import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
+import { CreateExam } from './pages/AdminPage/ExamManagement/CreateExam/CreateExam';
 import { QualificationManagement } from './pages/AdminPage/QualificationManagement/QualificationManagement';
 import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
@@ -73,6 +74,10 @@ import { ReportPostForum } from './pages/AdminPage/ReportPostForum/ReportPostFor
 import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/ReportDetail';
 import { UpdateCourse } from './pages/AdminPage/CourseManagement/UpdateCourse/UpdateCourse';
 import { CreateCourse } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourse';
+import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateExam';
+import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
+import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
+import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
 
 const App = () => {
 	return (
@@ -172,9 +177,6 @@ const AppContent = () => {
 							<Route path="discussions" element={<ForumDiscussions />}>
 								<Route path="topic/:topicId" element={<ForumDiscussions />} />
 							</Route>
-
-
-
 							<Route path="repositories" element={<ForumRepositories />} />
 							<Route
 								path="repositories/:repositoryId"
@@ -191,7 +193,11 @@ const AppContent = () => {
 							<Route path="/admin" element={<AdminPage />} />
 							<Route path="/admin-dashboard" element={<Dashboard />} />
 							<Route path="/admin-exam" element={<ExamManagement />} />
+							<Route path="/admin-exam/create" element={<CreateExam />} />
+							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
+							<Route path="/admin-question/create" element={<CreateQuestion />} />
+							<Route path="/admin-question/update/:questionId" element={<UpdateQuestion />} />
 							<Route
 								path="/admin-course"
 								element={<CourseManagement />}>
