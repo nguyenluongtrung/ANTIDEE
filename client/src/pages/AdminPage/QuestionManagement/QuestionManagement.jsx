@@ -10,20 +10,24 @@ import {
 	getAllQuestions,
 } from '../../../features/questions/questionSlice';
 import { Spinner } from '../../../components';
-import { CreateQuestion } from './CreateQuestion/CreateQuestion';
 import { QuestionDetail } from './QuestionDetail/QuestionDetail';
-import { UpdateQuestion } from './UpdateQuestion/UpdateQuestion';
-import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
+import {
+	calculateTotalPages,
+	getPageItems,
+	nextPage,
+	previousPage,
+} from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
+import { IoAddOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 export const QuestionManagement = () => {
-	const [isOpenCreateQuestion, setIsOpenCreateQuestion] = useState(false);
 	const [isOpenDetailQuestion, setIsOpenDetailQuestion] = useState(false);
-	const [isOpenUpdateQuestion, setIsOpenUpdateQuestion] = useState(false);
 	const [chosenQuestionId, setChosenQuestionId] = useState('');
 	const { isLoading } = useSelector((state) => state.questions);
 	const [questions, setQuestions] = useState([]);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -34,7 +38,7 @@ export const QuestionManagement = () => {
 	}
 	useEffect(() => {
 		initialQuestions();
-	}, [])
+	}, []);
 
 	useEffect(() => {
 		dispatch(getAllQuestions());
@@ -59,7 +63,6 @@ export const QuestionManagement = () => {
 		setRowsPerPage(Number(e.target.value));
 		setCurrentPage(1);
 	};
-
 
 	const totalPages = calculateTotalPages(questions.length, rowsPerPage);
 	const selectedQuestions = getPageItems(questions, currentPage, rowsPerPage);
@@ -94,25 +97,10 @@ export const QuestionManagement = () => {
 					)}
 				</Toaster>
 
-				{isOpenCreateQuestion && (
-					<CreateQuestion
-						setIsOpenCreateQuestion={setIsOpenCreateQuestion}
-						handleGetAllQuestions={handleGetAllQuestions}
-					/>
-				)}
-
 				{isOpenDetailQuestion && (
 					<QuestionDetail
 						chosenQuestionId={chosenQuestionId}
 						setIsOpenDetailQuestion={setIsOpenDetailQuestion}
-						handleGetAllQuestions={handleGetAllQuestions}
-					/>
-				)}
-
-				{isOpenUpdateQuestion && (
-					<UpdateQuestion
-						chosenQuestionId={chosenQuestionId}
-						setIsOpenUpdateQuestion={setIsOpenUpdateQuestion}
 						handleGetAllQuestions={handleGetAllQuestions}
 					/>
 				)}
@@ -134,10 +122,13 @@ export const QuestionManagement = () => {
 					</div>
 					<button
 						className="bg-pink text-white py-2 rounded-md block mx-auto"
-						style={{ width: '100px' }}
-						onClick={() => setIsOpenCreateQuestion(true)}
+						style={{ width: '150px' }}
+						onClick={() => navigate('create')}
 					>
-						<span>Thêm câu hỏi</span>
+						<div className="flex items-center">
+							<IoAddOutline className="size-8 pl-2 mr-2" />
+							<span className="text-sm pr-2">Thêm câu hỏi</span>
+						</div>
 					</button>
 				</div>
 				<table className="w-full border-b border-gray mt-3">
@@ -152,80 +143,86 @@ export const QuestionManagement = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{selectedQuestions && selectedQuestions
-							.filter((question) => question != undefined)
-							?.map((question, index) => {
-								return (
-									<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
-										<td className="font-medium text-center text-gray p-3">
-											<span>{index + 1}</span>
-										</td>
-										<td className="font-medium text-center text-gray">
-											<span>{question?.serviceId?.name}</span>
-										</td>
-										<td className="font-medium text-gray">
-											<span>{question.content}</span>
-										</td>
-										<td className="font-medium text-center text-gray">
-											<span>{question.difficultyLevel}</span>
-										</td>
-										<td className="font-medium text-center text-gray">
-											<button
-												className="hover:cursor-pointer text-xl pt-1.5"
-												onClick={() => {
-													setIsOpenDetailQuestion(true);
-													setChosenQuestionId(question._id);
-												}}
-											>
-												<MdOutlineRemoveRedEye className="block mx-auto" />
-											</button>
-										</td>
-										<td className="">
-											<div className="flex items-center justify-center">
+						{selectedQuestions &&
+							selectedQuestions
+								.filter((question) => question != undefined)
+								?.map((question, index) => {
+									return (
+										<tr className="hover:bg-light_purple transition-colors group odd:bg-light_purple hover:cursor-pointer">
+											<td className="font-medium text-center text-gray p-3">
+												<span>{index + 1}</span>
+											</td>
+											<td className="font-medium text-center text-gray">
+												<span>{question?.serviceId?.name}</span>
+											</td>
+											<td className="font-medium text-gray">
+												<span>{question.content}</span>
+											</td>
+											<td className="font-medium text-center text-gray">
+												<span>{question.difficultyLevel}</span>
+											</td>
+											<td className="font-medium text-center text-gray">
 												<button
-													className="flex items-center justify-end py-3 pr-2 text-xl"
+													className="hover:cursor-pointer text-xl pt-1.5"
 													onClick={() => {
-														setIsOpenUpdateQuestion(true);
+														setIsOpenDetailQuestion(true);
 														setChosenQuestionId(question._id);
 													}}
 												>
-													<BiEdit className="text-green" />
+													<MdOutlineRemoveRedEye className="block mx-auto" />
 												</button>
-												<button className="flex items-center justify-start py-3 pl-2 text-xl">
-													<BiTrash
-														className="text-red"
-														onClick={() => handleDeleteQuestion(question._id)}
-													/>
-												</button>
-											</div>
-										</td>
-									</tr>
-								);
-							})}
+											</td>
+											<td className="">
+												<div className="flex items-center justify-center">
+													<button
+														className="flex items-center justify-end py-3 pr-2 text-xl"
+														onClick={() => {
+															setChosenQuestionId(question._id);
+														}}
+													>
+														<BiEdit className="text-green" onClick={() => navigate(`update/${question._id}`)}/>
+													</button>
+													<button className="flex items-center justify-start py-3 pl-2 text-xl">
+														<BiTrash
+															className="text-red"
+															onClick={() => handleDeleteQuestion(question._id)}
+														/>
+													</button>
+												</div>
+											</td>
+										</tr>
+									);
+								})}
 					</tbody>
 				</table>
 				<div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
 					<div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
 						<div>
 							<p className="text-sm text-gray">
-								Hiển thị <span className="font-medium">{(currentPage - 1) * rowsPerPage + 1}</span> đến{' '}
+								Hiển thị{' '}
+								<span className="font-medium">
+									{(currentPage - 1) * rowsPerPage + 1}
+								</span>{' '}
+								đến{' '}
 								<span className="font-medium">
 									{Math.min(currentPage * rowsPerPage, questions.length)}
 								</span>{' '}
-								trong <span className="font-medium">{questions.length}</span> kết quả
+								trong <span className="font-medium">{questions.length}</span>{' '}
+								kết quả
 							</p>
 						</div>
 						<div>
-							<Pagination totalPages={totalPages}
+							<Pagination
+								totalPages={totalPages}
 								currentPage={currentPage}
 								onPageChange={(page) => setCurrentPage(page)}
 								onNextPage={handleNextPage}
 								onPreviousPage={handlePreviousPage}
-								rowsPerPage={rowsPerPage} />
+								rowsPerPage={rowsPerPage}
+							/>
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	);

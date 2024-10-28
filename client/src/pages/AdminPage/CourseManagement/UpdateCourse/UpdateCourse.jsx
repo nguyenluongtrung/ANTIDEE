@@ -10,14 +10,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export const UpdateCourse = () => {
     const params = useParams();
-
-    // const { qualifications, isLoading } = useSelector(
-    //     (state) => state.qualifications
-    // );
-
     const [qualifications, setQualifications] = useState([])
 
-    //Functions check qualificate trùng update thì phải lấy cái cũ
     const [courses, setCourses] = useState([])
     const [initQualificate, setInitQualificate] = useState("")
 
@@ -26,7 +20,6 @@ export const UpdateCourse = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // dispatch(getAllQualifications());
         const handleFetchCourse = async () => {
             const resultFetchCourse = await dispatch(getAllCourse());
             console.log("Fetch Course", resultFetchCourse)

@@ -21,6 +21,26 @@ export const getAllQuestions = createAsyncThunk(
 	}
 );
 
+export const getQuestion = createAsyncThunk(
+	'questions/getQuestion',
+	async (questionId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await questionService.getQuestion(token, questionId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const createQuestions = createAsyncThunk(
 	'questions/createQuestions',
 	async (questionData, thunkAPI) => {
@@ -116,13 +136,25 @@ export const questionSlice = createSlice({
 				state.message = action.payload;
 				state.questions = null;
 			})
+			.addCase(getQuestion.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getQuestion.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(getQuestion.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.questions = null;
+			})
 			.addCase(createQuestions.pending, (state) => {
 				state.isLoading = true;
 			})
 			.addCase(createQuestions.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.questions.push(action.payload);
 			})
 			.addCase(createQuestions.rejected, (state, action) => {
 				state.isLoading = false;
@@ -135,11 +167,11 @@ export const questionSlice = createSlice({
 			.addCase(updateQuestion.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.questions[
-					state.questions.findIndex(
-						(question) => question._id == action.payload._id
-					)
-				] = action.payload;
+				// state.questions[
+				// 	state.questions.findIndex(
+				// 		(question) => question._id == action.payload._id
+				// 	)
+				// ] = action.payload;
 			})
 			.addCase(updateQuestion.rejected, (state, action) => {
 				state.isLoading = false;
