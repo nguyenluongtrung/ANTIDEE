@@ -55,6 +55,18 @@ const createForumPost = async (forumPostData, token) => {
 	const response = await axios.post(API_URL, forumPostData, config);
 	return response.data.data.newForumPost;
 };
+
+const updateForumPost = async (token, forumPostData, forumPostId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.patch(API_URL + `${forumPostId}`, forumPostData, config);
+	return response.data.data;
+};
+
 const deleteForumPost = async (token, forumPostId) => {
 	const config = {
 		headers: {
@@ -250,5 +262,6 @@ const forumPostService = {
 	unReactToForumPost,
 	updateHiddenDetails,
 	getForumPost,
+	updateForumPost,
 };
 export default forumPostService;

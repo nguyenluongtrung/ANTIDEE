@@ -65,6 +65,7 @@ export const getForumPost = createAsyncThunk(
 		}
 	}
 );
+
 export const createForumPost = createAsyncThunk(
 	'forumPosts/createForumPost',
 	async (forumPostData, thunkAPI) => {
@@ -84,6 +85,28 @@ export const createForumPost = createAsyncThunk(
 		}
 	}
 );
+
+export const updateForumPost = createAsyncThunk(
+	'forumPosts/updateForumPost',
+	async ({ forumPostData, postId }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			console.log(forumPostData, postId)
+			const token = storedAccount.data.token;
+			return await forumPostService.updateForumPost(token, forumPostData, postId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const deleteForumPost = createAsyncThunk(
 	'forumPosts/deleteForumPost',
 	async (forumPostId, thunkAPI) => {
@@ -357,6 +380,22 @@ export const forumPostSlice = createSlice({
 				state.forumPosts.unshift(action.payload);
 			})
 			.addCase(createForumPost.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(updateForumPost.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateForumPost.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				const index = state.forumPosts.findIndex((forumPost) => forumPost._id === action.payload._id);
+				if (index !== -1) {
+					state.forumPosts[index] = action.payload;
+				}
+			})
+			.addCase(updateForumPost.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
