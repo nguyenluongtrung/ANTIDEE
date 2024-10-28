@@ -73,6 +73,7 @@ import { ReportPostForum } from './pages/AdminPage/ReportPostForum/ReportPostFor
 import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/ReportDetail';
 import { UpdateCourse } from './pages/AdminPage/CourseManagement/UpdateCourse/UpdateCourse';
 import { CreateCourse } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourse';
+import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 
 const App = () => {
 	return (
@@ -88,9 +89,10 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
-			{!isAdminPage && <div className="sidebar-container z-50"></div>}
-			<ChatForm />
+			{!isAdminPage && (<div className=" z-50"> <ChatForm /></div>)}
+
 			<div className="content-container select-none">
+
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<HomePage />} />
@@ -209,11 +211,16 @@ const AppContent = () => {
 									path="/admin-promotion/detail-promotion/:promotionId"
 									element={<PromotionDetail />}
 								/>
-								<Route
-									path="/admin-promotion/update-promotion/:promotionId"
-									element={<UpdatePromotion />}
-								/>
+
 							</Route>
+							<Route
+								path="/admin-promotion/:promotionId"
+								element={<UpdatePromotion />}
+							/>
+							<Route
+								path="/admin-promotion/create-promotion"
+								element={<CreatePromotion />}
+							/>
 							<Route
 								path="/admin-appFeedback"
 								element={<AppFeedbackManagement />}
