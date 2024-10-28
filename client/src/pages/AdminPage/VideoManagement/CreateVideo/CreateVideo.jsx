@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import React, { useRef, useState, useEffect } from 'react';
+import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from "../../../../components";
 import toast from "react-hot-toast";
 import { errorStyle, successStyle } from "../../../../utils/toast-customize";
@@ -14,14 +16,14 @@ import {
 } from 'firebase/storage';
 import { app } from '../../../../firebase';
 
-export const CreateVideo = ({ setIsOpenCreateVideo, handleGetAllVideos }) => {
+export const CreateVideo = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,  
   } = useForm();
-
+  const params = useParams();
   const dispatch = useDispatch();
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
@@ -105,106 +107,80 @@ export const CreateVideo = ({ setIsOpenCreateVideo, handleGetAllVideos }) => {
   const urlValue = watch("url");
 
   return (
-    <div className="popup active">
-      <div className="overlay"></div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="content rounded-md p-5"
-        style={{ width: "35vw" }}
-      >
-        <AiOutlineClose
-          className="absolute text-sm hover:cursor-pointer"
-          onClick={() => setIsOpenCreateVideo(false)}
-        />
-        <p className="grid text-green font-bold text-xl justify-center">
-          TẠO VIDEO
-        </p>
-        <table className="mt-3">
-          <tbody>
-            <tr>
-              <td>
-                <span>Tiêu đề</span>
-              </td>
-              <td className="pl-6 py-1 w-96">
-                <input
-                  type="text"
-                  {...register("title")}
-                  className="create-exam-input text-center"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span>Đường dẫn</span>
-              </td>
-              <td className="pl-6 py-1 w-96">
-                <input
-                  type="text"
-                  {...register("url")}
-                  className="create-exam-input text-center"
-                  disabled={Boolean(videoUrl)}  
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span className="font-bold">Video ưu đãi</span>
-              </td>
-              <td className="pl-[30px] py-2 grid justify-center">
-                <span
-                  className={`rounded-md rounded-customized-gray p-1 mx-auto w-[130px] text-center hover:cursor-pointer ${urlValue ? 'opacity-50 cursor-not-allowed' : ''}`} // Thêm điều kiện vô hiệu hóa
-                  onClick={(e) => {
-                    if (!urlValue) {  
-                      e.preventDefault();
-                      fileRef.current.click();
-                    }
-                  }}
-                >
-                  <span>Chọn video ưu đãi</span>
-                </span>
-                <input
-                  type="file"
-                  ref={fileRef}
-                  hidden
-                  accept="video/*"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-                <p className="text-sm self-center pl-2">
-                  {fileUploadError ? (
-                    <span className="text-red">{fileUploadError}</span>
-                  ) : filePerc > 0 && filePerc < 100 ? (
-                    <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
-                  ) : filePerc === 100 ? (
-                    <span className="text-green">Tải video lên thành công!</span>
-                  ) : (
-                    ''
-                  )}
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span>Mô tả</span>
-              </td>
-              <td className="pl-6 py-1">
-                <textarea
-                  type="text"
-                  {...register("description")}
-                  className="create-exam-textarea text-center"
-                  rows="3"
-                  cols="40"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button
-          type="submit"
-          className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
-        >
-          Thêm video
-        </button>
-      </form>
+    <div className="w-full min-h-screen bg-[#F6F7FB] p-6 flex flex-row">
+      <AdminSidebar />
+      <div className="flex-1 bg-white rounded-lg shadow-md p-6 max-w-[1600px] mx-auto">
+      <div className='flex items-center mb-10 text-2xl font-bold'>Đang <p className='text-primary text-2xl px-2'>{params.videoId ? 'Cập nhật' : 'Tạo mới'}</p>  video </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Tiêu đề</label>
+              <input
+                type="text"
+                {...register("title")}
+                className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Đường dẫn</label>
+              <input
+                type="text"
+                {...register("url")}
+                className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
+                disabled={Boolean(videoUrl)}
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Video ưu đãi</label>
+              <div
+                className={`block w-full px-4 py-2 border border-gray-300 rounded-lg text-center cursor-pointer ${
+                  urlValue ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                onClick={(e) => {
+                  if (!urlValue) {  
+                    e.preventDefault();
+                    fileRef.current.click();
+                  }
+                }}
+              >
+                Chọn video ưu đãi
+              </div>
+              <input
+                type="file"
+                ref={fileRef}
+                hidden
+                accept="video/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <p className="text-sm mt-1">
+                {fileUploadError ? (
+                  <span className="text-red ">{fileUploadError}</span>
+                ) : filePerc > 0 && filePerc < 100 ? (
+                  <span className="text-gray ">{`Đang tải lên ${filePerc}%`}</span>
+                ) : filePerc === 100 ? (
+                  <span className="text-green ">Tải video lên thành công!</span>
+                ) : (
+                  ''
+                )}
+              </p>
+            </div>
+            <div>
+              <label className="block text-gray  font-medium mb-1">Mô tả</label>
+              <textarea
+                {...register("description")}
+                className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
+                rows="3"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="block w-full bg-primary text-white rounded-lg py-2 mt-6 font-medium hover:bg-primary-dark transition duration-300"
+          >
+            Thêm video
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

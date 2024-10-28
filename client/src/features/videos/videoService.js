@@ -17,6 +17,16 @@ const createVideo = async (token, videoData) => {
 	const response = await axios.post(API_URL, videoData, config);
 	return response.data.data.video;
 };
+const getVideo = async (token, videoId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	}; 
+	const response = await axios.get(API_URL + `${videoId}`, config);
+	
+	return response.data.data.video;
+};
 
 const updateVideo = async (token, videoData, id) => {
 	const config = {
@@ -53,6 +63,7 @@ const videoService = {
 	createVideo,
 	updateVideo,
 	deleteVideo,
+	getVideo,
 	finishVideoByAccount,
 };
 

@@ -45,6 +45,8 @@ import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
 import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
+import { CreateVideo } from './pages/AdminPage/VideoManagement/CreateVideo/CreateVideo';
+import {UpdateVideo} from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo'; 
 import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
@@ -224,6 +226,9 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
+							<Route path="/admin-video/create" element={<CreateVideo />} />
+							<Route path="/admin-video/update/:videoId" element={<UpdateVideo />} />
+							<Route path="/admin-video/video-detail" element={<VideoDetail />} />
 							<Route path="/admin-report-forum" element={<ReportPostForum />}>
 								<Route
 									path="/admin-report-forum/report-detail/:reportId"
