@@ -10,19 +10,7 @@ const videoSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-    },
-    videoAccounts: [
-      {
-        isCompleted: {
-          type: Boolean,
-          default: false,
-        },
-        accountId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      },
-    ],
+    } 
   },
   {
     timestamps: true,
