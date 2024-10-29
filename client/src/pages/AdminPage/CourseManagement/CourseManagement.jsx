@@ -42,8 +42,8 @@ export const CourseManagement = () => {
             toast.error(result?.payload, errorStyle);
         }
         handleGetAllCourse()
-    };  
-    
+    };
+
 
     const handleRowsPerPageChange = (e) => {
         setRowsPerPage(Number(e.target.value));
@@ -126,6 +126,7 @@ export const CourseManagement = () => {
                             <td className="py-2 px-4 text-center font-bold">Chứng chỉ</td>
                             <td className="py-2 px-4 text-center font-bold">Thời gian</td>
                             <td className="py-2 px-4 text-center font-bold">Số lượng bài học</td>
+                            <td className="py-2 px-4 text-center font-bold">Chi tiết</td>
                             <td className="py-2 px-4 text-center font-bold">Hành Động</td>
                         </tr>
                     </thead>
@@ -158,7 +159,7 @@ export const CourseManagement = () => {
                                                 navigate(`/admin-course/detail-course/${course._id}`);
                                             }}
                                         >
-                                            <MdOutlineRemoveRedEye className="block mx-auto" />
+                                            <MdOutlineRemoveRedEye className="block mx-auto hover:text-primary" />
                                         </button>
                                     </td>
                                     <td className="">
@@ -167,15 +168,17 @@ export const CourseManagement = () => {
                                                 <button
                                                     className="flex items-center justify-end py-3 pr-2 text-xl"
                                                 >
-                                                    <BiEdit className="text-green" />
+                                                    <BiEdit className="text-green hover:text-primary" />
                                                 </button>
                                             </Link>
-                                            <button className="flex items-center justify-start py-3 pl-2 text-xl">
-                                                <BiTrash
-                                                    className="text-red hover:text-white"
-                                                    onClick={() => handleDeleteCourse(course._id)}
-                                                />
-                                            </button>
+                                            <div>
+                                                <button className="flex items-center  py-3 pl-2 text-xl">
+                                                    <BiTrash
+                                                        className="text-red hover:text-primary"
+                                                        onClick={() => handleDeleteCourse(course._id)}
+                                                    />
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

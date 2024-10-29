@@ -73,6 +73,7 @@ import { ReportPostForum } from './pages/AdminPage/ReportPostForum/ReportPostFor
 import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/ReportDetail';
 import { UpdateCourse } from './pages/AdminPage/CourseManagement/UpdateCourse/UpdateCourse';
 import { CreateCourse } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourse';
+import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 
 const App = () => {
 	return (
@@ -203,6 +204,10 @@ const AppContent = () => {
 							<Route
 								path="/admin-course/update-course/:courseId"
 								element={<UpdateCourse />}
+							/>
+							<Route
+								path="/admin-course/detail-course/:courseId"
+								element={<CoursesDetail />}
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
