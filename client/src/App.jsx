@@ -80,6 +80,7 @@ import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateEx
 import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
 import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
 import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
+import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 
 const App = () => {
 	return (
@@ -211,6 +212,10 @@ const AppContent = () => {
 							<Route
 								path="/admin-course/update-course/:courseId"
 								element={<UpdateCourse />}
+							/>
+							<Route
+								path="/admin-course/detail-course/:courseId"
+								element={<CoursesDetail />}
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
