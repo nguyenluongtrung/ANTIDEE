@@ -156,6 +156,10 @@ const getForumPost = asyncHandler(async (req, res) => {
 			path: 'author',
 			select: 'name avatar role',
 		})
+		.populate({
+			path: 'comments.author',
+			select: 'avatar name',
+		})
 		.populate('topic');
 
 	if (!forumPost) {

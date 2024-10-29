@@ -54,6 +54,7 @@ export const DetailedForumPost = ({
   const [reportPostId, setReportPostId] = useState();
   const [_selectedReason, setSelectedReason] = useState(null);
   const [isOpenUpdatePostForum, setIsOpenUpdatePostForum] = useState(false);
+  const [expandedCommentIndex, setExpandedCommentIndex] = useState(null);
 
   const handleShowPostOptions = (postId) => {
     setShowPostOptions((prevState) => (prevState === postId ? null : postId));
