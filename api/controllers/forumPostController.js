@@ -298,7 +298,7 @@ const reactToForumPost = asyncHandler(async (req, res) => {
 	const { userId } = req.body;
 
 	const forumPost = await ForumPost.findById(forumPostId)
-		.populate('author')
+		.populate('author topic')
 		.populate({
 			path: 'comments',
 			populate: {
@@ -306,6 +306,7 @@ const reactToForumPost = asyncHandler(async (req, res) => {
 				select: 'avatar name',
 			},
 		});
+
 	if (!forumPost.likes.includes(userId)) {
 		forumPost.likes.push(userId);
 		await forumPost.save();
@@ -321,7 +322,7 @@ const unReactToForumPost = asyncHandler(async (req, res) => {
 	const { userId } = req.body;
 
 	const forumPost = await ForumPost.findById(forumPostId)
-		.populate('author')
+		.populate('author topic')
 		.populate({
 			path: 'comments',
 			populate: {
