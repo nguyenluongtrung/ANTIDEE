@@ -8,6 +8,7 @@ import './CreateExam.css';
 import { useEffect } from 'react';
 import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateExam = () => {
 	const { isLoading: examLoading } = useSelector((state) => state.exams);
@@ -21,6 +22,7 @@ export const CreateExam = () => {
 	} = useForm();
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(getAllQualifications());
@@ -37,6 +39,7 @@ export const CreateExam = () => {
 		const result = await dispatch(createExam(examData));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm bài kiểm tra thành công', successStyle);
+			navigate('/admin-exam')
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}

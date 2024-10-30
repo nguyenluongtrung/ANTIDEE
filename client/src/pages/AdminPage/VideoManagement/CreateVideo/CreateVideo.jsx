@@ -25,6 +25,7 @@ export const CreateVideo = () => {
   } = useForm();
   const params = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
@@ -97,11 +98,10 @@ export const CreateVideo = () => {
     const result = await dispatch(createVideo(videoData));
     if (result.type.endsWith("fulfilled")) {
       toast.success("Thêm Video thành công", successStyle);
+      navigate('/admin-video')
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
-    setIsOpenCreateVideo(false);
-    handleGetAllVideos();
   };
  
   const urlValue = watch("url");
