@@ -16,6 +16,7 @@ import { UpdateQualification } from "./UpdateQualification/UpdateQualification";
 import { IoAddOutline } from "react-icons/io5";
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from "../../../utils/pagination";
 import Pagination from "../../../components/Pagination/Pagination";
+import DeletePopup from "../../../components/DeletePopup/DeletePopup";
 
 export const QualificationManagement = () => {
   const [isOpenCreateQualification, setIsOpenCreateQualification] =
@@ -29,34 +30,48 @@ export const QualificationManagement = () => {
     (state) => state.qualifications
   );
 
-  const [qualifications, setQualifications]=useState([]);
+  const [qualifications, setQualifications] = useState([]);
   const dispatch = useDispatch();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [selectedIdDelete, setSelectedIdDelete] = useState('');
 
   async function initiateQualifications() {
     let output = await dispatch(getAllQualifications());
     setQualifications(output.payload);
-}
+  }
 
-useEffect(() => {
-  initiateQualifications();
-}, []);
+  useEffect(() => {
+    initiateQualifications();
+  }, []);
 
   useEffect(() => {
     dispatch(getAllQualifications());
   }, []);
 
-  const handleDeleteQualification = async (id) => {
-    const result = await dispatch(deleteQualification(id));
+  const openDeletePopup = (qualificationId) => {
+    setSelectedIdDelete(qualificationId);
+    setIsDeletePopupOpen(true);
+  };
+
+  const closeDeletePopup = () => {
+    setIsDeletePopupOpen(false);
+    setSelectedIdDelete('');
+  };
+
+  const handleDeleteQualification = async () => {
+    const result = await dispatch(deleteQualification(selectedIdDelete));
     console.log("***", result);
     if (result.type.endsWith("fulfilled")) {
       toast.success("Xoá chứng chỉ thành công");
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
+    closeDeletePopup();
   };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -101,6 +116,14 @@ useEffect(() => {
             />
           )}
         </Toaster>
+
+        <DeletePopup
+          open={isDeletePopupOpen}
+          onClose={closeDeletePopup}
+          deleteAction={handleDeleteQualification}
+          itemName="chứng chỉ"
+        />
+
         {isOpenCreateQualification && (
           <CreateQualification
             setIsOpenCreateQualification={setIsOpenCreateQualification}
@@ -177,9 +200,7 @@ useEffect(() => {
                       <button className="flex items-center justify-start p-3 text-xl group">
                         <BiTrash
                           className="text-red group-hover:text-primary"
-                          onClick={() =>
-                            handleDeleteQualification(qualification._id)
-                          }
+                          onClick={() => openDeletePopup(qualification._id)}
                         />
                       </button>
                     </div>

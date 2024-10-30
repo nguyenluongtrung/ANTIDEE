@@ -17,6 +17,7 @@ import {
   previousPage,
 } from "../../../utils/pagination";
 import Pagination from "../../../components/Pagination/Pagination";
+import DeletePopup from "../../../components/DeletePopup/DeletePopup";
 
 export const VideoManagement = () => { 
 
@@ -27,6 +28,8 @@ export const VideoManagement = () => {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [selectedIdDelete, setSelectedIdDelete] = useState('');
 
   async function initiateVideos() {
     let output = await dispatch(getAllVideos());
@@ -41,9 +44,19 @@ export const VideoManagement = () => {
     dispatch(getAllVideos());
   }, []);
 
+  const openDeletePopup = (videoId) => {
+    setSelectedIdDelete(videoId);
+    setIsDeletePopupOpen(true);
+  };
+
+  const closeDeletePopup = () => {
+    setIsDeletePopupOpen(false);
+    setSelectedIdDelete('');
+  };
+
   //Delete Video
-  const handleDeleteVideo = async (id) => {
-    const result = await dispatch(deleteVideo(id));
+  const handleDeleteVideo = async () => {
+    const result = await dispatch(deleteVideo(selectedIdDelete));
     console.log("***", result);
     if (result.type.endsWith("fulfilled")) {
       toast.success("Xoá video thành công");
@@ -95,6 +108,12 @@ export const VideoManagement = () => {
           )}
         </Toaster>
 
+        <DeletePopup
+          open={isDeletePopupOpen}
+          onClose={closeDeletePopup}
+          deleteAction={handleDeleteVideo}
+          itemName="video"
+        />
 
         <div className="flex items-center justify-center">
           <div className="flex-1 pt-2" style={{ paddingRight: "70%" }}>
@@ -180,7 +199,7 @@ export const VideoManagement = () => {
                       <button className="flex items-center justify-start p-3 text-xl group">
                         <BiTrash
                           className="text-red group-hover:text-primary"
-                          onClick={() => handleDeleteVideo(video._id)}
+                          onClick={() => openDeletePopup(video._id)}
                         />
                       </button>
                     </div>

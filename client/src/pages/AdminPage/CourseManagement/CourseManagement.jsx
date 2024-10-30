@@ -13,10 +13,13 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 
 export const CourseManagement = () => {
     const [isOpenDetailCourse, setIsOpenDetailCourse] = useState(false);
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
     const [chosenCourseId, setChosenCourseId] = useState('');
+    const [selectedCourseIdDelete, setSelectedCourseIdDelete] = useState('');
     const [courses, setCourses] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -33,15 +36,25 @@ export const CourseManagement = () => {
         handleGetAllCourse();
     }, []);
 
+    const openDeletePopup = (courseId) => {
+        setSelectedCourseIdDelete(courseId);
+        setIsDeletePopupOpen(true);
+    };
 
-    const handleDeleteCourse = async (id) => {
-        const result = await dispatch(deleteCourse(id));
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedCourseIdDelete('');
+    };
+
+    const handleDeleteCourse = async () => {
+        const result = await dispatch(deleteCourse(selectedCourseIdDelete));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá khóa học thành công', successStyle);
         } else if (result?.error?.message === 'Rejected') {
             toast.error(result?.payload, errorStyle);
         }
         handleGetAllCourse()
+        closeDeletePopup();
     };
 
 
@@ -83,6 +96,13 @@ export const CourseManagement = () => {
                         />
                     )}
                 </Toaster>
+
+                <DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeleteCourse}
+                    itemName="khóa học"
+                />
 
                 {isOpenDetailCourse && (
                     <CoursesDetail
@@ -175,7 +195,7 @@ export const CourseManagement = () => {
                                                 <button className="flex items-center  py-3 pl-2 text-xl">
                                                     <BiTrash
                                                         className="text-red hover:text-primary"
-                                                        onClick={() => handleDeleteCourse(course._id)}
+                                                        onClick={() => openDeletePopup(course._id)}
                                                     />
                                                 </button>
                                             </div>

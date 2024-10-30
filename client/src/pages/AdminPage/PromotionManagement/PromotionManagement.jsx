@@ -15,6 +15,7 @@ import { formatDate } from '../../../utils/format';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 
 export const PromotionManagement = () => {
     const [isOpenCreatePromotion, setIsOpenCreatePromotion] = useState(false);
@@ -23,6 +24,8 @@ export const PromotionManagement = () => {
     const { isLoading } = useSelector((state) => state.promotions);
     const [promotions, setPromotions] = useState([]);
     const [filterStatus, setFilterStatus] = useState('all');
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [selectedIdDelete, setSelectedIdDelete] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -43,13 +46,24 @@ export const PromotionManagement = () => {
         dispatch(getAllPromotions());
     }, []);
 
-    const handleDeletePromotion = async (id) => {
-        const result = await dispatch(deletePromotion(id));
+    const openDeletePopup = (promotionId) => {
+        setSelectedIdDelete(promotionId);
+        setIsDeletePopupOpen(true);
+    };
+
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedIdDelete('');
+    };
+
+    const handleDeletePromotion = async () => {
+        const result = await dispatch(deletePromotion(selectedIdDelete));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá mã giảm giá thành công', successStyle);
         } else {
             toast.error(result?.payload, errorStyle);
         }
+        closeDeletePopup();
     };
 
     const handleGetAllPromotions = async () => {
@@ -108,6 +122,13 @@ export const PromotionManagement = () => {
             <AdminSidebar />
             <div className="flex-1 px-10 pt-5">
                 <Toaster />
+
+                <DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeletePromotion}
+                    itemName="khuyến mãi"
+                />
 
                 {isOpenCreatePromotion && (
                     <CreatePromotion
@@ -211,13 +232,15 @@ export const PromotionManagement = () => {
                                                 className="flex items-center justify-end py-3 pr-2 text-xl"
                                                 onClick={() => handleOpenUpdatePromotion(promotion?._id)}
                                             >
-                                                <BiEdit className="text-green" />
+                                                <BiEdit className="text-green hover:text-primary" />
                                             </button>
                                             <button
                                                 className="flex items-center justify-start py-3 pl-2 text-xl"
-                                                onClick={() => handleDeletePromotion(promotion._id)}
                                             >
-                                                <BiTrash className="text-red" />
+                                                <BiTrash
+                                                    className="text-red hover:text-primary"
+                                                    onClick={() => openDeletePopup(promotion._id)}
+                                                />
                                             </button>
                                         </div>
                                     </td>
