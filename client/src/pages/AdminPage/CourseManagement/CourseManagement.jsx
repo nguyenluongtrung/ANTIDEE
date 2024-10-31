@@ -126,7 +126,7 @@ export const CourseManagement = () => {
                         </select>
                         <span> hàng</span>
                     </div>
-                    <Link to="/admin-course/create-course">
+                    <Link to="/admin-course/create">
                         <button
                             className="bg-pink text-white rounded-md block mx-auto"
                             style={{ width: '170px' }}
@@ -176,7 +176,7 @@ export const CourseManagement = () => {
                                             className="hover:cursor-pointer text-xl pt-1.5"
                                             onClick={() => {
                                                 setIsOpenDetailCourse(true);
-                                                navigate(`/admin-course/detail-course/${course._id}`);
+                                                navigate(`/admin-course/detail/${course._id}`);
                                             }}
                                         >
                                             <MdOutlineRemoveRedEye className="block mx-auto hover:text-primary" />
@@ -184,7 +184,7 @@ export const CourseManagement = () => {
                                     </td>
                                     <td className="">
                                         <div className="flex items-center justify-center">
-                                            <Link to={`/admin-course/update-course/${course._id}`}>
+                                            <Link to={`/admin-course/update/${course._id}`}>
                                                 <button
                                                     className="flex items-center justify-end py-3 pr-2 text-xl"
                                                 >

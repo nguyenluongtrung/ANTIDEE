@@ -17,6 +17,7 @@ import { IoAddOutline } from "react-icons/io5";
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from "../../../utils/pagination";
 import Pagination from "../../../components/Pagination/Pagination";
 import DeletePopup from "../../../components/DeletePopup/DeletePopup";
+import { useNavigate } from "react-router-dom";
 
 export const QualificationManagement = () => {
   const [isOpenCreateQualification, setIsOpenCreateQualification] =
@@ -32,6 +33,7 @@ export const QualificationManagement = () => {
 
   const [qualifications, setQualifications] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -156,7 +158,7 @@ export const QualificationManagement = () => {
           <button
             className="bg-pink text-white rounded-md block mx-auto py-0.5"
             style={{ width: "170px" }}
-            onClick={() => setIsOpenCreateQualification(true)}
+            onClick={() => navigate('create')}
           >
             <div className="flex items-center">
               <IoAddOutline className="size-8 pl-2 mr-2" />
@@ -191,10 +193,8 @@ export const QualificationManagement = () => {
                       <button className="flex items-center justify-end py-3 pr-2 text-xl group">
                         <BiEdit
                           className="text-green group-hover:text-primary"
-                          onClick={() => {
-                            setIsOpenUpdateQualification(true);
-                            setChosenQualificationId(qualification._id);
-                          }}
+
+                          onClick={() => navigate(`update/${qualification._id}`)}
                         />
                       </button>
                       <button className="flex items-center justify-start p-3 text-xl group">

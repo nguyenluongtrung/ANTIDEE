@@ -90,7 +90,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
 
                             {listExams.filter(exam =>
                                 exam.category === "Kiểm tra training" &&
-                                String(exam.qualificationId._id) === String(formData.qualificationId)
+                                String(exam?.qualificationId?._id) === String(formData.qualificationId)
                             ).map(exam => (
                                 <option key={exam._id} value={exam._id}>
                                     {exam.name}
