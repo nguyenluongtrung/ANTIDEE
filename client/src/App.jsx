@@ -47,7 +47,7 @@ import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 import { CreateVideo } from './pages/AdminPage/VideoManagement/CreateVideo/CreateVideo';
-import {UpdateVideo} from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo'; 
+import { UpdateVideo } from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo';
 import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
@@ -82,6 +82,8 @@ import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuest
 import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
 import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
+import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
+import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
 
 const App = () => {
 	return (
@@ -208,15 +210,15 @@ const AppContent = () => {
 								element={<CourseManagement />}>
 							</Route>
 							<Route
-								path="/admin-course/create-course"
+								path="/admin-course/create"
 								element={<CreateCourse />}
 							/>
 							<Route
-								path="/admin-course/update-course/:courseId"
+								path="/admin-course/update/:courseId"
 								element={<UpdateCourse />}
 							/>
 							<Route
-								path="/admin-course/detail-course/:courseId"
+								path="/admin-course/detail/:courseId"
 								element={<CoursesDetail />}
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
@@ -242,6 +244,8 @@ const AppContent = () => {
 								path="/admin-qualification"
 								element={<QualificationManagement />}
 							/>
+							<Route path="/admin-qualification/create" element={<CreateQualification />} />
+							<Route path="/admin-qualification/update/:qualificateId" element={<UpdateQualification />} />
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
 							<Route path="/admin-video/create" element={<CreateVideo />} />
