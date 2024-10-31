@@ -2,17 +2,19 @@ const chatting = require('../models/chatModel');
 
 //get All chat
 const getAllChats = async (req, res) => {
-    const chat = await chatting.find({}).populate({
-        path: 'firstId secondId',
-        select: 'avatar name'
-    });;
-
-    res.status(200).json({
-        status: "success",
-        data: {
-            chat,
-        },
-    });
+    try {
+        const chats = await chatting.find({})
+            .populate('firstId secondId', 'avatar name');
+        res.status(200).json({
+            success: true,
+            data: chats,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
 };
 
 //createChat
@@ -20,35 +22,35 @@ const createChat = async (req, res) => {
     try {
         const { firstId, secondId } = req.body;
 
-        // kiểm tra xem có chat nào tồn tại giữa 2 id hay không
+        // Kiểm tra xem đã có chat giữa hai ID này chưa
         const existingChat = await chatting.findOne({
             $or: [
                 { firstId, secondId },
-                { firstId: secondId, secondId: firstId }
             ]
         });
 
         if (existingChat) {
             return res.status(400).json({
                 success: false,
-                error: "đã có chat tồn tại giữa 2 id này"
+                message: "Đã có cuộc hội thoại giữa hai ID này",
+                data: existingChat,
             });
         }
-        //  tạo chat nếu không tồn tại
 
-        const chat = await chatting.create(req.body);
+        // Tạo mới nếu chưa tồn tại
+        const newChat = await chatting.create(req.body);
         res.status(201).json({
             success: true,
-            data: { chat },
+            data: newChat,
         });
-
     } catch (error) {
         res.status(400).json({
             success: false,
             error: error.message,
-        })
+        });
     }
-}
+};
+
 
 //find chat
 
@@ -59,9 +61,10 @@ const getChatById = async (req, res) => {
         if (!chat) {
             return res.status(404).json({
                 success: false,
-                error: "Chat not found"
+                message: "Không tìm thấy cuộc hội thoại",
             });
         }
+
         res.status(200).json({
             success: true,
             data: chat,
@@ -72,7 +75,8 @@ const getChatById = async (req, res) => {
             error: error.message,
         });
     }
-}
+};
+
 module.exports = {
     getAllChats,
     createChat,

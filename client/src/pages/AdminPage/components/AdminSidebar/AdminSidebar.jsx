@@ -34,6 +34,7 @@ export default function AdminSidebar() {
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Bài Viết Bị Báo Cáo", icon:<MdReport />, to: '/admin-report-forum'},
+    { name: "Chăm sóc người dùng", icon:<MdReport />, to: '/admin-chat'},
   ];
 
   const onLogout = () => {

@@ -47,7 +47,7 @@ import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
 import { JourneyPage } from './pages/JourneyPage';
-import { ChatForm } from './pages/Chatting/ChatForm';
+//import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
@@ -78,6 +78,8 @@ import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateEx
 import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
 import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
 import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
+import { Chat } from './components/Chat/Chat';
+import { AdminChatManager } from './pages/AdminPage/ChatManagement/AdminChatManagement';
 
 const App = () => {
 	return (
@@ -93,8 +95,13 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
+			<div>
 			{!isAdminPage && <div className="sidebar-container z-50"></div>}
-			<ChatForm />
+			<Chat/>
+			</div>
+			
+
+			
 			<div className="content-container select-none">
 				<Routes>
 					<Route path="/" element={<Layout />}>
@@ -196,6 +203,7 @@ const AppContent = () => {
 							<Route path="/admin-exam/create" element={<CreateExam />} />
 							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
+							<Route path="/admin-chat" element={<AdminChatManager />} />
 							<Route path="/admin-question/create" element={<CreateQuestion />} />
 							<Route path="/admin-question/update/:questionId" element={<UpdateQuestion />} />
 							<Route

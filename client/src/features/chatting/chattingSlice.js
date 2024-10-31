@@ -5,21 +5,11 @@ export const createChat = createAsyncThunk(
 	"chatting/createChat",
 	async (chatData, thunkAPI) => {
 		try {
-			console.log(chatData);
 			const storedAccount = JSON.parse(localStorage.getItem("account"));
 			const token = storedAccount.data.token;
-			return await chattingService.createChat(
-				token,
-				chatData
-			);
+			return await chattingService.createChat(token, chatData);
 		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
-
+			const message = error.response?.data?.message || error.message || error.toString();
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -32,18 +22,12 @@ export const getChatById = createAsyncThunk(
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount?.data?.token;
 			return await chattingService.getChatById(token, chatId);
-
 		} catch (error) {
-			const message =
-				(error.response && error.response.data && error.response.data.message) ||
-				error.message ||
-				error.toString();
-
+			const message = error.response?.data?.message || error.message || error.toString();
 			return thunkAPI.rejectWithValue(message);
-
 		}
 	}
-)
+);
 
 export const getAllChats = createAsyncThunk(
 	'chatting/getAllChats',
@@ -51,18 +35,11 @@ export const getAllChats = createAsyncThunk(
 		try {
 			return await chattingService.getAllChats();
 		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
-
+			const message = error.response?.data?.message || error.message || error.toString();
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
 );
-
 
 const initialState = {
 	chatting: [],
@@ -81,6 +58,14 @@ export const chattingSlice = createSlice({
 			state.isLoading = false;
 			state.isSuccess = false;
 			state.message = "";
+		},
+		// Xử lý nhận tin nhắn thời gian thực
+		receiveMessage: (state, action) => {
+			const { chatId, message } = action.payload;
+			const chat = state.chatting.find((chat) => chat._id === chatId);
+			if (chat) {
+				chat.messages.push(message);
+			}
 		},
 	},
 	extraReducers: (builder) => {
@@ -127,5 +112,6 @@ export const chattingSlice = createSlice({
 			});
 	},
 });
-export const { reset } = chattingSlice.actions;
+
+export const { reset, receiveMessage } = chattingSlice.actions;
 export default chattingSlice.reducer;

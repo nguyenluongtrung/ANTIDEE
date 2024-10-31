@@ -5,7 +5,6 @@ const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const http = require('http');
-const { Server } = require('socket.io');
 const connectDB = require('./config/dbConnect');
 require('./utils/scheduledTasks/jobCancellation');
 const port = process.env.PORT || 5000;

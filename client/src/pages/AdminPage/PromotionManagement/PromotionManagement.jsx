@@ -48,6 +48,7 @@ export const PromotionManagement = () => {
         const result = await dispatch(deletePromotion(id));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá mã giảm giá thành công', successStyle);
+            setPromotions((prevPromotions) => prevPromotions.filter(promo => promo._id !== id));
         } else {
             toast.error(result?.payload, errorStyle);
         }
