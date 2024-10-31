@@ -16,6 +16,8 @@ import { ServiceDetail } from './ServiceDetail/ServiceDetail';
 import { CreateService } from './CreateService/CreateService';
 import { IoAddOutline } from 'react-icons/io5';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
+import Pagination from '../../../components/Pagination/Pagination';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 export const ServiceManagement = () => {
 	const [isOpenCreateService, setIsOpenCreateService] = useState(false);
 	const [isOpenUpdateService, setIsOpenUpdateService] = useState(false);
@@ -25,8 +27,9 @@ export const ServiceManagement = () => {
 	const dispatch = useDispatch();
 
 	const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [currentPage, setCurrentPage] = useState(1);
-
+	const [currentPage, setCurrentPage] = useState(1);
+	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+	const [selectedIdDelete, setSelectedIdDelete] = useState('');
 	async function initiateServices() {
         let output = await dispatch(getAllServices());
         setServices(output.payload);
@@ -40,8 +43,18 @@ export const ServiceManagement = () => {
 		dispatch(getAllServices());
 	}, []);
 
-	const handleDeleteService = async (id) => {
-		const result = await dispatch(deleteService(id));
+	const openDeletePopup = (serviceId) => {
+		setSelectedIdDelete(serviceId);
+		setIsDeletePopupOpen(true);
+	};
+
+	const closeDeletePopup = () => {
+		setIsDeletePopupOpen(false);
+		setSelectedIdDelete('');
+	};
+
+	const handleDeleteService = async () => {
+		const result = await dispatch(deleteService(selectedIdDelete));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xoá dịch vụ thành công', successStyle);
 			dispatch(getAllServices());
@@ -91,6 +104,13 @@ export const ServiceManagement = () => {
 					)}
 				</Toaster>
 
+				<DeletePopup
+					open={isDeletePopupOpen}
+					onClose={closeDeletePopup}
+					deleteAction={handleDeleteService}
+					itemName="dịch vụ"
+				/>
+
 				{isOpenCreateService && (
 					<CreateService
 						setIsOpenCreateService={setIsOpenCreateService}
@@ -118,6 +138,8 @@ export const ServiceManagement = () => {
 						<select
 							className="rounded-md p-1 mx-1 hover:cursor-pointer"
 							style={{ backgroundColor: '#E0E0E0' }}
+							value={rowsPerPage}
+							onChange={handleRowsPerPageChange}
 						>
 							<option>10</option>
 							<option>20</option>
@@ -194,7 +216,7 @@ export const ServiceManagement = () => {
 											<button className="flex items-center justify-start py-3 pl-2 text-xl">
 												<BiTrash
 													className="text-red"
-													onClick={() => handleDeleteService(services._id)}
+													onClick={() => openDeletePopup(services._id)}
 												/>
 											</button>
 										</div>

@@ -37,10 +37,19 @@ const getTopDiscussions = asyncHandler(async (req, res) => {
 			$limit: 5,
 		},
 		{
+			$lookup: {
+				from: 'topics',
+				localField: 'topic',
+				foreignField: '_id',
+				as: 'topicDetails',
+			},
+		},
+		{
 			$project: {
 				forumPostId: '$_id',
 				commentsCount: 1,
 				title: 1,
+				'topicDetails.topicName': 1,
 			},
 		},
 	]);
@@ -146,6 +155,10 @@ const getForumPost = asyncHandler(async (req, res) => {
 		.populate({
 			path: 'author',
 			select: 'name avatar role',
+		})
+		.populate({
+			path: 'comments.author',
+			select: 'avatar name',
 		})
 		.populate('topic');
 
@@ -285,7 +298,7 @@ const reactToForumPost = asyncHandler(async (req, res) => {
 	const { userId } = req.body;
 
 	const forumPost = await ForumPost.findById(forumPostId)
-		.populate('author')
+		.populate('author topic')
 		.populate({
 			path: 'comments',
 			populate: {
@@ -293,6 +306,7 @@ const reactToForumPost = asyncHandler(async (req, res) => {
 				select: 'avatar name',
 			},
 		});
+
 	if (!forumPost.likes.includes(userId)) {
 		forumPost.likes.push(userId);
 		await forumPost.save();
@@ -308,7 +322,7 @@ const unReactToForumPost = asyncHandler(async (req, res) => {
 	const { userId } = req.body;
 
 	const forumPost = await ForumPost.findById(forumPostId)
-		.populate('author')
+		.populate('author topic')
 		.populate({
 			path: 'comments',
 			populate: {

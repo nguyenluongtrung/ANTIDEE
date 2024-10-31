@@ -6,7 +6,7 @@ import {
 	FaRegComment,
 	FaRegHeart,
 } from 'react-icons/fa6';
-import { MdDeleteForever, MdEdit, MdOutlineReport } from 'react-icons/md';
+import { MdDeleteForever, MdEdit } from 'react-icons/md';
 import { PiShareFat } from 'react-icons/pi';
 import { TbMessageReport } from 'react-icons/tb';
 import { formatDateForumPost } from '../../../utils/format';
@@ -23,7 +23,6 @@ import {
 	unReactToForumPost,
 	updateHiddenDetails,
 } from '../../../features/forumPost/forumPostSlice';
-import { IoMdSend } from 'react-icons/io';
 import { getAccountInformation } from '../../../features/auth/authSlice';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -31,6 +30,7 @@ import { SavePostForm } from './SavePostForm';
 import reportListItems from './ReportForumPost/ReportListItems';
 import { BiSolidCommentError } from 'react-icons/bi';
 import { IoTime } from 'react-icons/io5';
+import { UpdatePostForum } from './UpdateForumPost/UpdateForumPost';
 
 export const DetailedForumPost = ({
 	postContent,
@@ -52,16 +52,18 @@ export const DetailedForumPost = ({
 	const [comment, setComment] = useState('');
 	const [isOpenReport, setIsOpenReport] = useState(false);
 	const [reportPostId, setReportPostId] = useState();
-	const [selectedReason, setSelectedReason] = useState(null);
+	const [_selectedReason, setSelectedReason] = useState(null);
+	const [isOpenUpdatePostForum, setIsOpenUpdatePostForum] = useState(false);
+	const [expandedCommentIndex, setExpandedCommentIndex] = useState(null);
 
 	const handleShowPostOptions = (postId) => {
 		setShowPostOptions((prevState) => (prevState === postId ? null : postId));
 	};
 
 	const initialForumPost = async () => {
-		const response = await dispatch(getForumPost(postId))
-		setPost(response.payload)
-	}
+		const response = await dispatch(getForumPost(postId));
+		setPost(response.payload);
+	};
 
 	useEffect(() => {
 		if (postContent) {
@@ -147,7 +149,6 @@ export const DetailedForumPost = ({
 
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Bình luận thành công', successStyle);
-			console.log(result.payload);
 			setForumPost((prevPosts) => {
 				const updatedPost = [...prevPosts];
 				const foundPostIndex = updatedPost.findIndex(
@@ -207,8 +208,24 @@ export const DetailedForumPost = ({
 		}
 	};
 
+	const handleOpenUpdatePostForum = () => {
+		if (post) {
+			setIsOpenUpdatePostForum(true);
+		} else {
+			console.error('Không thể mở form chỉnh sửa vì bài viết không tồn tại.');
+		}
+	};
+
+	console.log(post);
+
 	return (
 		<div>
+			{isOpenUpdatePostForum && postContent && (
+				<UpdatePostForum
+					chosenForumPostId={postContent._id}
+					setIsOpenUpdatePostForum={setIsOpenUpdatePostForum}
+				/>
+			)}
 			{!post?.hiddenDetails?.status && (
 				<div
 					ref={postRef}
@@ -272,7 +289,7 @@ export const DetailedForumPost = ({
 										</div>
 									</div>
 								</div>
-								<div className="mx-4 my-3 flex items-center justify-center cursor-pointer w-10 h-10 rounded-full hover:bg-light_gray text-center">
+								<div className="relative mx-4 my-3 flex items-center justify-center cursor-pointer w-10 h-10 rounded-full hover:bg-light_gray text-center">
 									<AiOutlineEllipsis
 										size={30}
 										onClick={() => handleShowPostOptions(post?._id)}
@@ -281,17 +298,28 @@ export const DetailedForumPost = ({
 										<div
 											ref={postOptionsRef}
 											className="absolute bg-white shadow-lg rounded-lg p-2 max-w-48"
+											style={{
+												top: '100%',
+												right: '0',
+												width: '250px',
+												height: 'auto',
+											}}
 										>
 											<ul>
-												<li className="cursor-pointer hover:bg-light_gray rounded-lg p-2">
-													<div className="flex items-center">
-														<MdEdit className="mr-2" />
-														<span>Chỉnh sửa</span>
-													</div>
-													<p className="text-xs text-gray text-left">
-														Chỉnh sửa nội dung bài đăng của bạn
-													</p>
-												</li>
+												{post?.author?._id === accountId && (
+													<li
+														className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
+														onClick={() => handleOpenUpdatePostForum()}
+													>
+														<div className="flex items-center">
+															<MdEdit className="mr-2" />
+															<span>Chỉnh sửa</span>
+														</div>
+														<p className="text-xs text-gray text-left">
+															Chỉnh sửa nội dung bài đăng của bạn
+														</p>
+													</li>
+												)}
 												{post?.author?._id === accountId ? (
 													<li
 														className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
@@ -383,8 +411,32 @@ export const DetailedForumPost = ({
 							</div>
 
 							<div>
-								<div className="my-2 px-4 py-2">
-									<p className="text-black text-base">{post?.content}</p>
+								<div className="px-4">
+									<p className="font-semibold text-[20px] text-[#2b2b2b]">
+										{post?.title}
+									</p>
+									{post?.topic && (
+										<div className="flex flex-wrap gap-1 my-2">
+											{post.topic &&
+												post.topic.length > 0 &&
+												post.topic.slice(0, 2).map((topic) => (
+													<div
+														key={topic._id}
+														className="bg-yellow text-[12px] px-2 py-1 rounded-md text-white"
+													>
+														{topic.topicName}
+													</div>
+												))}
+											{post.topic && post.topic.length > 2 && (
+												<div className="bg-gray-200 text-[12px] py-1 rounded-md text-gray">
+													+ {post.topic.length - 2} chủ đề khác
+												</div>
+											)}
+										</div>
+									)}
+								</div>
+								<div className="mb-2 px-4">
+									<p className="text-[14px]">{post?.content}</p>
 								</div>
 
 								{post?.images?.map((image, index) => (
@@ -428,9 +480,6 @@ export const DetailedForumPost = ({
 										<span className="ml-2">Lưu</span>
 									</div>
 								</div>
-								<div className="cursor-pointer">
-									<PiShareFat />
-								</div>
 							</div>
 							{post?.comments && (
 								<div className="px-4 py-4">
@@ -465,7 +514,13 @@ export const DetailedForumPost = ({
 										) : (
 											<FaUserAlt color="gray" size={20} />
 										)}
-										<div className="flex items-center ml-3 w-full rounded-full border-[1px] px-3 py-2 group focus-within:border-[1px]">
+										<form
+											className="flex items-center ml-3 w-full rounded-full border-[1px] px-3 py-2 group focus-within:border-[1px]"
+											onSubmit={(e) => {
+												e.preventDefault();
+												handleCommentSubmit(post?._id);
+											}}
+										>
 											<input
 												className="w-full text-sm focus:outline-none"
 												type="text"
@@ -473,20 +528,14 @@ export const DetailedForumPost = ({
 												value={comment}
 												onChange={(e) => setComment(e.target.value)}
 											/>
-											<div className="ml-2 text-blue">
-												<IoMdSend
-													className="hover:text-primary cursor-pointer"
-													onClick={() => handleCommentSubmit(post?._id)}
-												/>
-											</div>
-										</div>
+										</form>
 									</div>
 									{showAllComments ? (
 										<>
 											{post?.comments?.map((comment, index) => (
 												<p key={index} comment={comment} />
 											))}
-											<button onClick={handleHideComments}>
+											<button onClick={handleHideComments} className="mt-1">
 												Ẩn bớt bình luận
 											</button>
 										</>
@@ -496,7 +545,10 @@ export const DetailedForumPost = ({
 												<p key={index} comment={comment} />
 											))}
 											{post?.comments?.length > 3 && (
-												<button onClick={() => setShowAllComments(true)}>
+												<button
+													onClick={() => setShowAllComments(true)}
+													className="mt-1"
+												>
 													Hiển thị tất cả bình luận
 												</button>
 											)}

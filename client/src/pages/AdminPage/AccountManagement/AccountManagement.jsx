@@ -9,6 +9,8 @@ import { GrUserManager } from "react-icons/gr";
 import { GiConfirmed } from "react-icons/gi";
 import { FaUsersLine } from "react-icons/fa6";
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from "../../../utils/pagination";
+import Pagination from "../../../components/Pagination/Pagination";
+import DeletePopup from "../../../components/DeletePopup/DeletePopup";
 
 export const AccountManagement = () => {
   const { accounts, isLoading } = useSelector((state) => state.auth);
@@ -20,6 +22,18 @@ export const AccountManagement = () => {
   const [pageStanding, setPageStanding] = useState("Tất cả");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [selectedIdDelete, setSelectedIdDelete] = useState('');
+
+  const openDeletePopup = (accountId) => {
+    setSelectedIdDelete(accountId);
+    setIsDeletePopupOpen(true);
+  };
+
+  const closeDeletePopup = () => {
+    setIsDeletePopupOpen(false);
+    setSelectedIdDelete('');
+  };
 
   const handleRoleClick = (role) => {
     setSelectedRole(role);
@@ -73,6 +87,14 @@ export const AccountManagement = () => {
   return (
     <div className="w-full min-h-screen bg-white flex flex-row">
       <AdminSidebar />
+
+      <DeletePopup
+        open={isDeletePopupOpen}
+        onClose={closeDeletePopup}
+        deleteAction={'Chưa làm chức năng'}
+        itemName="tài khoản"
+      />
+
       {isOpenBlockAccount && (
         <BlockAccount
           setIsOpenBlockAccount={setIsOpenBlockAccount}
@@ -165,12 +187,14 @@ export const AccountManagement = () => {
                       setChosenAccountId(account._id);
                     }}
                   >
-                    {account.isBlocked ? <FaLock className="text-red m-auto" /> : <FaLockOpen className="text-primary m-auto" />}
+                    {account.isBlocked ? <FaLock className="text-red m-auto hover:text-green" /> : <FaLockOpen className="text-primary m-auto hover:text-green" />}
                   </button>
                 </td>
                 <td>
                   <button className="flex items-center justify-start p-3 text-xl group">
-                    <BiTrash className="text-red group-hover:text-primary m-auto" />
+                    <BiTrash className="text-red group-hover:text-primary m-auto"
+                      onClick={() => openDeletePopup(account._id)}
+                    />
                   </button>
                 </td>
               </tr>

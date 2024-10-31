@@ -14,8 +14,6 @@ export const CreateCourse = () => {
     const { qualifications, isLoading } = useSelector(
         (state) => state.qualifications
     );
-
-
     //Functions check qualificate trùng
     const [courses, setCourses] = useState([])
 
@@ -49,8 +47,6 @@ export const CreateCourse = () => {
     const usedQualificationIds = courses?.map(course => course.qualificationId);
 
     const availableQualifications = qualifications?.filter(qualificate => !usedQualificationIds.includes(qualificate._id));
-
-
 
     const handleFormChange = (field, value) => {
         setFormData(prevFormData => ({
@@ -167,9 +163,6 @@ export const CreateCourse = () => {
 
     return (
         <div className='w-full min-h-screen bg-white flex flex-row'>
-            {console.log("Formdata create:", formData)}
-            {console.log("UsedQualidicationId:: ", usedQualificationIds)}
-            {console.log("Xem list qualificate", availableQualifications)}
             <div>
                 <AdminSidebar />
             </div>

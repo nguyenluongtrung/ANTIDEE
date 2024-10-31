@@ -4,50 +4,55 @@ import './ExamManagement.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteExam, getAllExams } from '../../../features/exams/examSlice';
 import { Spinner } from '../../../components';
-import { CreateExam } from './CreateExam/CreateExam';
 import toast, { Toaster, ToastBar } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
-import { UpdateExam } from './UpdateExam/UpdateExam';
-import { ExamDetail } from './ExamDetail/ExamDetail';
 import { IoAddOutline } from 'react-icons/io5';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
+import Pagination from '../../../components/Pagination/Pagination';
+import { useNavigate } from 'react-router-dom';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
+
 export const ExamManagement = () => {
-	const [isOpenCreateExam, setIsOpenCreateExam] = useState(false);
-	const [isOpenUpdateExam, setIsOpenUpdateExam] = useState(false);
-	const [isOpenDetailExam, setIsOpenDetailExam] = useState(false);
-	const [chosenExamId, setChosenExamId] = useState('');
 	const { exams, isLoading } = useSelector((state) => state.exams);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [rowsPerPage, setRowsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
+	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [selectedIdDelete, setSelectedIdDelete] = useState('');
+
 
 	useEffect(() => {
 		dispatch(getAllExams());
 	}, []);
 
-	const handleDeleteExam = async (id) => {
-		const result = await dispatch(deleteExam(id));
+	const openDeletePopup = (examId) => {
+        setSelectedIdDelete(examId);
+        setIsDeletePopupOpen(true);
+    };
+
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedIdDelete('');
+    };
+
+	const handleDeleteExam = async () => {
+		const result = await dispatch(deleteExam(selectedIdDelete));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xoá bài kiểm tra thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-	};
-
-	const handleGetAllExams = () => {
-		Promise.all([dispatch(getAllExams())]).catch((error) => {
-			console.error('Error during dispatch:', error);
-		});
+		closeDeletePopup();
 	};
 
 	const handleRowsPerPageChange = (e) => {
         setRowsPerPage(Number(e.target.value));
         setCurrentPage(1);
     };
-
 
     const totalPages = calculateTotalPages(exams.length, rowsPerPage);
     const selectedExams = getPageItems(exams, currentPage, rowsPerPage);
@@ -82,26 +87,12 @@ export const ExamManagement = () => {
 					)}
 				</Toaster>
 
-				{isOpenCreateExam && (
-					<CreateExam
-						setIsOpenCreateExam={setIsOpenCreateExam}
-						handleGetAllExams={handleGetAllExams}
-					/>
-				)}
-				{isOpenUpdateExam && (
-					<UpdateExam
-						setIsOpenUpdateExam={setIsOpenUpdateExam}
-						handleGetAllExams={handleGetAllExams}
-						chosenExamId={chosenExamId}
-					/>
-				)}
-				{isOpenDetailExam && (
-					<ExamDetail
-						setIsOpenDetailExam={setIsOpenDetailExam}
-						handleGetAllExams={handleGetAllExams}
-						chosenExamId={chosenExamId}
-					/>
-				)}
+				<DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeleteExam}
+                    itemName="đề thi"
+                />
 
 				<div className="flex">
 					<div className="flex-1 pt-2">
@@ -121,7 +112,7 @@ export const ExamManagement = () => {
 					<button
 						className="bg-pink text-white rounded-md block mx-auto"
 						style={{ width: '150px' }}
-						onClick={() => setIsOpenCreateExam(true)}
+						onClick={() => navigate('create')}
 					>
 						<div className="flex items-center">
 							<IoAddOutline className="size-8 pl-2 mr-2" />
@@ -174,10 +165,7 @@ export const ExamManagement = () => {
 									<td className="font-medium text-center text-gray">
 										<button
 											className="hover:cursor-pointer text-xl pt-1.5"
-											onClick={() => {
-												setIsOpenDetailExam(true);
-												setChosenExamId(exam._id);
-											}}
+											
 										>
 											<MdOutlineRemoveRedEye className="block mx-auto" />
 										</button>
@@ -186,17 +174,14 @@ export const ExamManagement = () => {
 										<div className="flex items-center justify-center">
 											<button
 												className="flex items-center justify-end py-3 pr-2 text-xl"
-												onClick={() => {
-													setIsOpenUpdateExam(true);
-													setChosenExamId(exam._id);
-												}}
+												onClick={() => navigate(`update/${exam._id}`)}
 											>
-												<BiEdit className="text-green" />
+												<BiEdit className="text-green hover:text-primary" />
 											</button>
 											<button className="flex items-center justify-start py-3 pl-2 text-xl">
 												<BiTrash
-													className="text-red"
-													onClick={() => handleDeleteExam(exam._id)}
+													className="text-red hover:text-primary"
+                                                    onClick={() => openDeletePopup(exam._id)}
 												/>
 											</button>
 										</div>

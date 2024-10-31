@@ -34,6 +34,7 @@ export const Sidebar = ({ sidebarVisible, setSidebarVisible, services, account, 
 		{ name: "Công Việc", icon: <MdPostAdd />, to: "/job-posts" },
 		{ name: "Hành Trình", icon: <GiJourney />, to: "/journey" },
 		{ name: "Lịch làm việc", icon: <GrSchedules />, to: "/job-schedule" },
+		{ name: "Diễn Đàn", to: "/forum/discussions", icon: <BiCreditCardAlt />, },
 		{ name: "Xếp Hạng", icon: <FaRankingStar />, to: "/ranking" },
 		{ name: "Thời Tiết", icon: <TiWeatherPartlySunny />, to: "/weather-forecast" },
 	];

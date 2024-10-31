@@ -18,13 +18,15 @@ import {
 import { app } from '../../../../firebase';
 
 export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPosts }) => {
-    const { isLoading: forumPostLoading, forumPosts } = useSelector((state) => state.forumPosts);
-    const { topics, isLoading: topicsLoading } = useSelector((state) => state.topics);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+	const { isLoading: forumPostLoading, forumPosts } = useSelector(
+		(state) => state.forumPosts
+	);
+	const { topics } = useSelector((state) => state.topics);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
 
     const dispatch = useDispatch();
 
@@ -130,32 +132,32 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
                         warnings.push('Ảnh chứa nội dung cờ bạc.');
                     }
 
-                    if (!isImageValid) {
-                        throw new Error(warnings.join(' '));
-                    }
-                }
-                setIsCheckingImage(false);
-                const forumPostData = {
-                    ...formData,
-                    topic: Array.isArray(formData.topic) ? formData.topic : [formData.topic],
-                    images: imagesUrl || formData.images,
-                };
-                const result = await dispatch(createForumPost(forumPostData));
-                if (result.type.endsWith('fulfilled')) {
-                    toast.success('Đăng bài thành công', successStyle);
-                    setIsOpenCreatePostForum(false);
-                    handleGetAllForumPosts();
-                } else if (result?.error?.message === 'Rejected') {
-                    toast.error(result?.payload, errorStyle);
-                }
-            } catch (error) {
-                setIsCheckingImage(false);
-                toast.error(`Lỗi: ${error.message}`, errorStyle);
-            }
-        } else {
-            toast.error('Vui lòng tải ảnh lên trước khi đăng bài', errorStyle);
-        }
-    };
+					if (!isImageValid) {
+						throw new Error(warnings.join(' '));
+					}
+				}
+				setIsCheckingImage(false);
+				const forumPostData = {
+					...formData,
+					images: imagesUrl || formData.images,
+					topic: selectedTopics
+				};
+				const result = await dispatch(createForumPost(forumPostData));
+				if (result.type.endsWith('fulfilled')) {
+					toast.success('Đăng bài thành công', successStyle);
+					setIsOpenCreatePostForum(false);
+					handleGetAllForumPosts();
+				} else if (result?.error?.message === 'Rejected') {
+					toast.error(result?.payload, errorStyle);
+				}
+			} catch (error) {
+				setIsCheckingImage(false);
+				toast.error(`Lỗi: ${error.message}`, errorStyle);
+			}
+		} else {
+			toast.error('Vui lòng tải ảnh lên trước khi đăng bài', errorStyle);
+		}
+	};
 
 
 

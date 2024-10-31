@@ -1,4 +1,4 @@
-import { Footer, Header, Sidebar } from '../components';
+import { Footer, Header } from '../components';
 import { Outlet } from 'react-router-dom';
 import { Toaster, ToastBar } from 'react-hot-toast';
 

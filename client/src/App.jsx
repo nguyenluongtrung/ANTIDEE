@@ -16,6 +16,7 @@ import { InviteFriendPage } from './pages/InviteFriendPage';
 import { WannaBecomeHelperPage } from './pages/WannaBecomeHelperPage';
 import { AdminPage } from './pages/AdminPage';
 import { ExamManagement } from './pages/AdminPage/ExamManagement/ExamManagement';
+import { CreateExam } from './pages/AdminPage/ExamManagement/CreateExam/CreateExam';
 import { QualificationManagement } from './pages/AdminPage/QualificationManagement/QualificationManagement';
 import { CongratsPage } from './pages/CongratsPage';
 import { QuestionManagement } from './pages/AdminPage/QuestionManagement/QuestionManagement';
@@ -45,6 +46,8 @@ import { MyJobs } from './pages/MyAccount/MyJobs/MyJobs';
 import { BlackList } from './pages/MyAccount/BlackList/BlackList';
 import { FavoriteList } from './pages/MyAccount/FavoriteList/FavoriteList';
 import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManagement';
+import { CreateVideo } from './pages/AdminPage/VideoManagement/CreateVideo/CreateVideo';
+import { UpdateVideo } from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo';
 import { JourneyPage } from './pages/JourneyPage';
 import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
@@ -73,6 +76,14 @@ import { ReportPostForum } from './pages/AdminPage/ReportPostForum/ReportPostFor
 import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/ReportDetail';
 import { UpdateCourse } from './pages/AdminPage/CourseManagement/UpdateCourse/UpdateCourse';
 import { CreateCourse } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourse';
+import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateExam';
+import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
+import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
+import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
+import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
+import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
+import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
+import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
 
 const App = () => {
 	return (
@@ -88,9 +99,10 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
-			{!isAdminPage && <div className="sidebar-container z-50"></div>}
-			<ChatForm />
+			{!isAdminPage && (<div className=" z-50"> <ChatForm /></div>)}
+
 			<div className="content-container select-none">
+
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<HomePage />} />
@@ -169,7 +181,9 @@ const AppContent = () => {
 						<Route path="/ranking" element={<RankingPage />} />
 						<Route path="/job-schedule" element={<JobSchedulePage />} />
 						<Route path="/forum" element={<ForumLayout />}>
-							<Route path="discussions" element={<ForumDiscussions />} />
+							<Route path="discussions" element={<ForumDiscussions />}>
+								<Route path="topic/:topicId" element={<ForumDiscussions />} />
+							</Route>
 							<Route path="repositories" element={<ForumRepositories />} />
 							<Route
 								path="repositories/:repositoryId"
@@ -186,29 +200,42 @@ const AppContent = () => {
 							<Route path="/admin" element={<AdminPage />} />
 							<Route path="/admin-dashboard" element={<Dashboard />} />
 							<Route path="/admin-exam" element={<ExamManagement />} />
+							<Route path="/admin-exam/create" element={<CreateExam />} />
+							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
+							<Route path="/admin-question/create" element={<CreateQuestion />} />
+							<Route path="/admin-question/update/:questionId" element={<UpdateQuestion />} />
 							<Route
 								path="/admin-course"
 								element={<CourseManagement />}>
 							</Route>
 							<Route
-								path="/admin-course/create-course"
+								path="/admin-course/create"
 								element={<CreateCourse />}
 							/>
 							<Route
-								path="/admin-course/update-course/:courseId"
+								path="/admin-course/update/:courseId"
 								element={<UpdateCourse />}
+							/>
+							<Route
+								path="/admin-course/detail/:courseId"
+								element={<CoursesDetail />}
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
 									path="/admin-promotion/detail-promotion/:promotionId"
 									element={<PromotionDetail />}
 								/>
-								<Route
-									path="/admin-promotion/update-promotion/:promotionId"
-									element={<UpdatePromotion />}
-								/>
+
 							</Route>
+							<Route
+								path="/admin-promotion/:promotionId"
+								element={<UpdatePromotion />}
+							/>
+							<Route
+								path="/admin-promotion/create-promotion"
+								element={<CreatePromotion />}
+							/>
 							<Route
 								path="/admin-appFeedback"
 								element={<AppFeedbackManagement />}
@@ -217,10 +244,15 @@ const AppContent = () => {
 								path="/admin-qualification"
 								element={<QualificationManagement />}
 							/>
+							<Route path="/admin-qualification/create" element={<CreateQualification />} />
+							<Route path="/admin-qualification/update/:qualificateId" element={<UpdateQualification />} />
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
+							<Route path="/admin-video/create" element={<CreateVideo />} />
+							<Route path="/admin-video/update/:videoId" element={<UpdateVideo />} />
+							<Route path="/admin-video/video-detail" element={<VideoDetail />} />
 							<Route path="/admin-report-forum" element={<ReportPostForum />}>
-							<Route
+								<Route
 									path="/admin-report-forum/report-detail/:reportId"
 									element={<ReportDetail />}
 								/>

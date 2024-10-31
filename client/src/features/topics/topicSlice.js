@@ -40,6 +40,46 @@ export const createTopic = createAsyncThunk(
     }
 );
 
+export const getMostPopularTopics = createAsyncThunk(
+	'topics/getMostPopularTopics',
+	async (_, thunkAPI) => {
+		try {
+			return await topicService.getMostPopularTopics();
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+export const getAllForumPostsByTopic = createAsyncThunk(
+	'topics/getAllForumPostsByTopic',
+	async (topicId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await topicService.getAllForumPostsByTopic(token, topicId);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
+
+
 const initialState = {
     topics: [],
     isLoading: false,
@@ -83,6 +123,19 @@ const topicSlice = createSlice({
                 state.topics.push(action.payload); // Thêm topic mới vào danh sách
             })
             .addCase(createTopic.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getMostPopularTopics.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getMostPopularTopics.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.topics = action.payload; // Cập nhật danh sách topic
+            })
+            .addCase(getMostPopularTopics.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

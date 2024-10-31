@@ -13,6 +13,17 @@ const getAllExams = async (token) => {
 	return response.data.data.exams;
 };
 
+const getExam = async (token, examId) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(API_URL + examId, config);
+	return response.data.data.exam;
+};
+
 const getMyExamResults = async (token) => {
 	const config = {
 		headers: {
@@ -75,6 +86,7 @@ const deleteExam = async (token, id) => {
 
 const examService = {
 	getAllExams,
+	getExam,
 	createExam,
 	updateExam,
 	deleteExam,
