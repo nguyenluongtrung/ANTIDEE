@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../../components";
 import { deleteVideo, getAllVideos } from "../../../features/videos/videoSlice";
 
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { IoAddOutline } from "react-icons/io5";
 import {
   calculateTotalPages,
@@ -51,6 +51,7 @@ export const VideoManagement = () => {
       toast.error(result?.payload, errorStyle);
     }
   };
+  
   if (isLoading) {
     return <Spinner />;
   }
@@ -95,7 +96,6 @@ export const VideoManagement = () => {
           )}
         </Toaster>
 
-
         <div className="flex items-center justify-center">
           <div className="flex-1 pt-2" style={{ paddingRight: "70%" }}>
             <span>Hiển thị </span>
@@ -115,16 +115,15 @@ export const VideoManagement = () => {
             <button
               className="bg-pink text-white rounded-md block mx-auto py-0.5"
               style={{ width: "170px" }}
-
             >
               <div className="flex items-center">
                 <IoAddOutline className="size-8 pl-2 mr-2" />
                 <span className="text-sm pr-2">Thêm Video</span>
               </div>
             </button>
-            </Link>
-
+          </Link>
         </div>
+
         <table className="w-full border-b border-gray mt-3">
           <thead>
             <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
@@ -138,7 +137,7 @@ export const VideoManagement = () => {
           <tbody>
             {selectedVideos?.map((video, index) => {
               return (
-                <tr className="hover:bg-primary hover:bg-opacity-25 transition-colors odd:bg-light_pink  hover:cursor-pointer">
+                <tr className="hover:bg-primary hover:bg-opacity-25 transition-colors odd:bg-light_pink hover:cursor-pointer">
                   <td className="font-medium text-center text-gray p-3">
                     <span>{index + 1}</span>
                   </td>
@@ -149,39 +148,25 @@ export const VideoManagement = () => {
                     <span>{video.description}</span>
                   </td>
                   <td className="font-medium text-center text-gray">
-                    {video.url.includes("firebase") ? (
-                      <button
-                        onClick={() => window.open(video.url, "_blank")}
-                        className="text-blue-600 underline"
-                      >
-                        Xem video
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() =>
-                          window.open(`https://www.youtube.com/watch?v=${video.url}`, "_blank")
-                        }
-                        className="text-blue-600 underline"
-                      >
-                        Xem video
-                      </button>
-                    )}
+                    <button
+                      onClick={() => window.open(video.url, "_blank")}
+                      className="text-blue-600 underline"
+                    >
+                      Xem video
+                    </button>
                   </td>
-
                   <td className="">
                     <div className="flex items-center justify-center">
                       <Link to={`/admin-video/update/${video._id}`}>
-                        <button
-                          className="flex items-center justify-end py-3 pr-2 text-xl"
-                        >
+                        <button className="flex items-center justify-end py-3 pr-2 text-xl">
                           <BiEdit className="text-green" />
                         </button>
                       </Link>
-                      <button className="flex items-center justify-start p-3 text-xl group">
-                        <BiTrash
-                          className="text-red group-hover:text-primary"
-                          onClick={() => handleDeleteVideo(video._id)}
-                        />
+                      <button
+                        className="flex items-center justify-start p-3 text-xl group"
+                        onClick={() => handleDeleteVideo(video._id)}
+                      >
+                        <BiTrash className="text-red group-hover:text-primary" />
                       </button>
                     </div>
                   </td>
@@ -190,6 +175,7 @@ export const VideoManagement = () => {
             })}
           </tbody>
         </table>
+        
         <div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
@@ -202,12 +188,14 @@ export const VideoManagement = () => {
               </p>
             </div>
             <div>
-              <Pagination totalPages={totalPages}
+              <Pagination 
+                totalPages={totalPages}
                 currentPage={currentPage}
                 onPageChange={(page) => setCurrentPage(page)}
                 onNextPage={handleNextPage}
                 onPreviousPage={handlePreviousPage}
-                rowsPerPage={rowsPerPage} />
+                rowsPerPage={rowsPerPage} 
+              />
             </div>
           </div>
         </div>

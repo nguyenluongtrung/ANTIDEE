@@ -4,13 +4,12 @@ import { Spinner } from "../../../../components";
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast, { Toaster } from "react-hot-toast";
-import { errorStyle } from "../../../../utils/toast-customize";
-import { AiOutlineClose } from "react-icons/ai";
+import { errorStyle } from "../../../../utils/toast-customize"; 
 import { getAllVideos, getVideo, updateVideo } from "../../../../features/videos/videoSlice";
 import React, { useRef, useState, useEffect } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../../../../firebase';
-
+import { FiUploadCloud } from 'react-icons/fi';
 export const UpdateVideo = () => {
   const params = useParams();
   const [videos, setVideos] = useState([]);
@@ -128,20 +127,10 @@ export const UpdateVideo = () => {
                 value={formData.title}
                 onChange={e => handleFormChange('title', e.target.value)}
               />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Đường dẫn</label>
-              <input
-                type="text"
-                value={videoUrl || formData.url} // Hiển thị link video mới hoặc cũ
-                readOnly
-                className="create-exam-input text-center"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Tải video lên từ máy tính </label>
+            </div> 
+            <div className="m-auto">
               <div
-                className={`block w-full px-4 py-2 border border-gray-300 rounded-lg text-center cursor-pointer ${urlValue ? 'opacity-50 cursor-not-allowed' : ''
+                className={`flex flex-col items-center justify-center w-96 px-6 py-4 border-2 border-dashed border-gray rounded-lg text-center cursor-pointer transition-all duration-300 ${urlValue ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-100 hover:border-orange-500'
                   }`}
                 onClick={(e) => {
                   if (!urlValue) {
@@ -149,8 +138,13 @@ export const UpdateVideo = () => {
                     fileRef.current.click();
                   }
                 }}
+                style={{
+                  background: urlValue ? '#f8f9fa' : 'linear-gradient(to right, #ffecb3, #ffcc80)',
+                  color: urlValue ? '#9e9e9e' : '#f97316', // Đổi màu cam
+                }}
               >
-                Chọn video
+                <FiUploadCloud size={60} className="mb-3" />
+                <span className="font-semibold text-lg">Chọn video</span>
               </div>
               <input
                 type="file"
@@ -161,11 +155,11 @@ export const UpdateVideo = () => {
               />
               <p className="text-sm mt-1">
                 {fileUploadError ? (
-                  <span className="text-red ">{fileUploadError}</span>
+                  <span className="text-red">{fileUploadError}</span>
                 ) : filePerc > 0 && filePerc < 100 ? (
-                  <span className="text-gray ">{`Đang tải lên ${filePerc}%`}</span>
+                  <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
                 ) : filePerc === 100 ? (
-                  <span className="text-green ">Tải video lên thành công!</span>
+                  <span className="text-green">Tải video lên thành công!</span>
                 ) : (
                   ''
                 )}
