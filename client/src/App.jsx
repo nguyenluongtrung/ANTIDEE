@@ -223,17 +223,17 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
-									path="/admin-promotion/detail-promotion/:promotionId"
+									path="/admin-promotion/detail/:promotionId"
 									element={<PromotionDetail />}
 								/>
 
 							</Route>
 							<Route
-								path="/admin-promotion/:promotionId"
+								path="/admin-promotion/update/:promotionId"
 								element={<UpdatePromotion />}
 							/>
 							<Route
-								path="/admin-promotion/create-promotion"
+								path="/admin-promotion/create"
 								element={<CreatePromotion />}
 							/>
 							<Route
