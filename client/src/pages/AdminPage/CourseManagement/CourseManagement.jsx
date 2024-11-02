@@ -18,7 +18,6 @@ import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 export const CourseManagement = () => {
     const [isOpenDetailCourse, setIsOpenDetailCourse] = useState(false);
     const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-    const [chosenCourseId, setChosenCourseId] = useState('');
     const [selectedCourseIdDelete, setSelectedCourseIdDelete] = useState('');
     const [courses, setCourses] = useState('');
     const dispatch = useDispatch();
