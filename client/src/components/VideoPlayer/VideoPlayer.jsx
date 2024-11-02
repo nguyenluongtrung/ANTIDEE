@@ -60,7 +60,7 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
       />
       <div className="progress-container">
         <p className="font-bold my-6 text-lg flex justify-center">
-          <div>Current Watch Time:</div>
+          <div>Thời gian xem hiện tại:</div>
           <div className="font-semibold pl-4 text-gray">
             {formatTime(currentTime)}{" "}
           </div>

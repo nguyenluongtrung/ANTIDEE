@@ -178,7 +178,7 @@ export const LessonsPage = () => {
 														key={content._id}
 														className={`p-2 rounded-lg shadow-md flex justify-between items-center cursor-pointer hover:bg-light_primary transition`}
 														onClick={(e) => {
-															if (content.isPassed) {
+															if (content.isPassed && content.contentType == 'Exam') {
 																e.stopPropagation();
 																return;
 															}
