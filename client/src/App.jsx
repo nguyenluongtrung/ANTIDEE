@@ -115,7 +115,7 @@ const AppContent = () => {
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
 						<Route path="/congrats" element={<CongratsPage />} />
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
-						<Route path="/update-dw" element={<UpdateProfileForDW />} />
+						<Route path="/update-profile" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/deposit" element={<DepositPage />} />
 						<Route path="/courses" element={<MyCourses />} />
@@ -258,7 +258,7 @@ const AppContent = () => {
 								/>
 							</Route>
 							<Route path="/admin-account" element={<AccountManagement />} />
-							<Route path="/admin-role" element={<UpdateAccountRole />} />
+							<Route path="/admin-censor" element={<UpdateAccountRole />} />
 						</>
 					)}
 				</Routes>
