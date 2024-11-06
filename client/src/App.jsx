@@ -37,7 +37,6 @@ import {
 } from './pages/JobPostingPage';
 import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
 import { SignUpPage } from './pages/SignUpPage';
-import { DomesticHelper } from './pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
 import { VoucherList } from './pages/SearchVoucherPage/VoucherList';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -142,10 +141,6 @@ const AppContent = () => {
 						<Route path="/favorite-list" element={<FavoriteList />} />
 						<Route path="/apoints" element={<AccumulatePoint />} />
 						<Route path="/video-detail/:videoId" element={<VideoDetail />} />
-						<Route
-							path="/domestic-helper-feedback"
-							element={<DomesticHelper />}
-						/>
 						<Route path="/voucher-history" element={<VoucherHistory />}>
 							<Route
 								path="/voucher-history/voucher-detail/:voucherId"
