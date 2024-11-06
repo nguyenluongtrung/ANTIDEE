@@ -55,14 +55,14 @@ const LessonComponent = ({ lesson, lessonIndex, handleRemoveLesson, setFormData,
                 <div className="text-gray mb-2">Nhập tiêu đề bài học {lessonIndex + 1}</div>
                 <input
                     className="shadow appearance-none border py-3 px-3 rounded"
-                    value={lesson.title}
+                    value={lesson?.title}
                     onChange={e => handleLessonChange('title', e.target.value)}
                 />
             </div>
             {/* Hiển thị các nội dung trong bài học */}
             <div className="mt-4">
                 <h3 className="text-lg font-semibold">Nội dung bài học</h3>
-                {lesson.content?.map((content, contentIndex) => (
+                {lesson?.content?.map((content, contentIndex) => (
                     <ContentComponent
                         key={contentIndex}
                         content={content}

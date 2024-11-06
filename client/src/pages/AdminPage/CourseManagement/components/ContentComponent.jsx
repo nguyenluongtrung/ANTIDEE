@@ -45,7 +45,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
             <div className='flex gap-x-2'>
                 <div className=''>
                     <select
-                        value={content.contentType}
+                        value={content?.contentType}
                         onChange={e => handleContentChange('contentType', e.target.value)}
                         className="border rounded "
                     >
@@ -77,23 +77,23 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                 )} */}
 
 
-                {content.contentType === 'Exam' && (
+                {content?.contentType === 'Exam' && (
                     <div className="flex flex-col w-full">
                         <select
-                            value={content.examId ? content.examId._id : ''}
+                            value={content?.examId ? content?.examId._id : ''}
                             onChange={e => {
                                 handleContentChange('examId', e.target.value)
                             }}
-                            className="border rounded"
+                            className="border rounded w-56"
                         >
                             <option value="">Chọn câu hỏi</option>
 
                             {listExams.filter(exam =>
                                 exam.category === "Kiểm tra training" &&
-                                String(exam?.qualificationId?._id) === String(formData.qualificationId)
+                                String(exam?.qualificationId?._id) === String(formData?.qualificationId)
                             ).map(exam => (
-                                <option key={exam._id} value={exam._id}>
-                                    {exam.name}
+                                <option key={exam?._id} value={exam?._id}>
+                                    {exam?.name}
                                 </option>
                             ))}
                         </select>
@@ -102,18 +102,18 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
 
 
 
-                {content.contentType === 'Video' && (
+                {content?.contentType === 'Video' && (
                     <div className="flex flex-col w-full">
                         <select
-                            value={content.videoId ? content.videoId._id : ''}
+                            value={content?.videoId ? content?.videoId._id : ''}
                             onChange={e => handleContentChange('videoId', e.target.value)}
-                            className="border rounded"
+                            className="border rounded w-56"
                         >
                             <option value="">Chọn URL Video</option>
 
                             {videos?.map(videoUrl => (
-                                <option key={videoUrl._id} value={videoUrl._id}>
-                                    {videoUrl.title}
+                                <option key={videoUrl?._id} value={videoUrl?._id}>
+                                    {videoUrl?.title}
                                 </option>
                             ))}
                         </select>

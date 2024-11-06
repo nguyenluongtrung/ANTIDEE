@@ -84,6 +84,7 @@ import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/C
 import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
 import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
+import { CreateCourseDraggable } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourseDraggable';
 
 const App = () => {
 	return (
@@ -212,6 +213,10 @@ const AppContent = () => {
 							<Route
 								path="/admin-course/create"
 								element={<CreateCourse />}
+							/>
+							<Route
+								path="/admin-course/createDemo"
+								element={<CreateCourseDraggable />}
 							/>
 							<Route
 								path="/admin-course/update/:courseId"

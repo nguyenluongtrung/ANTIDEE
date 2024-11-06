@@ -7,6 +7,7 @@ import { getAllQualifications } from '../../../../features/qualifications/qualif
 import LessonComponent from '../components/LessonComponent';
 import { createCourse, getAllCourse, updateCourse } from '../../../../features/courses/courseSlice';
 import toast, { Toaster } from 'react-hot-toast';
+import { CreateCourseDraggable } from './CreateCourseDraggable';
 
 export const CreateCourse = () => {
     const params = useParams();
@@ -161,6 +162,20 @@ export const CreateCourse = () => {
         return !hasErrors;
     }
 
+    useEffect(() => {
+        setFormData(formData)
+        console.log("FData", formData)
+    }, [formData])
+
+    const [showPopup, setShowPopup] = useState(false);
+
+    const handleOpenPopup = () => setShowPopup(true);
+    const handleClosePopup = () => setShowPopup(false);
+
+    const handleSaveLessons = (updatedLessons) => {
+        setFormData((prev) => ({ ...prev, lessons: updatedLessons }));
+    };
+
     return (
         <div className='w-full min-h-screen bg-white flex flex-row'>
             <div>
@@ -261,11 +276,24 @@ export const CreateCourse = () => {
                     </div>
                 </div>
 
+                <button onClick={handleOpenPopup} className='bg-primary p-2 rounded text-white font-bold w-[200px] mb-4'>
+                    Chỉnh sửa danh sách bài học
+                </button>
+
+                {showPopup && (
+                    <CreateCourseDraggable
+                        listLessons={formData.lessons}
+                        formData={formData}
+                        setFormData={setFormData}
+                        setShowPopup={setShowPopup}
+                    />
+                )}
+
                 <div className=''>
                     <button onClick={addLesson} className='bg-primary p-2 rounded text-white font-bold w-[200px] mb-4'>Thêm bài học</button>
 
                     <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-10 mb-4'>
-                        {formData.lessons?.map((lesson, index) => (
+                        {formData?.lessons?.map((lesson, index) => (
                             <div key={index} className="flex flex-col w-full col-span-1 lg:col-span-4">
                                 <LessonComponent
                                     key={index}
