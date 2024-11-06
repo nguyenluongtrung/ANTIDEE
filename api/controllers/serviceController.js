@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Service = require('../models/serviceModel');
 const JobPost = require('../models/jobPostModel');
+const AccountService = require('../models/accountServiceModel');
 
 const createService = asyncHandler(async (req, res) => {
 	const newService = await Service.create(req.body);
@@ -62,7 +63,6 @@ const deleteService = asyncHandler(async (req, res) => {
 		},
 	});
 });
-
 const updateService = asyncHandler(async (req, res) => {
 	const oldService = await Service.findById(req.params.serviceId);
 
@@ -150,6 +150,21 @@ const rankingServices = asyncHandler(async (req, res) => {
 		},
 	});
 });
+const ratingService = asyncHandler(async (req, res) => {
+	const newRatingService = await AccountService.create({
+		accountId: req.account._id,
+		serviceId: req.params.serviceId,
+		rating: req.body.rating,
+		date: new Date(),
+	});
+
+	res.status(201).json({
+		status: 'success',
+		data: {
+			ratingDetail: newRatingService,
+		},
+	});
+});
 module.exports = {
 	updateService,
 	deleteService,
@@ -157,4 +172,5 @@ module.exports = {
 	getAllServices,
 	createService,
 	rankingServices,
+	ratingService,
 };

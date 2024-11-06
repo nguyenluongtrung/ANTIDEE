@@ -14,7 +14,7 @@ import {
 	updateJobPost,
 } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
-import { DomesticHelper } from '../../../MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
+import { DomesticHelperFeedback } from '../DomesticHelperPage/DomesticHelperFeedback';
 import { getAllFeedbacks } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
 import { DomesticHelperReview } from '../DomesticHelperPage/DomesticHelperReview';
 import { JobPostCancel } from '../JobPostCancel/JobPostCancel';
@@ -392,8 +392,9 @@ export const HistoryJobPostDetail = ({
 							className="absolute text-sm hover:cursor-pointer m-5"
 							onClick={() => setIsOpenFeedbackPopup(false)}
 						/>
-						<DomesticHelper
+						<DomesticHelperFeedback
 							serviceName={chosenJobPost?.serviceId?.name}
+							serviceId={chosenJobPost?.serviceId?._id}
 							serviceAddress={chosenJobPost?.contactInfo?.address}
 							domesticHelperId={chosenJobPost?.domesticHelperId}
 							role={role}

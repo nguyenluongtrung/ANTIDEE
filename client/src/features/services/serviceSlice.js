@@ -101,6 +101,26 @@ export const rankingServices = createAsyncThunk(
 	}
 );
 
+export const ratingService = createAsyncThunk(
+	'services/ratingService',
+	async ({ serviceId, rating }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await serviceService.ratingService(serviceId, rating, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 const initialState = {
 	services: null,
 	isError: false,
@@ -189,6 +209,18 @@ export const serviceSlice = createSlice({
 				state.isSuccess = true;
 			})
 			.addCase(rankingServices.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
+			.addCase(ratingService.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(ratingService.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(ratingService.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

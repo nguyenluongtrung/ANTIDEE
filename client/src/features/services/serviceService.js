@@ -2,13 +2,11 @@ import axios from 'axios';
 
 const API_URL = '/antidee/api/services/';
 
-// Get all services
 const getAllServices = async () => {
 	const response = await axios.get(API_URL);
 	return response.data.data.services;
 };
 
-// Get service
 const getService = async (token, serviceId) => {
 	const config = {
 		headers: {
@@ -20,7 +18,6 @@ const getService = async (token, serviceId) => {
 	return response.data.data.service;
 };
 
-// Delete service
 const deleteService = async (token, serviceId) => {
 	const config = {
 		headers: {
@@ -32,7 +29,6 @@ const deleteService = async (token, serviceId) => {
 	return response.data.data.oldService;
 };
 
-// Create service
 const createService = async (token, serviceData) => {
 	const config = {
 		headers: {
@@ -70,6 +66,21 @@ const rankingServices = async (token) => {
 	return response.data.data.rankingServices;
 };
 
+const ratingService = async (serviceId, rating, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.post(
+		API_URL + `rating/${serviceId}`,
+		{ rating },
+		config
+	);
+	return response.data.status;
+};
+
 const serviceService = {
 	getAllServices,
 	deleteService,
@@ -77,5 +88,6 @@ const serviceService = {
 	updateService,
 	getService,
 	rankingServices,
+	ratingService,
 };
 export default serviceService;
