@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../components';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
-import { FaAngleRight, FaArrowUp } from 'react-icons/fa';
+import { FaAngleRight, FaArrowUp, FaPaperPlane, FaStar, FaUserCheck } from 'react-icons/fa';
 import Marquee from 'react-fast-marquee';
 import AOS from 'aos';
 import { PiArrowBendDownRightBold } from 'react-icons/pi';
@@ -223,6 +223,45 @@ export const HomePage = () => {
 				</div>
 				<div className="background absolute"></div>
 			</main>
+
+			<div className="py-10 sm:py-16 lg:py-20 bg-white md:mt-0 mt-72">
+				<div
+					className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-10 sm:mb-12 lg:mb-16 flex justify-center items-center"
+					data-aos="fade-down"
+					data-aos-offset="200"
+				>
+					Các dịch vụ dành cho bạn <FaUserCheck className='ml-4 animate-bounce'size={50} />
+				</div>
+
+				<div className="flex justify-center bg-primary py-4">
+					<div className="w-[90%] sm:w-[85%] lg:w-[80%]" data-aos="slide-up" data-aos-offset="200">
+						<Marquee autoFill pauseOnHover className="h-52 sm:h-56 lg:h-64 rounded-lg bg-primary">
+							{services?.map((service, index) => (
+								<div className="bg-white rounded-2xl p-5 text-white mx-2 transition duration-300 hover:scale-105 cursor-pointer">
+									<div className="flex items-center rounded-sm">
+										<div className="w-52 h-48 bg-white flex items-center justify-center overflow-hidden rounded-lg">
+											<img src={service?.image}
+											alt={service?.name} className="w-full h-full object-cover" />
+										</div>
+										<div className="flex flex-col ml-4 gap-y-2">
+											<h2 className="text-xl font-semibold min-w-[200px] text-primary ">{service.name}</h2>
+											<p className="text-gray font-normal flex justify-center items-center">Chất lượng dịch vụ | {service.rating ? '5' : '5'} <FaStar size={15} className='mx-2 text-yellow' /></p>
+											<div className="text-primary mt-4">
+												<button className="flex justify-center items-center font-bold text-base hvr-shutter-in-horizontal rounded-lg">
+													Trải nghiệm ngay
+													<FaPaperPlane size={15} className='ml-2 animate-bounce'/>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							))}
+						</Marquee>
+					</div>
+				</div>
+			</div>
+
+
 
 			<PromotionPage />
 
