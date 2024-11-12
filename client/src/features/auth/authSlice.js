@@ -62,6 +62,24 @@ export const register = createAsyncThunk(
 	}
 );
 
+export const changePassword = createAsyncThunk(
+	'auth/changePassword',
+	async (accountData, thunkAPI) => {
+		try {
+			return await authService.changePassword(accountData);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const getAllAccounts = createAsyncThunk(
 	'auth/getAllAccounts',
 	async (_, thunkAPI) => {
@@ -671,6 +689,20 @@ export const authSlice = createSlice({
 				state.account = action.payload;
 			})
 			.addCase(login.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.account = null;
+			})
+			.addCase(changePassword.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(changePassword.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.account = action.payload;
+			})
+			.addCase(changePassword.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

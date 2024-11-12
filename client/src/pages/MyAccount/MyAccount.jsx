@@ -20,6 +20,8 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../utils/toast-customize';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { GoPencil } from "react-icons/go";
+import { FaRegEdit } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export const MyAccount = () => {
 	const fileRef = useRef(null);
@@ -138,7 +140,7 @@ export const MyAccount = () => {
 													type="text"
 													className={`update-input ml-10 w-40 placeholder:text-red ${
 														errors?.name && 'text-red'
-													}`}
+														}`}
 													placeholder={errors?.name?.message}
 													{...register('name', rules.name)}
 													defaultValue={account?.name}
@@ -158,7 +160,7 @@ export const MyAccount = () => {
 													type="text"
 													className={`update-input ml-10 w-40 placeholder:text-red ${
 														errors?.email && 'text-red'
-													}`}
+														}`}
 													placeholder={errors?.email?.message}
 													{...register('email', rules.email)}
 													defaultValue={account?.email}
@@ -178,7 +180,7 @@ export const MyAccount = () => {
 													type="text"
 													className={`update-input ml-10 w-40 placeholder:text-red ${
 														errors?.phoneNumber && 'text-red'
-													}`}
+														}`}
 													placeholder={errors?.phoneNumber?.message}
 													{...register('phoneNumber', rules.phoneNumber)}
 													defaultValue={account?.phoneNumber}
@@ -239,7 +241,7 @@ export const MyAccount = () => {
 													type="date"
 													className={`update-input ml-5 text-center w-40 ${
 														errors?.dob && 'text-red'
-													}`}
+														}`}
 													{...register('dob', rules.dob)}
 													max={maxDateString}
 													min={new Date(1900, 0, 1).toISOString().split('T')[0]}
@@ -269,7 +271,13 @@ export const MyAccount = () => {
 											<span className="text-gray">Mật khẩu</span>
 										</td>
 										<td>
-											<span className="pl-10">***********</span>
+											<span className="flex justify-center items-center pl-10">***********
+												<Link to={'change-password'}>
+													<p className='ml-4 flex justify-center items-center bg-primary text-white rounded-lg p-2 cursor-pointer fea-item hover:bg-primary_dark'>
+														Đổi mật khẩu <FaRegEdit className='ml-2' />
+													</p>
+												</Link>
+											</span>
 										</td>
 									</tr>
 								</tbody>

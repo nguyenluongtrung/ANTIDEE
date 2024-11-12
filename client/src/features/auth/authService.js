@@ -27,6 +27,17 @@ const register = async (accountData) => {
 	return response.data.data.account;
 };
 
+const changePassword = async (accountData) => {
+
+	const response = await axios.patch(API_URL + 'change-password', accountData);
+
+	if (response.data) {
+		localStorage.setItem('account', JSON.stringify(response.data));
+	}
+
+	return response.data.data.updatedAccount;
+};
+
 const getAllAccounts = async (token) => {
 	const response = await axios.get(API_URL);
 	return response.data.data.accounts;
@@ -358,6 +369,7 @@ const authService = {
 	loginWithGoogle,
 	logout,
 	register,
+	changePassword,
 	getAllAccounts,
 	updateAccountInformation,
 	getAccountInformation,
