@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler');
+const AccountService = require('./../models/accountServiceModel');
 
 // Hàm tính cosine similarity
 function cosineSimilarity(matrix1, matrix2) {
@@ -102,46 +103,91 @@ function __pred(u, i, Y_data, S, k, mu, Ybar, normalized = 1) {
 	return numerator / denominator + (normalized ? 0 : mu[u]);
 }
 
-const recommend = asyncHandler(async (req, res) => {
-	const { Y_data, user, k } = req.body;
+function mapObjectIDs(Y_data) {
+	const userMap = new Map();
+	const itemMap = new Map();
+	let userIndex = 0;
+	let itemIndex = 0;
 
-	// Check if Y_data is valid
+	const mappedY_data = Y_data.map(([userId, itemId, rating]) => {
+		// Map user ObjectID to index
+		if (!userMap.has(userId.toString())) {
+			userMap.set(userId.toString(), userIndex++);
+		}
+		// Map item ObjectID to index
+		if (!itemMap.has(itemId.toString())) {
+			itemMap.set(itemId.toString(), itemIndex++);
+		}
+		return [
+			userMap.get(userId.toString()),
+			itemMap.get(itemId.toString()),
+			rating,
+		];
+	});
+
+	return { mappedY_data, userMap, itemMap };
+}
+
+const recommend = asyncHandler(async (req, res) => {
+	let k = 2;
+	let user = req.account._id;
+	let accountServices = await AccountService.find({});
+	let Y_data = accountServices.map((accService) => {
+		return [
+			accService.accountId, // userId
+			accService.serviceId, // itemId
+			accService.rating, // rating
+		];
+	});
+
 	if (!Array.isArray(Y_data) || Y_data.some((row) => row.length < 3)) {
 		return res
 			.status(400)
 			.json({ status: 'error', message: 'Invalid Y_data format' });
 	}
 
-	const { Ybar_data, mu } = normalize_Y(Y_data);
+	const { mappedY_data, userMap, itemMap } = mapObjectIDs(Y_data);
 
-	const n_items = Math.max(...Y_data.map((row) => row[1])) + 1;
-	const n_users = Math.max(...Y_data.map((row) => row[0])) + 1;
+	const userIndex = userMap.get(user.toString());
+	if (userIndex === undefined) {
+		return res.status(404).json({ message: 'User not found' });
+	}
+
+	const { Ybar_data, mu } = normalize_Y(mappedY_data);
+
+	const n_items = Math.max(...mappedY_data.map((row) => row[1])) + 1;
+	const n_users = Math.max(...mappedY_data.map((row) => row[0])) + 1;
 
 	const Ybar = createSparseMatrix(Ybar_data, n_items, n_users);
 
 	const S = similarity(Ybar);
 
-	const ids = Y_data.reduce((acc, row, index) => {
-		if (row[0] === user) acc.push(index);
-		return acc;
-	}, []);
-	const items_rated_by_u = ids.map((id) => Y_data[id][1]);
-	const recommended_items = [];
+	const items_rated_by_u = mappedY_data
+		.filter((row) => row[0] === userIndex)
+		.map((row) => row[1]);
 
+	const recommended_items = [];
 	for (let i = 0; i < n_items; i++) {
 		if (!items_rated_by_u.includes(i)) {
-			const rating = __pred(user, i, Y_data, S, k, mu, Ybar);
+			const rating = __pred(userIndex, i, mappedY_data, S, k, mu, Ybar);
 			if (rating > 0) {
 				recommended_items.push([i, rating]);
 			}
 		}
 	}
 
+	const result = recommended_items
+		.sort((a, b) => b[1] - a[1])
+		.map(([itemIndex, rating]) => {
+			const itemId = Array.from(itemMap.keys()).find(
+				(key) => itemMap.get(key) === itemIndex
+			);
+			return { itemId: itemId, rating };
+		});
+
 	res.status(200).json({
 		status: 'success',
-		data: {
-			result: recommended_items.sort((a, b) => b[1] - a[1]),
-		},
+		data: { result },
 	});
 });
 

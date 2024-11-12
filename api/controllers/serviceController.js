@@ -151,12 +151,54 @@ const rankingServices = asyncHandler(async (req, res) => {
 	});
 });
 const ratingService = asyncHandler(async (req, res) => {
-	const newRatingService = await AccountService.create({
+	const foundAccountService = await AccountService.findOne({
 		accountId: req.account._id,
 		serviceId: req.params.serviceId,
-		rating: req.body.rating,
-		date: new Date(),
 	});
+
+	let newRating = Number(req.body.rating);
+	let newRatingCount = 1; // Start with a count of 1 for a new entry
+	let newRatingService;
+
+	if (foundAccountService) {
+		// Retrieve existing rating count and rating point
+		const currentRatingCount = foundAccountService.ratingCount || 0;
+		const currentRatingPoint = foundAccountService.rating || 0;
+		console.log(
+			currentRatingPoint,
+			currentRatingCount,
+			((currentRatingCount * currentRatingPoint + newRating) * 1.0) /
+				(currentRatingCount + 1)
+		);
+
+		// Calculate new rating and increment count
+		newRating =
+			((currentRatingCount * currentRatingPoint + newRating) * 1.0) /
+			(currentRatingCount + 1);
+		newRatingCount = currentRatingCount + 1;
+
+		// Update the existing entry with new rating and count
+		newRatingService = await AccountService.findByIdAndUpdate(
+			foundAccountService._id,
+			{
+				accountId: req.account._id,
+				serviceId: req.params.serviceId,
+				rating: newRating,
+				ratingCount: newRatingCount,
+				date: new Date(),
+			},
+			{ new: true }
+		);
+	} else {
+		// Create a new entry for a first-time rating
+		newRatingService = await AccountService.create({
+			accountId: req.account._id,
+			serviceId: req.params.serviceId,
+			rating: newRating,
+			ratingCount: newRatingCount,
+			date: new Date(),
+		});
+	}
 
 	res.status(201).json({
 		status: 'success',
@@ -165,6 +207,7 @@ const ratingService = asyncHandler(async (req, res) => {
 		},
 	});
 });
+
 module.exports = {
 	updateService,
 	deleteService,
