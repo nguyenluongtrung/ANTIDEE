@@ -81,6 +81,17 @@ const ratingService = async (serviceId, rating, token) => {
 	return response.data.status;
 };
 
+const recommend = async (token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get('/antidee/api/recommendations', config);
+	return response.data.data.result;
+};
+
 const serviceService = {
 	getAllServices,
 	deleteService,
@@ -89,5 +100,6 @@ const serviceService = {
 	getService,
 	rankingServices,
 	ratingService,
+	recommend,
 };
 export default serviceService;

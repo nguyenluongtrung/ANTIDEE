@@ -16,6 +16,9 @@ const accountServicesSchema = new Schema(
 		rating: {
 			type: Number,
 		},
+		ratingCount: {
+			type: Number,
+		},
 		date: {
 			type: Date,
 		},
