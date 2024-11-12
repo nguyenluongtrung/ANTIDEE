@@ -2,11 +2,10 @@ import { useForm } from "react-hook-form";
 import React, { useRef, useState, useEffect } from 'react';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from 'react-router-dom';
-import { Spinner } from "../../../../components";
+import { useNavigate, useParams } from 'react-router-dom'; 
 import toast from "react-hot-toast";
 import { errorStyle, successStyle } from "../../../../utils/toast-customize";
-import { AiOutlineClose } from "react-icons/ai";
+import { FiUploadCloud } from 'react-icons/fi';
 import { createVideo } from "../../../../features/videos/videoSlice";
 import {
   getDownloadURL,
@@ -21,7 +20,7 @@ export const CreateVideo = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,  
+    watch,
   } = useForm();
   const params = useParams();
   const dispatch = useDispatch();
@@ -72,7 +71,7 @@ export const CreateVideo = () => {
   const onSubmit = async (data) => {
     const videoData = {
       title: data.title.trim(),
-      url: videoUrl || data.url,   
+      url: videoUrl || data.url,
       description: data.description.trim(),
     };
 
@@ -103,14 +102,14 @@ export const CreateVideo = () => {
       toast.error(result?.payload, errorStyle);
     }
   };
- 
+
   const urlValue = watch("url");
 
   return (
     <div className="w-full min-h-screen bg-[#F6F7FB] p-6 flex flex-row">
       <AdminSidebar />
       <div className="flex-1 bg-white rounded-lg shadow-md p-6 max-w-[1600px] mx-auto">
-      <div className='flex items-center mb-10 text-2xl font-bold'>Đang <p className='text-primary text-2xl px-2'>{params.videoId ? 'Cập nhật' : 'Tạo mới'}</p>  video </div>
+        <div className='flex items-center mb-10 text-2xl font-bold'>Đang <p className='text-primary text-2xl px-2'>{params.videoId ? 'Cập nhật' : 'Tạo mới'}</p>  video </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -118,32 +117,26 @@ export const CreateVideo = () => {
               <input
                 type="text"
                 {...register("title")}
-                className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
+                className="block w-full px-4 py-2 border border-gray  rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
               />
             </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Đường dẫn</label>
-              <input
-                type="text"
-                {...register("url")}
-                className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
-                disabled={Boolean(videoUrl)}
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Video ưu đãi</label>
+            <div className="m-auto">
               <div
-                className={`block w-full px-4 py-2 border border-gray-300 rounded-lg text-center cursor-pointer ${
-                  urlValue ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+                className={`flex flex-col items-center justify-center w-96 px-6 py-4 border-2 border-dashed border-gray rounded-lg text-center cursor-pointer transition-all duration-300 ${urlValue ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-100 hover:border-orange-500'
+                  }`}
                 onClick={(e) => {
-                  if (!urlValue) {  
+                  if (!urlValue) {
                     e.preventDefault();
                     fileRef.current.click();
                   }
                 }}
+                style={{
+                  background: urlValue ? '#f8f9fa' : 'linear-gradient(to right, #ffecb3, #ffcc80)',
+                  color: urlValue ? '#9e9e9e' : '#f97316', // Đổi màu cam
+                }}
               >
-                Chọn video ưu đãi
+                <FiUploadCloud size={60} className="mb-3" />
+                <span className="font-semibold text-lg">Chọn video</span>
               </div>
               <input
                 type="file"
@@ -154,21 +147,23 @@ export const CreateVideo = () => {
               />
               <p className="text-sm mt-1">
                 {fileUploadError ? (
-                  <span className="text-red ">{fileUploadError}</span>
+                  <span className="text-red">{fileUploadError}</span>
                 ) : filePerc > 0 && filePerc < 100 ? (
-                  <span className="text-gray ">{`Đang tải lên ${filePerc}%`}</span>
+                  <span className="text-gray">{`Đang tải lên ${filePerc}%`}</span>
                 ) : filePerc === 100 ? (
-                  <span className="text-green ">Tải video lên thành công!</span>
+                  <span className="text-green">Tải video lên thành công!</span>
                 ) : (
                   ''
                 )}
               </p>
             </div>
+
+
             <div>
               <label className="block text-gray  font-medium mb-1">Mô tả</label>
               <textarea
                 {...register("description")}
-                className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
+                className="block w-full px-4 py-2 border border-gray  rounded-lg focus:border-primary focus:ring-primary focus:outline-none"
                 rows="3"
               />
             </div>
