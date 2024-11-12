@@ -83,6 +83,7 @@ import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/C
 import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
 import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
+import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 
 const App = () => {
 	return (
@@ -109,6 +110,7 @@ const AppContent = () => {
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/my-account" element={<MyAccount />} />
+						<Route path="/my-account/change-password" element={<ChangePasswordPage />} />
 						<Route path="/entry-exam/:examId" element={<EntryExamPage />} />
 						<Route path="/invite-friend" element={<InviteFriendPage />} />
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
