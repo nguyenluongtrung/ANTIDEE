@@ -95,10 +95,10 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
-			<div>
+			
 			{!isAdminPage && <div className="sidebar-container z-50"></div>}
-			<Chat/>
-			</div>
+			{!isAdminPage && <Chat />}
+			
 			
 
 			

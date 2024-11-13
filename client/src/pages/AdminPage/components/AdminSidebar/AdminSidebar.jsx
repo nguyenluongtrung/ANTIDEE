@@ -11,6 +11,7 @@ import { MdCleaningServices, MdOutlineQuestionMark } from "react-icons/md";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { TbReportSearch } from "react-icons/tb";
 import { RiDiscountPercentLine } from "react-icons/ri";
+import { AiOutlineMessage } from "react-icons/ai";
 import { logout, reset } from "../../../../features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { GiBookPile } from "react-icons/gi";
@@ -34,7 +35,7 @@ export default function AdminSidebar() {
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Bài Viết Bị Báo Cáo", icon:<MdReport />, to: '/admin-report-forum'},
-    { name: "Chăm sóc người dùng", icon:<MdReport />, to: '/admin-chat'},
+    { name: "Chăm sóc người dùng", icon:<AiOutlineMessage />, to: '/admin-chat'},
   ];
 
   const onLogout = () => {

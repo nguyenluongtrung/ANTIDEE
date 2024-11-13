@@ -4,7 +4,7 @@ const chatting = require('../models/chatModel');
 const getAllChats = async (req, res) => {
     try {
         const chats = await chatting.find({})
-            .populate('firstId secondId', 'avatar name');
+            .populate('firstId secondId', 'avatar name role email');
         res.status(200).json({
             success: true,
             data: chats,

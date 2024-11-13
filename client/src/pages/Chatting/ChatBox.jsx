@@ -2,35 +2,36 @@ import { useEffect, useState, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoSend } from "react-icons/io5";
 import { FaImages } from "react-icons/fa";
-import { getAllChats } from "../../features/chatting/chattingSlice";
+import { useDispatch } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../../firebase";
-import { useDispatch } from "react-redux";
-import { createMessage, getMessage } from "../../features/message/messageSlice";
-import { errorStyle, successStyle } from "../../utils/toast-customize";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
-import moment from 'moment';
-moment.locale('vi');
+import moment from "moment";
+import { createMessage, getMessage } from "../../features/message/messageSlice";
+import { app } from "../../firebase";
+import { errorStyle, successStyle } from "../../utils/toast-customize";
+moment.locale("vi");
 
-const socket = io("http://localhost:5173/");
+const socket = io("http://localhost:5000");
 
 export const Chatbox = ({
   openChat,
   setIsOpenChat,
   myAccountId,
-  adminId,
+  chatId,
+  myRole,
+  userName,
+  userAvatar
 }) => {
   if (!openChat) return null;
 
   const dispatch = useDispatch();
-  const [message, setMessage] = useState('');
-  const [chatBoxId, setChatBoxId] = useState('');
+  const [message, setMessage] = useState("");
   const [fileUrls, setFileUrls] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [filePercs, setFilePercs] = useState([]);
@@ -38,71 +39,39 @@ export const Chatbox = ({
   const messageEndRef = useRef(null);
 
   socket.on("sendMessage", (data) => {
-    // Broadcast message to the specific chat room
     socket.to(data.chatId).emit("receiveMessage", data);
   });
 
   useEffect(() => {
-    // Join the room only if the chatBoxId is present
-    if (chatBoxId) {
-      socket.emit("joinChat", chatBoxId);
+    if (chatId) {
+      socket.emit("joinChat", chatId);
     }
-
-    // Listen for incoming messages
     socket.on("receiveMessage", (newMessage) => {
       setMessageList((prevList) => [...prevList, newMessage]);
       scrollToBottom();
     });
 
     return () => {
-      // Cleanup on component unmount or when dependencies change
       socket.off("receiveMessage");
     };
-  }, [chatBoxId]);
-
+  }, [chatId]);
 
   const scrollToBottom = () => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messageEndRef.current?.scrollIntoView({ behavior: "auto" });
   };
 
-  async function initialChatList() {
-    let output = await dispatch(getAllChats());
-    const foundChat = output.payload.find(
-      chat => chat.firstId._id === myAccountId || chat.secondId._id === myAccountId
-    );
-    if (foundChat) {
-      setChatBoxId(foundChat._id);
-    }
-  }
 
-  useEffect(() => {
-    initialChatList();
-  }, [])
-
-  async function initialMessageList() {
-    let output = await dispatch(getMessage(chatBoxId));
+  const initialMessageList = async () => {
+    const output = await dispatch(getMessage(chatId));
     setMessageList(output.payload);
-  }
+  };
 
   useEffect(() => {
-    if (openChat && chatBoxId) {
+    if (openChat && chatId) {
       initialMessageList();
     }
-  }, [openChat, chatBoxId]);
+  }, [openChat, chatId]);
 
-  useEffect(() => {
-    socket.on("receiveMessage", (newMessage) => {
-      setMessageList((prevList) => [...prevList, newMessage]);
-      scrollToBottom();
-    });
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, []);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messageList]);
 
   useEffect(() => {
     if (selectedFiles.length > 0) {
@@ -141,60 +110,58 @@ export const Chatbox = ({
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    if (!message.trim() && selectedFiles.length === 0) {
-      return;
-    }
+    if (!message.trim() && selectedFiles.length === 0) return;
 
     const messageData = {
-      chatId: chatBoxId,
+      chatId: chatId,
       senderId: myAccountId,
       text: message,
       files: fileUrls,
       createdAt: new Date().toISOString(),
     };
-    socket.emit("sendMessage", messageData);
-    setMessageList((prevList) => [...prevList, messageData]);
-    scrollToBottom();
 
-    setMessage('');
+    socket.emit("sendMessage", messageData);
+    scrollToBottom();
+    setMessage("");
     setSelectedFiles([]);
     setFileUrls([]);
     setFilePercs([]);
 
     const result = await dispatch(createMessage(messageData));
     if (result && result.payload) {
-      toast.success("Send message success", successStyle);
+      toast.success("Message sent", successStyle);
+
     } else {
-      toast.error("Send message failed", errorStyle);
+      toast.error("Failed to send message", errorStyle);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSendMessage(e);
-    }
+    if (e.key === "Enter") handleSendMessage(e);
   };
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length > 0) {
-      setSelectedFiles(files);
-    }
+    if (files.length > 0) setSelectedFiles(files);
   };
 
   const formatMessageDate = (createdAt) => {
-    let createdAtMoment = moment(createdAt);
-    let now = moment();
-    let diffDays = now.diff(createdAtMoment, 'days');
+    const createdAtMoment = moment(createdAt);
+    const now = moment();
+    const diffDays = now.diff(createdAtMoment, "days");
 
     if (diffDays === 0) {
-      return 'hôm nay, ' + createdAtMoment.format('HH:mm');
+      return "Today, " + createdAtMoment.format("HH:mm");
     } else if (diffDays === 1) {
-      return 'hôm qua, ' + createdAtMoment.format('HH:mm');
+      return "Yesterday, " + createdAtMoment.format("HH:mm");
     } else {
-      return createdAtMoment.format('DD/MM/YYYY [lúc] HH:mm');
+      return createdAtMoment.format("DD/MM/YYYY [at] HH:mm");
     }
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
 
   return (
     <div className="relative z-50">
@@ -208,44 +175,57 @@ export const Chatbox = ({
           className="absolute top-2 right-2 text-gray hover:cursor-pointer hover:text-primary_dark"
           onClick={() => setIsOpenChat(false)}
         />
-
         <div className="bg-light_purple rounded-t-lg p-4 flex items-center justify-between">
-          <strong className="text-lg">Admin</strong>
+          <strong className="text-base">
+            {myRole === "Admin" ? (
+              <>
+                <img src={userAvatar} alt="User Avatar" className="inline-block w-6 h-6 rounded-full mr-2" />
+                {userName}
+              </>
+            ) : (
+              "Admin"
+            )}
+          </strong>
+
         </div>
 
-        <div className="h-[90%] bg-super_light_purple rounded m-2 overflow-y-scroll p-2">
-          {messageList.map((message) => (
-            <div
-              key={message._id || message.createdAt}
-              className={`mb-4 p-2 rounded-lg ${message.senderId === myAccountId
-                ? "bg-light_yellow text-white self-end ml-auto"
-                : "bg-green text-white self-start mr-auto"
-                } max-w-xs w-fit`}
-            >
-              <p className="mb-1">
-                <strong>{message.senderId === myAccountId ? "Bạn" : "Admin"}:</strong> {message.text}
-              </p>
-              <p className="text-xs text-black mb-2">
-                {formatMessageDate(message.createdAt)}
-              </p>
-              {message.files && message.files.length > 0 && (
-                <div className="flex gap-2 flex-wrap">
-                  {message.files.map((fileUrl, fileIndex) => (
-                    <img
-                      key={fileIndex}
-                      src={fileUrl}
-                      alt="Message attachment"
-                      className="w-12 h-12 object-cover rounded-md"
-                    />
-                  ))}
-                </div>
-              )}
+        <div className="h-[90%] rounded m-2 overflow-y-scroll p-2 flex flex-col">
+          {messageList.map((message, index) => (
+            <div>
+              <div
+                key={message._id || `${message.createdAt}-${index}`}
+                className={`mb-2 p-2 max-w-64 w-fit ${message.senderId === myAccountId
+                  ? "bg-light_yellow rounded-full rounded-tr-none rounded-br-full rounded-bl-full text-white self-end ml-auto"
+                  : "bg-green rounded-none rounded-tr-full rounded-br-full rounded-bl-full text-white self-start mr-auto"
+                  } max-w-xs w-fit`}
+              >
+                <p className="mb-1 text-sm ml-2">
+                  {message.text}{ }
+                </p>
+                {message.files && message.files.length > 0 && (
+                  <div className="flex gap-2 flex-wrap">
+                    {message.files.map((fileUrl, fileIndex) => (
+                      <img
+                        key={fileIndex}
+                        src={fileUrl}
+                        alt="Message attachment"
+                        className="w-12 h-12 object-cover rounded-md"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className={`text-xs${message.senderId === myAccountId
+                  ? " text-gray self-end ml-auto"
+                  : " text-gray self-start mr-auto"
+                  } max-w-xs w-fit`}>
+                  {formatMessageDate(message.createdAt)}
+                </p>
             </div>
           ))}
           <div ref={messageEndRef} />
-
         </div>
-        {/* File Upload Previews */}
+
         {selectedFiles.length > 0 && (
           <div className="flex gap-3 p-3 overflow-x-auto">
             {filePercs.map((perc, index) => (
@@ -271,7 +251,6 @@ export const Chatbox = ({
           </div>
         )}
 
-
         <div className="flex items-center gap-2 bg-light_gray p-2 rounded-b-lg">
           <div className="w-fit">
             <input
@@ -292,11 +271,11 @@ export const Chatbox = ({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Nhập tin nhắn của bạn..."
+            placeholder="Nhập tin nhắn của bạn"
           />
 
           <button
-            className="w-fit bg-primary text-white rounded-md px-4 py-4 hover:bg-primary_dark transition-colors duration-200"
+            className="w-fit  text-primary rounded-md px-4 py-4 transition-colors duration-200"
             onClick={handleSendMessage}
           >
             <IoSend />
