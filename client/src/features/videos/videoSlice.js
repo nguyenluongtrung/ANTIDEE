@@ -18,7 +18,26 @@ export const getAllVideos = createAsyncThunk(
 		}
 	}
 );
+export const getVideo = createAsyncThunk(
+	'videos/getVideo',
+	async (videoId, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await videoService.getVideo(token, videoId);
+			
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
 
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
 export const createVideo = createAsyncThunk(
 	'videos/createVideo',
 	async (videoData, thunkAPI) => {
@@ -136,6 +155,20 @@ export const videoSlice = createSlice({
 				state.message = action.payload;
 				state.videos = null;
 			})
+			.addCase(getVideo.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getVideo.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.videos = action.payload;
+			})
+			.addCase(getVideo.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.videos = [];
+			})
 			.addCase(createVideo.pending, (state) => {
 				state.isLoading = true;
 			})
@@ -155,10 +188,14 @@ export const videoSlice = createSlice({
 			.addCase(updateVideo.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.videos[
-					state.videos.findIndex((video) => video._id == action.payload._id)
-				] = action.payload;
+				if (Array.isArray(state.videos)) {
+					const index = state.videos.findIndex((video) => video._id === action.payload._id);
+					if (index !== -1) {
+						state.videos[index] = action.payload;  
+					}  
+				}  
 			})
+			
 			.addCase(updateVideo.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;

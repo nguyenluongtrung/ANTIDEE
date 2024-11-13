@@ -16,20 +16,24 @@ import {
 } from '../../../../features/auth/authSlice';
 import { Spinner } from '../../../../components';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+import { ratingService } from '../../../../features/services/serviceSlice';
 
-export const DomesticHelper = ({
+export const DomesticHelperFeedback = ({
 	serviceName,
+	serviceId,
 	serviceAddress,
 	domesticHelperId,
 	avatar,
 	jobPostId,
-	role
+	role,
 }) => {
 	const { account, isLoading: isAuthLoading } = useSelector(
 		(state) => state.auth
 	);
-	const [rating, setRating] = useState(0);
-	const [hover, setHover] = useState(0);
+	const [domesticHelperRating, setDomesticHelperRating] = useState(0);
+	const [serviceRating, setServiceRating] = useState(0);
+	const [domesticHelperRatingHover, setDomesticHelperRatingHover] = useState(0);
+	const [serviceRatingHover, setServiceRatingHover] = useState(0);
 	const [feedback, setFeedback] = useState('');
 
 	const [blacklist, setBlacklist] = useState(false);
@@ -51,12 +55,14 @@ export const DomesticHelper = ({
 			...data,
 			jobPostId,
 			customerId: account?._id,
-			feedbackFrom:role
+			feedbackFrom: role,
 		};
-		const result = await dispatch(createFeedback(feedbackData));
-		console.log(result);
-		if (result.type.endsWith('fulfilled')) {
-			toast.success('Feedback thành công', successStyle);
+		const createFeedbackResult = await dispatch(createFeedback(feedbackData));
+		const ratingServiceResult = await dispatch(
+			ratingService({ serviceId: serviceId, rating: serviceRating })
+		);
+		if (createFeedbackResult.type.endsWith('fulfilled') && ratingServiceResult.type.endsWith('fulfilled')) {
+			toast.success('Đánh giá thành công', successStyle);
 			if (blacklist) {
 				const blacklistResult = await dispatch(
 					addDomesticHelperToBlackList(domesticHelperId)
@@ -84,13 +90,13 @@ export const DomesticHelper = ({
 			toast.error(result?.payload, errorStyle);
 		}
 
-		if (rating != 0) {
-			const ratingData = {
-				rating: Number(rating),
+		if (domesticHelperRating != 0) {
+			const domesticHelperRatingData = {
+				domesticHelperRating: Number(domesticHelperRating),
 			};
 			await dispatch(
 				updateRatingDomesticHelper({
-					ratingData,
+					domesticHelperRatingData,
 					domesticHelperId: domesticHelperId,
 				})
 			);
@@ -109,82 +115,126 @@ export const DomesticHelper = ({
 
 	return (
 		<div className="popup active">
-			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl p-10 max-h-[90vh] overflow-y-auto">
-				<h2 className="text-center p-3 font-bold text-xl">
-					ĐÁNH GIÁ NGƯỜI GIÚP VIỆC
+			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl p-10 max-h-[80vh] overflow-y-auto">
+				<h2 className="text-center text-green p-3 font-bold text-xl">
+					ĐÁNH GIÁ TRẢI NGHIỆM
 				</h2>
 				<div>
-					<p className="text-green">
+					<p className="">
 						<span className="font-semibold">Dịch vụ: </span>
 						{serviceName}
 					</p>
 					<p>
-						<span className="font-semibold">Hoàn thành lúc: </span>17:24
-						25/04/202
+						<span className="font-semibold">Hoàn thành lúc: </span>
 					</p>
 					<p>
 						<span className="font-semibold">Địa chỉ: </span>
 						{serviceAddress}
 					</p>
 				</div>
-				<div className="flex justify-center">
-					<img
-						src={avatar}
-						alt="avatar"
-						className="ml-3 rounded-full w-14 h-14 bg-green"
-						onClick={toggleModal}
-					/>
-				</div>
-				<form onSubmit={handleSubmit(onSubmit)} className="p-5">
-					<input
-						{...register('domesticHelperId')}
-						hidden="true"
-						value={domesticHelperId}
-					/>
-					<div className="flex justify-center">
-						{[...Array(5)].map((star, i) => {
-							const ratingValue = i + 1;
-							return (
-								<label key={i}>
-									<input
-										{...register('rating')}
-										type="radio"
-										name="rating"
-										className="hidden"
-										value={ratingValue}
-										onClick={(e) => setRating(e.target.value)}
-									/>
+				<form onSubmit={handleSubmit(onSubmit)} className="">
+					<div className="flex items-center gap-3">
+						<input
+							{...register('domesticHelperId')}
+							hidden="true"
+							value={domesticHelperId}
+						/>
+						<p>Đánh giá giúp việc: </p>
+						<div className="flex justify-center">
+							{[...Array(5)].map((star, i) => {
+								const domesticHelperRatingValue = i + 1;
+								return (
+									<label key={i}>
+										<input
+											{...register('domesticHelperRating')}
+											type="radio"
+											name="domesticHelperRating"
+											className="hidden"
+											value={domesticHelperRatingValue}
+											onClick={(e) => setDomesticHelperRating(e.target.value)}
+										/>
 
-									<FaStar
-										className="star "
-										color={
-											ratingValue <= (hover || rating)
-												? '#EBEA0B'
-												: 'rgba(136, 114, 114, 0.8)'
-										}
-										size={25}
-										onMouseEnter={() => setHover(ratingValue)}
-										onMouseLeave={() => setHover(null)}
-									/>
-								</label>
-							);
-						})}
+										<FaStar
+											className="star "
+											color={
+												domesticHelperRatingValue <=
+												(domesticHelperRatingHover || domesticHelperRating)
+													? '#EBEA0B'
+													: 'rgba(136, 114, 114, 0.8)'
+											}
+											size={25}
+											onMouseEnter={() => setDomesticHelperRatingHover(domesticHelperRatingValue)}
+											onMouseLeave={() => setDomesticHelperRatingHover(null)}
+										/>
+									</label>
+								);
+							})}
+						</div>
+						<div className="flex justify-center font-semibold mt-3 text-light_gray">
+							<span>
+								{domesticHelperRating == 1
+									? ' RẤT TỆ'
+									: domesticHelperRating == 2
+									? 'TỆ'
+									: domesticHelperRating == 3
+									? 'ỔN'
+									: domesticHelperRating == 4
+									? 'TỐT'
+									: domesticHelperRating == 5
+									? 'TUYỆT VỜI'
+									: ''}
+							</span>
+						</div>
 					</div>
-					<div className="flex justify-center font-semibold mt-3 text-light_gray">
-						<span>
-							{rating == 1
-								? ' RẤT TỆ'
-								: rating == 2
-								? 'TỆ'
-								: rating == 3
-								? 'ỔN'
-								: rating == 4
-								? 'TỐT'
-								: rating == 5
-								? 'TUYỆT VỜI'
-								: ''}
-						</span>
+					<div className="flex items-center gap-3">
+						<p>Đánh giá trải nghiệm dịch vụ: </p>
+						<div className="flex justify-center">
+							{[...Array(5)].map((star, i) => {
+								const serviceRatingValue = i + 1;
+								return (
+									<label key={i}>
+										<input
+											{...register('serviceRating')}
+											type="radio"
+											name="serviceRating"
+											className="hidden"
+											value={serviceRatingValue}
+											onClick={(e) => setServiceRating(e.target.value)}
+										/>
+
+										<FaStar
+											className="star "
+											color={
+												serviceRatingValue <=
+												(serviceRatingHover || serviceRating)
+													? '#EBEA0B'
+													: 'rgba(136, 114, 114, 0.8)'
+											}
+											size={25}
+											onMouseEnter={() => setServiceRatingHover(serviceRatingValue)}
+											onMouseLeave={() => setServiceRatingHover(null)}
+										/>
+									</label>
+								);
+							})}
+						</div>
+						<div className="flex justify-center font-semibold mt-3 text-light_gray">
+							<span>
+								{serviceRating == 1
+									? ' RẤT TỆ'
+									: serviceRating == 2
+									? 'TỆ'
+									: serviceRating == 3
+									? 'ỔN'
+									: serviceRating == 4
+									? 'TỐT'
+									: serviceRating == 5
+									? 'TUYỆT VỜI'
+									: ''}
+							</span>
+						</div>
 					</div>
+
 					<div>
 						<h3>Điều gì bạn mong muốn tốt hơn?</h3>
 						<div className="grid grid-cols-2 gap-4">

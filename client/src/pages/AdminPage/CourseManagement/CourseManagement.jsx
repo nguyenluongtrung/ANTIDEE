@@ -13,10 +13,12 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 
 export const CourseManagement = () => {
     const [isOpenDetailCourse, setIsOpenDetailCourse] = useState(false);
-    const [chosenCourseId, setChosenCourseId] = useState('');
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [selectedCourseIdDelete, setSelectedCourseIdDelete] = useState('');
     const [courses, setCourses] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -33,17 +35,27 @@ export const CourseManagement = () => {
         handleGetAllCourse();
     }, []);
 
+    const openDeletePopup = (courseId) => {
+        setSelectedCourseIdDelete(courseId);
+        setIsDeletePopupOpen(true);
+    };
 
-    const handleDeleteCourse = async (id) => {
-        const result = await dispatch(deleteCourse(id));
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedCourseIdDelete('');
+    };
+
+    const handleDeleteCourse = async () => {
+        const result = await dispatch(deleteCourse(selectedCourseIdDelete));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá khóa học thành công', successStyle);
         } else if (result?.error?.message === 'Rejected') {
             toast.error(result?.payload, errorStyle);
         }
         handleGetAllCourse()
-    };  
-    
+        closeDeletePopup();
+    };
+
 
     const handleRowsPerPageChange = (e) => {
         setRowsPerPage(Number(e.target.value));
@@ -84,6 +96,13 @@ export const CourseManagement = () => {
                     )}
                 </Toaster>
 
+                <DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeleteCourse}
+                    itemName="khóa học"
+                />
+
                 {isOpenDetailCourse && (
                     <CoursesDetail
                         setIsOpenDetailCourse={setIsOpenDetailCourse}
@@ -106,7 +125,7 @@ export const CourseManagement = () => {
                         </select>
                         <span> hàng</span>
                     </div>
-                    <Link to="/admin-course/create-course">
+                    <Link to="/admin-course/create">
                         <button
                             className="bg-pink text-white rounded-md block mx-auto"
                             style={{ width: '170px' }}
@@ -126,6 +145,7 @@ export const CourseManagement = () => {
                             <td className="py-2 px-4 text-center font-bold">Chứng chỉ</td>
                             <td className="py-2 px-4 text-center font-bold">Thời gian</td>
                             <td className="py-2 px-4 text-center font-bold">Số lượng bài học</td>
+                            <td className="py-2 px-4 text-center font-bold">Chi tiết</td>
                             <td className="py-2 px-4 text-center font-bold">Hành Động</td>
                         </tr>
                     </thead>
@@ -155,27 +175,29 @@ export const CourseManagement = () => {
                                             className="hover:cursor-pointer text-xl pt-1.5"
                                             onClick={() => {
                                                 setIsOpenDetailCourse(true);
-                                                navigate(`/admin-course/detail-course/${course._id}`);
+                                                navigate(`/admin-course/detail/${course._id}`);
                                             }}
                                         >
-                                            <MdOutlineRemoveRedEye className="block mx-auto" />
+                                            <MdOutlineRemoveRedEye className="block mx-auto hover:text-primary" />
                                         </button>
                                     </td>
                                     <td className="">
                                         <div className="flex items-center justify-center">
-                                            <Link to={`/admin-course/update-course/${course._id}`}>
+                                            <Link to={`/admin-course/update/${course._id}`}>
                                                 <button
                                                     className="flex items-center justify-end py-3 pr-2 text-xl"
                                                 >
-                                                    <BiEdit className="text-green" />
+                                                    <BiEdit className="text-green hover:text-primary" />
                                                 </button>
                                             </Link>
-                                            <button className="flex items-center justify-start py-3 pl-2 text-xl">
-                                                <BiTrash
-                                                    className="text-red hover:text-white"
-                                                    onClick={() => handleDeleteCourse(course._id)}
-                                                />
-                                            </button>
+                                            <div>
+                                                <button className="flex items-center  py-3 pl-2 text-xl">
+                                                    <BiTrash
+                                                        className="text-red hover:text-primary"
+                                                        onClick={() => openDeletePopup(course._id)}
+                                                    />
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

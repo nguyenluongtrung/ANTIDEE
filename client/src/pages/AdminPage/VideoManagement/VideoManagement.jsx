@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../../components";
 import { deleteVideo, getAllVideos } from "../../../features/videos/videoSlice";
 
-import { CreateVideo } from "./CreateVideo/CreateVideo";
-import { UpdateVideo } from "./UpdateVideo/UpdateVideo";
-
+import { Link } from 'react-router-dom'
 import { IoAddOutline } from "react-icons/io5";
 import {
   calculateTotalPages,
@@ -19,11 +17,9 @@ import {
   previousPage,
 } from "../../../utils/pagination";
 import Pagination from "../../../components/Pagination/Pagination";
+import DeletePopup from "../../../components/DeletePopup/DeletePopup";
 
-export const VideoManagement = () => {
-  const [isOpenCreateVideo, setIsOpenCreateVideo] = useState(false);
-  const [isOpenUpdateVideo, setIsOpenUpdateVideo] = useState(false);
-  const [chosenVideoId, setChosenVideoId] = useState("");
+export const VideoManagement = () => { 
 
   const { isLoading } = useSelector((state) => state.videos);
   const [videos, setVideos] = useState([]);
@@ -32,6 +28,8 @@ export const VideoManagement = () => {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [selectedIdDelete, setSelectedIdDelete] = useState('');
 
   async function initiateVideos() {
     let output = await dispatch(getAllVideos());
@@ -46,9 +44,19 @@ export const VideoManagement = () => {
     dispatch(getAllVideos());
   }, []);
 
+  const openDeletePopup = (videoId) => {
+    setSelectedIdDelete(videoId);
+    setIsDeletePopupOpen(true);
+  };
+
+  const closeDeletePopup = () => {
+    setIsDeletePopupOpen(false);
+    setSelectedIdDelete('');
+  };
+
   //Delete Video
-  const handleDeleteVideo = async (id) => {
-    const result = await dispatch(deleteVideo(id));
+  const handleDeleteVideo = async () => {
+    const result = await dispatch(deleteVideo(selectedIdDelete));
     console.log("***", result);
     if (result.type.endsWith("fulfilled")) {
       toast.success("Xoá video thành công");
@@ -99,19 +107,13 @@ export const VideoManagement = () => {
             />
           )}
         </Toaster>
-        {isOpenCreateVideo && (
-          <CreateVideo
-            setIsOpenCreateVideo={setIsOpenCreateVideo}
-            handleGetAllVideos={handleGetAllVideos}
-          />
-        )}
-        {isOpenUpdateVideo && (
-          <UpdateVideo
-            setIsOpenUpdateVideo={setIsOpenUpdateVideo}
-            handleGetAllVideos={handleGetAllVideos}
-            chosenVideoId={chosenVideoId}
-          />
-        )}
+
+        <DeletePopup
+          open={isDeletePopupOpen}
+          onClose={closeDeletePopup}
+          deleteAction={handleDeleteVideo}
+          itemName="video"
+        />
 
         <div className="flex items-center justify-center">
           <div className="flex-1 pt-2" style={{ paddingRight: "70%" }}>
@@ -128,16 +130,19 @@ export const VideoManagement = () => {
             </select>
             <span> hàng</span>
           </div>
-          <button
-            className="bg-pink text-white rounded-md block mx-auto py-0.5"
-            style={{ width: "170px" }}
-            onClick={() => setIsOpenCreateVideo(true)}
-          >
-            <div className="flex items-center">
-              <IoAddOutline className="size-8 pl-2 mr-2" />
-              <span className="text-sm pr-2">Thêm Video</span>
-            </div>
-          </button>
+          <Link to="/admin-video/create">
+            <button
+              className="bg-pink text-white rounded-md block mx-auto py-0.5"
+              style={{ width: "170px" }}
+
+            >
+              <div className="flex items-center">
+                <IoAddOutline className="size-8 pl-2 mr-2" />
+                <span className="text-sm pr-2">Thêm Video</span>
+              </div>
+            </button>
+            </Link>
+
         </div>
         <table className="w-full border-b border-gray mt-3">
           <thead>
@@ -184,19 +189,17 @@ export const VideoManagement = () => {
 
                   <td className="">
                     <div className="flex items-center justify-center">
-                      <button className="flex items-center justify-end py-3 pr-2 text-xl group">
-                        <BiEdit
-                          className="text-green group-hover:text-primary"
-                          onClick={() => {
-                            setIsOpenUpdateVideo(true);
-                            setChosenVideoId(video._id);
-                          }}
-                        />
-                      </button>
+                      <Link to={`/admin-video/update/${video._id}`}>
+                        <button
+                          className="flex items-center justify-end py-3 pr-2 text-xl"
+                        >
+                          <BiEdit className="text-green" />
+                        </button>
+                      </Link>
                       <button className="flex items-center justify-start p-3 text-xl group">
                         <BiTrash
                           className="text-red group-hover:text-primary"
-                          onClick={() => handleDeleteVideo(video._id)}
+                          onClick={() => openDeletePopup(video._id)}
                         />
                       </button>
                     </div>

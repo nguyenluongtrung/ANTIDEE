@@ -40,6 +40,39 @@ const login = asyncHandler(async (req, res) => {
 	}
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+
+	const { phoneNumber, oldPassword, newPassword } = req.body.accountData;
+
+	const account = await Account.findOne({ phoneNumber }).select('+password');
+
+	if (
+		account &&
+		(await account.comparePasswordInDb(oldPassword, account.password))
+	) {
+
+		const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+		const updatedAccount = await Account.findByIdAndUpdate(
+			account._id,
+			{ password: hashedPassword },
+			{ new: true,}
+		);
+
+		res.status(200).json({
+			status: 'success',
+			data: {
+				updatedAccount,
+				token: generateToken(account._id),
+			},
+		});
+	} else {
+		res.status(400);
+		throw new Error('Mật khẩu cũ không chính xác');
+	}
+});
+
+
 const loginWithGoogle = asyncHandler(async (req, res) => {
 	const { email } = req.body;
 
@@ -896,6 +929,7 @@ module.exports = {
 	register,
 	login,
 	loginWithGoogle,
+	changePassword,
 	updateAccountInformation,
 	getAccountInformation,
 	getAllAccounts,

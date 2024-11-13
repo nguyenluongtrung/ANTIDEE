@@ -12,6 +12,7 @@ import { IoAddOutline } from 'react-icons/io5';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
 import { useNavigate } from 'react-router-dom';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 
 export const ExamManagement = () => {
 	const { exams, isLoading } = useSelector((state) => state.exams);
@@ -20,18 +21,32 @@ export const ExamManagement = () => {
 
 	const [rowsPerPage, setRowsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
+	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [selectedIdDelete, setSelectedIdDelete] = useState('');
+
 
 	useEffect(() => {
 		dispatch(getAllExams());
 	}, []);
 
-	const handleDeleteExam = async (id) => {
-		const result = await dispatch(deleteExam(id));
+	const openDeletePopup = (examId) => {
+        setSelectedIdDelete(examId);
+        setIsDeletePopupOpen(true);
+    };
+
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedIdDelete('');
+    };
+
+	const handleDeleteExam = async () => {
+		const result = await dispatch(deleteExam(selectedIdDelete));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xoá bài kiểm tra thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+		closeDeletePopup();
 	};
 
 	const handleRowsPerPageChange = (e) => {
@@ -71,6 +86,13 @@ export const ExamManagement = () => {
 						/>
 					)}
 				</Toaster>
+
+				<DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeleteExam}
+                    itemName="đề thi"
+                />
 
 				<div className="flex">
 					<div className="flex-1 pt-2">
@@ -154,12 +176,12 @@ export const ExamManagement = () => {
 												className="flex items-center justify-end py-3 pr-2 text-xl"
 												onClick={() => navigate(`update/${exam._id}`)}
 											>
-												<BiEdit className="text-green" />
+												<BiEdit className="text-green hover:text-primary" />
 											</button>
 											<button className="flex items-center justify-start py-3 pl-2 text-xl">
 												<BiTrash
-													className="text-red"
-													onClick={() => handleDeleteExam(exam._id)}
+													className="text-red hover:text-primary"
+                                                    onClick={() => openDeletePopup(exam._id)}
 												/>
 											</button>
 										</div>

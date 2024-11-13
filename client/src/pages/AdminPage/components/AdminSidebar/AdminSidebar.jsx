@@ -32,7 +32,7 @@ export default function AdminSidebar() {
     { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
     { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
-    { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-role'},
+    { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-censor'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
     { name: "Bài Viết Bị Báo Cáo", icon:<MdReport />, to: '/admin-report-forum'},
     { name: "Chăm sóc người dùng", icon:<AiOutlineMessage />, to: '/admin-chat'},

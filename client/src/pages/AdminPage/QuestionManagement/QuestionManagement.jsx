@@ -20,10 +20,13 @@ import {
 import Pagination from '../../../components/Pagination/Pagination';
 import { IoAddOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 
 export const QuestionManagement = () => {
 	const [isOpenDetailQuestion, setIsOpenDetailQuestion] = useState(false);
 	const [chosenQuestionId, setChosenQuestionId] = useState('');
+	const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [selectedIdDelete, setSelectedIdDelete] = useState('');
 	const { isLoading } = useSelector((state) => state.questions);
 	const [questions, setQuestions] = useState([]);
 	const dispatch = useDispatch();
@@ -44,19 +47,30 @@ export const QuestionManagement = () => {
 		dispatch(getAllQuestions());
 	}, []);
 
+	const openDeletePopup = (questionId) => {
+        setSelectedIdDelete(questionId);
+        setIsDeletePopupOpen(true);
+    };
+
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedIdDelete('');
+    };
+
 	const handleGetAllQuestions = () => {
 		Promise.all([dispatch(getAllQuestions())]).catch((error) => {
 			console.error('Error during dispatch:', error);
 		});
 	};
 
-	const handleDeleteQuestion = async (id) => {
-		const result = await dispatch(deleteQuestion(id));
+	const handleDeleteQuestion = async () => {
+		const result = await dispatch(deleteQuestion(selectedIdDelete));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xoá câu hỏi thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+		closeDeletePopup();
 	};
 
 	const handleRowsPerPageChange = (e) => {
@@ -96,6 +110,13 @@ export const QuestionManagement = () => {
 						/>
 					)}
 				</Toaster>
+
+				<DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeleteQuestion}
+                    itemName="câu hỏi"
+                />
 
 				{isOpenDetailQuestion && (
 					<QuestionDetail
@@ -180,12 +201,12 @@ export const QuestionManagement = () => {
 															setChosenQuestionId(question._id);
 														}}
 													>
-														<BiEdit className="text-green" onClick={() => navigate(`update/${question._id}`)}/>
+														<BiEdit className="text-green hover:text-primary" onClick={() => navigate(`update/${question._id}`)}/>
 													</button>
 													<button className="flex items-center justify-start py-3 pl-2 text-xl">
 														<BiTrash
-															className="text-red"
-															onClick={() => handleDeleteQuestion(question._id)}
+															className="text-red hover:text-primary"
+															onClick={() => openDeletePopup(question._id)}
 														/>
 													</button>
 												</div>

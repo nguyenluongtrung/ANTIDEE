@@ -1,16 +1,18 @@
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../../../components";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { errorStyle, successStyle } from "../../../../utils/toast-customize";
 import { AiOutlineClose } from "react-icons/ai";
 import "./CreateQualification.css";
 import { createQualification } from "../../../../features/qualifications/qualificationSlice";
+import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import { useNavigate } from "react-router-dom";
+import { CiBoxList } from "react-icons/ci";
+import { IoCreateOutline } from "react-icons/io5";
 
-export const CreateQualification = ({
-  setIsOpenCreateQualification,
-  handleGetAllQualifications,
-}) => {
+
+export const CreateQualification = () => {
   const { qualifications, isLoading } = useSelector(
     (state) => state.qualifications
   );
@@ -22,6 +24,7 @@ export const CreateQualification = ({
   } = useForm();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     const qualificateData = {
@@ -63,8 +66,6 @@ export const CreateQualification = ({
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
-    setIsOpenCreateQualification(false);
-    handleGetAllQualifications();
   };
 
   const checkExistNames = (newName) => {
@@ -81,58 +82,43 @@ export const CreateQualification = ({
   }
 
   return (
-    <div className="popup active">
-      <div className="overlay"></div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="content rounded-md p-5"
-        style={{ width: "35vw" }}
-      >
-        <AiOutlineClose
-          className="absolute text-sm hover:cursor-pointer"
-          onClick={() => setIsOpenCreateQualification(false)}
-        />
-        <p className="grid text-green font-bold text-xl justify-center">
-          TẠO CHỨNG CHỈ
-        </p>
-        <table className="mt-3">
-          <tbody>
-            <tr>
-              <td>
-                <span>Tên chứng chỉ</span>
-              </td>
-              <td className="pl-6 py-1 w-96">
-                <input
-                  type="text"
-                  {...register("name")} //, {required: true}
-                  className="create-exam-input text-center"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span>Mô tả</span>
-              </td>
-              <td className="pl-6 py-1">
-                <textarea
-                  type="text"
-                  {...register("description")} //, {required: true}
-                  className="create-exam-textarea text-center"
-                  rows="3"
-                  cols="40"
-                />
-                {/* {errors.description && showErrorToast('Vui lòng nhập "Mô tả" Chứng Chỉ')} */}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button
-          type="submit"
-          className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
+    <div className="w-full min-h-screen bg-white flex flex-row">
+      <AdminSidebar />
+      <Toaster />
+      <div className="w-full p-10">
+        <div className="flex justify-between">
+          <div className="flex mb-10 text-2xl font-bold">
+            Đang <p className="text-primary text-2xl px-2">Tạo mới</p> chứng chỉ{' '}
+          </div>
+          <div>
+            <button type="submit" onClick={() => navigate('/admin-qualification')} className='bg-primary p-2 rounded text-white font-semibold flex items-center fea-item hover:bg-primary_dark'>Quay lại danh sách <CiBoxList size={25} className="mx-2" /></button>
+          </div>
+        </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
         >
-          Tạo chứng chỉ
-        </button>
-      </form>
+          <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-10 '>
+            <div className="flex flex-col w-full col-span-1 lg:col-span-4">
+              <div className="text-gray mb-2">Nhập tên chứng chỉ</div>
+              <input
+                type="text"
+                {...register('name')}
+                className="shadow appearance-none border py-3 px-3 rounded"
+              />
+            </div>
+            <div className="flex flex-col w-full col-span-1 lg:col-span-4">
+              <div className="text-gray mb-2">Nhập mô tả chứng chỉ</div>
+              <textarea
+                type="text"
+                {...register('description')}
+                className="shadow appearance-none border py-3 px-3 rounded"
+              />
+            </div>
+          </div>
+          <button type="submit" className='bg-primary p-2 rounded text-white font-bold w-[200px] mb-4 fea-item hover:bg-primary_dark flex items-center justify-center'>Tạo chứng chỉ <IoCreateOutline size={25} className="ml-2" /></button>
+        </form>
+        <div className="mb-1 rounded-sm border-b border-light_gray"></div>
+      </div>
     </div>
   );
 };

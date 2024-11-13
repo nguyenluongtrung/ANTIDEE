@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Service = require('../models/serviceModel');
 const JobPost = require('../models/jobPostModel');
+const AccountService = require('../models/accountServiceModel');
 
 const createService = asyncHandler(async (req, res) => {
 	const newService = await Service.create(req.body);
@@ -62,7 +63,6 @@ const deleteService = asyncHandler(async (req, res) => {
 		},
 	});
 });
-
 const updateService = asyncHandler(async (req, res) => {
 	const oldService = await Service.findById(req.params.serviceId);
 
@@ -150,6 +150,64 @@ const rankingServices = asyncHandler(async (req, res) => {
 		},
 	});
 });
+const ratingService = asyncHandler(async (req, res) => {
+	const foundAccountService = await AccountService.findOne({
+		accountId: req.account._id,
+		serviceId: req.params.serviceId,
+	});
+
+	let newRating = Number(req.body.rating);
+	let newRatingCount = 1; // Start with a count of 1 for a new entry
+	let newRatingService;
+
+	if (foundAccountService) {
+		// Retrieve existing rating count and rating point
+		const currentRatingCount = foundAccountService.ratingCount || 0;
+		const currentRatingPoint = foundAccountService.rating || 0;
+		console.log(
+			currentRatingPoint,
+			currentRatingCount,
+			((currentRatingCount * currentRatingPoint + newRating) * 1.0) /
+				(currentRatingCount + 1)
+		);
+
+		// Calculate new rating and increment count
+		newRating =
+			((currentRatingCount * currentRatingPoint + newRating) * 1.0) /
+			(currentRatingCount + 1);
+		newRatingCount = currentRatingCount + 1;
+
+		// Update the existing entry with new rating and count
+		newRatingService = await AccountService.findByIdAndUpdate(
+			foundAccountService._id,
+			{
+				accountId: req.account._id,
+				serviceId: req.params.serviceId,
+				rating: newRating,
+				ratingCount: newRatingCount,
+				date: new Date(),
+			},
+			{ new: true }
+		);
+	} else {
+		// Create a new entry for a first-time rating
+		newRatingService = await AccountService.create({
+			accountId: req.account._id,
+			serviceId: req.params.serviceId,
+			rating: newRating,
+			ratingCount: newRatingCount,
+			date: new Date(),
+		});
+	}
+
+	res.status(201).json({
+		status: 'success',
+		data: {
+			ratingDetail: newRatingService,
+		},
+	});
+});
+
 module.exports = {
 	updateService,
 	deleteService,
@@ -157,4 +215,5 @@ module.exports = {
 	getAllServices,
 	createService,
 	rankingServices,
+	ratingService,
 };

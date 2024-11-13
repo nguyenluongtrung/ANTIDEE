@@ -15,7 +15,7 @@ import { formatDate } from '../../../utils/format';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
 import Pagination from '../../../components/Pagination/Pagination';
-
+import DeletePopup from '../../../components/DeletePopup/DeletePopup';
 
 export const PromotionManagement = () => {
     const [isOpenCreatePromotion, setIsOpenCreatePromotion] = useState(false);
@@ -23,13 +23,15 @@ export const PromotionManagement = () => {
     const [isOpenDetailPromotion, setIsOpenDetailPromotion] = useState(false);
     const { isLoading } = useSelector((state) => state.promotions);
     const [promotions, setPromotions] = useState([]);
+    const [filterStatus, setFilterStatus] = useState('all');
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const [selectedIdDelete, setSelectedIdDelete] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-
 
     async function initiatePromotions() {
         let output = await dispatch(getAllPromotions());
@@ -44,45 +46,42 @@ export const PromotionManagement = () => {
         dispatch(getAllPromotions());
     }, []);
 
-    const handleDeletePromotion = async (id) => {
-        const result = await dispatch(deletePromotion(id));
+    const openDeletePopup = (promotionId) => {
+        setSelectedIdDelete(promotionId);
+        setIsDeletePopupOpen(true);
+    };
+
+    const closeDeletePopup = () => {
+        setIsDeletePopupOpen(false);
+        setSelectedIdDelete('');
+    };
+
+    const handleDeletePromotion = async () => {
+        const result = await dispatch(deletePromotion(selectedIdDelete));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá mã giảm giá thành công', successStyle);
-            setPromotions((prevPromotions) => prevPromotions.filter(promo => promo._id !== id));
+            setPromotions((prevPromotions) => prevPromotions.filter(promo => promo._id !== selectedIdDelete));
         } else {
             toast.error(result?.payload, errorStyle);
         }
+        closeDeletePopup();
     };
 
     const handleGetAllPromotions = async () => {
         await dispatch(getAllPromotions());
     };
 
-    const location = useLocation();
-
-    useEffect(() => {
-        if (location.pathname.includes("/detail-promotion/")) {
-            setIsOpenDetailPromotion(true);
-            setIsOpenUpdatePromotion(false);
-
-        } else if (location.pathname.includes("/update-promotion")) {
-            setIsOpenDetailPromotion(false);
-            setIsOpenUpdatePromotion(true);
-
-        }
-    }, [location.pathname]);
-
-
-    const handleOpenCreatePromotion = () => {
-        setIsOpenCreatePromotion(true);
-    };
-
     const handleOpenDetailPromotion = (promotionId) => {
-        navigate(`/admin-promotion/detail-promotion/${promotionId}`);
+        navigate(`/admin-promotion/detail/${promotionId}`);
+        setIsOpenDetailPromotion(true);
     };
 
     const handleOpenUpdatePromotion = (promotionId) => {
-        navigate(`/admin-promotion/update-promotion/${promotionId}`);
+        navigate(`/admin-promotion/update/${promotionId}`);
+        setIsOpenUpdatePromotion(true);
+    };
+    const handleOpenCreatePromotion = () => {
+        navigate('/admin-promotion/create');
     };
 
     const handleRowsPerPageChange = (e) => {
@@ -90,9 +89,22 @@ export const PromotionManagement = () => {
         setCurrentPage(1);
     };
 
+    const handleFilterChange = (e) => {
+        setFilterStatus(e.target.value);
+        setCurrentPage(1);
+    };
 
-    const totalPages = calculateTotalPages(promotions.length, rowsPerPage);
-    const selectedPromotions = getPageItems(promotions, currentPage, rowsPerPage);
+    const filteredPromotions = promotions.filter((promotion) => {
+        const currentDate = new Date();
+        const endDate = new Date(promotion.endDate);
+        const isExpired = endDate < currentDate;
+        if (filterStatus === 'active') return !isExpired;
+        if (filterStatus === 'expired') return isExpired;
+        return true;
+    });
+
+    const totalPages = calculateTotalPages(filteredPromotions.length, rowsPerPage);
+    const selectedPromotions = getPageItems(filteredPromotions, currentPage, rowsPerPage);
 
     const handleNextPage = () => {
         setCurrentPage(nextPage(currentPage, totalPages));
@@ -103,7 +115,7 @@ export const PromotionManagement = () => {
     };
 
     if (isLoading) {
-        return <Spinner />;
+        return <Spinner/>;
     }
 
     return (
@@ -111,6 +123,13 @@ export const PromotionManagement = () => {
             <AdminSidebar />
             <div className="flex-1 px-10 pt-5">
                 <Toaster />
+
+                <DeletePopup
+                    open={isDeletePopupOpen}
+                    onClose={closeDeletePopup}
+                    deleteAction={handleDeletePromotion}
+                    itemName="khuyến mãi"
+                />
 
                 {isOpenCreatePromotion && (
                     <CreatePromotion
@@ -130,16 +149,31 @@ export const PromotionManagement = () => {
                 )}
 
                 <div className="flex justify-between items-center">
-                    <div className="flex-1 pt-2">
+                    <div className="flex items-center">
                         <span>Hiển thị </span>
-                        <select className="rounded-md p-1 mx-1 hover:cursor-pointer bg-light_purple"
+                        <select
+                            className="rounded-md p-1 mx-1 hover:cursor-pointer bg-light_purple"
                             value={rowsPerPage}
-                            onChange={handleRowsPerPageChange}>
+                            onChange={handleRowsPerPageChange}
+                        >
                             <option>10</option>
                             <option>20</option>
                             <option>30</option>
                         </select>
                         <span> hàng</span>
+                    </div>
+                    <div>
+                        <label htmlFor="status-filter">Lọc theo trạng thái: </label>
+                        <select
+                            id="status-filter"
+                            className="rounded-md p-1 mx-1 hover:cursor-pointer bg-light_purple"
+                            value={filterStatus}
+                            onChange={handleFilterChange}
+                        >
+                            <option value="all">Tất cả</option>
+                            <option value="active">Đang hoạt động</option>
+                            <option value="expired">Đã hết hạn</option>
+                        </select>
                     </div>
                     <button
                         className="bg-pink text-white py-2 rounded-md"
@@ -199,13 +233,15 @@ export const PromotionManagement = () => {
                                                 className="flex items-center justify-end py-3 pr-2 text-xl"
                                                 onClick={() => handleOpenUpdatePromotion(promotion?._id)}
                                             >
-                                                <BiEdit className="text-green" />
+                                                <BiEdit className="text-green hover:text-primary" />
                                             </button>
                                             <button
                                                 className="flex items-center justify-start py-3 pl-2 text-xl"
-                                                onClick={() => handleDeletePromotion(promotion._id)}
                                             >
-                                                <BiTrash className="text-red" />
+                                                <BiTrash
+                                                    className="text-red hover:text-primary"
+                                                    onClick={() => openDeletePopup(promotion._id)}
+                                                />
                                             </button>
                                         </div>
                                     </td>
@@ -213,7 +249,6 @@ export const PromotionManagement = () => {
                             );
                         })}
                     </tbody>
-
                 </table>
                 <div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 sm:px-6">
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
@@ -221,24 +256,23 @@ export const PromotionManagement = () => {
                             <p className="text-sm text-gray">
                                 Hiển thị <span className="font-medium">{(currentPage - 1) * rowsPerPage + 1}</span> đến{' '}
                                 <span className="font-medium">
-                                    {Math.min(currentPage * rowsPerPage, promotions.length)}
+                                    {Math.min(currentPage * rowsPerPage, filteredPromotions.length)}
                                 </span>{' '}
-                                trong <span className="font-medium">{promotions.length}</span> kết quả
+                                trong <span className="font-medium">{filteredPromotions.length}</span> kết quả
                             </p>
                         </div>
                         <div>
-                            <Pagination totalPages={totalPages}
+                            <Pagination
+                                totalPages={totalPages}
                                 currentPage={currentPage}
                                 onPageChange={(page) => setCurrentPage(page)}
                                 onNextPage={handleNextPage}
                                 onPreviousPage={handlePreviousPage}
-                                rowsPerPage={rowsPerPage} />
+                                rowsPerPage={rowsPerPage}
+                            />
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     );

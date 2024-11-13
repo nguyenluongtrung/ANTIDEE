@@ -1,36 +1,62 @@
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../../../components";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { errorStyle, successStyle } from "../../../../utils/toast-customize";
 import { AiOutlineClose } from "react-icons/ai";
 import "./UpdateQualification.css";
-import { useState } from "react";
-import { updateQualification } from "../../../../features/qualifications/qualificationSlice";
+import { useEffect, useState } from "react";
+import { getAllQualifications, updateQualification } from "../../../../features/qualifications/qualificationSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import AdminSidebar from "../../components/AdminSidebar/AdminSidebar";
+import { CiBoxList } from "react-icons/ci";
+import { IoCreateOutline } from "react-icons/io5";
 
-export const UpdateQualification = ({
-  setIsOpenUpdateQualification,
-  handleGetAllQualifications,
-  chosenQualificationId,
-}) => {
-  const { qualifications, isLoading } = useSelector(
+export const UpdateQualification = () => {
+
+  const { isLoading } = useSelector(
     (state) => state.qualifications
   );
-  const [chosenQualification, setChosenQualification] = useState(
-    qualifications[
-      qualifications.findIndex(
-        (qualification) => qualification._id == chosenQualificationId
-      )
-    ]
-  );
+
+  const [qualifications, setQualifications] = useState([])
+  const params = useParams();
+  const [chosenQualification, setChosenQualification] = useState({});
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const fetchListQualificates = async () => {
+      const response = await dispatch(getAllQualifications());
+
+      setQualifications(response.payload)
+
+      const haveUpdateQualification = response.payload?.find(
+        (qualification) => qualification._id == params?.qualificateId
+      )
+
+      setChosenQualification(haveUpdateQualification)
+    }
+
+    fetchListQualificates();
+  }, []);
+
+  useEffect(() => {
+    if (chosenQualification) {
+      reset({
+        name: chosenQualification.name || '',
+        description: chosenQualification.description || '',
+      });
+    }
+  }, [chosenQualification, reset]);
 
   const onSubmit = async (data) => {
     const qualificateData = {
@@ -71,7 +97,7 @@ export const UpdateQualification = ({
     const result = await dispatch(
       updateQualification({
         qualificationData: qualificateData,
-        id: chosenQualificationId,
+        id: params?.qualificateId,
       })
     );
     if (result.type.endsWith("fulfilled")) {
@@ -79,8 +105,6 @@ export const UpdateQualification = ({
     } else if (result?.error?.message === "Rejected") {
       toast.error(result?.payload, errorStyle);
     }
-    setIsOpenUpdateQualification(false);
-    handleGetAllQualifications();
   };
 
   const checkExistNames = (newName) => {
@@ -97,59 +121,45 @@ export const UpdateQualification = ({
   }
 
   return (
-    <div className="popup active">
-      <div className="overlay"></div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="content rounded-md p-5"
-        style={{ width: "35vw" }}
-      >
-        <AiOutlineClose
-          className="absolute text-sm hover:cursor-pointer"
-          onClick={() => setIsOpenUpdateQualification(false)}
-        />
-        <p className="grid text-green font-bold text-xl justify-center">
-          CẬP NHẬT CHỨNG CHỈ
-        </p>
-        <table className="mt-3">
-          <tbody>
-            <tr>
-              <td>
-                <span>Tên chứng chỉ</span>
-              </td>
-              <td className="pl-6 py-1 w-80">
-                <input
-                  type="text"
-                  {...register("name")}
-                  defaultValue={chosenQualification?.name}
-                  className="create-exam-input text-center"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span className="">Mô tả</span>
-              </td>
-              <td className="pl-6 py-1">
-                <textarea
-                  type="text"
-                  {...register("description")}
-                  defaultValue={chosenQualification?.description}
-                  className="create-exam-textarea text-center"
-                  rows="3"
-                  cols="40"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button
-          type="submit"
-          className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1 mt-3"
+    <div className="w-full min-h-screen bg-white flex flex-row">
+      <AdminSidebar />
+      <Toaster />
+      <div className="w-full p-10">
+        <div className="flex justify-between">
+          <div className="flex mb-10 text-2xl font-bold">
+            Đang <p className="text-primary text-2xl px-2">Cập nhật</p> chứng chỉ{' '}
+          </div>
+          <div>
+            <button type="submit" onClick={() => navigate('/admin-qualification')} className='bg-primary p-2 rounded text-white font-semibold flex items-center fea-item hover:bg-primary_dark'>Quay lại danh sách <CiBoxList size={25} className="mx-2" /></button>
+          </div>
+        </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
         >
-          Cập nhật chứng chỉ
-        </button>
-      </form>
+          <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-10 '>
+            <div className="flex flex-col w-full col-span-1 lg:col-span-4">
+              <div className="text-gray mb-2">Nhập tên chứng chỉ</div>
+              <input
+                type="text"
+                {...register('name')}
+                defaultValue={chosenQualification?.name}
+                className="shadow appearance-none border py-3 px-3 rounded"
+              />
+            </div>
+            <div className="flex flex-col w-full col-span-1 lg:col-span-4">
+              <div className="text-gray mb-2">Nhập mô tả chứng chỉ</div>
+              <textarea
+                type="text"
+                {...register('description')}
+                defaultValue={chosenQualification?.description}
+                className="shadow appearance-none border py-3 px-3 rounded"
+              />
+            </div>
+          </div>
+          <button type="submit" className='bg-primary p-2 rounded text-white font-bold w-[250px] my-4 fea-item hover:bg-primary_dark flex items-center justify-center'>Cập nhật chứng chỉ <IoCreateOutline size={25} className="ml-2" /></button>
+        </form>
+        <div className="mb-1 rounded-sm border-b border-light_gray"></div>
+      </div>
     </div>
   );
 };
