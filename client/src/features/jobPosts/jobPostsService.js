@@ -12,6 +12,23 @@ const getJobPost = async (jobPostId) => {
 	return response.data.data.jobPost;
 };
 
+const filterJobPostsByService = async (serviceIds, isInMyLocation, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(
+		API_URL +
+			`filter-jobs?serviceIds=${serviceIds}&isInMyLocation=${
+				isInMyLocation ? true : false
+			}`,
+		config
+	);
+	return response.data.data.filteredJobPosts;
+};
+
 const countNumberOfJobsByAccountId = async (token) => {
 	const config = {
 		headers: {
@@ -109,7 +126,7 @@ const deleteJobPost = async (token, id) => {
 	return response.data.data.id;
 };
 
-const getAJob = async (token, jobPostId, accountId, receivedAt) => {
+const getAJob = async (token, jobPostId) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -117,12 +134,11 @@ const getAJob = async (token, jobPostId, accountId, receivedAt) => {
 	};
 
 	const response = await axios.patch(
-		API_URL + '/get-a-job/' + `${jobPostId}/${accountId}`,
-		{ receivedAt },
+		API_URL + 'get-a-job/' + `${jobPostId}`,
+		{},
 		config
 	);
 
-	console.log(response);
 	return response.data.data.jobPost;
 };
 
@@ -185,6 +201,7 @@ const getRevenueByMonths = async (token) => {
 
 const jobPostService = {
 	getAllJobPosts,
+	filterJobPostsByService,
 	createJobPost,
 	deleteJobPost,
 	updateJobPost,

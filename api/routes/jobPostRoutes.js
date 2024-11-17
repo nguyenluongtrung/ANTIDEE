@@ -15,6 +15,7 @@ const {
 	countNumberOfJobPostByAccountId,
 	getRevenueByCurrentMonth,
 	getRevenueByMonths,
+	filterJobPostsByService,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
@@ -24,7 +25,8 @@ router
 	.post(protect, createJobPost)
 	.get(getAllJobPosts)
 	.delete(protect, restrict('Admin'), deleteAllJobPost);
-router.route('/get-a-job/:jobPostId/:accountId').patch(protect, getAJob);
+router.route('/filter-jobs').get(protect, filterJobPostsByService);
+router.route('/get-a-job/:jobPostId').patch(protect, getAJob);
 router.route('/apply-a-job/:jobPostId/:accountId').patch(protect, applyAJob);
 router
 	.route('/select-a-job/:jobPostId/:taskerId')

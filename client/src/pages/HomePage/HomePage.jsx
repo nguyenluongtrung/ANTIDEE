@@ -35,6 +35,7 @@ export const HomePage = () => {
 	const topRef = useRef();
 	const serviceRef = useRef();
 	const { isLoading } = useSelector((state) => state.services);
+	const { account } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const benefit = [
@@ -85,11 +86,9 @@ export const HomePage = () => {
 		}
 	}
 
-	console.log(recommendedServices);
-
 	useEffect(() => {
 		initiateRecommendedServices();
-	}, []);
+	}, [account]);
 
 	useEffect(() => {
 		initiateServices();

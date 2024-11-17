@@ -1,17 +1,13 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import chattingService from "./chattingService";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import chattingService from './chattingService';
 
 export const createChat = createAsyncThunk(
-	"chatting/createChat",
+	'chatting/createChat',
 	async (chatData, thunkAPI) => {
 		try {
-			console.log(chatData);
-			const storedAccount = JSON.parse(localStorage.getItem("account"));
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await chattingService.createChat(
-				token,
-				chatData
-			);
+			return await chattingService.createChat(token, chatData);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -32,18 +28,18 @@ export const getChatById = createAsyncThunk(
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount?.data?.token;
 			return await chattingService.getChatById(token, chatId);
-
 		} catch (error) {
 			const message =
-				(error.response && error.response.data && error.response.data.message) ||
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
 				error.message ||
 				error.toString();
 
 			return thunkAPI.rejectWithValue(message);
-
 		}
 	}
-)
+);
 
 export const getAllChats = createAsyncThunk(
 	'chatting/getAllChats',
@@ -63,13 +59,12 @@ export const getAllChats = createAsyncThunk(
 	}
 );
 
-
 const initialState = {
 	chatting: [],
 	isError: false,
 	isSuccess: false,
 	isLoading: false,
-	message: "",
+	message: '',
 };
 
 export const chattingSlice = createSlice({
@@ -80,7 +75,7 @@ export const chattingSlice = createSlice({
 			state.isError = false;
 			state.isLoading = false;
 			state.isSuccess = false;
-			state.message = "";
+			state.message = '';
 		},
 	},
 	extraReducers: (builder) => {
@@ -123,7 +118,7 @@ export const chattingSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
-				state.chatting = []
+				state.chatting = [];
 			});
 	},
 });
