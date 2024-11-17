@@ -135,9 +135,7 @@ const AppContent = () => {
 							path="/exam-result-history"
 							element={<ExamResultHistory />}
 						/>
-						<Route path="/job-posts" element={<JobPostListPage />}>
-							<Route path="/job-posts/:jobPostId" element={<JobPostDetail />} />
-						</Route>
+						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path="/reply-feedback" element={<ReplyFeedback />} />
 						<Route path="/black-list" element={<BlackList />} />
 						<Route path="/favorite-list" element={<FavoriteList />} />

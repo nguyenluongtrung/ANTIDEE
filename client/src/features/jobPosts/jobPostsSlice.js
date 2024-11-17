@@ -19,6 +19,30 @@ export const getAllJobPosts = createAsyncThunk(
 	}
 );
 
+export const filterJobPostsByService = createAsyncThunk(
+	'jobPosts/filterJobPostsByService',
+	async ({ serviceIds, isInMyLocation }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await jobPostsService.filterJobPostsByService(
+				serviceIds,
+				isInMyLocation,
+				token
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const countNumberOfJobsByAccountId = createAsyncThunk(
 	'jobPosts/countNumberOfJobsByAccountId',
 	async (_, thunkAPI) => {
@@ -153,16 +177,11 @@ export const deleteJobPost = createAsyncThunk(
 
 export const getAJob = createAsyncThunk(
 	'jobPosts/getAJob',
-	async ({ jobPostId, accountId, receivedAt }, thunkAPI) => {
+	async (jobPostId, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
-			return await jobPostsService.getAJob(
-				token,
-				jobPostId,
-				accountId,
-				receivedAt
-			);
+			return await jobPostsService.getAJob(token, jobPostId);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -305,6 +324,20 @@ export const jobPostSlice = createSlice({
 				state.jobPosts = action.payload;
 			})
 			.addCase(getAllJobPosts.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.jobPosts = null;
+			})
+			.addCase(filterJobPostsByService.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(filterJobPostsByService.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.jobPosts = action.payload;
+			})
+			.addCase(filterJobPostsByService.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
