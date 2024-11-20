@@ -129,14 +129,11 @@ export const ConfirmPage = () => {
 				},
 			});
 
-			
-
 			if (promotionQuantity !== undefined) {
 				const quantity = promotionQuantity - 1;
 				await dispatch(updatePromotionQuantity({ promotionId, quantity }));
 				await dispatch(createAccountPromotion({ accountId: account._id, promotionId, serviceId }))
 			}
-
 
 			let newApoints = 0;
 
@@ -151,8 +148,6 @@ export const ConfirmPage = () => {
 				: 0;
 
 			if (!isNaN(apoint)) {
-
-
 				if (!isNaN(apoint)) {
 					// Trường hợp apoint = 0
 					if (apoint === 0) {

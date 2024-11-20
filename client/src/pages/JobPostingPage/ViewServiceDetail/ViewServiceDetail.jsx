@@ -24,7 +24,7 @@ export const ViewServiceDetail = () => {
 			setChosenService(chosenService);
 		};
 		asyncFn();
-	}, []);
+	}, [serviceId]);
 
 	if(serviceLoading){
 		return <Spinner />

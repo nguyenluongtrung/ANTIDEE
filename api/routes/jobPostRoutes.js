@@ -16,6 +16,7 @@ const {
 	getRevenueByCurrentMonth,
 	getRevenueByMonths,
 	filterJobPostsByService,
+	getMyJobPostingHistory,
 } = require('../controllers/jobPostController');
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router
 	.get(getAllJobPosts)
 	.delete(protect, restrict('Admin'), deleteAllJobPost);
 router.route('/filter-jobs').get(protect, filterJobPostsByService);
+router.route('/job-posting-history').get(protect, getMyJobPostingHistory);
 router.route('/get-a-job/:jobPostId').patch(protect, getAJob);
 router.route('/apply-a-job/:jobPostId/:accountId').patch(protect, applyAJob);
 router

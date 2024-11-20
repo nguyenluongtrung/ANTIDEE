@@ -29,6 +29,20 @@ const filterJobPostsByService = async (serviceIds, isInMyLocation, token) => {
 	return response.data.data.filteredJobPosts;
 };
 
+const getMyJobPostingHistory = async (option, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
+	const response = await axios.get(
+		API_URL + `job-posting-history?option=${option}`,
+		config
+	);
+	return response.data.data.jobHistory;
+};
+
 const countNumberOfJobsByAccountId = async (token) => {
 	const config = {
 		headers: {
@@ -65,7 +79,7 @@ const updateJobPost = async (token, jobPostData, id) => {
 	return response.data.data.jobPost;
 };
 
-const cancelJobPost = async (token, isCanceled, reason, account, jobPostId) => {
+const cancelJobPost = async (token, reason, jobPostId) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -75,9 +89,7 @@ const cancelJobPost = async (token, isCanceled, reason, account, jobPostId) => {
 	const response = await axios.patch(
 		API_URL + 'cancel-a-job/' + `${jobPostId}`,
 		{
-			isCanceled,
 			reason,
-			account,
 		},
 		config
 	);
@@ -214,6 +226,7 @@ const jobPostService = {
 	getRevenueByCurrentMonth,
 	getRevenueByMonths,
 	getJobPost,
+	getMyJobPostingHistory,
 };
 
 export default jobPostService;
