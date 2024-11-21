@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import messageService from "./messageService";
-import { BiMessageSquareEdit } from "react-icons/bi";
 
 export const createMessage = createAsyncThunk(
     "messages/createMessage",

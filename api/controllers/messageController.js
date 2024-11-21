@@ -1,12 +1,12 @@
-const MessageModel = require('../models/messageModel');
-const { io } = require('../server'); // Make sure io is imported
+const MessageModel = require("../models/messageModel");
+const { io } = require("../server"); // Make sure io is imported
 
 //createMessage
 const getAllMessage = async (req, res) => {
 	const messages = await MessageModel.find({});
 
 	res.status(200).json({
-		status: 'success',
+		status: "success",
 		data: {
 			messages,
 		},
@@ -27,10 +27,10 @@ const createMessage = async (req, res) => {
 		const messages = await MessageModel.create(messageData);
 
 		if (chatId && io) {
-			io.to(chatId).emit('receiveMessage', messages);
+			io.to(chatId).emit("receiveMessage", messages);
 
 			// Emit notification for new message
-			io.emit('notification', messages);
+			io.emit("notification", messages);
 		}
 
 		res.status(201).json({
@@ -50,12 +50,17 @@ const getMessages = async (req, res) => {
 	const { chatId } = req.params;
 
 	try {
-		const messages = await MessageModel.find({ chatId });
+		const messages = await MessageModel.find({ chatId })
 		res.status(200).json(messages);
 	} catch (error) {
 		res.status(500).json(error);
 	}
 };
+
+// .populate({
+// 	path: "senderId",
+// 	select: "role name",
+// });
 
 module.exports = {
 	createMessage,
