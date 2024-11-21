@@ -168,6 +168,37 @@ const getMyJobPostingHistory = asyncHandler(async (req, res) => {
 	});
 });
 
+const getMyReceivedJobs = asyncHandler(async (req, res) => {
+	const { option } = req.query;
+	const jobPosts = await JobPost.find({
+		domesticHelperId: String(req.account._id),
+	})
+		.sort([['createdAt', 'desc']])
+		.populate('serviceId');
+	let myReceivedJobs = [...jobPosts];
+	if (option == 'readyToWork') {
+		myReceivedJobs = myReceivedJobs.filter(
+			(job) =>
+				job?.hasCompleted?.customerConfirm == false &&
+				job?.hasCompleted?.domesticHelperConfirm == false &&
+				job?.cancelDetails?.isCanceled == false
+		);
+	} else if (option == 'completed') {
+		myReceivedJobs = myReceivedJobs.filter(
+			(job) =>
+				job?.hasCompleted?.customerConfirm == true &&
+				job?.hasCompleted?.domesticHelperConfirm == true
+		);
+	}
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			myReceivedJobs,
+		},
+	});
+});
+
 const filterJobPostsByService = asyncHandler(async (req, res) => {
 	const { serviceIds, isInMyLocation } = req.query;
 
@@ -533,11 +564,11 @@ const cancelAJob = asyncHandler(async (req, res) => {
 });
 
 const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
-	const { isCanceled, reason, account } = req.body;
+	const { reason } = req.body;
 	const jobPostId = req.params.jobPostId;
 
 	const isFoundJobPost = await JobPost.findById(jobPostId);
-	const foundAcc = await Account.findById(account);
+	const foundAcc = await Account.findById(req.account._id);
 	if (!isFoundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
@@ -549,9 +580,9 @@ const cancelAJobDomesticHelper = asyncHandler(async (req, res) => {
 		jobPostId,
 		{
 			cancelDetails: {
-				isCanceled,
+				isCanceled: true,
 				reason,
-				account,
+				account: req.account._id,
 			},
 		},
 		{ new: true }
@@ -753,4 +784,5 @@ module.exports = {
 	getRevenueByMonths,
 	filterJobPostsByService,
 	getMyJobPostingHistory,
+	getMyReceivedJobs,
 };

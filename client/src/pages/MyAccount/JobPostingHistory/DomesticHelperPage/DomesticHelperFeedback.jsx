@@ -18,7 +18,7 @@ import { ratingService } from '../../../../features/services/serviceSlice';
 import { AiOutlineClose } from 'react-icons/ai';
 
 export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
-	const { account, isLoading: isAuthLoading } = useSelector(
+	const { isLoading: isAuthLoading } = useSelector(
 		(state) => state.auth
 	);
 	const [domesticHelperRating, setDomesticHelperRating] = useState(0);

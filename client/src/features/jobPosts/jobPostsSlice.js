@@ -39,6 +39,26 @@ export const getMyJobPostingHistory = createAsyncThunk(
 	}
 );
 
+export const getMyReceivedJobs = createAsyncThunk(
+	'jobPosts/getMyReceivedJobs',
+	async ({ option }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await jobPostsService.getMyReceivedJobs(option, token);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const filterJobPostsByService = createAsyncThunk(
 	'jobPosts/filterJobPostsByService',
 	async ({ serviceIds, isInMyLocation }, thunkAPI) => {
@@ -145,15 +165,13 @@ export const cancelJobPost = createAsyncThunk(
 
 export const cancelAJobDomesticHelper = createAsyncThunk(
 	'jobPosts/cancelAJobDomesticHelper',
-	async ({ isCanceled, reason, account, jobPostId }, thunkAPI) => {
+	async ({ reason, jobPostId }, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
 			return await jobPostsService.cancelAJobDomesticHelper(
 				token,
-				isCanceled,
 				reason,
-				account,
 				jobPostId
 			);
 		} catch (error) {
@@ -352,6 +370,20 @@ export const jobPostSlice = createSlice({
 				state.jobPosts = action.payload;
 			})
 			.addCase(getMyJobPostingHistory.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.jobPosts = null;
+			})
+			.addCase(getMyReceivedJobs.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getMyReceivedJobs.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.jobPosts = action.payload;
+			})
+			.addCase(getMyReceivedJobs.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;

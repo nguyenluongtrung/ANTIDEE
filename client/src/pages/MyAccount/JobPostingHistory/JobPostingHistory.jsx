@@ -59,7 +59,7 @@ export const JobPostingHistory = () => {
 			setSelectedJobPost(result.payload);
 			setIsOpenJobPostDetail(true);
 			if (filterOption == 'completed') {
-				const feedbackData = await dispatch(getFeedbackDetail({ jobPostId }));
+				const feedbackData = await dispatch(getFeedbackDetail({ jobPostId, from: 'customer' }));
 				if (feedbackData.type.includes('fulfilled')) {
 					setSelectedFeedback(feedbackData.payload);
 				} else {

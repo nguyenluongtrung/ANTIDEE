@@ -21,13 +21,14 @@ export const getAllFeedbacks = createAsyncThunk(
 
 export const getFeedbackDetail = createAsyncThunk(
 	'domesticHelperFeedbacks/getFeedbackDetail',
-	async ({ jobPostId }, thunkAPI) => {
+	async ({ jobPostId, from }, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
 			return await domesticHelperFeedbackService.getFeedbackDetail(
 				token,
-				jobPostId
+				jobPostId,
+				from
 			);
 		} catch (error) {
 			const message =
