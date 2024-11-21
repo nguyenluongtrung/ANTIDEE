@@ -16,14 +16,14 @@ const createFeedback = async (token, feedbackData) => {
 	return response.data.data.feedback;
 };
 
-const getFeedbackDetail = async (token, jobPostId) => {
+const getFeedbackDetail = async (token, jobPostId, from) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
 	};
 	const response = await axios.get(
-		API_URL + `detail/${jobPostId}/customer`,
+		API_URL + `detail/${jobPostId}/${from}`,
 		config
 	);
 	return response.data.data.feedback;
