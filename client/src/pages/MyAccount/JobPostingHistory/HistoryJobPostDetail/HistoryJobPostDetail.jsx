@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -14,34 +14,23 @@ import {
 	updateJobPost,
 } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
-import { DomesticHelperFeedback } from '../DomesticHelperPage/DomesticHelperFeedback';
-import { getAllFeedbacks } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
-import { DomesticHelperReview } from '../DomesticHelperPage/DomesticHelperReview';
-import { JobPostCancel } from '../JobPostCancel/JobPostCancel';
 
 export const HistoryJobPostDetail = ({
-	chosenJobPostId,
-	setIsOpenJobPostDetail,
-	accounts,
-	myAccountId,
-	getAllInitialJobList,
-	role
+	onClose,
+	selectedJobPost,
+	selectedFeedback,
+	onCancelJob,
+	onDomesticHelperFeedback,
+	onFeedbackReview,
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
-	const [feedbacks, setFeedbacks] = useState([]);
-	const { jobPosts, isLoading } = useSelector((state) => state.jobPosts);
-	const [isOpenFeedbackPopup, setIsOpenFeedbackPopup] = useState(false);
-	const [isOpenReviewPopup, setIsOpenReviewPopup] = useState(false);
-	const [isOpenCancelForm, setIsOpenCancelForm] = useState(false);
-	const [chosenJobPost, setChosenJobPost] = useState(
-		jobPosts?.find((jobPost) => String(jobPost._id) === String(chosenJobPostId))
-	);
 
+	const { isLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
 
 	const handleSelectTasker = async (id) => {
 		const result = await dispatch(
-			selectATasker({ jobPostId: chosenJobPostId, taskerId: id })
+			selectATasker({ jobPostId: selectedJobPost._id, taskerId: id })
 		);
 
 		if (result.type.endsWith('fulfilled')) {
@@ -51,24 +40,18 @@ export const HistoryJobPostDetail = ({
 		}
 	};
 
-	const handleGetAllInitialFeedbacks = async (id) => {
-		const result = await dispatch(getAllFeedbacks());
-
-		setFeedbacks(result.payload);
-	};
-
 	const handleCompleteJobPost = async (e) => {
 		e.preventDefault();
 		const jobPostData = {
-			...chosenJobPost,
+			...selectedJobPost,
 			hasCompleted: {
-				...chosenJobPost.hasCompleted,
+				...selectedJobPost.hasCompleted,
 				customerConfirm: true,
 				completedAt: new Date(),
 			},
 		};
 		const result = await dispatch(
-			updateJobPost({ jobPostData, id: chosenJobPostId })
+			updateJobPost({ jobPostData, id: selectedJobPost._id })
 		);
 
 		if (result.type.endsWith('fulfilled')) {
@@ -80,22 +63,17 @@ export const HistoryJobPostDetail = ({
 		getAllInitialJobList();
 	};
 
-	useEffect(() => {
-		handleGetAllInitialFeedbacks();
-	}, []);
-
 	if (isLoading) {
 		return <Spinner />;
 	}
+
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
 			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => {
-						setIsOpenJobPostDetail(false);
-					}}
+					onClick={onClose}
 				/>
 
 				{!isOpenApplicantsDetails ? (
@@ -105,36 +83,39 @@ export const HistoryJobPostDetail = ({
 						</p>
 						<div className="">
 							<p className="text-brown font-bold mb-3">
-								{chosenJobPost?.serviceId?.name?.toUpperCase()}
+								{selectedJobPost?.serviceId?.name?.toUpperCase()}
 							</p>
 							<p className="text-gray mb-2">
 								Bắt đầu lúc:{' '}
 								<span className="text-brown">
-									{formatDate(chosenJobPost?.workingTime?.startingDate)}{' '}
-									{formatWorkingTime(chosenJobPost?.workingTime?.startingHour)}
+									{formatDate(selectedJobPost?.workingTime?.startingDate)}{' '}
+									{formatWorkingTime(
+										selectedJobPost?.workingTime?.startingHour
+									)}
 								</span>
 							</p>
 							<p className="text-gray mb-2">
 								Hết hạn lúc: {''}
 								<span className="text-brown">
-									{formatDate(chosenJobPost?.dueDate)}{' '}
+									{formatDate(selectedJobPost?.dueDate)}{' '}
 								</span>
 							</p>
 							<p className="text-gray mb-2">
 								Đã đăng lúc: {''}
 								<span className="text-brown">
-									{formatDate(chosenJobPost?.createdAt)}{' '}
-									{formatTime(Date.parse(chosenJobPost?.createdAt))}
+									{formatDate(selectedJobPost?.createdAt)}{' '}
+									{formatTime(Date.parse(selectedJobPost?.createdAt))}
 								</span>
 							</p>
 							<div className="border-2 border-gray  my-3">
-								{chosenJobPost?.workload?.find(
+								{selectedJobPost?.workload?.find(
 									(option) => String(option?.optionName) === 'Thời gian'
 								)?.optionValue == undefined ? (
 									<div>
 										<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
 										<p className="text-center text-brown font-bold mb-3">
-											{Intl.NumberFormat().format(chosenJobPost?.totalPrice)} VND
+											{Intl.NumberFormat().format(selectedJobPost?.totalPrice)}{' '}
+											VND
 										</p>
 									</div>
 								) : (
@@ -145,7 +126,7 @@ export const HistoryJobPostDetail = ({
 											</p>
 											<p className="text-center text-brown font-bold mb-3">
 												{
-													chosenJobPost?.workload?.find(
+													selectedJobPost?.workload?.find(
 														(option) =>
 															String(option?.optionName) === 'Thời gian'
 													)?.optionValue
@@ -158,7 +139,10 @@ export const HistoryJobPostDetail = ({
 												Số tiền:{' '}
 											</p>
 											<p className="text-center text-brown font-bold mb-3">
-												{Intl.NumberFormat().format(chosenJobPost?.totalPrice)} VND
+												{Intl.NumberFormat().format(
+													selectedJobPost?.totalPrice
+												)}{' '}
+												VND
 											</p>
 										</div>
 									</div>
@@ -167,12 +151,12 @@ export const HistoryJobPostDetail = ({
 							<p className="text-gray mb-2 ">
 								Tại:{' '}
 								<span className="text-black">
-									{chosenJobPost?.contactInfo?.address}
+									{selectedJobPost?.contactInfo?.address}
 								</span>
 							</p>
 							<p className="text-gray mb-2">
 								Khối lượng công việc:
-								{chosenJobPost?.workload?.map((option) => {
+								{selectedJobPost?.workload?.map((option) => {
 									return (
 										<p className="text-black ml-10">
 											+ {option?.optionName}: {option?.optionValue}
@@ -180,46 +164,32 @@ export const HistoryJobPostDetail = ({
 									);
 								})}
 							</p>
-							{chosenJobPost?.isChosenYourself &&
-								chosenJobPost?.domesticHelperId &&
-								!chosenJobPost?.hasCompleted?.customerConfirm &&
-								!chosenJobPost?.hasCompleted?.domesticHelperConfirm && (
+							{selectedJobPost?.isChosenYourself &&
+								selectedJobPost?.domesticHelperId &&
+								!selectedJobPost?.hasCompleted?.customerConfirm &&
+								!selectedJobPost?.hasCompleted?.domesticHelperConfirm && (
 									<p className="text-gray mb-3">
 										Người giúp việc:{' '}
 										<span className="text-black">
-											{
-												accounts?.find(
-													(acc) =>
-														String(acc._id) ==
-														String(chosenJobPost?.domesticHelperId)
-												)?.name
-											}
+											{selectedJobPost.domesticHelperId.name}
 										</span>
 									</p>
 								)}
-							{chosenJobPost?.hasCompleted?.customerConfirm &&
-								chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
-								chosenJobPost?.domesticHelperId && (
+							{selectedJobPost?.hasCompleted?.customerConfirm &&
+								selectedJobPost?.hasCompleted?.domesticHelperConfirm &&
+								selectedJobPost?.domesticHelperId && (
 									<p className="text-gray mb-3">
 										Người giúp việc:{' '}
 										<span className="text-black">
-											{
-												accounts?.find(
-													(acc) =>
-														String(acc._id) ==
-														String(chosenJobPost?.domesticHelperId)
-												)?.name
-											}
+											{selectedJobPost.domesticHelperId.name}
 										</span>{' '}
 										&nbsp;
-										{feedbacks?.findIndex(
-											(feedback) =>
-												String(feedback.jobPostId) === String(chosenJobPostId) && feedback.feedbackFrom===role
-										) !== -1 ? (
+										{selectedFeedback ? (
 											<span
 												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
-												onClick={() => {
-													setIsOpenReviewPopup(true);
+												onClick={(e) => {
+													e.preventDefault();
+													onFeedbackReview();
 												}}
 											>
 												(Review)
@@ -227,8 +197,9 @@ export const HistoryJobPostDetail = ({
 										) : (
 											<span
 												className="text-black italic hover:underline hover:text-brown hover:cursor-pointer"
-												onClick={() => {
-													setIsOpenFeedbackPopup(true);
+												onClick={(e) => {
+													e.preventDefault();
+													onDomesticHelperFeedback();
 												}}
 											>
 												(Đánh giá)
@@ -240,19 +211,19 @@ export const HistoryJobPostDetail = ({
 							<p className="text-gray mb-3">
 								Ghi chú:{' '}
 								<span className="text-black">
-									{chosenJobPost?.note ? chosenJobPost?.note : 'Không có'}
+									{selectedJobPost?.note ? selectedJobPost?.note : 'Không có'}
 								</span>
 							</p>
-							{chosenJobPost?.cancelDetails?.isCanceled && (
+							{selectedJobPost?.cancelDetails?.isCanceled && (
 								<p className="text-gray mb-3">
 									Lí do hủy việc:{' '}
 									<span className="text-black">
-										{chosenJobPost?.cancelDetails?.reason}
+										{selectedJobPost?.cancelDetails?.reason}
 									</span>
 								</p>
 							)}
-							{chosenJobPost?.isChosenYourself &&
-								!chosenJobPost?.domesticHelperId && (
+							{selectedJobPost?.isChosenYourself &&
+								!selectedJobPost?.domesticHelperId && (
 									<p
 										className="text-gray mb-3 hover:text-brown hover:cursor-pointer"
 										onClick={() => setIsOpenApplicantsDetails(true)}
@@ -260,9 +231,9 @@ export const HistoryJobPostDetail = ({
 										Xem danh sách người ứng tuyển{' '}
 									</p>
 								)}
-							{!chosenJobPost?.hasCompleted?.customerConfirm &&
-								!chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
-								!chosenJobPost?.cancelDetails?.isCanceled && (
+							{!selectedJobPost?.hasCompleted?.customerConfirm &&
+								!selectedJobPost?.hasCompleted?.domesticHelperConfirm &&
+								!selectedJobPost?.cancelDetails?.isCanceled && (
 									<div className="flex justify-center">
 										<button
 											className={
@@ -271,16 +242,16 @@ export const HistoryJobPostDetail = ({
 											style={{ width: '70%' }}
 											onClick={(e) => {
 												e.preventDefault();
-												setIsOpenCancelForm(true);
+												onCancelJob();
 											}}
 										>
 											<p className="text-center">Hủy việc</p>
 										</button>
 									</div>
 								)}
-							{!chosenJobPost?.hasCompleted?.customerConfirm &&
-								chosenJobPost?.hasCompleted?.domesticHelperConfirm &&
-								!chosenJobPost?.cancelDetails?.isCanceled && (
+							{!selectedJobPost?.hasCompleted?.customerConfirm &&
+								selectedJobPost?.hasCompleted?.domesticHelperConfirm &&
+								!selectedJobPost?.cancelDetails?.isCanceled && (
 									<div className="flex justify-center">
 										<button
 											className={
@@ -303,7 +274,7 @@ export const HistoryJobPostDetail = ({
 							DANH SÁCH NHỮNG NGƯỜI ỨNG TUYỂN
 						</p>
 						<div>
-							{chosenJobPost?.applicants?.map((applicant, index) => (
+							{selectedJobPost?.applicants?.map((applicant, index) => (
 								<div
 									className="flex rounded-2xl p-5 mb-5"
 									style={{ backgroundColor: 'rgba(100,100,100,0.1)' }}
@@ -359,86 +330,6 @@ export const HistoryJobPostDetail = ({
 					</>
 				)}
 			</form>
-			{isOpenCancelForm && (
-				<div className="popup active">
-					<div
-						className="overlay"
-						onClick={() => setIsOpenCancelForm(false)}
-					></div>
-					<div className="content rounded-md">
-						<AiOutlineClose
-							className="absolute text-sm hover:cursor-pointer m-5"
-							onClick={() => setIsOpenCancelForm(false)}
-						/>
-						<JobPostCancel
-							jobPostId={chosenJobPost?._id}
-							setIsOpenCancelForm={setIsOpenCancelForm}
-							myAccountId={myAccountId}
-							getAllInitialJobList={getAllInitialJobList}
-							setIsOpenJobPostDetail={setIsOpenJobPostDetail}
-						/>
-					</div>
-				</div>
-			)}
-
-			{isOpenFeedbackPopup && (
-				<div className="popup active">
-					<div
-						className="overlay"
-						onClick={() => setIsOpenFeedbackPopup(false)}
-					></div>
-					<div className="content rounded-md">
-						<AiOutlineClose
-							className="absolute text-sm hover:cursor-pointer m-5"
-							onClick={() => setIsOpenFeedbackPopup(false)}
-						/>
-						<DomesticHelperFeedback
-							serviceName={chosenJobPost?.serviceId?.name}
-							serviceId={chosenJobPost?.serviceId?._id}
-							serviceAddress={chosenJobPost?.contactInfo?.address}
-							domesticHelperId={chosenJobPost?.domesticHelperId}
-							role={role}
-							avatar={
-								accounts?.find(
-									(acc) =>
-										String(acc._id) == String(chosenJobPost?.domesticHelperId)
-								)?.avatar
-							}
-							jobPostId={chosenJobPost?._id}
-						/>
-					</div>
-				</div>
-			)}
-			{isOpenReviewPopup && (
-				<div className="popup active">
-					<div
-						className="overlay"
-						onClick={() => setIsOpenReviewPopup(false)}
-					></div>
-					<div className="content rounded-md">
-						<AiOutlineClose
-							className="absolute text-sm hover:cursor-pointer m-5"
-							onClick={() => setIsOpenReviewPopup(false)}
-						/>
-						<DomesticHelperReview
-							serviceName={chosenJobPost?.serviceId?.name}
-							serviceAddress={chosenJobPost?.contactInfo?.address}
-							domesticHelperId={chosenJobPost?.domesticHelperId}
-							avatar={
-								accounts?.find(
-									(acc) =>
-										String(acc._id) == String(chosenJobPost?.domesticHelperId)
-								)?.avatar
-							}
-							jobPostId={chosenJobPost?._id}
-							chosenfeedback={feedbacks.find(
-								(feedback) =>
-									String(feedback.jobPostId) === String(chosenJobPostId)
-							)}
-						/>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };

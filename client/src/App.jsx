@@ -48,7 +48,7 @@ import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManageme
 import { CreateVideo } from './pages/AdminPage/VideoManagement/CreateVideo/CreateVideo';
 import { UpdateVideo } from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo';
 import { JourneyPage } from './pages/JourneyPage';
-import { ChatForm } from './pages/Chatting/ChatForm';
+//import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
@@ -79,11 +79,16 @@ import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateEx
 import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
 import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
 import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
+
+import { Chat } from './components/Chat/Chat';
+import { AdminChatManager } from './pages/AdminPage/ChatManagement/AdminChatManagement';
+
 import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
 import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
 import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
+
 
 const App = () => {
 	return (
@@ -99,7 +104,9 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
-			{!isAdminPage && (<div className=" z-50"> <ChatForm /></div>)}
+			
+			{!isAdminPage && <div className="sidebar-container z-50"></div>}
+			{!isAdminPage && <Chat />}
 
 			<div className="content-container select-none">
 
@@ -198,6 +205,7 @@ const AppContent = () => {
 							<Route path="/admin-exam/create" element={<CreateExam />} />
 							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
+							<Route path="/admin-chat" element={<AdminChatManager />} />
 							<Route path="/admin-question/create" element={<CreateQuestion />} />
 							<Route path="/admin-question/update/:questionId" element={<UpdateQuestion />} />
 							<Route

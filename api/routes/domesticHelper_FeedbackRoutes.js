@@ -8,6 +8,7 @@ const {
 	replyToFeedback,
 	deleteReply,
 	updateReply,
+	getFeedbackDetail,
 } = require('../controllers/domesticHelper_FeedbackController');
 
 const router = express.Router();
@@ -18,6 +19,10 @@ router
 	.route('/:feedbackId')
 	.get(protect, getFeedbackById)
 	.delete(protect, deleteFeedback);
+
+router
+	.route('/detail/:jobPostId/:feedbackFrom')
+	.get(protect, getFeedbackDetail);
 
 router.route('/reply/:feedbackId').post(protect, replyToFeedback);
 

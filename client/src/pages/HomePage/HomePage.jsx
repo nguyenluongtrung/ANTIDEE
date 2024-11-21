@@ -274,7 +274,7 @@ export const HomePage = () => {
 									className="bg-white rounded-2xl relative p-5 text-white mx-2 transition duration-300 hover:scale-105 cursor-pointer"
 									onClick={() => navigateToServicePage(service?._id)}
 								>
-									{recommendedServices.find(
+									{recommendedServices?.find(
 										(recommend) =>
 											String(recommend.itemId) == String(service._id)
 									) && (

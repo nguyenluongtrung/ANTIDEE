@@ -84,16 +84,6 @@ export const JobPostListPage = () => {
 		setServiceOptions(options);
 	};
 
-	const handleGetAllJobPosts = async () => {
-		let output = await dispatch(getAllJobPosts());
-		let newJobPosts = output.payload?.filter(
-			(jobPost) => jobPost.domesticHelperId == null
-		);
-
-		setJobPosts(newJobPosts);
-		setIsInMyLocation(false);
-	};
-
 	const handleChange = (selectedOption) => {
 		setChosenServiceOptions(selectedOption);
 	};
@@ -143,6 +133,7 @@ export const JobPostListPage = () => {
 					onClose={() => {
 						setIsOpenJobPostDetail(false);
 						setSearchParams({});
+						initiateJobPosts();
 					}}
 				/>
 			)}

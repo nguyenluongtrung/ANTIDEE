@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaStar } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import {
-	createFeedback,
-	getAllFeedbacks,
-} from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
+import { createFeedback } from '../../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
 import { useForm } from 'react-hook-form';
-import {
-	getAccountInformation,
-	updateRatingCustomer,
-	updateRatingDomesticHelper,
-} from '../../../../features/auth/authSlice';
+import { updateRatingCustomer } from '../../../../features/auth/authSlice';
 import { Spinner } from '../../../../components';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+import { AiOutlineClose } from 'react-icons/ai';
 
-export const CustomerFeedback = ({
-	serviceName,
-	serviceAddress,
-	customerId,
-	avatar,
-	jobPostId,
-    role
-}) => {
+export const CustomerFeedback = ({ selectedJobPost, onClose }) => {
 	const { account, isLoading: isAuthLoading } = useSelector(
 		(state) => state.auth
 	);
@@ -43,13 +30,12 @@ export const CustomerFeedback = ({
 
 	const onSubmit = async (data) => {
 		const feedbackData = {
-			...data,
-			jobPostId,
-			domesticHelperId: account?._id,
-			feedbackFrom: role
+			jobPostId: selectedJobPost._id,
+			feedbackFrom: 'Người giúp việc',
+			rating: rating,
+			content: data.content,
 		};
 		const result = await dispatch(createFeedback(feedbackData));
-		console.log(result);
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Feedback thành công', successStyle);
 		} else if (result?.error?.message === 'Rejected') {
@@ -63,13 +49,11 @@ export const CustomerFeedback = ({
 			await dispatch(
 				updateRatingCustomer({
 					ratingData,
-					customerId: customerId,
+					customerId: selectedJobPost.customerId,
 				})
 			);
 		}
-
-		await dispatch(getAccountInformation());
-		await dispatch(getAllFeedbacks());
+		onClose();
 	};
 
 	if (isAuthLoading) {
@@ -81,39 +65,26 @@ export const CustomerFeedback = ({
 
 	return (
 		<div className="popup active">
+			<div className="overlay"></div>
 			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl p-10 max-h-[90vh] overflow-y-auto">
-				<h2 className="text-center p-3 font-bold text-xl">
-					ĐÁNH GIÁ CHỦ NHÀ
-				</h2>
-				<div>
-					<p className="text-green">
-						<span className="font-semibold">Dịch vụ: </span>
-						{serviceName}
-					</p>
-					<p>
-						<span className="font-semibold">Hoàn thành lúc: </span>17:24
-						25/04/202
-					</p>
-					<p>
-						<span className="font-semibold">Địa chỉ: </span>
-						{serviceAddress}
-					</p>
-				</div>
-				<div className="flex justify-center">
-					<img
-						src={avatar}
-						alt="avatar"
-						className="ml-3 rounded-full w-14 h-14 bg-green"
-						onClick={toggleModal}
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="content rounded-md p-5"
+					style={{ width: '35vw' }}
+				>
+					<AiOutlineClose
+						className="absolute text-sm hover:cursor-pointer"
+						onClick={onClose}
 					/>
-				</div>
-				<form onSubmit={handleSubmit(onSubmit)} className="p-5">
-					<input
-						{...register('customerId')}
-						hidden="true"
-						value={customerId}
-					/>
-					<div className="flex justify-center">
+					<h2 className="text-center text-green font-bold text-xl">
+						ĐÁNH GIÁ CHỦ NHÀ
+					</h2>
+					<div>
+						<p className="text-brown font-bold text-center">
+							{selectedJobPost?.serviceId?.name?.toUpperCase()}
+						</p>
+					</div>
+					<div className="flex justify-center mb-3">
 						{[...Array(5)].map((star, i) => {
 							const ratingValue = i + 1;
 							return (
@@ -142,23 +113,10 @@ export const CustomerFeedback = ({
 							);
 						})}
 					</div>
-					<div className="flex justify-center font-semibold mt-3 text-light_gray">
-						<span>
-							{rating == 1
-								? ' RẤT TỆ'
-								: rating == 2
-								? 'TỆ'
-								: rating == 3
-								? 'ỔN'
-								: rating == 4
-								? 'TỐT'
-								: rating == 5
-								? 'TUYỆT VỜI'
-								: ''}
-						</span>
-					</div>
 					<div>
-						<h3>Điều gì bạn mong muốn tốt hơn?</h3>
+						<p className="text-[14px] font-semibold mb-2">
+							Điều gì bạn mong muốn tốt hơn?
+						</p>
 						<div className="grid grid-cols-2 gap-4">
 							<input
 								type="radio"
@@ -172,7 +130,7 @@ export const CustomerFeedback = ({
 							<label
 								for="select1"
 								className="flex justify-center rounded-md 
-                            cursor-pointer items-center h-24 shadow-2xl hover:bg-light_yellow"
+                            cursor-pointer items-center h-24 shadow-2xl text-sm p-5 hover:bg-light_yellow"
 							>
 								Cung cấp chỉ dẫn cụ thể hơn
 							</label>
@@ -189,7 +147,7 @@ export const CustomerFeedback = ({
 							<label
 								for="select2"
 								className="flex justify-center rounded-md 
-                            cursor-pointer items-center h-24 shadow-2xl  hover:bg-light_yellow"
+                            cursor-pointer items-center h-24 shadow-2xl text-sm p-5  hover:bg-light_yellow"
 							>
 								Đối xử lịch sự, tôn trọng
 							</label>
@@ -206,7 +164,7 @@ export const CustomerFeedback = ({
 							<label
 								htmlFor="select3"
 								className="flex  justify-center rounded-md
-                             cursor-pointer items-center h-24 shadow-2xl  hover:bg-light_yellow"
+                             cursor-pointer items-center h-24 shadow-2xl text-sm p-5  hover:bg-light_yellow"
 							>
 								Thanh toán đúng hạn
 							</label>
@@ -223,7 +181,7 @@ export const CustomerFeedback = ({
 							<label
 								htmlFor="select4"
 								className="flex  justify-center rounded-md
-                             cursor-pointer items-center h-24 shadow-2xl  hover:bg-light_yellow"
+                             cursor-pointer items-center h-24 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
 							>
 								Khác
 							</label>
@@ -256,7 +214,6 @@ export const CustomerFeedback = ({
 					</div>
 				</form>
 			</div>
-			{/* mở to avatar */}
 			{isModalOpen && (
 				<div className="modal">
 					<div className="modal-content">
