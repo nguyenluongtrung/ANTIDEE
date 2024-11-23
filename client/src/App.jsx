@@ -48,7 +48,6 @@ import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManageme
 import { CreateVideo } from './pages/AdminPage/VideoManagement/CreateVideo/CreateVideo';
 import { UpdateVideo } from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo';
 import { JourneyPage } from './pages/JourneyPage';
-//import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
@@ -88,6 +87,7 @@ import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePro
 import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
 import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
 import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
+import { DetailExam } from './pages/AdminPage/ExamManagement/DetailExam/DetailExam';
 
 
 const App = () => {
@@ -204,6 +204,7 @@ const AppContent = () => {
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-exam/create" element={<CreateExam />} />
 							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
+							<Route path="/admin-exam/detail/:examId" element={<DetailExam />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
 							<Route path="/admin-chat" element={<AdminChatManager />} />
 							<Route path="/admin-question/create" element={<CreateQuestion />} />

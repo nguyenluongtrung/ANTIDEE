@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
-import './UpdateExam.css';
 import { getExam, updateExam } from '../../../../features/exams/examSlice';
 import { useEffect, useState } from 'react';
 import { getAllQualifications } from '../../../../features/qualifications/qualificationSlice';
@@ -63,7 +62,7 @@ export const UpdateExam = () => {
 		return (
 			<div className="w-full min-h-screen bg-white flex flex-row">
 				<AdminSidebar />
-				<div className="w-full p-10">
+				<div className="flex-1 px-10 pt-5">
 					<div className="flex mb-10 text-2xl font-bold">
 						Đang <p className="text-primary text-2xl px-2">Cập nhật</p> bài thi{' '}
 					</div>

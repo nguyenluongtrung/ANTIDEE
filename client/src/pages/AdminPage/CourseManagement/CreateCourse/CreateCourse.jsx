@@ -14,7 +14,6 @@ export const CreateCourse = () => {
     const { qualifications, isLoading } = useSelector(
         (state) => state.qualifications
     );
-    //Functions check qualificate trùng
     const [courses, setCourses] = useState([])
 
     const dispatch = useDispatch();
@@ -118,7 +117,6 @@ export const CreateCourse = () => {
     const validateField = (field, value) => {
         let error = '';
 
-        // Kiểm tra nếu giá trị là một chuỗi, chỉ khi đó mới gọi trim()
         if (typeof value === 'string' && !value.trim()) {
             error = 'Trường này không được để trống.';
         } else if (typeof value === 'string' && value.length > 255) {
@@ -127,12 +125,9 @@ export const CreateCourse = () => {
             error = 'Không được có hơn 2 khoảng trống liên tiếp.';
         }
 
-        // Thêm kiểm tra cho giá trị dạng số (ví dụ: duration)
         if (field === 'duration' && Number(value) < 0) {
             error = 'Giá trị không được là số âm.';
         }
-
-        console.log("Xem value type: ", field + typeof value)
 
         return error;
     }
@@ -175,7 +170,7 @@ export const CreateCourse = () => {
                         <input
                             className="shadow appearance-none border py-3 px-3 rounded"
                             value={formData.name}
-                            onChange={e => handleFormChange('name', e.target.value)} // Thay đổi key 'name'
+                            onChange={e => handleFormChange('name', e.target.value)} 
                         />
                         <div className='h-4 mb-6'>
                             {errors.name && (

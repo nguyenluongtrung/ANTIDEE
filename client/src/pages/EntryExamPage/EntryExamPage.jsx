@@ -67,7 +67,7 @@ export const EntryExamPage = () => {
 			const question = questionList.find(
 				(question) => question._id == answer.questionId
 			);
-			if (question.correctAnswer == answer.answerContent) {
+			if (String(question.correctAnswer).trim().toLowerCase() == String(answer.answerContent).trim().toLowerCase()) {
 				setTotalScore((totalScore) => totalScore + 1);
 			}
 		});

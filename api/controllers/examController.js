@@ -241,6 +241,7 @@ const saveExamResult = asyncHandler(async (req, res) => {
 		throw new Error('Error saving exam result');
 	}
 });
+
 const getMyExamResults = asyncHandler(async (req, res) => {
 	const results = await AccountExam.find({
 		accountId: req.account._id,

@@ -52,7 +52,7 @@ export const CreateExam = () => {
 	return (
 		<div className="w-full min-h-screen bg-white flex flex-row">
 			<AdminSidebar />
-			<div className="w-full p-10">
+			<div className="flex-1 px-10 pt-5">
 				<div className="flex mb-10 text-2xl font-bold">
 					Đang <p className="text-primary text-2xl px-2">Tạo mới</p> bài thi{' '}
 				</div>

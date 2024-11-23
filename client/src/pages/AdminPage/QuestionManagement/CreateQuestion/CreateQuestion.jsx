@@ -74,7 +74,7 @@ export const CreateQuestion = () => {
 		const result = await dispatch(createQuestions(newQuestionList));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm câu hỏi thành công', successStyle);
-			navigate('/admin-question')
+			navigate('/admin-question');
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
@@ -141,21 +141,34 @@ export const CreateQuestion = () => {
 							onChange={handleFileUpload}
 						/>
 					</div>
-					<div className=" max-h-80 overflow-y-auto">
+					<div className="max-h-80 overflow-y-auto border rounded-lg shadow-md">
 						{data.length > 0 && (
-							<table className="table">
-								<thead>
+							<table className="table-auto w-full border-collapse">
+								<thead className="bg-yellow">
 									<tr>
 										{Object.keys(data[0]).map((key) => (
-											<th key={key}>{key}</th>
+											<th
+												key={key}
+												className="px-4 py-2 text-sm font-semibold text-gray-700 border-b border-gray-200"
+											>
+												{key}
+											</th>
 										))}
 									</tr>
 								</thead>
 								<tbody>
 									{data.map((row, index) => (
-										<tr key={index}>
-											{Object.values(row).map((value, index) => (
-												<td key={index} className="text-center">
+										<tr
+											key={index}
+											className={`${
+												index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+											} hover:bg-gray-100`}
+										>
+											{Object.values(row).map((value, idx) => (
+												<td
+													key={idx}
+													className="px-4 py-2 text-sm text-gray-600 border-b border-gray-200 text-center"
+												>
 													{value}
 												</td>
 											))}
