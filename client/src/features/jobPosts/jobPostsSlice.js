@@ -129,6 +129,7 @@ export const updateJobPost = createAsyncThunk(
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
 			const token = storedAccount.data.token;
+			console.log(token, jobPostData, id);
 			return await jobPostsService.updateJobPost(token, jobPostData, id);
 		} catch (error) {
 			const message =

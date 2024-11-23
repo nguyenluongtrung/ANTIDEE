@@ -15,11 +15,15 @@ import { MdOutlineNoteAlt } from 'react-icons/md';
 import { LiaMoneyCheckAltSolid } from 'react-icons/lia';
 import { PiMoneyWavy } from 'react-icons/pi';
 import { RiCalendarScheduleLine } from 'react-icons/ri';
+import { GrStatusInfo } from 'react-icons/gr';
 
 import { appendHourToDate } from '../../utils/format';
 
 import { getAccountInformation } from '../../features/auth/authSlice';
-import { getAllJobPosts, getJobPost } from '../../features/jobPosts/jobPostsSlice';
+import {
+	getAllJobPosts,
+	getJobPost,
+} from '../../features/jobPosts/jobPostsSlice';
 import { getAllServices } from '../../features/services/serviceSlice';
 
 import './JobSchedulePage.css';
@@ -40,11 +44,7 @@ export const JobSchedulePage = () => {
 	const getAllJobList = async () => {
 		let output = await dispatch(getAllJobPosts());
 		let newJobHistory = output.payload.filter(
-			(job) =>
-				job.domesticHelperId == String(myAccountId) &&
-				job?.hasCompleted?.customerConfirm == false &&
-				job?.hasCompleted?.domesticHelperConfirm == false &&
-				job?.cancelDetails?.isCanceled == false
+			(job) => job.domesticHelperId == String(myAccountId)
 		);
 
 		const myJobs = [];
@@ -161,7 +161,7 @@ export const JobSchedulePage = () => {
 						}}
 						events={filteredJobs}
 						locale={viLocale}
-						dayMaxEvents={6}
+						dayMaxEvents={4}
 						eventClick={handleEventClick}
 					/>
 				</div>
@@ -241,6 +241,26 @@ export const JobSchedulePage = () => {
 															{detailJobPost.totalPrice} vnđ
 														</p>
 													</div>
+													{detailJobPost.hasCompleted.customerConfirm &&
+														detailJobPost.hasCompleted
+															.domesticHelperConfirm && (
+															<div className="text-base mt-3 text-black font-bold flex items-center gap-x-4">
+																<GrStatusInfo size={17} />
+																Trạng thái:{' '}
+																<p className="text-green font-medium">
+																	Đã hoàn thành
+																</p>
+															</div>
+														)}
+													{detailJobPost.cancelDetails.isCanceled && (
+															<div className="text-base mt-3 text-black font-bold flex items-center gap-x-4">
+																<GrStatusInfo size={17} />
+																Trạng thái:{' '}
+																<p className="text-red font-medium">
+																	Đã hủy
+																</p>
+															</div>
+														)}
 												</div>
 											)}
 										</div>

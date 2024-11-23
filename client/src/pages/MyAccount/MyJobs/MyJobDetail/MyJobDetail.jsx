@@ -4,9 +4,6 @@ import {
 	formatWorkingTime,
 	getCurrentTimeString,
 } from '../../../../utils/format';
-import { updateJobPost } from '../../../../features/jobPosts/jobPostsSlice';
-import { errorStyle, successStyle } from '../../../../utils/toast-customize';
-import toast from 'react-hot-toast';
 
 export const MyJobDetail = ({
 	onClose,
@@ -15,6 +12,7 @@ export const MyJobDetail = ({
 	onCancelJob,
 	onDomesticHelperFeedback,
 	onFeedbackReview,
+	onCompleteJob
 }) => {
 	const checkIsCompleted = () => {
 		const startingDate = new Date(selectedJobPost.workingTime.startingDate);
@@ -39,26 +37,6 @@ export const MyJobDetail = ({
 		);
 	};
 
-	const handleCompleteJobPost = async (e) => {
-		e.preventDefault();
-		const jobPostData = {
-			...selectedJobPost,
-			hasCompleted: {
-				...selectedJobPost.hasCompleted,
-				domesticHelperConfirm: true,
-			},
-		};
-		const result = await dispatch(
-			updateJobPost({ jobPostData, id: selectedJobPostId })
-		);
-
-		if (result.type.endsWith('fulfilled')) {
-			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
-		} else if (result?.error?.message === 'Rejected') {
-			toast.error(result?.payload, errorStyle);
-		}
-		onClose()
-	};
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
@@ -179,7 +157,7 @@ export const MyJobDetail = ({
 									'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
 								}
 								style={{ width: '70%' }}
-								onClick={handleCompleteJobPost}
+								onClick={onCompleteJob}
 							>
 								<p className="text-center">Hoàn thành công việc</p>
 							</button>

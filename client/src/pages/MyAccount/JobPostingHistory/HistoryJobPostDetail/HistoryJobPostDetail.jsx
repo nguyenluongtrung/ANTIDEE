@@ -11,7 +11,6 @@ import toast from 'react-hot-toast';
 import { IoMdCheckboxOutline } from 'react-icons/io';
 import {
 	selectATasker,
-	updateJobPost,
 } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 
@@ -22,6 +21,7 @@ export const HistoryJobPostDetail = ({
 	onCancelJob,
 	onDomesticHelperFeedback,
 	onFeedbackReview,
+	onCompleteJob
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
 
@@ -38,29 +38,6 @@ export const HistoryJobPostDetail = ({
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-	};
-
-	const handleCompleteJobPost = async (e) => {
-		e.preventDefault();
-		const jobPostData = {
-			...selectedJobPost,
-			hasCompleted: {
-				...selectedJobPost.hasCompleted,
-				customerConfirm: true,
-				completedAt: new Date(),
-			},
-		};
-		const result = await dispatch(
-			updateJobPost({ jobPostData, id: selectedJobPost._id })
-		);
-
-		if (result.type.endsWith('fulfilled')) {
-			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
-		} else if (result?.error?.message === 'Rejected') {
-			toast.error(result?.payload, errorStyle);
-		}
-		setIsOpenJobPostDetail(false);
-		getAllInitialJobList();
 	};
 
 	if (isLoading) {
@@ -258,7 +235,7 @@ export const HistoryJobPostDetail = ({
 												'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
 											}
 											style={{ width: '70%' }}
-											onClick={handleCompleteJobPost}
+											onClick={onCompleteJob}
 										>
 											<p className="text-center">
 												Xác nhận hoàn thành công việc
