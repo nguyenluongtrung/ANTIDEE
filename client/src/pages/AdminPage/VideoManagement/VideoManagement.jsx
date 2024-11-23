@@ -168,7 +168,7 @@ export const VideoManagement = () => {
                     <span>{video.description}</span>
                   </td>
                   <td className="font-medium text-center text-gray">
-                    {video.url.includes("firebase") ? (
+                    {video?.url?.includes("firebase") ? (
                       <button
                         onClick={() => window.open(video.url, "_blank")}
                         className="text-blue-600 underline"
@@ -187,7 +187,7 @@ export const VideoManagement = () => {
                     )}
                   </td>
 
-                  <td className="">
+                  <td className="flex justify-center">
                     <div className="flex items-center justify-center">
                       <Link to={`/admin-video/update/${video._id}`}>
                         <button

@@ -86,7 +86,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                             }}
                             className="border rounded"
                         >
-                            <option value="">Chọn câu hỏi</option>
+                            <option value="">Chọn đề thi</option>
 
                             {listExams.filter(exam =>
                                 exam.category === "Kiểm tra training" &&
