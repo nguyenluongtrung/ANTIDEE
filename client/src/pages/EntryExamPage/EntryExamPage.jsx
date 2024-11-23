@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react';
 import { getAllExams, saveExamResult } from '../../features/exams/examSlice';
 import { ScoreNotification } from './ScoreNotification/ScoreNotification';
 import { TimerCountDown } from './TimerCountDown/TimerCountDown';
+import ConfirmPopup from '../../components/ConfirmPopup/ConfirmPopup';
 
 export const EntryExamPage = () => {
 	const { exams, isLoading: examLoading } = useSelector((state) => state.exams);
@@ -20,13 +21,12 @@ export const EntryExamPage = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { examId } = useParams();
+	const [openConfirmSubmitPopup, setOpenConfirmSubmitPopup] = useState(false);
 
 	useEffect(() => {
 		const asyncFn = async () => {
 			const result = await dispatch(getAllExams());
-			const chosenExam = result.payload.find(
-				(exam) => exam._id == examId
-			);
+			const chosenExam = result.payload.find((exam) => exam._id == examId);
 			setChosenExam(chosenExam);
 			setStartTime(new Date().getTime());
 		};
@@ -62,6 +62,7 @@ export const EntryExamPage = () => {
 	};
 
 	const handleSubmitExam = () => {
+		setOpenConfirmSubmitPopup(false);
 		answers.map((answer) => {
 			const question = questionList.find(
 				(question) => question._id == answer.questionId
@@ -71,6 +72,10 @@ export const EntryExamPage = () => {
 			}
 		});
 		setIsSubmit(true);
+	};
+
+	const closeConfirmPopup = () => {
+		setOpenConfirmSubmitPopup(false);
 	};
 
 	useEffect(() => {
@@ -102,6 +107,15 @@ export const EntryExamPage = () => {
 					passGrade={chosenExam?.passGrade}
 				/>
 			)}
+			{openConfirmSubmitPopup && (
+				<ConfirmPopup
+					open={openConfirmSubmitPopup}
+					onClose={closeConfirmPopup}
+					action={handleSubmitExam}
+					itemName="nộp bài thi"
+				/>
+			)}
+
 			<div className="exam-info p-3 rounded-xl bg-light mb-8">
 				<p className="text-brown font-bold mb-1">
 					Chuyên môn: <span>{chosenExam?.qualificationId?.name}</span>
@@ -145,14 +159,14 @@ export const EntryExamPage = () => {
 				{!isOpenScoreNotification ? (
 					<button
 						className="inline text-center mt-0.5 pb-1 rounded-md bg-white text-primary submit-test-btn hover:bg-primary hover:text-white"
-						onClick={handleSubmitExam}
+						onClick={() => setOpenConfirmSubmitPopup(true)}
 					>
 						<span>Nộp bài</span>
 					</button>
 				) : (
 					<button
 						className="inline text-center mt-0.5 pb-1 rounded-md bg-white text-primary submit-test-btn hover:bg-primary hover:text-white"
-						onClick={() => navigate('/qualifications')}
+						onClick={() => navigate(-1)}
 					>
 						<span>Quay về</span>
 					</button>
@@ -218,9 +232,6 @@ export const EntryExamPage = () => {
 					);
 				})}
 			</div>
-			{/* <button className="block mx-auto bg-white text-center pb-1 rounded-md next-test-btn hover:bg-green text-green hover:text-white">
-				<span className="">Tiếp theo</span>
-			</button> */}
 		</div>
 	);
 };

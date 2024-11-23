@@ -60,6 +60,7 @@ export const PromotionManagement = () => {
         const result = await dispatch(deletePromotion(selectedIdDelete));
         if (result.type.endsWith('fulfilled')) {
             toast.success('Xoá mã giảm giá thành công', successStyle);
+            setPromotions((prevPromotions) => prevPromotions.filter(promo => promo._id !== selectedIdDelete));
         } else {
             toast.error(result?.payload, errorStyle);
         }
@@ -71,16 +72,16 @@ export const PromotionManagement = () => {
     };
 
     const handleOpenDetailPromotion = (promotionId) => {
-        navigate(`/admin-promotion/detail-promotion/${promotionId}`);
+        navigate(`/admin-promotion/detail/${promotionId}`);
         setIsOpenDetailPromotion(true);
     };
 
     const handleOpenUpdatePromotion = (promotionId) => {
-        navigate(`/admin-promotion/${promotionId}`);
+        navigate(`/admin-promotion/update/${promotionId}`);
         setIsOpenUpdatePromotion(true);
     };
     const handleOpenCreatePromotion = () => {
-        navigate('/admin-promotion/create-promotion');
+        navigate('/admin-promotion/create');
     };
 
     const handleRowsPerPageChange = (e) => {

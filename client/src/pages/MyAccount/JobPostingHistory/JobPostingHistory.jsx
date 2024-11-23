@@ -1,122 +1,119 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../components';
-import { getAllJobPosts } from '../../../features/jobPosts/jobPostsSlice';
 import {
-	getAccountInformation,
-	getAllAccounts,
-} from '../../../features/auth/authSlice';
+	getJobPost,
+	getMyJobPostingHistory,
+	updateJobPost,
+} from '../../../features/jobPosts/jobPostsSlice';
 import {
 	formatDate,
 	formatTime,
 	formatWorkingTime,
 } from '../../../utils/format';
 import { HistoryJobPostDetail } from './HistoryJobPostDetail/HistoryJobPostDetail';
-import { calculateTotalPages, getPageItems, nextPage, previousPage } from '../../../utils/pagination';
+import {
+	calculateTotalPages,
+	getPageItems,
+	nextPage,
+	previousPage,
+} from '../../../utils/pagination';
+import Pagination from '../../../components/Pagination/Pagination';
+import { useSearchParams } from 'react-router-dom';
+import { JobPostCancel } from './JobPostCancel/JobPostCancel';
+import { DomesticHelperFeedback } from './DomesticHelperPage/DomesticHelperFeedback';
+import { DomesticHelperReview } from './DomesticHelperPage/DomesticHelperReview';
+import { getFeedbackDetail } from '../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
+import toast from 'react-hot-toast';
+import { errorStyle, successStyle } from '../../../utils/toast-customize';
 
 export const JobPostingHistory = () => {
-	const [myAccountId, setMyAccountId] = useState();
-	const [myAccountRole, setMyAccountRole] = useState();
-	const [accounts, setAccounts] = useState([]);
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [myJobHistory, setMyJobHistory] = useState([]);
-	const [chosenJobPostId, setChosenJobPostId] = useState();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
+	const [isOpenCancelForm, setIsOpenCancelForm] = useState(false);
+	const [isOpenFeedbackPopup, setIsOpenFeedbackPopup] = useState(false);
+	const [isOpenReviewPopup, setIsOpenReviewPopup] = useState(false);
+	const [selectedJobPost, setSelectedJobPost] = useState();
+	const [selectedFeedback, setSelectedFeedback] = useState();
 	const [filterOption, setFilterOption] = useState('hasNotDomesticHelperYet');
 	const dispatch = useDispatch();
 	const { isLoading: accountLoading } = useSelector((state) => state.auth);
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 
-	const [rowsPerPage, setRowsPerPage] = useState(6);
+	const [rowsPerPage, _setRowsPerPage] = useState(6);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	async function initiateAccountInformation() {
-		let output = await dispatch(getAccountInformation());
-
-		setMyAccountId(output.payload._id);
-		setMyAccountRole(output.payload.role);
-	}
-
-	async function getInitialHistoryJobList(filterOption) {
-		let output = await dispatch(getAllJobPosts());
-		let newJobHistory;
-		if (filterOption == 'hasNotDomesticHelperYet') {
-			newJobHistory = output.payload.filter(
-				(job) =>
-					job.domesticHelperId == null &&
-					String(job.customerId) == String(myAccountId) &&
-					job?.cancelDetails?.isCanceled === false
-			);
-		} else if (filterOption == 'hasAlreadyDomesticHelper') {
-			newJobHistory = output.payload.filter(
-				(job) =>
-					job.domesticHelperId != null &&
-					String(job.customerId) == String(myAccountId) &&
-					job?.hasCompleted?.customerConfirm == false &&
-					job?.hasCompleted?.domesticHelperConfirm == false &&
-					job?.cancelDetails?.isCanceled === false
-			);
-		} else if (filterOption == 'completed') {
-			newJobHistory = output.payload.filter(
-				(job) =>
-					String(job.customerId) == String(myAccountId) &&
-					job?.hasCompleted?.customerConfirm == true &&
-					job?.hasCompleted?.domesticHelperConfirm == true &&
-					job?.cancelDetails?.isCanceled === false
-			);
-		} else if (filterOption == 'cancelled') {
-			newJobHistory = output.payload.filter(
-				(job) =>
-					String(job.customerId) == String(myAccountId) &&
-					job?.cancelDetails?.isCanceled === true
-			);
-		} else if (filterOption == 'needToBeConfirmed') {
-			newJobHistory = output.payload.filter(
-				(job) =>
-					String(job.customerId) == String(myAccountId) &&
-					job?.cancelDetails?.isCanceled === false &&
-					job?.hasCompleted?.customerConfirm == false &&
-					job?.hasCompleted?.domesticHelperConfirm == true
-			);
-		} else {
-			newJobHistory = output.payload;
-		}
-		setMyJobHistory(newJobHistory);
-	}
-
-	const getAllInitialJobList = async () => {
-		let output = await dispatch(getAllJobPosts());
-		let newJobHistory = output.payload.filter(
-			(job) =>
-				job.domesticHelperId == null &&
-				String(job.customerId) == String(myAccountId) &&
-				job?.cancelDetails?.isCanceled === false
+	async function getHistoryJobList(filterOption) {
+		let output = await dispatch(
+			getMyJobPostingHistory({ option: filterOption })
 		);
-		setMyJobHistory(newJobHistory);
+
+		if (output.type.endsWith('fulfilled')) {
+			setMyJobHistory(output.payload);
+		} else {
+			setMyJobHistory([]);
+		}
+	}
+
+	const handleGetJobPostDetail = async (jobPostId) => {
+		const result = await dispatch(getJobPost(jobPostId));
+		if (result.type.includes('fulfilled')) {
+			setSelectedJobPost(result.payload);
+			setIsOpenJobPostDetail(true);
+			if (filterOption == 'completed') {
+				const feedbackData = await dispatch(getFeedbackDetail({ jobPostId, from: 'customer' }));
+				if (feedbackData.type.includes('fulfilled')) {
+					setSelectedFeedback(feedbackData.payload);
+				} else {
+					setSelectedFeedback();
+				}
+			}
+		} else {
+			setIsOpenJobPostDetail(false);
+			toast.error('Có lỗi xảy ra!');
+		}
 	};
 
-	async function initialAccountList() {
-		let output = await dispatch(getAllAccounts());
+	const handleCompleteJobPost = async () => {
+		const jobPostData = {
+			...selectedJobPost,
+			hasCompleted: {
+				...selectedJobPost.hasCompleted,
+				customerConfirm: true,
+				completedAt: new Date(),
+			},
+		};
 
-		setAccounts(output.payload);
-	}
+		const result = await dispatch(
+			updateJobPost({ jobPostData, id: selectedJobPost._id })
+		);
+
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+		getHistoryJobList(filterOption);
+	};
 
 	useEffect(() => {
-		initialAccountList();
-	}, []);
-
-	useEffect(() => {
-		initiateAccountInformation();
-	}, []);
+		const jobId = searchParams.get('id');
+		if (jobId) {
+			handleGetJobPostDetail(jobId);
+		}
+	}, [searchParams.get('id')]);
 
 	useEffect(() => {
 		setCurrentPage(1);
-		getInitialHistoryJobList(filterOption);
-	}, [filterOption, myAccountId]);
+		getHistoryJobList(filterOption);
+	}, [filterOption]);
 
 	const totalPages = calculateTotalPages(myJobHistory.length, rowsPerPage);
 	const selectedJobs = getPageItems(myJobHistory, currentPage, rowsPerPage);
-  
-	const handleNextPage = () => setCurrentPage(nextPage(currentPage, totalPages));
+
+	const handleNextPage = () =>
+		setCurrentPage(nextPage(currentPage, totalPages));
 	const handlePreviousPage = () => setCurrentPage(previousPage(currentPage));
 
 	if (jobPostLoading || accountLoading) {
@@ -128,14 +125,73 @@ export const JobPostingHistory = () => {
 			<div className="px-16 pt-20 mb-10">
 				{isOpenJobPostDetail && (
 					<HistoryJobPostDetail
-						chosenJobPostId={chosenJobPostId}
-						setIsOpenJobPostDetail={setIsOpenJobPostDetail}
-						accounts={accounts}
-						myAccountId={myAccountId}
-						getAllInitialJobList={getAllInitialJobList}
-						role={myAccountRole}
+						selectedJobPost={selectedJobPost}
+						selectedFeedback={selectedFeedback}
+						onClose={() => {
+							setIsOpenJobPostDetail(false);
+							setSearchParams({});
+							getHistoryJobList(filterOption);
+							setSelectedJobPost();
+						}}
+						onCancelJob={() => {
+							setIsOpenJobPostDetail(false);
+							setIsOpenCancelForm(true);
+						}}
+						onDomesticHelperFeedback={() => {
+							setIsOpenJobPostDetail(false);
+							setIsOpenFeedbackPopup(true);
+						}}
+						onFeedbackReview={() => {
+							setIsOpenJobPostDetail(false);
+							setIsOpenReviewPopup(true);
+						}}
+						onCompleteJob={() => {
+							handleCompleteJobPost();
+							setIsOpenJobPostDetail(false);
+							setSearchParams({});
+							setSelectedJobPost();
+						}}
 					/>
 				)}
+
+				{isOpenCancelForm && (
+					<JobPostCancel
+						jobPostId={selectedJobPost?._id}
+						onClose={() => {
+							setIsOpenCancelForm(false);
+							setSearchParams({});
+							getHistoryJobList(filterOption);
+							setSelectedJobPost();
+						}}
+					/>
+				)}
+
+				{isOpenFeedbackPopup && (
+					<DomesticHelperFeedback
+						selectedJobPost={selectedJobPost}
+						onClose={() => {
+							setIsOpenFeedbackPopup(false);
+							setSearchParams({});
+							getHistoryJobList(filterOption);
+							setSelectedJobPost();
+						}}
+					/>
+				)}
+
+				{isOpenReviewPopup && (
+					<DomesticHelperReview
+						selectedJobPost={selectedJobPost}
+						selectedFeedback={selectedFeedback}
+						onClose={() => {
+							setIsOpenReviewPopup(false);
+							setSearchParams({});
+							getHistoryJobList(filterOption);
+							setSelectedJobPost();
+							setSelectedFeedback();
+						}}
+					/>
+				)}
+
 				<div
 					className="filter-jobs bg-light mb-8"
 					style={{ padding: '30px 300px' }}
@@ -147,7 +203,10 @@ export const JobPostingHistory = () => {
 								className="w-3 mr-2"
 								name="filterOption"
 								checked={filterOption === 'hasNotDomesticHelperYet'}
-								onChange={() => setFilterOption('hasNotDomesticHelperYet')}
+								onChange={() => {
+									setFilterOption('hasNotDomesticHelperYet');
+									getHistoryJobList('hasNotDomesticHelperYet');
+								}}
 							/>
 							<p className="font-bold">Chưa có người làm</p>
 						</div>
@@ -157,7 +216,10 @@ export const JobPostingHistory = () => {
 								className="w-3 mr-2"
 								name="filterOption"
 								checked={filterOption === 'hasAlreadyDomesticHelper'}
-								onChange={() => setFilterOption('hasAlreadyDomesticHelper')}
+								onChange={() => {
+									setFilterOption('hasAlreadyDomesticHelper');
+									getHistoryJobList('hasAlreadyDomesticHelper');
+								}}
 							/>
 							<p className="font-bold">Đã có người làm</p>
 						</div>
@@ -167,7 +229,10 @@ export const JobPostingHistory = () => {
 								className="w-3 mr-2"
 								name="filterOption"
 								checked={filterOption === 'completed'}
-								onChange={() => setFilterOption('completed')}
+								onChange={() => {
+									setFilterOption('completed');
+									getHistoryJobList('completed');
+								}}
 							/>
 							<p className="font-bold">Đã hoàn thành</p>
 						</div>
@@ -177,7 +242,10 @@ export const JobPostingHistory = () => {
 								className="w-3 mr-2"
 								name="filterOption"
 								checked={filterOption === 'cancelled'}
-								onChange={() => setFilterOption('cancelled')}
+								onChange={() => {
+									setFilterOption('cancelled');
+									getHistoryJobList('cancelled');
+								}}
 							/>
 							<p className="font-bold">Đã hủy</p>
 						</div>
@@ -187,7 +255,10 @@ export const JobPostingHistory = () => {
 								className="w-3 mr-2"
 								name="filterOption"
 								checked={filterOption === 'needToBeConfirmed'}
-								onChange={() => setFilterOption('needToBeConfirmed')}
+								onChange={() => {
+									setFilterOption('needToBeConfirmed');
+									getHistoryJobList('needToBeConfirmed');
+								}}
 							/>
 							<p className="font-bold">Chờ xác nhận</p>
 						</div>
@@ -205,8 +276,9 @@ export const JobPostingHistory = () => {
 						{selectedJobs?.map((post) => {
 							return (
 								<div
-									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
-										}`}
+									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
+										post?.isUrgent && 'bg-light_pink'
+									}`}
 								>
 									<p className="text-brown font-bold mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
@@ -222,7 +294,7 @@ export const JobPostingHistory = () => {
 										</span>
 									</p>
 									{post?.hasCompleted?.customerConfirm &&
-										post?.hasCompleted?.domesticHelperConfirm ? (
+									post?.hasCompleted?.domesticHelperConfirm ? (
 										<p className="text-gray mb-2">
 											Hoàn thành lúc: {''}
 											<span className="text-brown">
@@ -306,8 +378,8 @@ export const JobPostingHistory = () => {
 											className="text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
 											style={{ width: '70%' }}
 											onClick={() => {
-												setIsOpenJobPostDetail(true);
-												setChosenJobPostId(post?._id);
+												setSearchParams({ id: post?._id });
+												handleGetJobPostDetail(post?._id);
 											}}
 										>
 											<p className="text-center">Xem chi tiết công việc</p>
@@ -319,22 +391,33 @@ export const JobPostingHistory = () => {
 					</div>
 				)}
 
-				<div className="flex justify-center items-center mt-4 space-x-2">
-					<button
-						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
-						disabled={currentPage === 1}
-						onClick={handlePreviousPage}
-					>
-						&#9664;
-					</button>
-					<span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
-					<button
-						className="bg-light_gray hover:bg-gray hover:text-white w-fit px-4 py-2 rounded disabled:opacity-50"
-						disabled={currentPage === totalPages}
-						onClick={handleNextPage}
-					>
-						&#9654;
-					</button>
+				<div className="flex items-center justify-between border-t border-gray bg-white px-4 py-3 mt-5 sm:px-6">
+					<div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+						<div>
+							<p className="text-sm text-gray">
+								Hiển thị{' '}
+								<span className="font-medium">
+									{(currentPage - 1) * rowsPerPage + 1}
+								</span>{' '}
+								đến{' '}
+								<span className="font-medium">
+									{Math.min(currentPage * rowsPerPage, myJobHistory.length)}
+								</span>{' '}
+								trong <span className="font-medium">{myJobHistory.length}</span>{' '}
+								kết quả
+							</p>
+						</div>
+						<div>
+							<Pagination
+								totalPages={totalPages}
+								currentPage={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+								onNextPage={handleNextPage}
+								onPreviousPage={handlePreviousPage}
+								rowsPerPage={rowsPerPage}
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

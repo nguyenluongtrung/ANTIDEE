@@ -2,9 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import './HomePage.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../components';
-import { getAllServices } from '../../features/services/serviceSlice';
+import {
+	getAllServices,
+	getRecommendedServices,
+} from '../../features/services/serviceSlice';
 import { useNavigate } from 'react-router-dom';
-import { FaAngleRight, FaArrowUp } from 'react-icons/fa';
+import {
+	FaAngleRight,
+	FaArrowUp,
+	FaPaperPlane,
+	FaStar,
+	FaUserCheck,
+} from 'react-icons/fa';
+import { GiBowTieRibbon } from "react-icons/gi";
 import Marquee from 'react-fast-marquee';
 import AOS from 'aos';
 import { PiArrowBendDownRightBold } from 'react-icons/pi';
@@ -16,16 +26,16 @@ import {
 	formatWorkingTime,
 	getCurrentTimeString,
 } from '../../utils/format';
-import { JobPostDetail } from '../JobPostListPage/JobPostDetail/JobPostDetail';
 import PromotionPage from './Promotion/PromotionPage';
 
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
+	const [recommendedServices, setRecommendedServices] = useState();
 	const [jobPosts, setJobPosts] = useState([]);
-	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const topRef = useRef();
 	const serviceRef = useRef();
 	const { isLoading } = useSelector((state) => state.services);
+	const { account } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const benefit = [
@@ -67,6 +77,19 @@ export const HomePage = () => {
 		setServices(output.payload);
 	}
 
+	async function initiateRecommendedServices() {
+		let output = await dispatch(getRecommendedServices());
+		if (output.type.includes('fulfilled')) {
+			setRecommendedServices(output.payload);
+		} else {
+			setRecommendedServices([]);
+		}
+	}
+
+	useEffect(() => {
+		initiateRecommendedServices();
+	}, [account]);
+
 	useEffect(() => {
 		initiateServices();
 	}, []);
@@ -77,7 +100,6 @@ export const HomePage = () => {
 
 	async function initiateJobPosts() {
 		let output = await dispatch(getAllJobPosts());
-		console.log(output);
 		if (output.type.endsWith('fulfilled')) {
 			const filteredJobPosts = output.payload
 				?.filter(
@@ -176,7 +198,6 @@ export const HomePage = () => {
 				<FaArrowUp className="text-pink text-xl sm:text-2xl md:text-3xl" />
 			</div>
 
-
 			<main
 				className="w-full h-full relative px-5 md:px-10 lg:px-20 py-9 bg-hero text-white"
 				ref={topRef}
@@ -224,35 +245,69 @@ export const HomePage = () => {
 				<div className="background absolute"></div>
 			</main>
 
-			<PromotionPage />
-
-			<div className="py-10 sm:py-16 lg:py-20 bg-white md:mt-0 mt-72" ref={serviceRef}>
+			<div
+				className="py-10 sm:py-16 lg:py-20 bg-white md:mt-0 mt-72"
+				ref={serviceRef}
+			>
 				<div
-					className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-10 sm:mb-12 lg:mb-16"
+					className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-10 sm:mb-12 lg:mb-16 flex justify-center items-center"
 					data-aos="fade-down"
 					data-aos-offset="200"
 				>
-					Các dịch vụ hàng đầu
+					Các dịch vụ dành cho bạn{' '}
+					<FaUserCheck className="ml-4 animate-bounce" size={50} />
 				</div>
 
-				<div className="flex justify-center">
-					<div className="w-[90%] sm:w-[85%] lg:w-[80%]" data-aos="slide-up" data-aos-offset="200">
-						<Marquee autoFill pauseOnHover className="h-52 sm:h-56 lg:h-64 rounded-lg bg-white">
+				<div className="flex justify-center bg-primary py-4">
+					<div
+						className="w-[90%] sm:w-[85%] lg:w-[80%]"
+						data-aos="slide-up"
+						data-aos-offset="200"
+					>
+						<Marquee
+							autoFill
+							pauseOnHover
+							className="h-52 sm:h-56 lg:h-64 rounded-lg bg-primary"
+						>
 							{services?.map((service, index) => (
 								<div
-									key={index}
-									className="mx-2 sm:mx-4 transition duration-300 ease-in-out transform hover:scale-110 border-gray-300 shadow-2xl rounded-[10px] sm:rounded-[12px] lg:rounded-[15px] hover:cursor-pointer"
+									className="bg-white rounded-2xl relative p-5 text-white mx-2 transition duration-300 hover:scale-105 cursor-pointer"
+									onClick={() => navigateToServicePage(service?._id)}
 								>
-									<div className="p-3 sm:p-4">
-										<img
-											src={service?.image}
-											alt={service?.name}
-											className="w-[120px] h-[110px] sm:w-[150px] sm:h-[130px] lg:w-[175px] lg:h-[155px] object-cover rounded-lg"
-											onClick={() => navigateToServicePage(service?._id)}
-										/>
-										<p className="mt-2 sm:mt-3 text-primary font-bold opacity-80 text-center text-xs sm:text-sm lg:text-base">
-											{service?.name}
-										</p>
+									{recommendedServices?.find(
+										(recommend) =>
+											String(recommend.itemId) == String(service._id)
+									) && (
+										<div className="absolute top-0 left-0" style={{ transform: "rotate(-30deg)" }}>
+											<GiBowTieRibbon size={60} color="#27c250" />
+										</div>
+									)}
+									<div className="flex items-center rounded-sm">
+										<div className="w-52 h-48 bg-white flex items-center justify-center overflow-hidden rounded-lg">
+											<img
+												src={service?.image}
+												alt={service?.name}
+												className="w-full h-full object-cover"
+											/>
+										</div>
+										<div className="flex flex-col ml-4 gap-y-2">
+											<h2 className="text-xl font-semibold min-w-[200px] text-primary ">
+												{service.name}
+											</h2>
+											<p className="text-gray font-normal flex justify-center items-center">
+												Chất lượng dịch vụ | {service.rating ? '5' : '5'}{' '}
+												<FaStar size={15} className="mx-2 text-yellow" />
+											</p>
+											<div className="text-primary mt-4">
+												<button className="flex justify-center items-center font-bold text-base hvr-shutter-in-horizontal rounded-lg">
+													Trải nghiệm ngay
+													<FaPaperPlane
+														size={15}
+														className="ml-2 animate-bounce"
+													/>
+												</button>
+											</div>
+										</div>
 									</div>
 								</div>
 							))}
@@ -261,95 +316,130 @@ export const HomePage = () => {
 				</div>
 			</div>
 
+			<PromotionPage />
 
-
-
-			<div className="mt-20 px-4 md:px-16 lg:px-28">
-				<div
-					className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10"
-					data-aos="fade-down"
-					data-aos-offset="200"
-				>
-					Công việc dành cho bạn
-				</div>
-
-				<div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
-					{jobPosts.slice(0, 3)?.map((post) => (
+			{jobPosts.length > 0 && (
+				<>
+					<div className="mt-20 px-4 md:px-16 lg:px-28">
 						<div
-							className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${post?.isUrgent && 'bg-light_pink'}`}
-							style={{ height: '350px' }}
+							className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10"
+							data-aos="fade-down"
+							data-aos-offset="200"
 						>
-							<p className="text-brown font-bold mb-3">
-								{post?.serviceId?.name?.toUpperCase()}
-							</p>
-							{post?.isUrgent && (
-								<div className="triangle-down absolute top-0 right-0"></div>
-							)}
-							<p className="text-gray mb-2">
-								Bắt đầu lúc: <span className="text-brown">{formatDate(post?.workingTime?.startingDate)} {formatWorkingTime(post?.workingTime?.startingHour)}</span>
-							</p>
-							<p className="text-gray mb-2">
-								Hết hạn lúc: <span className="text-brown">{formatDate(post?.dueDate)}</span>
-							</p>
-							<div className="border-2 border-gray my-3">
-								{post?.workload?.find((option) => String(option?.optionName) === 'Thời gian') == undefined ? (
-									<div>
-										<p className="text-gray mb-2 text-center mt-3">Số tiền:</p>
-										<p className="text-center text-brown font-bold mb-3">
-											{Intl.NumberFormat().format(post?.totalPrice)} VND
-										</p>
-									</div>
-								) : (
-									<div className="grid grid-cols-2">
-										<div className="border-r-2 border-gray">
-											<p className="text-gray mb-2 text-center mt-3">Làm trong:</p>
-											<p className="text-center text-brown font-bold mb-3">
-												{post?.workload?.find((option) => String(option?.optionName) === 'Thời gian')?.optionValue} giờ
-											</p>
-										</div>
-										<div>
-											<p className="text-gray mb-2 text-center mt-3">Số tiền:</p>
-											<p className="text-center text-brown font-bold mb-3">
-												{Intl.NumberFormat().format(post?.totalPrice)} VND
-											</p>
-										</div>
-									</div>
-								)}
-							</div>
-							<p className="text-gray mb-2">
-								Tại: <span className={`text-black ${!JSON.parse(localStorage.getItem('account')) && 'blur-text'}`}>{post?.contactInfo?.address}</span>
-							</p>
-							<p className="text-gray mb-3">
-								Ghi chú: <span className="text-black">{post?.note || 'Không có'}</span>
-							</p>
-							<div className="flex flex-col items-center absolute bottom-5 left-1/2 transform -translate-x-1/2 w-full">
-								<button
-									className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 w-3/4 text-center hover:bg-light_yellow hover:text-brown"
-									onClick={() => {
-										navigate(`/job-posts/${post?._id}`, {
-											state: { isOpenJobPostDetail: true, jobPosts },
-										});
-									}}
+							Công việc dành cho bạn
+						</div>
+						<div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
+							{jobPosts.slice(0, 3)?.map((post) => (
+								<div
+									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${
+										post?.isUrgent && 'bg-light_pink'
+									}`}
+									style={{ height: '350px' }}
 								>
-									Xem chi tiết công việc
+									<p className="text-brown font-bold mb-3">
+										{post?.serviceId?.name?.toUpperCase()}
+									</p>
+									{post?.isUrgent && (
+										<div className="triangle-down absolute top-0 right-0"></div>
+									)}
+									<p className="text-gray mb-2">
+										Bắt đầu lúc:{' '}
+										<span className="text-brown">
+											{formatDate(post?.workingTime?.startingDate)}{' '}
+											{formatWorkingTime(post?.workingTime?.startingHour)}
+										</span>
+									</p>
+									<p className="text-gray mb-2">
+										Hết hạn lúc:{' '}
+										<span className="text-brown">
+											{formatDate(post?.dueDate)}
+										</span>
+									</p>
+									<div className="border-2 border-gray my-3">
+										{post?.workload?.find(
+											(option) => String(option?.optionName) === 'Thời gian'
+										) == undefined ? (
+											<div>
+												<p className="text-gray mb-2 text-center mt-3">
+													Số tiền:
+												</p>
+												<p className="text-center text-brown font-bold mb-3">
+													{Intl.NumberFormat().format(post?.totalPrice)} VND
+												</p>
+											</div>
+										) : (
+											<div className="grid grid-cols-2">
+												<div className="border-r-2 border-gray">
+													<p className="text-gray mb-2 text-center mt-3">
+														Làm trong:
+													</p>
+													<p className="text-center text-brown font-bold mb-3">
+														{
+															post?.workload?.find(
+																(option) =>
+																	String(option?.optionName) === 'Thời gian'
+															)?.optionValue
+														}{' '}
+														giờ
+													</p>
+												</div>
+												<div>
+													<p className="text-gray mb-2 text-center mt-3">
+														Số tiền:
+													</p>
+													<p className="text-center text-brown font-bold mb-3">
+														{Intl.NumberFormat().format(post?.totalPrice)} VND
+													</p>
+												</div>
+											</div>
+										)}
+									</div>
+									<p className="text-gray mb-2">
+										Tại:{' '}
+										<span
+											className={`text-black ${
+												!JSON.parse(localStorage.getItem('account')) &&
+												'blur-text'
+											}`}
+										>
+											{post?.contactInfo?.address}
+										</span>
+									</p>
+									<p className="text-gray mb-3">
+										Ghi chú:{' '}
+										<span className="text-black">
+											{post?.note || 'Không có'}
+										</span>
+									</p>
+									<div className="flex flex-col items-center absolute bottom-5 left-1/2 transform -translate-x-1/2 w-full">
+										<button
+											className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 w-3/4 text-center hover:bg-light_yellow hover:text-brown"
+											onClick={() => {
+												navigate(`/job-posts/${post?._id}`, {
+													state: { isOpenJobPostDetail: true, jobPosts },
+												});
+											}}
+										>
+											Xem chi tiết công việc
+										</button>
+									</div>
+								</div>
+							))}
+						</div>
+
+						{jobPosts.length > 3 && (
+							<div className="mx-auto mt-8 w-[150px]">
+								<button
+									className="rounded-sm border-2 py-2 px-4 text-center hover:bg-yellow"
+									onClick={() => navigate('/job-posts')}
+								>
+									Xem thêm
 								</button>
 							</div>
-						</div>
-					))}
-				</div>
-
-				{jobPosts.length > 3 && (
-					<div className="mx-auto mt-8 w-[150px]">
-						<button
-							className="rounded-sm border-2 py-2 px-4 text-center hover:bg-yellow"
-							onClick={() => navigate('/job-posts')}
-						>
-							Xem thêm
-						</button>
+						)}
 					</div>
-				)}
-			</div>
-
+				</>
+			)}
 
 			<div className="mt-20 flex flex-col bg-white gap-y-16 sm:gap-y-8 lg:gap-y-28">
 				<div
@@ -453,16 +543,19 @@ export const HomePage = () => {
 				</div>
 			</div>
 
-
-
 			<div className="container mx-auto mt-20 px-4">
 				<div
 					className="my-16 font-bold text-center"
 					data-aos="fade-down"
 					data-aos-offset="200"
 				>
-					<span className="font-extrabold text-2xl sm:text-3xl lg:text-4xl text-primary">100,000+</span>
-					<span className="text-2xl sm:text-3xl lg:text-4xl"> khách hàng sử dụng ứng dụng Antidee</span>
+					<span className="font-extrabold text-2xl sm:text-3xl lg:text-4xl text-primary">
+						100,000+
+					</span>
+					<span className="text-2xl sm:text-3xl lg:text-4xl">
+						{' '}
+						khách hàng sử dụng ứng dụng Antidee
+					</span>
 				</div>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-[30px] justify-center">
@@ -479,14 +572,13 @@ export const HomePage = () => {
 							<h4 className="mt-2 text-primary text-xl sm:text-2xl font-bold">
 								{item.name}
 							</h4>
-							<p className="font-bold text-md sm:text-lg text-center">{item.text}</p>
+							<p className="font-bold text-md sm:text-lg text-center">
+								{item.text}
+							</p>
 						</div>
 					))}
 				</div>
 			</div>
-
-
-
 
 			<div className="mt-16">
 				<div className="relative px-4 sm:px-12 lg:px-60 flex flex-col lg:flex-row">
@@ -513,7 +605,10 @@ export const HomePage = () => {
 								Luôn sẵn sàng hỗ trợ khách hàng
 							</h2>
 							<span className="text-sm sm:text-lg">
-								Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào mang đến dịch vụ dọn dẹp nhà chuyên nghiệp và tận tâm nhất...
+								Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
+								hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
+								để chăm sóc ngôi nhà của mình. Chính vì vậy, chúng tôi tự hào
+								mang đến dịch vụ dọn dẹp nhà chuyên nghiệp và tận tâm nhất...
 							</span>
 						</div>
 					</div>
@@ -526,7 +621,9 @@ export const HomePage = () => {
 								Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
 							</h2>
 							<span className="text-sm sm:text-lg">
-								Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn hảo từ đầu đến cuối...
+								Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
+								cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
+								hảo từ đầu đến cuối...
 							</span>
 
 							<div className="text-xl font-bold hover:text-primary cursor-pointer">
@@ -547,7 +644,6 @@ export const HomePage = () => {
 					</div>
 				</div>
 			</div>
-
 		</div>
 	);
 };

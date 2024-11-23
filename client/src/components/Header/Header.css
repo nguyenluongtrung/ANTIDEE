@@ -2,10 +2,10 @@
 	font-size: 14px;
 }
 
-	.header-login-btn,
-	.header-register-btn {
-		padding: 3px 0 5px 0;
-	}
+.header-login-btn,
+.header-register-btn {
+	padding: 3px 0 5px 0;
+}
 
 .logo-text {
 	font-size: 16px;
@@ -44,10 +44,10 @@
 .dropdown:hover {
 	display: block;
 
-    .dropdown-content{
-        display: flex;
+	.dropdown-content {
+		display: flex;
 		flex-direction: column;
-    }
+	}
 }
 
 .service-section {
@@ -99,18 +99,19 @@
 	color: var(--primary-color);
 	font-weight: medium;
 	text-align: center;
-	margin-right: 1.25rem;  
+	margin-right: 1.25rem;
 	margin-top: auto;
 	margin-bottom: auto;
 }
 @media (max-width: 768px) {
-    .hide-on-mobile {
-        display: none !important; 
-    }
-	.header-login-btn, .header-register-btn{
+	.hide-on-mobile {
+		display: none !important;
+	}
+	.header-login-btn,
+	.header-register-btn {
 		margin-left: 10px;
 	}
-	.header-register-btn{
+	.header-register-btn {
 		margin-left: -5px;
 	}
 }

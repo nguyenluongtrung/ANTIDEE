@@ -37,7 +37,6 @@ import {
 } from './pages/JobPostingPage';
 import { JobPostingHistory } from './pages/MyAccount/JobPostingHistory/JobPostingHistory';
 import { SignUpPage } from './pages/SignUpPage';
-import { DomesticHelper } from './pages/MyAccount/JobPostingHistory/DomesticHelperPage/DomesticHelper';
 import { ReplyFeedback } from './pages/MyAccount/ReplyFeedback/ReplyFeedback';
 import { VoucherList } from './pages/SearchVoucherPage/VoucherList';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -49,7 +48,7 @@ import { VideoManagement } from './pages/AdminPage/VideoManagement/VideoManageme
 import { CreateVideo } from './pages/AdminPage/VideoManagement/CreateVideo/CreateVideo';
 import { UpdateVideo } from './pages/AdminPage/VideoManagement/UpdateVideo/UpdateVideo';
 import { JourneyPage } from './pages/JourneyPage';
-import { ChatForm } from './pages/Chatting/ChatForm';
+//import { ChatForm } from './pages/Chatting/ChatForm';
 import { PromotionManagement } from './pages/AdminPage/PromotionManagement/PromotionManagement';
 import { RankingPage } from './pages/RankingPage/RankingPage';
 import { Dashboard } from './pages/AdminPage/Dashboard/Dashboard';
@@ -80,10 +79,16 @@ import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateEx
 import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
 import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
 import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
+
+import { Chat } from './components/Chat/Chat';
+import { AdminChatManager } from './pages/AdminPage/ChatManagement/AdminChatManagement';
+
 import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
 import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
+import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
+
 
 const App = () => {
 	return (
@@ -99,7 +104,9 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
-			{!isAdminPage && (<div className=" z-50"> <ChatForm /></div>)}
+			
+			{!isAdminPage && <div className="sidebar-container z-50"></div>}
+			{!isAdminPage && <Chat />}
 
 			<div className="content-container select-none">
 
@@ -110,12 +117,13 @@ const AppContent = () => {
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/my-account" element={<MyAccount />} />
+						<Route path="/my-account/change-password" element={<ChangePasswordPage />} />
 						<Route path="/entry-exam/:examId" element={<EntryExamPage />} />
 						<Route path="/invite-friend" element={<InviteFriendPage />} />
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
 						<Route path="/congrats" element={<CongratsPage />} />
 						<Route path="/weather-forecast" element={<WeatherForecastPage />} />
-						<Route path="/update-dw" element={<UpdateProfileForDW />} />
+						<Route path="/update-profile" element={<UpdateProfileForDW />} />
 						<Route path="/qualifications" element={<QualificationPage />} />
 						<Route path="/deposit" element={<DepositPage />} />
 						<Route path="/courses" element={<MyCourses />} />
@@ -134,18 +142,12 @@ const AppContent = () => {
 							path="/exam-result-history"
 							element={<ExamResultHistory />}
 						/>
-						<Route path="/job-posts" element={<JobPostListPage />}>
-							<Route path="/job-posts/:jobPostId" element={<JobPostDetail />} />
-						</Route>
+						<Route path="/job-posts" element={<JobPostListPage />} />
 						<Route path="/reply-feedback" element={<ReplyFeedback />} />
 						<Route path="/black-list" element={<BlackList />} />
 						<Route path="/favorite-list" element={<FavoriteList />} />
 						<Route path="/apoints" element={<AccumulatePoint />} />
 						<Route path="/video-detail/:videoId" element={<VideoDetail />} />
-						<Route
-							path="/domestic-helper-feedback"
-							element={<DomesticHelper />}
-						/>
 						<Route path="/voucher-history" element={<VoucherHistory />}>
 							<Route
 								path="/voucher-history/voucher-detail/:voucherId"
@@ -203,6 +205,7 @@ const AppContent = () => {
 							<Route path="/admin-exam/create" element={<CreateExam />} />
 							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
 							<Route path="/admin-question" element={<QuestionManagement />} />
+							<Route path="/admin-chat" element={<AdminChatManager />} />
 							<Route path="/admin-question/create" element={<CreateQuestion />} />
 							<Route path="/admin-question/update/:questionId" element={<UpdateQuestion />} />
 							<Route
@@ -223,17 +226,17 @@ const AppContent = () => {
 							/>
 							<Route path="/admin-promotion" element={<PromotionManagement />}>
 								<Route
-									path="/admin-promotion/detail-promotion/:promotionId"
+									path="/admin-promotion/detail/:promotionId"
 									element={<PromotionDetail />}
 								/>
 
 							</Route>
 							<Route
-								path="/admin-promotion/:promotionId"
+								path="/admin-promotion/update/:promotionId"
 								element={<UpdatePromotion />}
 							/>
 							<Route
-								path="/admin-promotion/create-promotion"
+								path="/admin-promotion/create"
 								element={<CreatePromotion />}
 							/>
 							<Route
@@ -258,7 +261,7 @@ const AppContent = () => {
 								/>
 							</Route>
 							<Route path="/admin-account" element={<AccountManagement />} />
-							<Route path="/admin-role" element={<UpdateAccountRole />} />
+							<Route path="/admin-censor" element={<UpdateAccountRole />} />
 						</>
 					)}
 				</Routes>

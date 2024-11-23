@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import domesticHelperFeedbackService from './domesticHelperFeedbackService';
 
 export const getAllFeedbacks = createAsyncThunk(
@@ -19,14 +19,40 @@ export const getAllFeedbacks = createAsyncThunk(
 	}
 );
 
+export const getFeedbackDetail = createAsyncThunk(
+	'domesticHelperFeedbacks/getFeedbackDetail',
+	async ({ jobPostId, from }, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await domesticHelperFeedbackService.getFeedbackDetail(
+				token,
+				jobPostId,
+				from
+			);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const createFeedback = createAsyncThunk(
 	'domesticHelperFeedbacks/createFeedback',
 	async (feedbackData, thunkAPI) => {
 		try {
-			console.log(feedbackData);
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount.data.token
-			return await domesticHelperFeedbackService.createFeedback(token, feedbackData)
+			const token = storedAccount.data.token;
+			return await domesticHelperFeedbackService.createFeedback(
+				token,
+				feedbackData
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -46,8 +72,11 @@ export const replyFeedback = createAsyncThunk(
 		try {
 			const storedUser = JSON.parse(localStorage.getItem('account'));
 			const token = storedUser.data.token;
-			return await domesticHelperFeedbackService.replyFeedback(replyData, feedbackId, token);
-
+			return await domesticHelperFeedbackService.replyFeedback(
+				replyData,
+				feedbackId,
+				token
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -67,7 +96,11 @@ export const deleteReply = createAsyncThunk(
 		try {
 			const storedUser = JSON.parse(localStorage.getItem('account'));
 			const token = storedUser.data.token;
-			return await domesticHelperFeedbackService.deleteReply(feedbackId, replyId, token);
+			return await domesticHelperFeedbackService.deleteReply(
+				feedbackId,
+				replyId,
+				token
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -79,17 +112,21 @@ export const deleteReply = createAsyncThunk(
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
-)
+);
 
 export const updateReply = createAsyncThunk(
 	'domesticHelperFeedbacks/updateReply',
 	async ({ feedbackId, replyId, content }, thunkAPI) => {
 		try {
-			console.log(feedbackId, replyId, content)
+			console.log(feedbackId, replyId, content);
 			const storedUser = JSON.parse(localStorage.getItem('account'));
 			const token = storedUser.data.token;
 			return await domesticHelperFeedbackService.updateReply(
-				feedbackId, replyId, content, token);
+				feedbackId,
+				replyId,
+				content,
+				token
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -101,7 +138,7 @@ export const updateReply = createAsyncThunk(
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
-)
+);
 
 const initialState = {
 	domesticHelperFeedbacks: [],
@@ -138,7 +175,18 @@ export const domesticHelperFeedbackSlice = createSlice({
 				state.message = action.payload;
 				state.domesticHelperFeedbacks = null;
 			})
-
+			.addCase(getFeedbackDetail.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getFeedbackDetail.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(getFeedbackDetail.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
 			.addCase(createFeedback.pending, (state) => {
 				state.isLoading = true;
 			})
@@ -207,7 +255,7 @@ export const domesticHelperFeedbackSlice = createSlice({
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
-			})
+			});
 	},
 });
 export const { reset } = domesticHelperFeedbackSlice.actions;

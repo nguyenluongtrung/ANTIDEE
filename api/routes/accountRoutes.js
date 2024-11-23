@@ -29,6 +29,7 @@ const {
 	updateRatingCustomer,
 	getAccountSalary,
 	getAllEligibleAccounts,
+	changePassword,
 } = require('../controllers/accountController');
 const { protect, restrict } = require('../middleware/accountMiddleware');
 const router = express.Router();
@@ -39,6 +40,7 @@ router.route('/register').post(register);
 router.route('/eligible-accounts').get(getAllEligibleAccounts);
 router.route('/block/:accountId').patch(blockAccount);
 router.route('/update-role/:accountId').patch(updateRole);
+router.route('/change-password').patch(changePassword);
 router
 	.route('/information')
 	.patch(protect, updateAccountInformation)

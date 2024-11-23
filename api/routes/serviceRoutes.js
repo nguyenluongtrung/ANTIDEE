@@ -7,6 +7,7 @@ const {
 	deleteService,
 	updateService,
 	rankingServices,
+	ratingService,
 } = require('../controllers/serviceController');
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router
 	.post(protect, restrict('Admin'), createService)
 	.get(getAllServices);
 router.route('/ranking').get(protect, restrict('Admin'), rankingServices);
+router.route('/rating/:serviceId').post(protect, ratingService);
 router
 	.route('/:serviceId')
 	.get(getService)

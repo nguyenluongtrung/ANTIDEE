@@ -10,7 +10,7 @@ const createMessage = async (token, messageData) => {
     };
     const response = await axios.post(API_URL_MESSAGE, messageData, config);
 
-    return response.data.messages;
+    return response.data.data.messages;
 };
 
 const getMessage = async (token, chatId) => {
@@ -20,7 +20,7 @@ const getMessage = async (token, chatId) => {
         },
     };
     const response = await axios.get(API_URL_MESSAGE + "/" + chatId, config);
-    return response.data.data.messages;
+    return response.data;
 }
 
 const getAllMessage = async () => {

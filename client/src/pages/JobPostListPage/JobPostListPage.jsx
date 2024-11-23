@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../components';
-import { getAllJobPosts } from '../../features/jobPosts/jobPostsSlice';
+import {
+	filterJobPostsByService,
+	getAllJobPosts,
+	getJobPost,
+} from '../../features/jobPosts/jobPostsSlice';
 import {
 	formatDate,
 	formatWorkingTime,
@@ -15,10 +19,12 @@ import {
 import './JobPostListPage.css';
 import Select from 'react-select';
 import { getAllServices } from '../../features/services/serviceSlice';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export const JobPostListPage = () => {
 	const location = useLocation();
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const [isInMyLocation, setIsInMyLocation] = useState(false);
 	const [account, setAccount] = useState();
@@ -26,13 +32,12 @@ export const JobPostListPage = () => {
 	const [serviceOptions, setServiceOptions] = useState([]);
 	const [chosenServiceOptions, setChosenServiceOptions] = useState([]);
 	const [jobPosts, setJobPosts] = useState([]);
-	const [allJobPosts, setAllJobPosts] = useState([]);
+	const [selectedJobPost, setSelectedJobPost] = useState();
 	const { isLoading: serviceLoading } = useSelector((state) => state.services);
 
 	const dispatch = useDispatch();
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 
-	const navigate = useNavigate()
 	async function initiateAccountInformation() {
 		let output = await dispatch(getAccountInformation());
 
@@ -48,7 +53,6 @@ export const JobPostListPage = () => {
 	async function initiateJobPosts() {
 		let output = await dispatch(getAllJobPosts());
 		setJobPosts(output.payload);
-		setAllJobPosts(output.payload);
 	}
 
 	useEffect(() => {
@@ -61,8 +65,8 @@ export const JobPostListPage = () => {
 
 	useEffect(() => {
 		const isOpenJobPostDetail = location.state?.isOpenJobPostDetail;
-		if(isOpenJobPostDetail){
-			setIsOpenJobPostDetail(true)
+		if (isOpenJobPostDetail) {
+			setIsOpenJobPostDetail(true);
 		}
 		initiateJobPosts();
 	}, []);
@@ -70,22 +74,6 @@ export const JobPostListPage = () => {
 	useEffect(() => {
 		initiateAllServices();
 	}, []);
-
-	useEffect(() => {
-		if (chosenServiceOptions.length > 0) {
-			setJobPosts(
-				allJobPosts.filter(
-					(jobPost) =>
-						chosenServiceOptions.findIndex(
-							(service) =>
-								String(service.value) === String(jobPost.serviceId._id)
-						) !== -1
-				)
-			);
-		} else if (chosenServiceOptions.length == 0) {
-			setJobPosts(allJobPosts);
-		}
-	}, [chosenServiceOptions]);
 
 	const initiateAllServices = async () => {
 		const output = await dispatch(getAllServices());
@@ -96,18 +84,41 @@ export const JobPostListPage = () => {
 		setServiceOptions(options);
 	};
 
-	const handleGetAllJobPosts = async () => {
-		let output = await dispatch(getAllJobPosts());
-		let newJobPosts = output.payload?.filter(
-			(jobPost) => jobPost.domesticHelperId == null
-		);
-
-		setJobPosts(newJobPosts);
-		setIsInMyLocation(false);
-	};
-
 	const handleChange = (selectedOption) => {
 		setChosenServiceOptions(selectedOption);
+	};
+
+	const handleGetJobPostDetail = async (jobPostId) => {
+		const result = await dispatch(getJobPost(jobPostId));
+		if (result.type.includes('fulfilled')) {
+			setSelectedJobPost(result.payload);
+			setIsOpenJobPostDetail(true);
+		} else {
+			setIsOpenJobPostDetail(false);
+			toast.error('Có lỗi xảy ra!');
+		}
+	};
+
+	useEffect(() => {
+		const jobId = searchParams.get('id');
+		if (jobId) {
+			handleGetJobPostDetail(jobId);
+		}
+	}, [searchParams.get('id')]);
+
+	const handleFilterJobPosts = async () => {
+		let filterServiceIds = '';
+		chosenServiceOptions.forEach((option) => {
+			filterServiceIds = filterServiceIds + `${option.value},`;
+		});
+		const result = await dispatch(filterJobPostsByService({serviceIds: filterServiceIds.substring(0, filterServiceIds.length - 1), isInMyLocation}));
+
+		if (result.type.includes('fulfilled')) {
+			setJobPosts(result.payload);
+		} else{
+			setJobPosts([])
+		}
+		setChosenServiceOptions([])
 	};
 
 	if (jobPostLoading || serviceLoading) {
@@ -118,10 +129,12 @@ export const JobPostListPage = () => {
 		<div className="px-16 pt-20 mb-10">
 			{isOpenJobPostDetail && (
 				<JobPostDetail
-					setIsOpenJobPostDetail={setIsOpenJobPostDetail}
-					handleGetAllJobPosts={handleGetAllJobPosts}
-					jobPosts={jobPosts}
-					isOpenJobPostDetail={isOpenJobPostDetail}
+					selectedJobPost={selectedJobPost}
+					onClose={() => {
+						setIsOpenJobPostDetail(false);
+						setSearchParams({});
+						initiateJobPosts();
+					}}
 				/>
 			)}
 			<div className="filter-jobs bg-light py-7 px-32 mb-8">
@@ -145,21 +158,18 @@ export const JobPostListPage = () => {
 						<p className="font-bold">Lọc công việc trong khu vực đã đăng ký</p>
 					</div>
 				</div>
+				<div className="flex justify-end">
+					<button
+						className="bg-another_primary text-white py-1.5 text-center rounded-md block"
+						style={{ width: '100px' }}
+						onClick={handleFilterJobPosts}
+					>
+						Tìm kiếm
+					</button>
+				</div>
 			</div>
 			<div className="grid grid-cols-3 gap-28">
 				{jobPosts
-					?.filter((jobPost) => {
-						if (isInMyLocation) {
-							const addressDetails = jobPost?.contactInfo?.address.split(',');
-							const jobCity = addressDetails[addressDetails.length - 1].trim();
-							const myCity = account?.address
-								.split(',')
-								[account?.address.split(',').length - 1].trim();
-							return jobCity.toUpperCase().includes(myCity.toUpperCase());
-						} else {
-							return jobPost;
-						}
-					})
 					?.filter(
 						(jobPost) =>
 							jobPost.domesticHelperId == null &&
@@ -286,7 +296,12 @@ export const JobPostListPage = () => {
 								</div>
 								<p className="text-gray mb-2 ">
 									Tại:{' '}
-									<span className={`text-black ${!JSON.parse(localStorage.getItem('account')) && 'blur-text'}`}>
+									<span
+										className={`text-black ${
+											!JSON.parse(localStorage.getItem('account')) &&
+											'blur-text'
+										}`}
+									>
 										{post?.contactInfo?.address}
 									</span>
 								</p>
@@ -301,8 +316,8 @@ export const JobPostListPage = () => {
 										className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
 										style={{ width: '70%' }}
 										onClick={() => {
-											setIsOpenJobPostDetail(true);
-											navigate(`/job-posts/${post?._id}`)
+											setSearchParams({ id: post?._id });
+											handleGetJobPostDetail(post?._id);
 										}}
 									>
 										<p className="text-center">Xem chi tiết công việc</p>

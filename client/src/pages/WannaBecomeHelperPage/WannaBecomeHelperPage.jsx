@@ -54,7 +54,7 @@ export const WannaBecomeHelperPage = () => {
                         chúng ta sẽ cùng nhau gặt hái được nhiều thành công.</p>
 
                     <div className='grid justify-center'>
-                        <Link className='bg-green flex text-center text-white w-28 mt-3 p-1 rounded-full' to={'/update-dw'}><p className='pl-5 !text-center'>Cập nhật</p></Link>
+                        <Link className='bg-green flex text-center text-white w-28 mt-3 p-1 rounded-full' to={'/update-profile'}><p className='pl-5 !text-center'>Cập nhật</p></Link>
                     </div>
                 </div>
             </div>

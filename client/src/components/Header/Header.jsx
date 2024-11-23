@@ -5,7 +5,11 @@ import { LoginPage } from '../../pages/LoginPage/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage/RegisterPage';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAccountInformation, logout, reset } from '../../features/auth/authSlice';
+import {
+	getAccountInformation,
+	logout,
+	reset,
+} from '../../features/auth/authSlice';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { FaArrowRight, FaBars } from 'react-icons/fa';
 import { Spinner } from '../Spinner/Spinner';
@@ -21,7 +25,9 @@ export const Header = () => {
 	const [isServicesOpen, setIsServicesOpen] = useState(false); // State for dropdown
 
 	const { account } = useSelector((state) => state.auth);
-	const accountBalance = useSelector((state) => state.auth.account?.accountBalance);
+	const accountBalance = useSelector(
+		(state) => state.auth.account?.accountBalance
+	);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -73,18 +79,28 @@ export const Header = () => {
 		<div className={`mb-7 ${showHeader ? 'header-visible' : 'header-hidden'}`}>
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 			{isOpenRegisterForm && (
-				<RegisterPage setIsOpenRegisterForm={setIsOpenRegisterForm} setIsOpenLoginForm={setIsOpenLoginForm} />
+				<RegisterPage
+					setIsOpenRegisterForm={setIsOpenRegisterForm}
+					setIsOpenLoginForm={setIsOpenLoginForm}
+				/>
 			)}
 
-			<div className={`navbar-container flex justify-between px-4 py-3 ${showHeader ? 'header-background' : ''}`}>
+			<div
+				className={`navbar-container flex justify-between px-4 py-3 ${
+					showHeader ? 'header-background' : ''
+				}`}
+			>
 				<div className="menuicon pt-2 flex items-center gap-2">
-					<FaBars size={24} className="text-primary cursor-pointer" onClick={() => setIsMobileMenuVisible(true)} />
+					<FaBars
+						size={24}
+						className="text-primary cursor-pointer"
+						onClick={() => setIsMobileMenuVisible(true)}
+					/>
 					<Link to="/home">
-					<p className="text-primary font-bold logo-text pt-2">Antidee</p>
-				</Link>
+						<p className="text-primary font-bold logo-text pt-2">Antidee</p>
+					</Link>
 				</div>
 
-				
 				<ul className="navbar-menu flex text-gray normal-text pt-2 hide-on-mobile">
 					<li className="mr-5 dropdown">
 						<Link to={''}>
@@ -100,11 +116,17 @@ export const Header = () => {
 										onClick={() => navigateToServicePage(service?._id)}
 									>
 										<div className="relative grid gap-6 bg-white px-5 py-3 sm:gap-8 sm:p-8 hover:bg-light_primary hover:text-white">
-											<a href="#" className="-m-3 p-0.5 flex items-start rounded-lg hover:bg-gray-50">
+											<a
+												href="#"
+												className="-m-3 p-0.5 flex items-start rounded-lg hover:bg-gray-50"
+											>
 												<div className="ml-4 flex">
 													<p className="text-base font-medium text-gray-900">
 														{service.name}
-														<FaArrowRight className="ml-3 custom-icon inline-block" size={13} />
+														<FaArrowRight
+															className="ml-3 custom-icon inline-block"
+															size={13}
+														/>
 													</p>
 												</div>
 											</a>
@@ -158,21 +180,18 @@ export const Header = () => {
 						</>
 					) : (
 						<>
-						<button
-							className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 mr-3 border-primary border-2"
-							onClick={() => setIsOpenLoginForm(true)}
-						>
-							<span>Đăng nhập</span>
-						</button>
-						<Link to={'/sign-up'}>
-						<button
-							className="header-register-btn text-white text-center rounded-2xl font-medium w-28 p-2  bg-primary"
-							// onClick={() => setIsOpenRegisterForm(true)}
-						>
-							<span>Đăng ký</span>
-						</button>
-					</Link>
-				</>
+							<button
+								className="header-login-btn text-primary text-center rounded-2xl font-medium w-28 mr-3 border-primary border-2"
+								onClick={() => setIsOpenLoginForm(true)}
+							>
+								<span>Đăng nhập</span>
+							</button>
+							<Link to={'/sign-up'}>
+								<button className="header-register-btn text-white text-center rounded-2xl font-medium w-28 p-2  bg-primary">
+									<span>Đăng ký</span>
+								</button>
+							</Link>
+						</>
 					)}
 				</div>
 			</div>
@@ -189,5 +208,4 @@ export const Header = () => {
 			<hr className="hr-header" />
 		</div>
 	);
-
 };
