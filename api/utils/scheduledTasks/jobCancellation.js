@@ -15,14 +15,12 @@ cron.schedule('*/1 * * * *', async () => {
 			dueDate.setHours(0, 0, 0, 0);
 			now.setHours(0, 0, 0, 0);
 			if (dueDate.getTime() < now.getTime()) {
-				jobPost.cancelDetails.isCanceled = true;
 				if (
 					jobPost?.domesticHelperId == null ||
 					jobPost?.domesticHelperId == undefined
-				)
+				) {
+					jobPost.cancelDetails.isCanceled = true;
 					jobPost.cancelDetails.reason = 'Không có người nhận việc';
-				else {
-					jobPost.cancelDetails.reason = 'Chưa hoàn thành công việc';
 				}
 				await jobPost.save();
 			}

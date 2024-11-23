@@ -4,6 +4,7 @@ import { Spinner } from '../../../components';
 import {
 	getJobPost,
 	getMyReceivedJobs,
+	updateJobPost,
 } from '../../../features/jobPosts/jobPostsSlice';
 import {
 	formatDate,
@@ -23,6 +24,8 @@ import { JobPostCancel } from './JobPostCancel/JobPostCancel';
 import { getFeedbackDetail } from '../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
 import { CustomerFeedBackReview } from './CustomerFeedback/CustomerFeedbackReview';
 import { CustomerFeedback } from './CustomerFeedback/CustomerFeedback';
+import toast from 'react-hot-toast';
+import { errorStyle, successStyle } from '../../../utils/toast-customize';
 
 export const MyJobs = () => {
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
@@ -75,6 +78,26 @@ export const MyJobs = () => {
 		}
 	};
 
+	const handleCompleteJob = async () => {
+		const jobPostData = {
+			...selectedJobPost,
+			hasCompleted: {
+				...selectedJobPost.hasCompleted,
+				domesticHelperConfirm: true,
+			},
+		};
+		const result = await dispatch(
+			updateJobPost({ jobPostData, id: selectedJobPost._id })
+		);
+
+		if (result.type.endsWith('fulfilled')) {
+			toast.success('Xác nhận hoàn thành công việc thành công', successStyle);
+		} else if (result?.error?.message === 'Rejected') {
+			toast.error(result?.payload, errorStyle);
+		}
+		getMyJobList(filterOption);
+	}
+
 	useEffect(() => {
 		const jobId = searchParams.get('id');
 		if (jobId) {
@@ -90,8 +113,6 @@ export const MyJobs = () => {
 	if (jobPostLoading || accountLoading) {
 		return <Spinner />;
 	}
-
-	console.log(selectedFeedback)
 
 	return (
 		<div>
@@ -117,6 +138,12 @@ export const MyJobs = () => {
 						onFeedbackReview={() => {
 							setIsOpenJobPostDetail(false);
 							setIsOpenReviewPopup(true);
+						}}
+						onCompleteJob={() => {
+							handleCompleteJob();
+							setIsOpenJobPostDetail(false);
+							setSearchParams({});
+							setSelectedJobPost();
 						}}
 					/>
 				)}
