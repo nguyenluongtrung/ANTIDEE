@@ -17,11 +17,74 @@ const createExam = asyncHandler(async (req, res) => {
 		name,
 	} = req.body;
 
-	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
-	const allMediumQuestionList = await Question.find({
-		difficultyLevel: 'Bình thường',
+	if (
+		!category ||
+		!numOfEasyQuestion ||
+		!numOfMediumQuestion ||
+		!duration ||
+		!passGrade ||
+		!name
+	) {
+		res.status(400);
+		throw new Error('Vui lòng điền đủ thông tin');
+	}
+	const existedEntryExam = await Exam.find({
+		qualificationId: qualificationId,
+		category: 'Kiểm tra đầu vào',
 	});
-	const allHardQuestionList = await Question.find({ difficultyLevel: 'Khó' });
+	if (category == 'Kiểm tra đầu vào' && existedEntryExam.length > 0) {
+		res.status(400);
+		throw new Error('Đã tồn tại bài kiểm tra đầu vào của chứng chỉ này');
+	}
+	if (
+		Number(passGrade) >
+		Number(numOfEasyQuestion) +
+			Number(numOfMediumQuestion) +
+			Number(numOfHardQuestion)
+	) {
+		res.status(400);
+		throw new Error('Điểm cần đạt không hợp lệ');
+	}
+
+	const allEasyQuestionList = (
+		await Question.find({ difficultyLevel: 'Dễ' }).populate('serviceId')
+	).filter(
+		(question) =>
+			question.serviceId &&
+			String(question.serviceId.requiredQualification) ===
+				String(qualificationId)
+	);
+
+	const allMediumQuestionList = (
+		await Question.find({ difficultyLevel: 'Bình thường' }).populate(
+			'serviceId'
+		)
+	).filter(
+		(question) =>
+			question.serviceId &&
+			String(question.serviceId.requiredQualification) ===
+				String(qualificationId)
+	);
+
+	const allHardQuestionList = (
+		await Question.find({ difficultyLevel: 'Khó' }).populate('serviceId')
+	).filter(
+		(question) =>
+			question.serviceId &&
+			String(question.serviceId.requiredQualification) ===
+				String(qualificationId)
+	);
+
+	if (Number(numOfEasyQuestion) > allEasyQuestionList.length) {
+		res.status(400);
+		throw new Error('Không đủ số lượng câu hỏi dễ cần tạo');
+	} else if (Number(numOfMediumQuestion) > allMediumQuestionList.length) {
+		res.status(400);
+		throw new Error('Không đủ số lượng câu hỏi bình thường cần tạo');
+	} else if (Number(numOfHardQuestion) > allHardQuestionList.length) {
+		res.status(400);
+		throw new Error('Không đủ số lượng câu hỏi khó cần tạo');
+	}
 
 	const randomEasyQuestionList = [];
 	const randomMediumQuestionList = [];
@@ -141,18 +204,72 @@ const updateExam = asyncHandler(async (req, res) => {
 		numOfHardQuestion,
 		numOfQuestions,
 		duration,
-		description,
 		category,
 		passGrade,
 		qualificationId,
 		name,
 	} = req.body;
 
-	const allEasyQuestionList = await Question.find({ difficultyLevel: 'Dễ' });
-	const allMediumQuestionList = await Question.find({
-		difficultyLevel: 'Bình thường',
-	});
-	const allHardQuestionList = await Question.find({ difficultyLevel: 'Khó' });
+	if (
+		!category ||
+		!numOfEasyQuestion ||
+		!numOfMediumQuestion ||
+		!duration ||
+		!passGrade ||
+		!name
+	) {
+		res.status(400);
+		throw new Error('Vui lòng điền đủ thông tin');
+	}
+	if (
+		Number(passGrade) >
+		Number(numOfEasyQuestion) +
+			Number(numOfMediumQuestion) +
+			Number(numOfHardQuestion)
+	) {
+		res.status(400);
+		throw new Error('Điểm cần đạt không hợp lệ');
+	}
+
+	const allEasyQuestionList = (
+		await Question.find({ difficultyLevel: 'Dễ' }).populate('serviceId')
+	).filter(
+		(question) =>
+			question.serviceId &&
+			String(question.serviceId.requiredQualification) ===
+				String(qualificationId)
+	);
+
+	const allMediumQuestionList = (
+		await Question.find({ difficultyLevel: 'Bình thường' }).populate(
+			'serviceId'
+		)
+	).filter(
+		(question) =>
+			question.serviceId &&
+			String(question.serviceId.requiredQualification) ===
+				String(qualificationId)
+	);
+
+	const allHardQuestionList = (
+		await Question.find({ difficultyLevel: 'Khó' }).populate('serviceId')
+	).filter(
+		(question) =>
+			question.serviceId &&
+			String(question.serviceId.requiredQualification) ===
+				String(qualificationId)
+	);
+
+	if (Number(numOfEasyQuestion) > allEasyQuestionList.length) {
+		res.status(400);
+		throw new Error('Không đủ số lượng câu hỏi dễ cần tạo');
+	} else if (Number(numOfMediumQuestion) > allMediumQuestionList.length) {
+		res.status(400);
+		throw new Error('Không đủ số lượng câu hỏi bình thường cần tạo');
+	} else if (Number(numOfHardQuestion) > allHardQuestionList.length) {
+		res.status(400);
+		throw new Error('Không đủ số lượng câu hỏi khó cần tạo');
+	}
 
 	const randomEasyQuestionList = [];
 	const randomMediumQuestionList = [];
@@ -196,7 +313,6 @@ const updateExam = asyncHandler(async (req, res) => {
 		},
 		qualificationId,
 		duration,
-		description,
 		category,
 		passGrade,
 		name,

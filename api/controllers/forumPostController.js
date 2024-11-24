@@ -6,13 +6,20 @@ const mongoose = require('mongoose');
 
 const createForumPost = asyncHandler(async (req, res) => {
 	try {
-		const newForumPost = await ForumPost.create({
+		const forumPost = await ForumPost.create({
 			...req.body,
 			author: req.account._id,
 		});
+
+		const newForumPost = await ForumPost.findById(forumPost._id)
+			.populate('author', 'avatar name role _id')
+			.populate('topic');
+
 		res.status(201).json({
 			success: true,
-			data: newForumPost,
+			data: {
+				newForumPost,
+			},
 		});
 	} catch (error) {
 		res.status(400).json({
@@ -120,12 +127,10 @@ const getAllForumPosts = asyncHandler(async (req, res) => {
 		const hiddenPostsObjectId = hiddenPosts.map(
 			(id) => new mongoose.Types.ObjectId(id)
 		);
-		const hiddenPostsCheck = await ForumPost.find({
-			_id: { $in: hiddenPostsObjectId },
-		});
 		const forumPosts = await ForumPost.find({
 			_id: { $nin: hiddenPostsObjectId },
 		})
+			.sort({ createdAt: -1 })
 			.populate({
 				path: 'author',
 				select: 'name avatar role',

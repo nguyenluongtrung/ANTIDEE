@@ -133,30 +133,6 @@ export const HomePage = () => {
 						return false;
 					}
 				})
-				?.filter((jobPost) => {
-					const createdDate = new Date(jobPost.createdAt);
-					const currentDate = new Date();
-					const thirtyMinutesInMs = 30 * 60 * 1000;
-					const createdDatePlus30Minutes = new Date(
-						createdDate.getTime() + thirtyMinutesInMs
-					);
-					if (
-						jobPost.isChosenYourFav === true &&
-						currentDate <= createdDatePlus30Minutes
-					) {
-						if (
-							accounts
-								.find((acc) => String(acc._id) === String(jobPost.customerId))
-								?.favoriteList?.find(
-									(fav) => String(fav.domesticHelperId) === String(account._id)
-								)
-						) {
-							return true;
-						}
-					} else {
-						return true;
-					}
-				});
 			setJobPosts(filteredJobPosts);
 		} else {
 			setJobPosts([]);
@@ -270,7 +246,8 @@ export const HomePage = () => {
 							className="h-52 sm:h-56 lg:h-64 rounded-lg bg-primary"
 						>
 							{services?.map((service, index) => (
-								<div
+								<div 
+									key={index}
 									className="bg-white rounded-2xl relative p-5 text-white mx-2 transition duration-300 hover:scale-105 cursor-pointer"
 									onClick={() => navigateToServicePage(service?._id)}
 								>
