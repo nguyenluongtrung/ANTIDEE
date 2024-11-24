@@ -7,7 +7,6 @@ import {
 	FaRegHeart,
 } from 'react-icons/fa6';
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
-import { PiShareFat } from 'react-icons/pi';
 import { TbMessageReport } from 'react-icons/tb';
 import { formatDateForumPost } from '../../../utils/format';
 import { useEffect, useRef, useState } from 'react';
@@ -16,7 +15,6 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import {
 	commentForumPost,
 	getAllForumPosts,
-	getForumPost,
 	hideForumPost,
 	reactToForumPost,
 	unhideForumPost,
@@ -24,28 +22,26 @@ import {
 	updateHiddenDetails,
 } from '../../../features/forumPost/forumPostSlice';
 import { getAccountInformation } from '../../../features/auth/authSlice';
-import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { SavePostForm } from './SavePostForm';
 import reportListItems from './ReportForumPost/ReportListItems';
 import { BiSolidCommentError } from 'react-icons/bi';
 import { IoTime } from 'react-icons/io5';
-import { UpdatePostForum } from './UpdateForumPost/UpdateForumPost';
 
 export const DetailedForumPost = ({
 	postContent,
-	handleDeleteForumPost,
+	onDeleteForumPost,
 	setForumPost,
+	onUpdateForumPost
 }) => {
 	const [showPostOptions, setShowPostOptions] = useState();
+	
 	const [_hiddenPostIds, setHiddenPostIds] = useState([]);
 	const [openSavePostForm, setOpenSavePostForm] = useState(false);
 	const [undoPostId, setUndoPostId] = useState(null);
 	const dispatch = useDispatch();
-	const { postId } = useParams();
 	const [accountId, setAccountId] = useState();
 	const [myAvatar, setMyAvatar] = useState();
-	const [post, setPost] = useState();
 	const postOptionsRef = useRef(null);
 	const postRef = useRef(null);
 	const [showAllComments, setShowAllComments] = useState(false);
@@ -53,25 +49,10 @@ export const DetailedForumPost = ({
 	const [isOpenReport, setIsOpenReport] = useState(false);
 	const [reportPostId, setReportPostId] = useState();
 	const [_selectedReason, setSelectedReason] = useState(null);
-	const [isOpenUpdatePostForum, setIsOpenUpdatePostForum] = useState(false);
-	const [expandedCommentIndex, setExpandedCommentIndex] = useState(null);
 
 	const handleShowPostOptions = (postId) => {
 		setShowPostOptions((prevState) => (prevState === postId ? null : postId));
 	};
-
-	const initialForumPost = async () => {
-		const response = await dispatch(getForumPost(postId));
-		setPost(response.payload);
-	};
-
-	useEffect(() => {
-		if (postContent) {
-			setPost(postContent);
-		} else if (!postContent && postId) {
-			initialForumPost();
-		}
-	}, [postContent, postId]);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -208,30 +189,18 @@ export const DetailedForumPost = ({
 		}
 	};
 
-	const handleOpenUpdatePostForum = () => {
-		if (post) {
-			setIsOpenUpdatePostForum(true);
-		} else {
-			console.error('Không thể mở form chỉnh sửa vì bài viết không tồn tại.');
-		}
-	};
-
-	console.log(post);
+	
 
 	return (
 		<div>
-			{isOpenUpdatePostForum && postContent && (
-				<UpdatePostForum
-					chosenForumPostId={postContent._id}
-					setIsOpenUpdatePostForum={setIsOpenUpdatePostForum}
-				/>
-			)}
-			{!post?.hiddenDetails?.status && (
+			
+
+			{!postContent?.hiddenDetails?.status && (
 				<div
 					ref={postRef}
 					className="bg-white shadow-md rounded-lg overflow-hidden mt-4"
 				>
-					{undoPostId && undoPostId === post?._id ? (
+					{undoPostId && undoPostId === postContent?._id ? (
 						<div className="justify-center  bg-primary rounded p-2">
 							<div className="grid grid-cols-4 gap-4 items-center ">
 								<div className="col-span-3">
@@ -249,7 +218,7 @@ export const DetailedForumPost = ({
 								</div>
 								<button
 									className="h-10 bg-green hover:bg-blue text-xs md:text-lg lg:text-lg text-white rounded-lg  transition-colors"
-									onClick={() => handleUndoHidePost(post._id)}
+									onClick={() => handleUndoHidePost(postContent._id)}
 								>
 									Hoàn tác
 								</button>
@@ -259,7 +228,7 @@ export const DetailedForumPost = ({
 							<div className="text-white ">
 								<strong className="flex">
 									<IoTime size={30} className="mr-2" />
-									Đã ẩn bài viết của {post?.author?.name}
+									Đã ẩn bài viết của {postContent?.author?.name}
 								</strong>
 								<p className="ml-10">Tạm thời không nhìn thấy bài viết này</p>
 							</div>
@@ -268,10 +237,10 @@ export const DetailedForumPost = ({
 						<div>
 							<div className="flex justify-between">
 								<div className="flex items-center px-4 py-3">
-									{post?.author?.avatar ? (
+									{postContent?.author?.avatar ? (
 										<img
 											className="h-10 w-10 rounded-full object-cover"
-											src={post?.author?.avatar}
+											src={postContent?.author?.avatar}
 											alt="User avatar"
 										/>
 									) : (
@@ -281,20 +250,20 @@ export const DetailedForumPost = ({
 									<div className="ml-3">
 										<div className="text-sm font-semibold text-gray-900">
 											<div>
-												{post?.author?.name} ({post?.author?.role})
+												{postContent?.author?.name} ({postContent?.author?.role})
 											</div>
 										</div>
 										<div className="text-xs text-gray-600">
-											{formatDateForumPost(post?.createdAt)}
+											{formatDateForumPost(postContent?.createdAt)}
 										</div>
 									</div>
 								</div>
 								<div className="relative mx-4 my-3 flex items-center justify-center cursor-pointer w-10 h-10 rounded-full hover:bg-light_gray text-center">
 									<AiOutlineEllipsis
 										size={30}
-										onClick={() => handleShowPostOptions(post?._id)}
+										onClick={() => handleShowPostOptions(postContent?._id)}
 									/>
-									{showPostOptions === post?._id && (
+									{showPostOptions === postContent?._id && (
 										<div
 											ref={postOptionsRef}
 											className="absolute bg-white shadow-lg rounded-lg p-2 max-w-48"
@@ -306,10 +275,10 @@ export const DetailedForumPost = ({
 											}}
 										>
 											<ul>
-												{post?.author?._id === accountId && (
+												{postContent?.author?._id === accountId && (
 													<li
 														className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
-														onClick={() => handleOpenUpdatePostForum()}
+														onClick={onUpdateForumPost}
 													>
 														<div className="flex items-center">
 															<MdEdit className="mr-2" />
@@ -320,10 +289,10 @@ export const DetailedForumPost = ({
 														</p>
 													</li>
 												)}
-												{post?.author?._id === accountId ? (
+												{postContent?.author?._id === accountId ? (
 													<li
 														className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
-														onClick={handleDeleteForumPost}
+														onClick={onDeleteForumPost}
 													>
 														<div className="flex items-center">
 															<MdDeleteForever className="mr-2" />
@@ -336,7 +305,7 @@ export const DetailedForumPost = ({
 												) : (
 													<li
 														className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
-														onClick={() => handleHidePost(post?._id)}
+														onClick={() => handleHidePost(postContent?._id)}
 													>
 														<div className="flex items-center">
 															<MdDeleteForever className="mr-2" />
@@ -352,7 +321,7 @@ export const DetailedForumPost = ({
 													className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
 													onClick={() => {
 														setIsOpenReport(true);
-														setReportPostId(post?._id);
+														setReportPostId(postContent?._id);
 													}}
 												>
 													<div className="flex items-center">
@@ -413,13 +382,13 @@ export const DetailedForumPost = ({
 							<div>
 								<div className="px-4">
 									<p className="font-semibold text-[20px] text-[#2b2b2b]">
-										{post?.title}
+										{postContent?.title}
 									</p>
-									{post?.topic && (
+									{postContent?.topic && (
 										<div className="flex flex-wrap gap-1 my-2">
-											{post.topic &&
-												post.topic.length > 0 &&
-												post.topic.slice(0, 2).map((topic) => (
+											{postContent.topic &&
+												postContent.topic.length > 0 &&
+												postContent.topic.slice(0, 2).map((topic) => (
 													<div
 														key={topic._id}
 														className="bg-yellow text-[12px] px-2 py-1 rounded-md text-white"
@@ -427,19 +396,19 @@ export const DetailedForumPost = ({
 														{topic.topicName}
 													</div>
 												))}
-											{post.topic && post.topic.length > 2 && (
+											{postContent.topic && postContent.topic.length > 2 && (
 												<div className="bg-gray-200 text-[12px] py-1 rounded-md text-gray">
-													+ {post.topic.length - 2} chủ đề khác
+													+ {postContent.topic.length - 2} chủ đề khác
 												</div>
 											)}
 										</div>
 									)}
 								</div>
 								<div className="mb-2 px-4">
-									<p className="text-[14px]">{post?.content}</p>
+									<p className="text-[14px]">{postContent?.content}</p>
 								</div>
 
-								{post?.images?.map((image, index) => (
+								{postContent?.images?.map((image, index) => (
 									<img
 										className="w-full object-cover"
 										src={image}
@@ -452,25 +421,25 @@ export const DetailedForumPost = ({
 							<div className="px-4 py-4 flex items-center justify-between border-t">
 								<div className="flex">
 									<div className="flex items-center cursor-pointer">
-										{post?.likes?.includes(accountId) ? (
+										{postContent?.likes?.includes(accountId) ? (
 											<FaHeart
 												color="red"
 												onClick={() =>
-													handleUnReactToForumPost(post._id, accountId)
+													handleUnReactToForumPost(postContent._id, accountId)
 												}
 											/>
 										) : (
 											<FaRegHeart
 												onClick={() =>
-													handleReactToForumPost(post._id, accountId)
+													handleReactToForumPost(postContent._id, accountId)
 												}
 											/>
 										)}
-										<span className="ml-2">{post?.likes?.length}</span>
+										<span className="ml-2">{postContent?.likes?.length}</span>
 									</div>
 									<div className="flex items-center cursor-pointer ml-4">
 										<FaRegComment />
-										<span className="ml-2">{post?.comments?.length}</span>
+										<span className="ml-2">{postContent?.comments?.length}</span>
 									</div>
 									<div
 										className="flex items-center cursor-pointer ml-4"
@@ -481,10 +450,10 @@ export const DetailedForumPost = ({
 									</div>
 								</div>
 							</div>
-							{post?.comments && (
+							{postContent?.comments && (
 								<div className="px-4 py-4">
-									{post.comments
-										.slice(0, showAllComments ? post.comments.length : 3)
+									{postContent.comments
+										.slice(0, showAllComments ? postContent.comments.length : 3)
 										.map((comment, index) => (
 											<div key={index} className="flex mb-4">
 												<img
@@ -518,7 +487,7 @@ export const DetailedForumPost = ({
 											className="flex items-center ml-3 w-full rounded-full border-[1px] px-3 py-2 group focus-within:border-[1px]"
 											onSubmit={(e) => {
 												e.preventDefault();
-												handleCommentSubmit(post?._id);
+												handleCommentSubmit(postContent?._id);
 											}}
 										>
 											<input
@@ -532,7 +501,7 @@ export const DetailedForumPost = ({
 									</div>
 									{showAllComments ? (
 										<>
-											{post?.comments?.map((comment, index) => (
+											{postContent?.comments?.map((comment, index) => (
 												<p key={index} comment={comment} />
 											))}
 											<button onClick={handleHideComments} className="mt-1">
@@ -541,10 +510,10 @@ export const DetailedForumPost = ({
 										</>
 									) : (
 										<>
-											{post?.comments?.slice(0, 3).map((comment, index) => (
+											{postContent?.comments?.slice(0, 3).map((comment, index) => (
 												<p key={index} comment={comment} />
 											))}
-											{post?.comments?.length > 3 && (
+											{postContent?.comments?.length > 3 && (
 												<button
 													onClick={() => setShowAllComments(true)}
 													className="mt-1"
@@ -559,7 +528,7 @@ export const DetailedForumPost = ({
 
 							{openSavePostForm && (
 								<SavePostForm
-									chosenForumPostId={post?._id}
+									chosenForumPostId={postContent?._id}
 									setOpenSavePostForm={setOpenSavePostForm}
 								/>
 							)}

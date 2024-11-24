@@ -56,16 +56,10 @@ import { AccountManagement } from './pages/AdminPage/AccountManagement/AccountMa
 import { UpdateAccountRole } from './pages/AdminPage/UpdateAccountRole/UpdateAccountRole';
 import { TransactionHistory } from './pages/TransactionHistory/TransactionHistory';
 import { AccountSalary } from './pages/MyAccount/AccountSalary/AccountSalary';
-import { ForumLayout } from './pages/ForumPage/layout';
-import { ForumDiscussions } from './pages/ForumPage/ForumDiscussions';
-import { ForumRepositories } from './pages/ForumPage/ForumRepositories';
-import { DetailedRepository } from './pages/ForumPage/DetailedRepository';
-import { DetailedForumPost } from './pages/ForumPage/components/DetailedForumPost';
 import { JobSchedulePage } from './pages/JobSchedulePage';
 import { MyCourses } from './pages/CoursesPage';
 import { LessonsPage } from './pages/CoursesPage/LessonsPage/LessonsPage';
 import { VoucherDetail } from './pages/HistoryVoucher/VoucherDetail/VoucherDetail';
-import { JobPostDetail } from './pages/JobPostListPage/JobPostDetail/JobPostDetail';
 import { PromotionDetail } from './pages/AdminPage/PromotionManagement/PromotionDetail/PromotionDetail';
 import { UpdatePromotion } from './pages/AdminPage/PromotionManagement/UpdatePromotion/UpdatePromotion';
 import { CourseManagement } from './pages/AdminPage/CourseManagement/CourseManagement';
@@ -75,20 +69,20 @@ import { ReportDetail } from './pages/AdminPage/ReportPostForum/ReportDetail/Rep
 import { UpdateCourse } from './pages/AdminPage/CourseManagement/UpdateCourse/UpdateCourse';
 import { CreateCourse } from './pages/AdminPage/CourseManagement/CreateCourse/CreateCourse';
 import { UpdateExam } from './pages/AdminPage/ExamManagement/UpdateExam/UpdateExam';
-import { QuestionDetail } from './pages/AdminPage/QuestionManagement/QuestionDetail/QuestionDetail';
 import { CreateQuestion } from './pages/AdminPage/QuestionManagement/CreateQuestion/CreateQuestion';
 import { UpdateQuestion } from './pages/AdminPage/QuestionManagement/UpdateQuestion/UpdateQuestion';
-
 import { Chat } from './components/Chat/Chat';
 import { AdminChatManager } from './pages/AdminPage/ChatManagement/AdminChatManagement';
-
 import { CoursesDetail } from './pages/AdminPage/CourseManagement/CourseDetail/CourseDetail';
 import { CreatePromotion } from './pages/AdminPage/PromotionManagement/CreatePromotion/CreatePromotion';
 import { CreateQualification } from './pages/AdminPage/QualificationManagement/CreateQualification/CreateQualification';
 import { UpdateQualification } from './pages/AdminPage/QualificationManagement/UpdateQualification/UpdateQualification';
 import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 import { DetailExam } from './pages/AdminPage/ExamManagement/DetailExam/DetailExam';
-
+import { ForumPage } from './pages/ForumPage/ForumPage';
+import { DetailedForumPost } from './pages/ForumPage/components/DetailedForumPost';
+import { ForumRepositories } from './pages/ForumPage/components/ForumRepositories';
+import { DetailedRepository } from './pages/ForumPage/components/DetailedRepository';
 
 const App = () => {
 	return (
@@ -182,20 +176,17 @@ const AppContent = () => {
 						<Route path="/journey" element={<JourneyPage />} />
 						<Route path="/ranking" element={<RankingPage />} />
 						<Route path="/job-schedule" element={<JobSchedulePage />} />
-						<Route path="/forum" element={<ForumLayout />}>
-							<Route path="discussions" element={<ForumDiscussions />}>
-								<Route path="topic/:topicId" element={<ForumDiscussions />} />
-							</Route>
-							<Route path="repositories" element={<ForumRepositories />} />
-							<Route
-								path="repositories/:repositoryId"
-								element={<DetailedRepository />}
-							/>
+						<Route path="/discussions" element={<ForumPage />}>
 							<Route
 								path="discussions/:postId"
 								element={<DetailedForumPost />}
 							/>
 						</Route>
+						<Route path="repositories" element={<ForumRepositories />} />
+						<Route
+								path="repositories/:repositoryId"
+								element={<DetailedRepository />}
+							/>
 					</Route>
 					{isAdminPage && (
 						<>
