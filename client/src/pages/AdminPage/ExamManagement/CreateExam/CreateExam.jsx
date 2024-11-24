@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { createExam } from '../../../../features/exams/examSlice';
 import { Spinner } from '../../../../components';
-import toast from 'react-hot-toast';
+import toast, { ToastBar, Toaster } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import './CreateExam.css';
 import { useEffect } from 'react';
@@ -39,7 +39,7 @@ export const CreateExam = () => {
 		const result = await dispatch(createExam(examData));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Thêm bài kiểm tra thành công', successStyle);
-			navigate('/admin-exam')
+			navigate('/admin-exam');
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
@@ -53,6 +53,7 @@ export const CreateExam = () => {
 		<div className="w-full min-h-screen bg-white flex flex-row">
 			<AdminSidebar />
 			<div className="flex-1 px-10 pt-5">
+				<Toaster />
 				<div className="flex mb-10 text-2xl font-bold">
 					Đang <p className="text-primary text-2xl px-2">Tạo mới</p> bài thi{' '}
 				</div>

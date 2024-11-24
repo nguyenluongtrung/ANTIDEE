@@ -192,8 +192,8 @@ export const EntryExamPage = () => {
 										(answer) =>
 											Number(answer.questionNumber) ===
 												Number(customIndex + 1) &&
-											answer.answerContent != question.correctAnswer &&
-											choice == answer.answerContent
+											String(answer.answerContent).trim().toLowerCase() != String(question.correctAnswer).trim().toLowerCase() &&
+											String(choice).trim().toLowerCase() == String(answer.answerContent).trim().toLowerCase()
 									);
 								return (
 									<div>
@@ -214,7 +214,7 @@ export const EntryExamPage = () => {
 										<span
 											className={`${
 												isSubmit &&
-												choice === question?.correctAnswer &&
+												String(choice).trim().toLowerCase() == String(question?.correctAnswer).trim().toLowerCase()  &&
 												'text-green'
 											} ${isWrongAnswer && 'text-red'}`}
 										>
