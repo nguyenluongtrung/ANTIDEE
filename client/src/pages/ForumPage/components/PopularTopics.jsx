@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BsPostcardHeartFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { CreatePostForum } from './CreateForumPost/CreateForumPost';
 import {
 	getAllForumPostsByTopic,
-	getMostPopularTopics,
 } from '../../../features/topics/topicSlice';
 import { useDispatch } from 'react-redux';
 import goldMedal from '../../../../public/image/gold-medal.png';
 import silverMedal from '../../../../public/image/silver-medal.png';
 import copperMedal from '../../../../public/image/copper-medal.png';
 
-export const PopularTopics = ({allTopics, setForumPosts}) => {
+export const PopularTopics = ({setForumPosts, mostPopularTopics, onCreateForumPost}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
-	const [mostPopularTopics, setMostPopularTopics] = useState([]);
-
-	async function initialPopularTopics() {
-		let output = await dispatch(getMostPopularTopics());
-
-		setMostPopularTopics(output.payload);
-	}
-
-	useEffect(() => {
-		initialPopularTopics();
-	}, []);
 
 	const handleTopicClick = async (topicId) => {
 		const output = await dispatch(getAllForumPostsByTopic(topicId));
@@ -41,24 +27,15 @@ export const PopularTopics = ({allTopics, setForumPosts}) => {
 
 	return (
 		<div className="p-4">
-			{isOpenCreatePostForum && (
-				<CreatePostForum
-					allTopics={allTopics}
-					setForumPosts={setForumPosts}
-					onClose={() => {
-						setIsOpenCreatePostForum(false)
-					}}
-				/>
-			)}
 			<div className={`bg-white rounded-lg shadow-md p-4 space-y-2`}>
 				<button
-					className="bg-primary text-white rounded-xl px-5 py-2 w-full font-semibold	hover:bg-primary_dark fea-item"
-					onClick={() => setIsOpenCreatePostForum(true)}
+					className="bg-primary text-white rounded-xl px-5 py-2 w-full font-semibold	hover:bg-primary_dark"
+					onClick={onCreateForumPost}
 				>
 					Tạo thảo luận
 				</button>
 				<button
-					className="bg-green text-white rounded-xl px-5 py-2 w-full font-semibold	hover:bg-primary_dark fea-item"
+					className="bg-green text-white rounded-xl px-5 py-2 w-full font-semibold hover:bg-primary_dark"
 					onClick={() => handleBackToHome()}
 				>
 					Trang chủ
@@ -87,7 +64,7 @@ export const PopularTopics = ({allTopics, setForumPosts}) => {
 					return (
 						<div key={index}>
 							<div
-								className="flex items-center mb-4 hover:bg-primary p-2 rounded-lg cursor-pointer hvr-shutter-in-horizontal group"
+								className="flex items-center mb-4 hover:bg-primary hover:text-white p-2 rounded-lg cursor-pointer hvr-shutter-in-horizontal group"
 								onClick={() => handleTopicClick(pTopics._id)}
 							>
 								{index <= 2 && (

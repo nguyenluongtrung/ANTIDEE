@@ -12,9 +12,13 @@ import { useEffect, useState } from 'react';
 import { UpdatePostForum } from './components/UpdateForumPost/UpdateForumPost';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { getAllTopics } from '../../features/topics/topicSlice';
+import {
+	getAllTopics,
+	getMostPopularTopics,
+} from '../../features/topics/topicSlice';
 import { successStyle } from '../../utils/toast-customize';
 import { PostForumInfo } from './components/PostForumInfo/PostForumInfo';
+import { CreatePostForum } from './components/CreateForumPost/CreateForumPost';
 
 export const ForumPage = () => {
 	const dispatch = useDispatch();
@@ -24,33 +28,35 @@ export const ForumPage = () => {
 	const [allTopics, setAllTopics] = useState([]);
 	const [isOpenUpdatePostForum, setIsOpenUpdatePostForum] = useState(false);
 	const [isOpenDetailPostForum, setIsOpenDetailPostForum] = useState(false);
+	const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
 	const [listTopDiscussions, setListTopDiscussions] = useState([]);
+	const [mostPopularTopics, setMostPopularTopics] = useState([]);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const resultFetchTopDiscussionsPosts = await dispatch(
-				getTopDiscussionForumPosts()
-			);
-			setListTopDiscussions(resultFetchTopDiscussionsPosts.payload);
-		};
+	async function fetchPopularTopics() {
+		let output = await dispatch(getMostPopularTopics());
 
-		fetchData();
-	}, []);
+		setMostPopularTopics(output.payload);
+	}
 
 	const fetchForumPosts = async () => {
-		const output = await dispatch(getAllForumPosts());
-		if (output.type.includes('fulfilled')) {
-			setForumPosts(output.payload);
+		const result = await dispatch(getAllForumPosts());
+		if (result.type.includes('fulfilled')) {
+			setForumPosts(result.payload);
 		} else {
 			setForumPosts();
 		}
 	};
 
-	useEffect(() => {
-		fetchForumPosts();
-	}, []);
+	const fetchTopDiscussions = async () => {
+		const result = await dispatch(getTopDiscussionForumPosts());
+		if (result.type.includes('fulfilled')) {
+			setListTopDiscussions(result.payload);
+		} else {
+			setListTopDiscussions();
+		}
+	};
 
-	async function initialAllTopics() {
+	async function fetchAllTopics() {
 		let output = await dispatch(getAllTopics());
 
 		if (output.type.includes('fulfilled')) {
@@ -61,35 +67,32 @@ export const ForumPage = () => {
 	}
 
 	useEffect(() => {
-		initialAllTopics();
+		fetchPopularTopics();
+	}, []);
+
+	useEffect(() => {
+		fetchTopDiscussions();
+	}, []);
+
+	useEffect(() => {
+		fetchForumPosts();
+	}, []);
+
+	useEffect(() => {
+		fetchAllTopics();
 	}, []);
 
 	const handleOpenUpdatePostForum = async (jobPostId) => {
-		const result = await dispatch(getForumPost(jobPostId));
-		if (result.type.includes('fulfilled')) {
-			setSelectedForumPost(result.payload);
-			setIsOpenUpdatePostForum(true);
-		} else {
-			setIsOpenUpdatePostForum(false);
-			toast.error('Có lỗi xảy ra!');
+		if (jobPostId) {
+			const result = await dispatch(getForumPost(jobPostId));
+			if (result.type.includes('fulfilled')) {
+				setSelectedForumPost(result.payload);
+				setIsOpenUpdatePostForum(true);
+			} else {
+				setIsOpenUpdatePostForum(false);
+				toast.error('Có lỗi xảy ra!');
+			}
 		}
-	};
-
-	useEffect(() => {
-		const forumPostId = searchParams.get('id');
-		if (forumPostId) {
-			handleOpenUpdatePostForum(forumPostId);
-		}
-	}, [searchParams.get('id')]);
-
-	const handleUpdateCommentLocal = (forumPostId) => {
-		setForumPosts((prevPosts) => {
-			const updatedPost = [...prevPosts];
-			const foundPostIndex = updatedPost.findIndex(
-				(post) => post._id == forumPostId
-			);
-			return prevPosts;
-		});
 	};
 
 	const handleDeleteForumPost = async (forumPostId) => {
@@ -100,21 +103,49 @@ export const ForumPage = () => {
 		} else {
 			toast.error(result?.payload, errorStyle);
 		}
+		fetchTopDiscussions();
+		fetchAllTopics();
 	};
 
 	const handleOpenDiscussionDetail = async (id) => {
-		const result = await dispatch(getForumPost(id));
-		if (result.type.includes('fulfilled')) {
-			setSelectedForumPost(result.payload);
-			setIsOpenDetailPostForum(true);
-		} else {
-			setIsOpenDetailPostForum(false);
-			toast.error('Có lỗi xảy ra!');
+		if (id) {
+			const result = await dispatch(getForumPost(id));
+			if (result.type.includes('fulfilled')) {
+				setSelectedForumPost(result.payload);
+				setIsOpenDetailPostForum(true);
+			} else {
+				setIsOpenDetailPostForum(false);
+				toast.error('Có lỗi xảy ra!');
+			}
 		}
-	}
+	};
+
+	useEffect(() => {
+		const forumPostId = searchParams.get('id');
+		const action = searchParams.get('action');
+		if (forumPostId && action) {
+			if (action == 'update') {
+				handleOpenUpdatePostForum(forumPostId);
+			} else if (action == 'detail') {
+				handleOpenDiscussionDetail(forumPostId);
+			}
+		}
+	}, [searchParams.get('id'), searchParams.get('action')]);
 
 	return (
 		<div>
+			{isOpenCreatePostForum && (
+				<CreatePostForum
+					allTopics={allTopics}
+					setForumPosts={setForumPosts}
+					onClose={() => {
+						setIsOpenCreatePostForum(false);
+						fetchForumPosts();
+						fetchTopDiscussions();
+						fetchPopularTopics();
+					}}
+				/>
+			)}
 			{isOpenUpdatePostForum && (
 				<UpdatePostForum
 					selectedForumPost={selectedForumPost}
@@ -124,6 +155,8 @@ export const ForumPage = () => {
 						setSelectedForumPost();
 						setSearchParams({});
 						fetchForumPosts();
+						fetchTopDiscussions();
+						fetchPopularTopics();
 					}}
 				/>
 			)}
@@ -136,32 +169,47 @@ export const ForumPage = () => {
 						setSelectedForumPost();
 						setSearchParams({});
 						fetchForumPosts();
+						fetchTopDiscussions();
+						fetchPopularTopics();
 					}}
 				/>
 			)}
 			<div className={`discussion mt-14`}>
 				<div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-4">
-					<PopularTopics setForumPosts={setForumPosts} allTopics={allTopics}/>
+					<PopularTopics
+						setForumPosts={setForumPosts}
+						mostPopularTopics={mostPopularTopics}
+						onCreateForumPost={() => {
+							setIsOpenCreatePostForum(true);
+						}}
+					/>
 					<div className="p-4">
 						{forumPosts?.map((post) => {
 							return (
 								<DetailedForumPost
 									postContent={post}
 									onDeleteForumPost={() => handleDeleteForumPost(post._id)}
-									handleUpdateCommentLocal={() =>
-										handleUpdateCommentLocal(post._id)
-									}
 									onUpdateForumPost={() => {
-										setSearchParams({ id: post?._id });
+										setSearchParams({ id: post?._id, action: 'update' });
 										handleOpenUpdatePostForum(post?._id);
 									}}
+									refetchData={() => {
+										fetchForumPosts();
+										fetchTopDiscussions();
+										fetchPopularTopics();
+									}}
 									setForumPosts={setForumPosts}
-									setSearchParams={setSearchParams}
 								/>
 							);
 						})}
 					</div>
-					<TopDiscussions listTopDiscussions={listTopDiscussions} onOpenTopDiscussionDetail={handleOpenDiscussionDetail}/>
+					<TopDiscussions
+						listTopDiscussions={listTopDiscussions}
+						onOpenTopDiscussionDetail={(postId) => {
+							setSearchParams({ id: postId, action: 'detail' });
+							handleOpenDiscussionDetail();
+						}}
+					/>
 				</div>
 			</div>
 		</div>
