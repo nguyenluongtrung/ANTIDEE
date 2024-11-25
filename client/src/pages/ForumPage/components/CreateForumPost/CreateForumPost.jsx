@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
 	createForumPost,
 } from '../../../../features/forumPost/forumPostSlice';
@@ -19,7 +19,7 @@ import {
 import { app } from '../../../../firebase';
 import { FiUploadCloud } from 'react-icons/fi';
 
-export const CreatePostForum = ({ allTopics, setForumPosts, onClose }) => {
+export const CreatePostForum = ({ allTopics, onClose }) => {
 	const {
 		register,
 		handleSubmit,
@@ -167,9 +167,6 @@ export const CreatePostForum = ({ allTopics, setForumPosts, onClose }) => {
 				const result = await dispatch(createForumPost(forumPostData));
 				if (result.type.endsWith('fulfilled')) {
 					toast.success('Đăng bài thành công', successStyle);
-					setForumPosts((prevForumPost) => {
-						return [result.payload, ...prevForumPost]
-					})
 					onClose();
 				} else if (result?.error?.message === 'Rejected') {
 					toast.error(result?.payload, errorStyle);

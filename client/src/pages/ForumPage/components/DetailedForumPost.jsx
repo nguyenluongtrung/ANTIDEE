@@ -14,7 +14,6 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import {
 	commentForumPost,
-	getAllForumPosts,
 	hideForumPost,
 	reactToForumPost,
 	unhideForumPost,
@@ -31,11 +30,11 @@ import { IoTime } from 'react-icons/io5';
 export const DetailedForumPost = ({
 	postContent,
 	onDeleteForumPost,
-	setForumPost,
-	onUpdateForumPost
+	setForumPosts,
+	onUpdateForumPost,
+	refetchData
 }) => {
 	const [showPostOptions, setShowPostOptions] = useState();
-	
 	const [_hiddenPostIds, setHiddenPostIds] = useState([]);
 	const [openSavePostForm, setOpenSavePostForm] = useState(false);
 	const [undoPostId, setUndoPostId] = useState(null);
@@ -100,7 +99,7 @@ export const DetailedForumPost = ({
 			setHiddenPostIds((prevHiddenIds) =>
 				prevHiddenIds.filter((id) => id !== postId)
 			);
-			setForumPost((prevPosts) =>
+			setForumPosts((prevPosts) =>
 				prevPosts.map((post) =>
 					post._id === postId ? { ...post, isHidden: false } : post
 				)
@@ -130,21 +129,10 @@ export const DetailedForumPost = ({
 
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Bình luận thành công', successStyle);
-			setForumPost((prevPosts) => {
-				const updatedPost = [...prevPosts];
-				const foundPostIndex = updatedPost.findIndex(
-					(post) => post._id == forumPostId
-				);
-				updatedPost[foundPostIndex] = {
-					...updatedPost[foundPostIndex],
-					comments: result.payload,
-				};
-				return updatedPost;
-			});
+			refetchData();
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error('Có lỗi xảy ra. Vui lòng thử lại!', errorStyle);
 		}
-		await dispatch(getAllForumPosts());
 		setComment('');
 	};
 
@@ -158,7 +146,14 @@ export const DetailedForumPost = ({
 			reactToForumPost({ forumPostId: postId, userId: accountId })
 		);
 		if (result.type.endsWith('fulfilled')) {
-			setPost(result.payload);
+			setForumPosts((prevPostList) => {
+				const updatedPostList = [...prevPostList];
+				const postIndex = updatedPostList.findIndex((post) => String(post._id) == String(result.payload._id));
+				if(postIndex != -1){
+					updatedPostList[postIndex] = result.payload;
+				}
+				return updatedPostList
+			})
 		}
 	};
 
@@ -167,7 +162,14 @@ export const DetailedForumPost = ({
 			unReactToForumPost({ forumPostId: postId, userId: accountId })
 		);
 		if (result.type.endsWith('fulfilled')) {
-			setPost(result.payload);
+			setForumPosts((prevPostList) => {
+				const updatedPostList = [...prevPostList];
+				const postIndex = updatedPostList.findIndex((post) => String(post._id) == String(result.payload._id));
+				if(postIndex != -1){
+					updatedPostList[postIndex] = result.payload;
+				}
+				return updatedPostList
+			})
 		}
 	};
 

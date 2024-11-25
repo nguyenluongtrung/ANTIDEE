@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import './PostForumInfo.css';
-import { FiUploadCloud } from 'react-icons/fi';
 
-export const PostForumInfo = ({ allTopics, selectedForumPost, onClose }) => {
-	const [selectedTopics, setSelectedTopics] = useState([]);
-	useEffect(() => {
-		if (selectedForumPost && selectedForumPost.topic) {
-			setSelectedTopics(selectedForumPost.topic.map((t) => t._id));
-		}
-	}, [selectedForumPost]);
-
+export const PostForumInfo = ({ selectedForumPost, onClose }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
@@ -26,7 +18,7 @@ export const PostForumInfo = ({ allTopics, selectedForumPost, onClose }) => {
 					<p>Chủ đề:</p>
 					<div className="flex">
 						{selectedForumPost.topic.map((topic, index) => (
-							<p className='italic'>{topic.topicName} {index !== selectedForumPost.topic.length - 1 && ', '}</p>
+							<p className='italic'>{topic.topicName}{index !== selectedForumPost.topic.length - 1 && ','} </p>
 						))}
 					</div>
 				</div>
