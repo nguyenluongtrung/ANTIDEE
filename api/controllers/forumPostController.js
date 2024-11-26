@@ -193,11 +193,19 @@ const saveForumPost = asyncHandler(async (req, res) => {
 			account: req.account._id,
 		});
 	} else {
-		repositoryExists.postsList.push({
-			postId: req.params.forumPostId,
-		});
-		repository = repositoryExists;
-		await repositoryExists.save();
+		const forumPostIndex = repositoryExists.postsList.findIndex(
+			(post) => String(post.postId) == String(req.params.forumPostId)
+		);
+		if (forumPostIndex != -1) {
+			res.status(400);
+			throw new Error('Bài viết đã được lưu');
+		} else {
+			repositoryExists.postsList.push({
+				postId: req.params.forumPostId,
+			});
+			repository = repositoryExists;
+			await repositoryExists.save();
+		}
 	}
 	res.status(201).json({
 		status: 'success',
@@ -216,6 +224,22 @@ const getForumRepositories = asyncHandler(async (req, res) => {
 		status: 'success',
 		data: {
 			repositories,
+		},
+	});
+});
+
+const getForumRepository = asyncHandler(async (req, res) => {
+	const repository = await PostRepository.findById(req.params.repoId).populate({
+		path: 'postsList.postId',
+		populate: {
+			path: 'topic',
+		},
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			repository,
 		},
 	});
 });
@@ -382,6 +406,7 @@ module.exports = {
 	getForumPost,
 	saveForumPost,
 	getForumRepositories,
+	getForumRepository,
 	hideForumPost,
 	unhideForumPost,
 	commentForumPost,

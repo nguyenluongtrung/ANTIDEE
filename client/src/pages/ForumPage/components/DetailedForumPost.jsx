@@ -32,7 +32,8 @@ export const DetailedForumPost = ({
 	onDeleteForumPost,
 	setForumPosts,
 	onUpdateForumPost,
-	refetchData
+	refetchData,
+	repositories
 }) => {
 	const [showPostOptions, setShowPostOptions] = useState();
 	const [_hiddenPostIds, setHiddenPostIds] = useState([]);
@@ -191,12 +192,8 @@ export const DetailedForumPost = ({
 		}
 	};
 
-	
-
 	return (
 		<div>
-			
-
 			{!postContent?.hiddenDetails?.status && (
 				<div
 					ref={postRef}
@@ -532,6 +529,8 @@ export const DetailedForumPost = ({
 								<SavePostForm
 									chosenForumPostId={postContent?._id}
 									setOpenSavePostForm={setOpenSavePostForm}
+									repositories={repositories}
+									refetchData={refetchData}
 								/>
 							)}
 						</div>
