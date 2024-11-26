@@ -15,11 +15,15 @@ import { MdOutlineNoteAlt } from 'react-icons/md';
 import { LiaMoneyCheckAltSolid } from 'react-icons/lia';
 import { PiMoneyWavy } from 'react-icons/pi';
 import { RiCalendarScheduleLine } from 'react-icons/ri';
+import { GrStatusInfo } from 'react-icons/gr';
 
 import { appendHourToDate } from '../../utils/format';
 
 import { getAccountInformation } from '../../features/auth/authSlice';
-import { getAllJobPosts, getJobPost } from '../../features/jobPosts/jobPostsSlice';
+import {
+	getAllJobPosts,
+	getJobPost,
+} from '../../features/jobPosts/jobPostsSlice';
 import { getAllServices } from '../../features/services/serviceSlice';
 
 import './JobSchedulePage.css';
@@ -40,11 +44,7 @@ export const JobSchedulePage = () => {
 	const getAllJobList = async () => {
 		let output = await dispatch(getAllJobPosts());
 		let newJobHistory = output.payload.filter(
-			(job) =>
-				job.domesticHelperId == String(myAccountId) &&
-				job?.hasCompleted?.customerConfirm == false &&
-				job?.hasCompleted?.domesticHelperConfirm == false &&
-				job?.cancelDetails?.isCanceled == false
+			(job) => job.domesticHelperId == String(myAccountId)
 		);
 
 		const myJobs = [];
@@ -161,7 +161,7 @@ export const JobSchedulePage = () => {
 						}}
 						events={filteredJobs}
 						locale={viLocale}
-						dayMaxEvents={6}
+						dayMaxEvents={4}
 						eventClick={handleEventClick}
 					/>
 				</div>

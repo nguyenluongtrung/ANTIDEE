@@ -12,10 +12,6 @@ import {
 	getCurrentTimeString,
 } from '../../utils/format';
 import { JobPostDetail } from './JobPostDetail/JobPostDetail';
-import {
-	getAccountInformation,
-	getAllAccounts,
-} from '../../features/auth/authSlice';
 import './JobPostListPage.css';
 import Select from 'react-select';
 import { getAllServices } from '../../features/services/serviceSlice';
@@ -27,8 +23,6 @@ export const JobPostListPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
 	const [isInMyLocation, setIsInMyLocation] = useState(false);
-	const [account, setAccount] = useState();
-	const [accounts, setAccounts] = useState();
 	const [serviceOptions, setServiceOptions] = useState([]);
 	const [chosenServiceOptions, setChosenServiceOptions] = useState([]);
 	const [jobPosts, setJobPosts] = useState([]);
@@ -38,30 +32,10 @@ export const JobPostListPage = () => {
 	const dispatch = useDispatch();
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 
-	async function initiateAccountInformation() {
-		let output = await dispatch(getAccountInformation());
-
-		setAccount(output.payload);
-	}
-
-	async function initiateAllAccounts() {
-		let output = await dispatch(getAllAccounts());
-
-		setAccounts(output.payload);
-	}
-
 	async function initiateJobPosts() {
 		let output = await dispatch(getAllJobPosts());
 		setJobPosts(output.payload);
 	}
-
-	useEffect(() => {
-		initiateAccountInformation();
-	}, []);
-
-	useEffect(() => {
-		initiateAllAccounts();
-	}, []);
 
 	useEffect(() => {
 		const isOpenJobPostDetail = location.state?.isOpenJobPostDetail;
@@ -200,32 +174,6 @@ export const JobPostListPage = () => {
 							return true;
 						} else {
 							return false;
-						}
-					})
-					?.filter((jobPost) => {
-						const createdDate = new Date(jobPost.createdAt);
-						const currentDate = new Date();
-
-						const thirtyMinutesInMs = 30 * 60 * 1000;
-						const createdDatePlus30Minutes = new Date(
-							createdDate.getTime() + thirtyMinutesInMs
-						);
-						if (
-							jobPost.isChosenYourFav == true &&
-							currentDate <= createdDatePlus30Minutes
-						) {
-							if (
-								accounts
-									.find((acc) => String(acc._id) === String(jobPost.customerId))
-									.favoriteList.find(
-										(fav) =>
-											String(fav.domesticHelperId) === String(account._id)
-									)
-							) {
-								return true;
-							}
-						} else {
-							return true;
 						}
 					})
 					?.map((post) => {

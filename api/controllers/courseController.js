@@ -227,7 +227,7 @@ const getLessonsByCourse = asyncHandler(async (req, res) => {
 						const examByAccountId = await AccountExam.findOne({
 							accountId: req.account._id,
 							examId: content.examId,
-						});
+						}).sort({ createdAt: -1 });
 
 						if (examByAccountId && examByAccountId.isPassed) {
 							numOfPassedContent += 1;

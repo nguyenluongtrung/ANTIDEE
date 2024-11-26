@@ -1,17 +1,15 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
 	createForumPost,
-	getAllForumPosts,
 } from '../../../../features/forumPost/forumPostSlice';
 import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 import { AiOutlineClose } from 'react-icons/ai';
 import './CreateForumPost.css';
-import { getAllTopics } from '../../../../features/topics/topicSlice';
 import {
 	getDownloadURL,
 	getStorage,
@@ -21,11 +19,7 @@ import {
 import { app } from '../../../../firebase';
 import { FiUploadCloud } from 'react-icons/fi';
 
-export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPosts }) => {
-	const { isLoading: forumPostLoading, forumPosts } = useSelector(
-		(state) => state.forumPosts
-	);
-	const { topics } = useSelector((state) => state.topics);
+export const CreatePostForum = ({ allTopics, onClose }) => {
 	const {
 		register,
 		handleSubmit,
@@ -34,12 +28,6 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
 
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (!forumPosts || forumPosts.length === 0) {
-			dispatch(getAllForumPosts());
-		}
-		dispatch(getAllTopics());
-	}, [dispatch, forumPosts]);
 	const fileRef = useRef(null);
 	const [file, setFile] = useState(undefined);
 	const [filePerc, setFilePerc] = useState(0);
@@ -179,8 +167,7 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
 				const result = await dispatch(createForumPost(forumPostData));
 				if (result.type.endsWith('fulfilled')) {
 					toast.success('Đăng bài thành công', successStyle);
-					setIsOpenCreatePostForum(false);
-					handleGetAllForumPosts();
+					onClose();
 				} else if (result?.error?.message === 'Rejected') {
 					toast.error(result?.payload, errorStyle);
 				}
@@ -234,20 +221,17 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
 			}
 		);
 	};
-	if (forumPostLoading) {
-		return <Spinner />;
-	}
 
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="content rounded-md p-5 w-[40vw] max-h-screen overflow-y-auto"
+				className="content rounded-md p-5 w-[40vw] max-h-[80%] overflow-y-auto"
 			>
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
-					onClick={() => setIsOpenCreatePostForum(false)}
+					onClick={onClose}
 				/>
 				<p className="grid text-primary font-bold text-xl justify-center">
 					TẠO BÀI VIẾT
@@ -285,7 +269,7 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
 				<div className="mt-3">
 					<div>Chủ đề</div>
 					<div className="flex flex-wrap gap-2">
-						{topics.map((topic) => (
+						{allTopics.map((topic) => (
 							<div
 								key={topic._id}
 								value={topic._id}
@@ -353,7 +337,7 @@ export const CreatePostForum = ({ setIsOpenCreatePostForum, handleGetAllForumPos
 					<button
 						className="btn-submit bg-primary w-full h-10 text-white p-2 rounded-md hover:bg-primary-dark"
 						type="submit"
-						disabled={isCheckingImage || forumPostLoading}
+						disabled={isCheckingImage}
 					>
 						{isCheckingImage ? (
 							<>

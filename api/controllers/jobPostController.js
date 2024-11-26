@@ -17,8 +17,8 @@ const createJobPost = asyncHandler(async (req, res) => {
 	const customer = accounts.find(
 		(acc) => String(acc._id) == String(jobPost.customerId)
 	);
-	const qualifications = await AccountQualification.find({
-		accountId: req.params.accountId,
+	const validAccountQualifications = await AccountQualification.find({
+		qualificationId: String(service.requiredQualification),
 	});
 
 	if (jobPost.paymentMethod == 'Ví người dùng') {
@@ -42,7 +42,9 @@ const createJobPost = asyncHandler(async (req, res) => {
 	if (isUrgent) {
 		for (let account of accounts) {
 			if (
-				qualifications?.includes(service.requiredQualification) &&
+				validAccountQualifications.find(
+					(acc) => String(acc.accountId) == String(account._id)
+				) &&
 				account.isEligible &&
 				account?.role === 'Người giúp việc'
 			) {
@@ -68,7 +70,9 @@ const createJobPost = asyncHandler(async (req, res) => {
 	if (isChosenYourFav) {
 		for (let account of accounts) {
 			if (
-				qualifications?.includes(service.requiredQualification) &&
+				validAccountQualifications.find(
+					(acc) => String(acc.accountId) == String(account._id)
+				) &&
 				account?.role === 'Người giúp việc' &&
 				account.isEligible &&
 				customer?.favoriteList?.findIndex(
@@ -244,7 +248,7 @@ const filterJobPostsByService = asyncHandler(async (req, res) => {
 
 const getJobPost = asyncHandler(async (req, res) => {
 	const jobPost = await JobPost.findById(req.params.jobPostId).populate(
-		'serviceId domesticHelperId'
+		'serviceId domesticHelperId applicants'
 	);
 
 	if (!jobPost) {

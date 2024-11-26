@@ -165,7 +165,7 @@ export const ExamManagement = () => {
 									<td className="font-medium text-center text-gray">
 										<button
 											className="hover:cursor-pointer text-xl pt-1.5"
-											
+											onClick={() => navigate(`detail/${exam._id}`)}
 										>
 											<MdOutlineRemoveRedEye className="block mx-auto" />
 										</button>

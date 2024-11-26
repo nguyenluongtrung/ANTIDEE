@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { FaPlus } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import {
-	getForumRepositories,
 	saveForumPost,
 } from '../../../features/forumPost/forumPostSlice';
 import toast from 'react-hot-toast';
@@ -12,10 +11,11 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 export const SavePostForm = ({
 	setOpenSavePostForm,
 	chosenForumPostId,
+	repositories,
+	refetchData
 }) => {
 	const [createNewRepo, setCreateNewRepo] = useState(false);
 	const [repositoryName, setRepositoryName] = useState('');
-	const [repositories, setRepositories] = useState([]);
 	const dispatch = useDispatch();
 
 	const savePost = async (e) => {
@@ -29,16 +29,8 @@ export const SavePostForm = ({
 			toast.error(response?.payload, errorStyle);
 		}
 		setOpenSavePostForm(false);
+		refetchData();
 	};
-
-	useEffect(() => {
-		const getAllRepositories = async () => {
-			const response = await dispatch(getForumRepositories());
-			console.log(response.payload);
-			setRepositories(response.payload);
-		};
-		getAllRepositories();
-	}, []);
 
 	return (
 		<div className="popup active">

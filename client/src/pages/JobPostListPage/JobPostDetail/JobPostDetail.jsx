@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { applyAJob, getAJob } from '../../../features/jobPosts/jobPostsSlice';
 import './JobPostDetail.css';
+import { getAccountInformation } from '../../../features/auth/authSlice';
 
 export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 	const [isChecked, setIsChecked] = useState(false);
@@ -81,6 +82,7 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 			toast.error(result?.payload, errorStyle);
 		}
 		onClose();
+		await dispatch(getAccountInformation());
 	};
 
 	// useEffect(() => {
