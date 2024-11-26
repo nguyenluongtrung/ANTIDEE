@@ -63,7 +63,11 @@ const updateForumPost = async (token, forumPostData, forumPostId) => {
 		},
 	};
 
-	const response = await axios.patch(API_URL + `${forumPostId}`, forumPostData, config);
+	const response = await axios.patch(
+		API_URL + `${forumPostId}`,
+		forumPostData,
+		config
+	);
 	return response.data.data;
 };
 
@@ -133,6 +137,16 @@ const getForumRepositories = async (token) => {
 	return response.data.data.repositories;
 };
 
+const getForumRepository = async (token, id) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	const response = await axios.get(API_URL + `repository/${id}`, config);
+	return response.data.data.repository;
+};
+
 const hideForumPost = async (forumPostId, token) => {
 	try {
 		const config = {
@@ -151,11 +165,12 @@ const hideForumPost = async (forumPostId, token) => {
 			response.data &&
 			response.data.status === 'success' &&
 			response.data.data
-		) {c
+		) {
+			c;
 			if (Array.isArray(response.data.data) && response.data.data.length > 0) {
-				return response.data.data[0].id; 
+				return response.data.data[0].id;
 			} else if (response.data.data.id) {
-				return response.data.data.id;  
+				return response.data.data.id;
 			} else {
 				throw new Error('Data structure does not contain post ID');
 			}
@@ -187,9 +202,9 @@ export const unhideForumPost = async (forumPostId, token) => {
 
 		if (response.data && response.data.status === 'success') {
 			if (Array.isArray(response.data.data) && response.data.data.length > 0) {
-				return response.data.data[0];  
+				return response.data.data[0];
 			} else if (response.data.data && response.data.data._id) {
-				return response.data.data;  
+				return response.data.data;
 			} else {
 				console.warn(
 					'Unhide action successful but no valid post data returned.'
@@ -263,5 +278,6 @@ const forumPostService = {
 	updateHiddenDetails,
 	getForumPost,
 	updateForumPost,
+	getForumRepository,
 };
 export default forumPostService;

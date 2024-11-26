@@ -9,7 +9,7 @@ import goldMedal from '../../../../public/image/gold-medal.png';
 import silverMedal from '../../../../public/image/silver-medal.png';
 import copperMedal from '../../../../public/image/copper-medal.png';
 
-export const PopularTopics = ({setForumPosts, mostPopularTopics, onCreateForumPost}) => {
+export const PopularTopics = ({setForumPosts, mostPopularTopics, onCreateForumPost, onOpenMyRepositories}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ export const PopularTopics = ({setForumPosts, mostPopularTopics, onCreateForumPo
 				</button>
 				<div
 					className="flex items-center p-3 rounded-md gap-2 hover:bg-primary  transition duration-300 cursor-pointer hvr-shutter-in-horizontal"
-					onClick={() => navigate('/forum/repositories')}
+					onClick={onOpenMyRepositories}
 				>
 					<BsPostcardHeartFill className="text-white bg-green rounded-full w-7 h-7 p-1" />
 					<div className="font-semibold">Bài viết đã lưu</div>

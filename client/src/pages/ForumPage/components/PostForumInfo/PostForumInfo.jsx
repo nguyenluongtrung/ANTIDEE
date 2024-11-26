@@ -3,6 +3,15 @@ import { AiOutlineClose } from 'react-icons/ai';
 import './PostForumInfo.css';
 
 export const PostForumInfo = ({ selectedForumPost, onClose }) => {
+	const allTopicName =
+		selectedForumPost.topic && selectedForumPost.topic.length > 0
+			? selectedForumPost.topic.map((topic, index) => {
+					return (
+						topic.topicName +
+						(index !== selectedForumPost.topic.length - 1 ? ', ' : '')
+					);
+			  })
+			: '';
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
@@ -12,21 +21,21 @@ export const PostForumInfo = ({ selectedForumPost, onClose }) => {
 					onClick={onClose}
 				/>
 				<div className="mt-3">
-					<p className='font-semibold text-center text-[16px] text-primary uppercase'>{selectedForumPost?.title}</p>
+					<p className="font-semibold text-center text-[16px] text-primary uppercase">
+						{selectedForumPost?.title}
+					</p>
 				</div>
-				<div className="mt-3 flex justify-center gap-2 text-gray">
-					<p>Chủ đề:</p>
-					<div className="flex">
-						{selectedForumPost.topic.map((topic, index) => (
-							<p className='italic'>{topic.topicName}{index !== selectedForumPost.topic.length - 1 && ','} </p>
-						))}
+				{allTopicName && (
+					<div className="mt-1 flex justify-center gap-2 text-gray">
+						<p className="underline">Chủ đề:</p>
+						<p className="truncate max-w-[300px]">{allTopicName}</p>
 					</div>
-				</div>
+				)}
 				<div className="mt-3">
-					<p className='text-justify'>{selectedForumPost?.content}</p>
+					<p className="text-justify">{selectedForumPost?.content}</p>
 				</div>
 				<div className="mt-3 flex items-center gap-2">
-					<img className='!w-full' src={selectedForumPost.images[0]} />
+					<img className="!w-full" src={selectedForumPost.images[0]} />
 				</div>
 			</div>
 		</div>

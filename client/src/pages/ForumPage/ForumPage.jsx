@@ -5,6 +5,8 @@ import {
 	deleteForumPost,
 	getAllForumPosts,
 	getForumPost,
+	getForumRepositories,
+	getForumRepository,
 	getTopDiscussionForumPosts,
 } from '../../features/forumPost/forumPostSlice';
 import { DetailedForumPost } from './components/DetailedForumPost';
@@ -19,18 +21,33 @@ import {
 import { successStyle } from '../../utils/toast-customize';
 import { PostForumInfo } from './components/PostForumInfo/PostForumInfo';
 import { CreatePostForum } from './components/CreateForumPost/CreateForumPost';
+import { ForumRepositories } from './components/ForumRepositories';
+import { DetailedRepository } from './components/DetailedRepository';
 
 export const ForumPage = () => {
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [selectedForumPost, setSelectedForumPost] = useState();
+	const [selectedForumRepository, setSelectedForumRepository] = useState();
 	const [forumPosts, setForumPosts] = useState([]);
 	const [allTopics, setAllTopics] = useState([]);
 	const [isOpenUpdatePostForum, setIsOpenUpdatePostForum] = useState(false);
 	const [isOpenDetailPostForum, setIsOpenDetailPostForum] = useState(false);
 	const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
+	const [isOpenMyRepositories, setIsOpenMyRepositories] = useState(false);
+	const [isOpenRepositoryDetail, setIsOpenRepositoryDetail] = useState(false);
 	const [listTopDiscussions, setListTopDiscussions] = useState([]);
 	const [mostPopularTopics, setMostPopularTopics] = useState([]);
+	const [repositories, setRepositories] = useState([]);
+
+	const fetchAllRepositories = async () => {
+		const result = await dispatch(getForumRepositories());
+		if (result.type.includes('fulfilled')) {
+			setRepositories(result.payload);
+		} else {
+			setRepositories();
+		}
+	};
 
 	async function fetchPopularTopics() {
 		let output = await dispatch(getMostPopularTopics());
@@ -65,6 +82,10 @@ export const ForumPage = () => {
 			setAllTopics([]);
 		}
 	}
+
+	useEffect(() => {
+		fetchAllRepositories();
+	}, []);
 
 	useEffect(() => {
 		fetchPopularTopics();
@@ -115,6 +136,19 @@ export const ForumPage = () => {
 				setIsOpenDetailPostForum(true);
 			} else {
 				setIsOpenDetailPostForum(false);
+				toast.error('Có lỗi xảy ra!');
+			}
+		}
+	};
+
+	const handleOpenRepositoryDetail = async (id) => {
+		if (id) {
+			const result = await dispatch(getForumRepository(id));
+			if (result.type.includes('fulfilled')) {
+				setSelectedForumRepository(result.payload);
+				setIsOpenRepositoryDetail(true);
+			} else {
+				setIsOpenRepositoryDetail(false);
 				toast.error('Có lỗi xảy ra!');
 			}
 		}
@@ -174,6 +208,35 @@ export const ForumPage = () => {
 					}}
 				/>
 			)}
+			{isOpenMyRepositories && (
+				<ForumRepositories
+					selectedForumPost={selectedForumPost}
+					repositories={repositories}
+					onOpenRepositoryDetail={(repoId) => {
+						setIsOpenMyRepositories(false);
+						handleOpenRepositoryDetail(repoId);
+					}}
+					onClose={() => {
+						setIsOpenMyRepositories(false);
+						fetchForumPosts();
+						fetchTopDiscussions();
+						fetchPopularTopics();
+					}}
+				/>
+			)}
+			{isOpenRepositoryDetail && (
+				<DetailedRepository
+					selectedForumRepository={selectedForumRepository}
+					onClose={() => {
+						setIsOpenRepositoryDetail(false);
+					}}
+					onOpenTopDiscussionDetail={(postId) => {
+						setSearchParams({ id: postId, action: 'detail' });
+						setIsOpenRepositoryDetail(false);
+						handleOpenDiscussionDetail();
+					}}
+				/>
+			)}
 			<div className={`discussion mt-14`}>
 				<div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-4">
 					<PopularTopics
@@ -181,6 +244,9 @@ export const ForumPage = () => {
 						mostPopularTopics={mostPopularTopics}
 						onCreateForumPost={() => {
 							setIsOpenCreatePostForum(true);
+						}}
+						onOpenMyRepositories={() => {
+							setIsOpenMyRepositories(true);
 						}}
 					/>
 					<div className="p-4">
@@ -197,8 +263,10 @@ export const ForumPage = () => {
 										fetchForumPosts();
 										fetchTopDiscussions();
 										fetchPopularTopics();
+										fetchAllRepositories();
 									}}
 									setForumPosts={setForumPosts}
+									repositories={repositories}
 								/>
 							);
 						})}

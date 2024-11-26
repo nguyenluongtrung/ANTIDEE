@@ -98,12 +98,10 @@ const AppContent = () => {
 	const isAdminPage = pathname.startsWith('/admin');
 	return (
 		<div className="app-container select-none bg-white">
-			
 			{!isAdminPage && <div className="sidebar-container z-50"></div>}
 			{!isAdminPage && <Chat />}
 
 			<div className="content-container select-none">
-
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<HomePage />} />
@@ -111,7 +109,10 @@ const AppContent = () => {
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/my-account" element={<MyAccount />} />
-						<Route path="/my-account/change-password" element={<ChangePasswordPage />} />
+						<Route
+							path="/my-account/change-password"
+							element={<ChangePasswordPage />}
+						/>
 						<Route path="/entry-exam/:examId" element={<EntryExamPage />} />
 						<Route path="/invite-friend" element={<InviteFriendPage />} />
 						<Route path="/become-helper" element={<WannaBecomeHelperPage />} />
@@ -176,17 +177,7 @@ const AppContent = () => {
 						<Route path="/journey" element={<JourneyPage />} />
 						<Route path="/ranking" element={<RankingPage />} />
 						<Route path="/job-schedule" element={<JobSchedulePage />} />
-						<Route path="/discussions" element={<ForumPage />}>
-							<Route
-								path="discussions/:postId"
-								element={<DetailedForumPost />}
-							/>
-						</Route>
-						<Route path="repositories" element={<ForumRepositories />} />
-						<Route
-								path="repositories/:repositoryId"
-								element={<DetailedRepository />}
-							/>
+						<Route path="/discussions" element={<ForumPage />} />
 					</Route>
 					{isAdminPage && (
 						<>
@@ -194,20 +185,29 @@ const AppContent = () => {
 							<Route path="/admin-dashboard" element={<Dashboard />} />
 							<Route path="/admin-exam" element={<ExamManagement />} />
 							<Route path="/admin-exam/create" element={<CreateExam />} />
-							<Route path="/admin-exam/update/:examId" element={<UpdateExam />} />
-							<Route path="/admin-exam/detail/:examId" element={<DetailExam />} />
+							<Route
+								path="/admin-exam/update/:examId"
+								element={<UpdateExam />}
+							/>
+							<Route
+								path="/admin-exam/detail/:examId"
+								element={<DetailExam />}
+							/>
 							<Route path="/admin-question" element={<QuestionManagement />} />
 							<Route path="/admin-chat" element={<AdminChatManager />} />
-							<Route path="/admin-question/create" element={<CreateQuestion />} />
-							<Route path="/admin-question/update/:questionId" element={<UpdateQuestion />} />
+							<Route
+								path="/admin-question/create"
+								element={<CreateQuestion />}
+							/>
+							<Route
+								path="/admin-question/update/:questionId"
+								element={<UpdateQuestion />}
+							/>
 							<Route
 								path="/admin-course"
-								element={<CourseManagement />}>
-							</Route>
-							<Route
-								path="/admin-course/create"
-								element={<CreateCourse />}
-							/>
+								element={<CourseManagement />}
+							></Route>
+							<Route path="/admin-course/create" element={<CreateCourse />} />
 							<Route
 								path="/admin-course/update/:courseId"
 								element={<UpdateCourse />}
@@ -221,7 +221,6 @@ const AppContent = () => {
 									path="/admin-promotion/detail/:promotionId"
 									element={<PromotionDetail />}
 								/>
-
 							</Route>
 							<Route
 								path="/admin-promotion/update/:promotionId"
@@ -239,13 +238,25 @@ const AppContent = () => {
 								path="/admin-qualification"
 								element={<QualificationManagement />}
 							/>
-							<Route path="/admin-qualification/create" element={<CreateQualification />} />
-							<Route path="/admin-qualification/update/:qualificateId" element={<UpdateQualification />} />
+							<Route
+								path="/admin-qualification/create"
+								element={<CreateQualification />}
+							/>
+							<Route
+								path="/admin-qualification/update/:qualificateId"
+								element={<UpdateQualification />}
+							/>
 							<Route path="/admin-service" element={<ServiceManagement />} />
 							<Route path="/admin-video" element={<VideoManagement />} />
 							<Route path="/admin-video/create" element={<CreateVideo />} />
-							<Route path="/admin-video/update/:videoId" element={<UpdateVideo />} />
-							<Route path="/admin-video/video-detail" element={<VideoDetail />} />
+							<Route
+								path="/admin-video/update/:videoId"
+								element={<UpdateVideo />}
+							/>
+							<Route
+								path="/admin-video/video-detail"
+								element={<VideoDetail />}
+							/>
 							<Route path="/admin-report-forum" element={<ReportPostForum />}>
 								<Route
 									path="/admin-report-forum/report-detail/:reportId"

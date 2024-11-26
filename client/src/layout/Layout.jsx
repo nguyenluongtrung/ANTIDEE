@@ -1,13 +1,14 @@
-import { Footer, Header } from '../components';
-import { Outlet } from 'react-router-dom';
-import { Toaster, ToastBar } from 'react-hot-toast';
+import { Outlet } from "react-router-dom";
+import { Footer, Header } from "../components";
+import { ToastBar, Toaster } from "react-hot-toast";
 
 export const Layout = () => {
 	return (
-		<>
+		<div className="flex flex-col min-h-screen">
 			<Header />
-			<Outlet>
-			</Outlet>
+			<div className="flex-grow">
+				<Outlet />
+			</div>
 			<Footer />
 			<Toaster>
 				{(t) => (
@@ -22,6 +23,6 @@ export const Layout = () => {
 					/>
 				)}
 			</Toaster>
-		</>
+		</div>
 	);
 };
