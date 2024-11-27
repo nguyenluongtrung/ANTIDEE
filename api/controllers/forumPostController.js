@@ -6,13 +6,20 @@ const mongoose = require('mongoose');
 
 const createForumPost = asyncHandler(async (req, res) => {
 	try {
-		const newForumPost = await ForumPost.create({
+		const forumPost = await ForumPost.create({
 			...req.body,
 			author: req.account._id,
 		});
+
+		const newForumPost = await ForumPost.findById(forumPost._id)
+			.populate('author', 'avatar name role _id')
+			.populate('topic');
+
 		res.status(201).json({
 			success: true,
-			data: newForumPost,
+			data: {
+				newForumPost,
+			},
 		});
 	} catch (error) {
 		res.status(400).json({
@@ -120,12 +127,10 @@ const getAllForumPosts = asyncHandler(async (req, res) => {
 		const hiddenPostsObjectId = hiddenPosts.map(
 			(id) => new mongoose.Types.ObjectId(id)
 		);
-		const hiddenPostsCheck = await ForumPost.find({
-			_id: { $in: hiddenPostsObjectId },
-		});
 		const forumPosts = await ForumPost.find({
 			_id: { $nin: hiddenPostsObjectId },
 		})
+			.sort({ createdAt: -1 })
 			.populate({
 				path: 'author',
 				select: 'name avatar role',
@@ -188,11 +193,19 @@ const saveForumPost = asyncHandler(async (req, res) => {
 			account: req.account._id,
 		});
 	} else {
-		repositoryExists.postsList.push({
-			postId: req.params.forumPostId,
-		});
-		repository = repositoryExists;
-		await repositoryExists.save();
+		const forumPostIndex = repositoryExists.postsList.findIndex(
+			(post) => String(post.postId) == String(req.params.forumPostId)
+		);
+		if (forumPostIndex != -1) {
+			res.status(400);
+			throw new Error('Bài viết đã được lưu');
+		} else {
+			repositoryExists.postsList.push({
+				postId: req.params.forumPostId,
+			});
+			repository = repositoryExists;
+			await repositoryExists.save();
+		}
 	}
 	res.status(201).json({
 		status: 'success',
@@ -211,6 +224,22 @@ const getForumRepositories = asyncHandler(async (req, res) => {
 		status: 'success',
 		data: {
 			repositories,
+		},
+	});
+});
+
+const getForumRepository = asyncHandler(async (req, res) => {
+	const repository = await PostRepository.findById(req.params.repoId).populate({
+		path: 'postsList.postId',
+		populate: {
+			path: 'topic',
+		},
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			repository,
 		},
 	});
 });
@@ -342,7 +371,7 @@ const unReactToForumPost = asyncHandler(async (req, res) => {
 
 const updateHiddenDetails = async (req, res) => {
 	const { postId } = req.params;
-	const { accountId, reasonContent, status } = req.body;
+	const { reasonContent, status } = req.body;
 
 	try {
 		const post = await ForumPost.findById(postId);
@@ -351,7 +380,7 @@ const updateHiddenDetails = async (req, res) => {
 		}
 
 		post.hiddenDetails.reasons.push({
-			accountId: accountId,
+			accountId: req.account._id,
 			content: reasonContent,
 			update: new Date(),
 		});
@@ -377,6 +406,7 @@ module.exports = {
 	getForumPost,
 	saveForumPost,
 	getForumRepositories,
+	getForumRepository,
 	hideForumPost,
 	unhideForumPost,
 	commentForumPost,

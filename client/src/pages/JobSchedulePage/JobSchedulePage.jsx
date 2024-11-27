@@ -241,26 +241,6 @@ export const JobSchedulePage = () => {
 															{detailJobPost.totalPrice} vnđ
 														</p>
 													</div>
-													{detailJobPost.hasCompleted.customerConfirm &&
-														detailJobPost.hasCompleted
-															.domesticHelperConfirm && (
-															<div className="text-base mt-3 text-black font-bold flex items-center gap-x-4">
-																<GrStatusInfo size={17} />
-																Trạng thái:{' '}
-																<p className="text-green font-medium">
-																	Đã hoàn thành
-																</p>
-															</div>
-														)}
-													{detailJobPost.cancelDetails.isCanceled && (
-															<div className="text-base mt-3 text-black font-bold flex items-center gap-x-4">
-																<GrStatusInfo size={17} />
-																Trạng thái:{' '}
-																<p className="text-red font-medium">
-																	Đã hủy
-																</p>
-															</div>
-														)}
 												</div>
 											)}
 										</div>

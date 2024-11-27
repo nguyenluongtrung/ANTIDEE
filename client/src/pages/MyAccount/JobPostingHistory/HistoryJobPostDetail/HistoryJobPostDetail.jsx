@@ -9,9 +9,7 @@ import {
 } from '../../../../utils/format';
 import toast from 'react-hot-toast';
 import { IoMdCheckboxOutline } from 'react-icons/io';
-import {
-	selectATasker,
-} from '../../../../features/jobPosts/jobPostsSlice';
+import { selectATasker } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
 
 export const HistoryJobPostDetail = ({
@@ -21,7 +19,7 @@ export const HistoryJobPostDetail = ({
 	onCancelJob,
 	onDomesticHelperFeedback,
 	onFeedbackReview,
-	onCompleteJob
+	onCompleteJob,
 }) => {
 	const [isOpenApplicantsDetails, setIsOpenApplicantsDetails] = useState(false);
 
@@ -38,6 +36,7 @@ export const HistoryJobPostDetail = ({
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
+		onClose();
 	};
 
 	if (isLoading) {
@@ -258,36 +257,22 @@ export const HistoryJobPostDetail = ({
 								>
 									<div className="mr-10 flex flex-col justify-center">
 										<img
-											src={
-												accounts?.find(
-													(acc) => String(acc._id) == String(applicant)
-												)?.avatar
-											}
+											src={applicant?.avatar}
 											className="w-16 rounded-full"
 										/>
 									</div>
 									<div className="w-80">
-										<p className="font-bold">
-											{
-												accounts?.find(
-													(acc) => String(acc._id) == String(applicant)
-												)?.name
-											}
-										</p>
+										<p className="font-bold">{applicant?.name}</p>
 										<p className="">Điểm uy tín: 4.5 / 5.0</p>
 										<p className="italic mt-1 text-white bg-primary rounded-2xl p-1 w-20 text-center">
-											{
-												accounts?.find(
-													(acc) => String(acc._id) == String(applicant)
-												)?.accountLevel?.domesticHelperLevel?.name
-											}
+											{applicant?.accountLevel?.domesticHelperLevel?.name}
 										</p>
 									</div>
 									<div className="flex flex-col justify-center">
 										<IoMdCheckboxOutline
 											size={25}
 											className="text-brown hover:cursor-pointer hover:text-green"
-											onClick={() => handleSelectTasker(applicant)}
+											onClick={() => handleSelectTasker(applicant._id)}
 										/>
 									</div>
 								</div>

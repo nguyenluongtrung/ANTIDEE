@@ -6,7 +6,7 @@ export const getAllForumPosts = createAsyncThunk(
 	async (_, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount?.data?.token;  
+			const token = storedAccount?.data?.token;
 			if (!token) {
 				throw new Error('No token found');
 			}
@@ -29,7 +29,7 @@ export const getTopDiscussionForumPosts = createAsyncThunk(
 	async (_, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			const token = storedAccount?.data?.token;  
+			const token = storedAccount?.data?.token;
 			if (!token) {
 				throw new Error('No token found');
 			}
@@ -91,9 +91,13 @@ export const updateForumPost = createAsyncThunk(
 	async ({ forumPostData, postId }, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
-			console.log(forumPostData, postId)
+			console.log(forumPostData, postId);
 			const token = storedAccount.data.token;
-			return await forumPostService.updateForumPost(token, forumPostData, postId);
+			return await forumPostService.updateForumPost(
+				token,
+				forumPostData,
+				postId
+			);
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -170,6 +174,27 @@ export const getForumRepositories = createAsyncThunk(
 		}
 	}
 );
+
+export const getForumRepository = createAsyncThunk(
+	'forumPosts/getForumRepository',
+	async (id, thunkAPI) => {
+		try {
+			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
+			return await forumPostService.getForumRepository(token, id);
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			return thunkAPI.rejectWithValue(message);
+		}
+	}
+);
+
 export const hideForumPost = createAsyncThunk(
 	'forumPosts/hideForumPost',
 	async (forumPostId, thunkAPI) => {
@@ -284,12 +309,11 @@ export const commentForumPost = createAsyncThunk(
 
 export const updateHiddenDetails = createAsyncThunk(
 	'forumPosts/updateHiddenDetails',
-	async ({ accountId, reasonContent, status, postId }, thunkAPI) => {
+	async ({ reasonContent, status, postId }, thunkAPI) => {
 		try {
 			const storedUser = JSON.parse(localStorage.getItem('account'));
 			const token = storedUser.data.token;
 			return await forumPostService.updateHiddenDetails(
-				accountId,
 				reasonContent,
 				status,
 				postId,
@@ -390,7 +414,9 @@ export const forumPostSlice = createSlice({
 			.addCase(updateForumPost.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				const index = state.forumPosts.findIndex((forumPost) => forumPost._id === action.payload._id);
+				const index = state.forumPosts.findIndex(
+					(forumPost) => forumPost._id === action.payload._id
+				);
 				if (index !== -1) {
 					state.forumPosts[index] = action.payload;
 				}
