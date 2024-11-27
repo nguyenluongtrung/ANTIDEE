@@ -8,6 +8,8 @@ import {
 	getForumRepositories,
 	getForumRepository,
 	getTopDiscussionForumPosts,
+	hideForumPost,
+	updateHiddenDetails,
 } from '../../features/forumPost/forumPostSlice';
 import { DetailedForumPost } from './components/DetailedForumPost';
 import { useEffect, useState } from 'react';
@@ -18,11 +20,12 @@ import {
 	getAllTopics,
 	getMostPopularTopics,
 } from '../../features/topics/topicSlice';
-import { successStyle } from '../../utils/toast-customize';
+import { errorStyle, successStyle } from '../../utils/toast-customize';
 import { PostForumInfo } from './components/PostForumInfo/PostForumInfo';
 import { CreatePostForum } from './components/CreateForumPost/CreateForumPost';
 import { ForumRepositories } from './components/ForumRepositories';
 import { DetailedRepository } from './components/DetailedRepository';
+import { ReportForm } from './components/ReportForm';
 
 export const ForumPage = () => {
 	const dispatch = useDispatch();
@@ -36,6 +39,7 @@ export const ForumPage = () => {
 	const [isOpenCreatePostForum, setIsOpenCreatePostForum] = useState(false);
 	const [isOpenMyRepositories, setIsOpenMyRepositories] = useState(false);
 	const [isOpenRepositoryDetail, setIsOpenRepositoryDetail] = useState(false);
+	const [isOpenReportForumPost, setIsOpenReportForumPost] = useState(false);
 	const [listTopDiscussions, setListTopDiscussions] = useState([]);
 	const [mostPopularTopics, setMostPopularTopics] = useState([]);
 	const [repositories, setRepositories] = useState([]);
@@ -154,6 +158,25 @@ export const ForumPage = () => {
 		}
 	};
 
+	const handleReportForumPost = async (reasonContent) => {
+		const result = await dispatch(
+			updateHiddenDetails({
+				reasonContent,
+				postId: searchParams.get('id'),
+			})
+		);
+
+		if (result.type.endsWith('fulfilled')) {
+			await dispatch(hideForumPost(searchParams.get('id')));
+			fetchForumPosts();
+			toast.success('Báo cáo bài viết thành công', successStyle);
+		} else {
+			toast.error('Có lỗi xảy ra. Vui lòng thử lại!', errorStyle);
+		}
+		setSearchParams({});
+		setIsOpenReportForumPost(false);
+	};
+
 	useEffect(() => {
 		const forumPostId = searchParams.get('id');
 		const action = searchParams.get('action');
@@ -162,6 +185,8 @@ export const ForumPage = () => {
 				handleOpenUpdatePostForum(forumPostId);
 			} else if (action == 'detail') {
 				handleOpenDiscussionDetail(forumPostId);
+			} else if (action == 'report') {
+				setIsOpenReportForumPost(true);
 			}
 		}
 	}, [searchParams.get('id'), searchParams.get('action')]);
@@ -233,8 +258,17 @@ export const ForumPage = () => {
 					onOpenTopDiscussionDetail={(postId) => {
 						setSearchParams({ id: postId, action: 'detail' });
 						setIsOpenRepositoryDetail(false);
-						handleOpenDiscussionDetail();
+						handleOpenDiscussionDetail(postId);
 					}}
+				/>
+			)}
+			{isOpenReportForumPost && (
+				<ReportForm
+					onClose={() => {
+						setSearchParams({});
+						setIsOpenReportForumPost(false);
+					}}
+					onReportForumPost={handleReportForumPost}
 				/>
 			)}
 			<div className={`discussion mt-14`}>
@@ -258,6 +292,11 @@ export const ForumPage = () => {
 									onUpdateForumPost={() => {
 										setSearchParams({ id: post?._id, action: 'update' });
 										handleOpenUpdatePostForum(post?._id);
+									}}
+									onReportForumPost={(postId) => {
+										setSearchParams({ id: postId, action: 'report' });
+										setIsOpenReportForumPost(true);
+										
 									}}
 									refetchData={() => {
 										fetchForumPosts();

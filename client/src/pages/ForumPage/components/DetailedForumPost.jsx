@@ -1,4 +1,4 @@
-import { AiOutlineClose, AiOutlineEllipsis } from 'react-icons/ai';
+import { AiOutlineEllipsis } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';
 import {
 	FaHeart,
@@ -18,12 +18,10 @@ import {
 	reactToForumPost,
 	unhideForumPost,
 	unReactToForumPost,
-	updateHiddenDetails,
 } from '../../../features/forumPost/forumPostSlice';
 import { getAccountInformation } from '../../../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { SavePostForm } from './SavePostForm';
-import reportListItems from './ReportForumPost/ReportListItems';
 import { BiSolidCommentError } from 'react-icons/bi';
 import { IoTime } from 'react-icons/io5';
 
@@ -32,8 +30,9 @@ export const DetailedForumPost = ({
 	onDeleteForumPost,
 	setForumPosts,
 	onUpdateForumPost,
+	onReportForumPost,
 	refetchData,
-	repositories
+	repositories,
 }) => {
 	const [showPostOptions, setShowPostOptions] = useState();
 	const [_hiddenPostIds, setHiddenPostIds] = useState([]);
@@ -46,9 +45,6 @@ export const DetailedForumPost = ({
 	const postRef = useRef(null);
 	const [showAllComments, setShowAllComments] = useState(false);
 	const [comment, setComment] = useState('');
-	const [isOpenReport, setIsOpenReport] = useState(false);
-	const [reportPostId, setReportPostId] = useState();
-	const [_selectedReason, setSelectedReason] = useState(null);
 
 	const handleShowPostOptions = (postId) => {
 		setShowPostOptions((prevState) => (prevState === postId ? null : postId));
@@ -83,11 +79,12 @@ export const DetailedForumPost = ({
 
 	const handleHidePost = async (postId) => {
 		try {
-			await dispatch(hideForumPost(postId)).unwrap();
+			await dispatch(hideForumPost(postId));
 			setHiddenPostIds((prevHiddenIds) => [...prevHiddenIds, postId]);
 			setUndoPostId(postId);
 			setTimeout(() => {
 				setUndoPostId(null);
+				refetchData();
 			}, 5000);
 		} catch (error) {
 			console.error('Đã xảy ra lỗi khi ẩn bài viết:', error);
@@ -96,7 +93,7 @@ export const DetailedForumPost = ({
 
 	const handleUndoHidePost = async (postId) => {
 		try {
-			const result = await dispatch(unhideForumPost(postId)).unwrap();
+			const result = await dispatch(unhideForumPost(postId));
 			setHiddenPostIds((prevHiddenIds) =>
 				prevHiddenIds.filter((id) => id !== postId)
 			);
@@ -105,6 +102,7 @@ export const DetailedForumPost = ({
 					post._id === postId ? { ...post, isHidden: false } : post
 				)
 			);
+			refetchData();
 		} catch (error) {
 			console.error('Lỗi khi khôi phục bài viết:', error);
 		}
@@ -149,12 +147,14 @@ export const DetailedForumPost = ({
 		if (result.type.endsWith('fulfilled')) {
 			setForumPosts((prevPostList) => {
 				const updatedPostList = [...prevPostList];
-				const postIndex = updatedPostList.findIndex((post) => String(post._id) == String(result.payload._id));
-				if(postIndex != -1){
+				const postIndex = updatedPostList.findIndex(
+					(post) => String(post._id) == String(result.payload._id)
+				);
+				if (postIndex != -1) {
 					updatedPostList[postIndex] = result.payload;
 				}
-				return updatedPostList
-			})
+				return updatedPostList;
+			});
 		}
 	};
 
@@ -165,30 +165,14 @@ export const DetailedForumPost = ({
 		if (result.type.endsWith('fulfilled')) {
 			setForumPosts((prevPostList) => {
 				const updatedPostList = [...prevPostList];
-				const postIndex = updatedPostList.findIndex((post) => String(post._id) == String(result.payload._id));
-				if(postIndex != -1){
+				const postIndex = updatedPostList.findIndex(
+					(post) => String(post._id) == String(result.payload._id)
+				);
+				if (postIndex != -1) {
 					updatedPostList[postIndex] = result.payload;
 				}
-				return updatedPostList
-			})
-		}
-	};
-
-	const handleReportSubmit = async (reasonContent) => {
-		const result = await dispatch(
-			updateHiddenDetails({
-				accountId: accountId,
-				reasonContent,
-				postId: reportPostId,
-			})
-		);
-
-		if (result.type.endsWith('fulfilled')) {
-			toast.success('Báo cáo bài viết thành công', successStyle);
-			setIsOpenReport(false);
-			await handleHidePost(reportPostId);
-		} else if (result?.error?.message === 'Rejected') {
-			toast.error('Có lỗi xảy ra. Vui lòng thử lại!', errorStyle);
+				return updatedPostList;
+			});
 		}
 	};
 
@@ -249,7 +233,8 @@ export const DetailedForumPost = ({
 									<div className="ml-3">
 										<div className="text-sm font-semibold text-gray-900">
 											<div>
-												{postContent?.author?.name} ({postContent?.author?.role})
+												{postContent?.author?.name} ({postContent?.author?.role}
+												)
 											</div>
 										</div>
 										<div className="text-xs text-gray-600">
@@ -316,61 +301,22 @@ export const DetailedForumPost = ({
 													</li>
 												)}
 
-												<li
-													className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
-													onClick={() => {
-														setIsOpenReport(true);
-														setReportPostId(postContent?._id);
-													}}
-												>
-													<div className="flex items-center">
-														<TbMessageReport className="mr-2" />
-														<span>Báo cáo bài viết</span>
-													</div>
-													<p className="text-xs text-gray text-left">
-														Hãy cho chúng tôi biết bài viết này có vấn đề gì
-													</p>
-												</li>
-												{isOpenReport && (
-													<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-														<div className="bg-white p-4 rounded-lg shadow-lg max-w-sm w-full">
-															<AiOutlineClose
-																className="absolute text-sm hover:cursor-pointer"
-																onClick={() => {
-																	setIsOpenReport(false);
-																}}
-															/>
-															<h1 className="text-2xl font-bold text-center">
-																Báo cáo
-															</h1>
-															<div>
-																<strong className="text-xl">
-																	Tại sao bạn báo cáo bài viết này?
-																</strong>
-																<p className="text-justify text-sm">
-																	Hãy cho quản trị viên biết bài viết này có vấn
-																	đề gì. Chúng tôi sẽ không thông báo cho người
-																	đăng rằng bạn đã báo cáo bài viết.
-																</p>
-															</div>
-															<div>
-																<ul className="space-y-2 text-left font-semibold">
-																	{reportListItems.map((item, index) => (
-																		<li
-																			key={index}
-																			className="cursor-pointer hover:bg-light_gray p-2 rounded"
-																			onClick={() => {
-																				setSelectedReason(item);
-																				handleReportSubmit(item);
-																			}}
-																		>
-																			{item}
-																		</li>
-																	))}
-																</ul>
-															</div>
+												{String(postContent?.author?._id) !=
+													String(accountId) && (
+													<li
+														className="cursor-pointer hover:bg-light_gray rounded-lg p-2"
+														onClick={() => {
+															onReportForumPost(postContent?._id);
+														}}
+													>
+														<div className="flex items-center">
+															<TbMessageReport className="mr-2" />
+															<span>Báo cáo bài viết</span>
 														</div>
-													</div>
+														<p className="text-xs text-gray text-left">
+															Hãy cho chúng tôi biết bài viết này có vấn đề gì
+														</p>
+													</li>
 												)}
 											</ul>
 										</div>
@@ -438,7 +384,9 @@ export const DetailedForumPost = ({
 									</div>
 									<div className="flex items-center cursor-pointer ml-4">
 										<FaRegComment />
-										<span className="ml-2">{postContent?.comments?.length}</span>
+										<span className="ml-2">
+											{postContent?.comments?.length}
+										</span>
 									</div>
 									<div
 										className="flex items-center cursor-pointer ml-4"
@@ -472,7 +420,7 @@ export const DetailedForumPost = ({
 												</div>
 											</div>
 										))}
-									<div className="flex items-center mt-5 h-10">
+									<div className="flex items-center h-10">
 										{myAvatar ? (
 											<img
 												className="h-10 w-10 rounded-full object-cover"
@@ -509,9 +457,11 @@ export const DetailedForumPost = ({
 										</>
 									) : (
 										<>
-											{postContent?.comments?.slice(0, 3).map((comment, index) => (
-												<p key={index} comment={comment} />
-											))}
+											{postContent?.comments
+												?.slice(0, 3)
+												.map((comment, index) => (
+													<p key={index} comment={comment} />
+												))}
 											{postContent?.comments?.length > 3 && (
 												<button
 													onClick={() => setShowAllComments(true)}

@@ -166,7 +166,6 @@ const hideForumPost = async (forumPostId, token) => {
 			response.data.status === 'success' &&
 			response.data.data
 		) {
-			c;
 			if (Array.isArray(response.data.data) && response.data.data.length > 0) {
 				return response.data.data[0].id;
 			} else if (response.data.data.id) {
@@ -178,10 +177,6 @@ const hideForumPost = async (forumPostId, token) => {
 			throw new Error('Unexpected response structure');
 		}
 	} catch (error) {
-		console.error(
-			'Error hiding forum post:',
-			error.response?.data || error.message
-		);
 		throw error;
 	}
 };
@@ -238,7 +233,6 @@ export const commentForumPost = async (commentData, forumPostId, token) => {
 };
 
 export const updateHiddenDetails = async (
-	accountId,
 	reasonContent,
 	status,
 	postId,
@@ -250,7 +244,6 @@ export const updateHiddenDetails = async (
 		},
 	};
 	const requestBody = {
-		accountId,
 		reasonContent,
 		status,
 	};
