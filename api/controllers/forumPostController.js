@@ -371,7 +371,7 @@ const unReactToForumPost = asyncHandler(async (req, res) => {
 
 const updateHiddenDetails = async (req, res) => {
 	const { postId } = req.params;
-	const { accountId, reasonContent, status } = req.body;
+	const { reasonContent, status } = req.body;
 
 	try {
 		const post = await ForumPost.findById(postId);
@@ -380,7 +380,7 @@ const updateHiddenDetails = async (req, res) => {
 		}
 
 		post.hiddenDetails.reasons.push({
-			accountId: accountId,
+			accountId: req.account._id,
 			content: reasonContent,
 			update: new Date(),
 		});
