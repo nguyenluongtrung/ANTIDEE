@@ -2,20 +2,26 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getMessage } from "../../../features/message/messageSlice";
 import { getAllChats } from "../../../features/chatting/chattingSlice";
-import { Chatbox } from "../../Chatting/ChatBox";
 import { getAccountInformation } from "../../../features/auth/authSlice";
 import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
 import { BiTrash } from "react-icons/bi";
+import { ChatBoxAdmin } from "./ChatBoxAdmin";
+
 
 export const AdminChatManager = () => {
   const [chats, setChats] = useState([]);
-  console.log(chats)
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageList, setMessageList] = useState([]);
   const [userName, setUserName] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
   const [myAccountId, setMyAccountId] = useState("");
   const [myRole, setMyRole] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [address, setAddress] = useState('')
+  const [gender, setGender] = useState('')
+  const [email, setEmail] = useState('')
+
+
 
   const [notificationMessage, setNotificationMessage] = useState();
   const dispatch = useDispatch();
@@ -47,77 +53,59 @@ export const AdminChatManager = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-white flex flex-row">
+    < div className="w-full max-h-[80%] min-h-screen bg-white flex flex-row">
       <AdminSidebar />
-      <div className="flex-1 px-10 pt-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold">Chăm sóc người dùng</h1>
-            <p className="text-sm font-medium text-gray pt-1">Trả lời, giải đáp thắc mắc từ phía người dùng.</p>
-          </div>
-          <div className="flex">
-            <div className="px-5 flex flex-col items-center">
-              <h2 className="text-2xl font-semibold">{chats.length}</h2>
-              <h1 className="text-sm font-medium text-gray">Hội thoại</h1>
-            </div>
-          </div>
+      <div className="w-1/4 bg-white border-r border-gray mt-[1.05rem]">
+        <div className="px-4 py-3 border-b border-gray">
+          <h2 className="text-lg font-semibold">Chăm sóc khách hàng</h2>
         </div>
+        {chats.map((chat, index) => (
+          <ul className="mt-4 hover:bg-light_primary rounded-lg" key={index} onClick={() => {
+            handleSelectChat(chat._id);
+            setUserName(chat.firstId.name)
+            setUserAvatar(chat.firstId.avatar)
+            setAddress(chat.firstId.address)
+            setGender(chat.firstId.gender)
+            setPhoneNumber(chat.firstId.phoneNumber)
+            setEmail(chat.firstId.email)
 
-        <table className="w-full border-b border-gray mt-3">
-          <thead>
-            <tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
-              <td className="py-2 px-4 text-center font-bold">STT</td>
-              <td className="py-2 px-4 text-center font-bold">Tên</td>
-              <td className="py-2 px-4 text-center font-bold">Vai trò</td>
-              <td className="py-2 px-4 text-center font-bold">Email</td>
-
-              <td className="py-2 px-4 text-center font-bold">Hành động</td>
-            </tr>
-          </thead>
-          <tbody>
-            {chats.map((chat, index) => (
-              <tr
-                key={index}
-                className="hover:bg-primary hover:bg-opacity-25 transition-colors odd:bg-light_pink hover:cursor-pointer"
-                onClick={() => {
-                  handleSelectChat(chat._id);
-                  setUserName(chat.firstId.name)
-                  setUserAvatar(chat.firstId.avatar)
-                }}
-              >
-                <td className="font-medium text-center text-gray p-3">{index + 1}</td>
-                <td className="font-medium text-center text-gray">
-                  {chat.firstId.name}
-                </td>
-                <td className="font-medium text-center text-gray">
-                  {chat.firstId.role}
-                </td>
-                <td className="font-medium text-center text-gray">
-                  {chat.firstId.email}
-                </td>
-                <td >
-                  <button className="flex items-center justify-start p-3 text-xl group">
-                    <BiTrash className="text-red group-hover:text-primary m-auto" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
+          }} >
+            <li className="px-4 py-2 flex items-center cursor-pointer hover:bg-gray">
+              <img
+                src={
+                  chat.firstId.avatar ||
+                  "https://via.placeholder.com/40?text=Avatar"
+                }
+                alt="Avatar"
+                className="w-10 h-10 rounded-full"
+              />
+              <div className="ml-3">
+                <h3 className="font-semibold">{chat.firstId.name} <p className="text-xs">({chat.firstId.role})</p></h3>
+              </div>
+            </li>
+          </ul>
+        ))}
       </div>
-      {selectedChat && (
-        <Chatbox
-          openChat={true}
-          setIsOpenChat={() => setSelectedChat(null)}
-          chatId={selectedChat}
-          messageList={messageList}
-          userName={userName}
-          myAccountId={myAccountId}
-          myRole={myRole}
-          userAvatar={userAvatar}
-        />
-      )}
+      {/* Main Content */}
+      <div className="flex-1">
+        {selectedChat && (
+          <ChatBoxAdmin
+            openChat={true}
+            setIsOpenChat={() => setSelectedChat(null)}
+            chatId={selectedChat}
+            messageList={messageList}
+            userName={userName}
+            myAccountId={myAccountId}
+            myRole={myRole}
+            userAvatar={userAvatar}
+            phoneNumber={phoneNumber}
+            gender={gender}
+            address={address}
+            email={email}
+          />
+        )}
+      </div>
     </div>
+
   );
 };

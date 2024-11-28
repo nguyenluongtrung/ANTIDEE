@@ -10,17 +10,14 @@ const DonutChart = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await dispatch(rankingServices());
-            let data = response.payload.categories.concat(response.payload.data)
-            let result = []
-            for(let i = 0; i< data.length; i++){
-                if(i + 5 >= data.length)
-                    break;
-                result.push({
-                    name: data[i],
-                    value: data[i+5]
-                })
-            }
-			setChartData(result);
+			if (response.payload?.categories && response.payload?.data) {
+				const { categories, data } = response.payload;
+				const result = categories.map((name, i) => ({
+					name,
+					value: data[i] || 0,
+				}));
+				setChartData(result);
+			}
 		};
 
 		fetchData();

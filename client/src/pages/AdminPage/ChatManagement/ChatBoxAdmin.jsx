@@ -12,21 +12,25 @@ import {
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 import moment from "moment";
-import { createMessage, getMessage } from "../../features/message/messageSlice";
-import { app } from "../../firebase";
-import { errorStyle, successStyle } from "../../utils/toast-customize";
+import { createMessage, getMessage } from "../../../features/message/messageSlice";
+import { app } from "../../../firebase";
+import { errorStyle, successStyle } from "../../../utils/toast-customize";
+import { getAccountInformation } from "../../../features/auth/authSlice";
 moment.locale("vi");
-
 const socket = io("http://localhost:5000");
 
-export const Chatbox = ({
+export const ChatBoxAdmin = ({
   openChat,
   setIsOpenChat,
   myAccountId,
   chatId,
   myRole,
   userName,
-  userAvatar
+  userAvatar,
+  phoneNumber,
+  gender,
+  address,
+  email
 }) => {
   if (!openChat) return null;
 
@@ -37,6 +41,7 @@ export const Chatbox = ({
   const [filePercs, setFilePercs] = useState([]);
   const [messageList, setMessageList] = useState([]);
   const messageEndRef = useRef(null);
+  const [account, setAccountInfor] = useState('');
 
   socket.on("sendMessage", (data) => {
     socket.to(data.chatId).emit("receiveMessage", data);
@@ -109,9 +114,7 @@ export const Chatbox = ({
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-
     if (!message.trim() && selectedFiles.length === 0) return;
-
     const messageData = {
       chatId: chatId,
       senderId: myAccountId,
@@ -119,23 +122,19 @@ export const Chatbox = ({
       files: fileUrls,
       createdAt: new Date().toISOString(),
     };
-
     socket.emit("sendMessage", messageData);
     scrollToBottom();
     setMessage("");
     setSelectedFiles([]);
     setFileUrls([]);
     setFilePercs([]);
-
     const result = await dispatch(createMessage(messageData));
     if (result && result.payload) {
       toast.success("Message sent", successStyle);
-
     } else {
       toast.error("Failed to send message", errorStyle);
     }
   };
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSendMessage(e);
   };
@@ -149,13 +148,12 @@ export const Chatbox = ({
     const createdAtMoment = moment(createdAt);
     const now = moment();
     const diffDays = now.diff(createdAtMoment, "days");
-
     if (diffDays === 0) {
-      return "Today, " + createdAtMoment.format("HH:mm");
+      return "Hôm nay, " + createdAtMoment.format("HH:mm");
     } else if (diffDays === 1) {
-      return "Yesterday, " + createdAtMoment.format("HH:mm");
+      return "Hôm qua, " + createdAtMoment.format("HH:mm");
     } else {
-      return createdAtMoment.format("DD/MM/YYYY [at] HH:mm");
+      return createdAtMoment.format("DD/MM/YYYY [lúc] HH:mm");
     }
   };
 
@@ -164,45 +162,19 @@ export const Chatbox = ({
   }, [messageList]);
 
   return (
-    <div className="relative z-50">
-      <div
-        className="fixed inset-0 bg-black opacity-30"
-        onClick={() => setIsOpenChat(false)}
-      ></div>
-
-      <div className="fixed h-[32rem] right-4 bottom-20 bg-light_green rounded-lg shadow-lg max-w-sm w-full grid grid-rows-[auto_1fr_auto]">
-        <AiOutlineClose
-          className="absolute top-2 right-2 text-gray hover:cursor-pointer hover:text-primary_dark"
-          onClick={() => setIsOpenChat(false)}
-        />
-        <div className="bg-light_purple rounded-t-lg p-4 flex items-center justify-between">
-          <strong className="text-base">
-            {myRole === "Admin" ? (
-              <>
-                <img src={userAvatar} alt="User Avatar" className="inline-block w-6 h-6 rounded-full mr-2" />
-                {userName}
-              </>
-            ) : (
-              "Admin"
-            )}
-          </strong>
-
-        </div>
-
-        <div className="h-[90%] rounded m-2 overflow-y-scroll p-2 flex flex-col">
+    <div className="flex h-[85%] rounded-lg shadow-lg mt-[4.2rem]">
+      <div className=" flex flex-col flex-1">
+        <div className="flex-1 overflow-y-scroll p-2 mt-4">
           {messageList.map((message, index) => (
-            <div>
+            <div key={message._id || `${message.createdAt}-${index}`}>
               <div
-                key={message._id || `${message.createdAt}-${index}`}
                 className={`mb-2 p-2 max-w-64 w-fit ${message.senderId === myAccountId
-                  ? "bg-light_yellow rounded text-white self-end ml-auto"
-                  : "bg-green rounded text-white self-start mr-auto"
-                  } max-w-xs w-fit`}
+                  ? "bg-light_yellow rounded text-white ml-auto"
+                  : "bg-green rounded text-white mr-auto"
+                  }`}
               >
-                <p className="mb-1 text-sm ml-2">
-                  {message.text}{ }
-                </p>
-                {message.files && message.files.length > 0 && (
+                <p className="mb-1 text-sm">{message.text}</p>
+                {message.files?.length > 0 && (
                   <div className="flex gap-2 flex-wrap">
                     {message.files.map((fileUrl, fileIndex) => (
                       <img
@@ -215,17 +187,18 @@ export const Chatbox = ({
                   </div>
                 )}
               </div>
-              <p className={`text-xs${message.senderId === myAccountId
-                  ? " text-gray self-end ml-auto"
-                  : " text-gray self-start mr-auto"
-                  } max-w-xs w-fit`}>
-                  {formatMessageDate(message.createdAt)}
-                </p>
+              <p
+                className={`text-xs ${message.senderId === myAccountId
+                  ? "text-gray text-right"
+                  : "text-gray text-left"
+                  }`}
+              >
+                {formatMessageDate(message.createdAt)}
+              </p>
             </div>
           ))}
           <div ref={messageEndRef} />
         </div>
-
         {selectedFiles.length > 0 && (
           <div className="flex gap-3 p-3 overflow-x-auto">
             {filePercs.map((perc, index) => (
@@ -250,8 +223,8 @@ export const Chatbox = ({
             ))}
           </div>
         )}
-        <div className="flex items-center gap-2 bg-light_gray p-2 rounded-b-lg">
-          <div className="w-fit">
+        <div className="flex items-center gap-5 bg-super_light_purple p-3 rounded-b-lg shadow-inner">
+          <div>
             <input
               type="file"
               accept="image/*"
@@ -261,24 +234,54 @@ export const Chatbox = ({
               onChange={handleFileChange}
             />
             <label htmlFor="file-upload" className="cursor-pointer">
-              <FaImages className="text-gray hover:text-green mr-2" size={24} />
+              <FaImages className="text-blue hover:text-dark_blue transition-colors duration-200" size={24} />
             </label>
           </div>
           <input
-            className="flex-grow p-2 border border-light_gray rounded-full focus:outline-none focus:border-primary"
+            className="flex-grow p-2 border border-gray rounded-full focus:outline-none focus:border-green focus:ring-1 focus:ring-green placeholder-gray"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Nhập tin nhắn của bạn"
           />
           <button
-            className="w-fit  text-primary rounded-md px-4 py-4 transition-colors duration-200"
+            className="w-10 h-10 flex items-center justify-center text-blue hover:text-dark_blue rounded-full transition duration-200"
             onClick={handleSendMessage}
           >
-            <IoSend />
+            <IoSend size={20} />
           </button>
         </div>
+
+
       </div>
+
+      <div className="w-2/5 bg-white p-4 border-l border-gray text-center">
+        <img className="rounded-full w-36 h-36 mx-auto" src={userAvatar} alt="User Avatar" />
+        <h3 className="text-lg font-semibold mt-2 mb-4">{userName}</h3>
+        <div className="border mb-5"></div>
+
+        <h1 className="text-lg font-bold mb-2">Thông tin cá nhân</h1>
+        <p>
+          <span className="font-bold">Email: </span>
+          {email}
+        </p>
+        <p>
+          <span className="font-bold">Số điện thoại: </span>
+          {phoneNumber}
+        </p>
+        <p>
+          <span className="font-bold">Giới tính: </span>
+          {gender}
+        </p>
+        <p>
+          <span className="font-bold">Địa chỉ: </span>
+          {address}
+        </p>
+      </div>
+
     </div>
+
+
+
   );
 };
