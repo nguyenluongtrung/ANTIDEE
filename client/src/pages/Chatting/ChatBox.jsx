@@ -186,9 +186,7 @@ export const Chatbox = ({
               "Admin"
             )}
           </strong>
-
         </div>
-
         <div className="h-[90%] rounded m-2 overflow-y-scroll p-2 flex flex-col">
           {messageList.map((message, index) => (
             <div>
