@@ -18,10 +18,10 @@ export const Sidebar = () => {
 	const navigate = useNavigate();
 	return (
 		<div>
-			<div className="flex mb-4">
+			<div className="flex mb-4 ">
 				<img
 					src={`${account?.avatar}` || Ellipse_16}
-					className="block w-12 mr-2 rounded-full"
+					className="block w-12 mr-2 object-cover rounded-full"
 				/>
 				<div className="mt-2">
 					<p className="font-bold">{account?.name}</p>
