@@ -28,10 +28,10 @@ export const ForgotPasswordPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [
-    displayTextViewInInputPhoneNumber,
-    setDisplayTextViewInInputPhoneNumber,
-  ] = useState("");
+  // const [
+  //   displayTextViewInInputPhoneNumber,
+  //   setDisplayTextViewInInputPhoneNumber,
+  // ] = useState("");
 
   const [hidePhoneNumber, setHidePhoneNumber] = useState("");
 
@@ -221,24 +221,24 @@ export const ForgotPasswordPage = () => {
   const nameViewInInputPhoneNumber =
     "Quý khách vui lòng nhập số điện thoại !!!";
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      let i = 0;
-      const typingEffect = setInterval(() => {
-        if (i < nameViewInInputPhoneNumber.length) {
-          i++;
-          setDisplayTextViewInInputPhoneNumber(
-            (prevText) => prevText + nameViewInInputPhoneNumber.charAt(i - 1)
-          );
-        } else {
-          clearInterval(typingEffect);
-        }
-      }, 100);
-      return () => clearInterval(typingEffect);
-    }, 900); // Chờ 3 giây trước khi bắt đầu hiệu ứng ghi ra từng chữ
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     let i = 0;
+  //     const typingEffect = setInterval(() => {
+  //       if (i < nameViewInInputPhoneNumber.length) {
+  //         i++;
+  //         setDisplayTextViewInInputPhoneNumber(
+  //           (prevText) => prevText + nameViewInInputPhoneNumber.charAt(i - 1)
+  //         );
+  //       } else {
+  //         clearInterval(typingEffect);
+  //       }
+  //     }, 100);
+  //     return () => clearInterval(typingEffect);
+  //   }, 900); // Chờ 3 giây trước khi bắt đầu hiệu ứng ghi ra từng chữ
 
-    return () => clearTimeout(timer); // Xóa timer nếu component unmount
-  }, [nameViewInInputPhoneNumber]);
+  //   return () => clearTimeout(timer); // Xóa timer nếu component unmount
+  // }, [nameViewInInputPhoneNumber]);
 
   return (
     <section className="flex items-center justify-center mt-16 p-20">
@@ -310,7 +310,7 @@ export const ForgotPasswordPage = () => {
                         {inputOtp.map((data, index) => {
                           return (
                             <input
-                              className="otp-input w-16 h-24 text-center text-[30px] mx-3 border border-gray rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                              className="otp-input w-14 h-16 mx-1 sm:w-16 sm:h-24 text-center text-[30px] sm:mx-3 border border-gray rounded focus:outline-none focus:ring-2 focus:ring-primary"
                               type="text"
                               name="otp"
                               maxLength="1"
@@ -325,8 +325,7 @@ export const ForgotPasswordPage = () => {
                       <div className="flex items-center justify-center mt-20">
                         <button
                           type="submit"
-                          className="w-[500px] bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
-                          // onClick={handleVerifyOTP}
+                          className="sm:w-[500px] bg-primary mb-10 text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
                         >
                           <span>Xác nhận</span>
                           {loading && (
@@ -340,8 +339,9 @@ export const ForgotPasswordPage = () => {
               </>
             ) : (
               <div className="select-none">
-                <h2 className="text-[25px] font-bold text-center mb-12">
-                  {displayTextViewInInputPhoneNumber}
+                <h2 className="text-lg sm:text-[25px] font-bold text-center mb-12">
+                  {/* {displayTextViewInInputPhoneNumber} */}
+                  Quý khách vui lòng nhập số điện thoại !!!
                 </h2>
                 <div className="flex items-center justify-center gap-x-3">
                   <span className="py-3 text-[18px]">+84</span>
@@ -356,7 +356,7 @@ export const ForgotPasswordPage = () => {
                 <div className="flex items-center justify-center mt-20">
                   <button
                     type="submit"
-                    className="w-[500px] bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
+                    className="sm:w-[500px] mb-10 bg-primary text-white py-3 rounded-full hover:bg-blue-600 transition duration-300 font-bold flex justify-center items-center"
                     onClick={handleSendOTP}
                   >
                     <span>Xác nhận</span>

@@ -118,14 +118,14 @@ export const SignUpPage = () => {
         {openChooseRole &&
           <div className="popup active">
             <div className="overlay"></div>
-            <div className="content register-container m-auto rounded-xl w-[60%]">
+            <div className="content register-container m-auto rounded-xl w-[100%] sm:w-[80%] md:w-[60%]">
               <div>
                 <p className="font-bold mt-3 mb-4 text-center text-xl">
                   Đăng kí với vai trò là <span className="text-primary text-2xl">Người dùng </span> hay <span className="text-primary text-2xl">Người giúp việc </span>
                 </p>
-                <div className="flex justify-between">
+                <div className="flex flex-col md:flex-row justify-between">
                   <button
-                    className={`flex border rounded-md py-6 items-center justify-around m-6 cursor-pointer ${roleSignUp === "Khách hàng" && 'text-primary'}`}
+                    className={`flex border rounded-md py-6 items-center justify-around my-6 md:m-6 cursor-pointer ${roleSignUp === "Khách hàng" && 'text-primary'}`}
                     onClick={() => setRoleSignUp("Khách hàng")}
                   >
                     <FaRegUser size={25} />
@@ -133,7 +133,7 @@ export const SignUpPage = () => {
                     <div>{roleSignUp === "Khách hàng" && <FaCheck />}</div>
                   </button>
                   <button
-                    className={`flex border rounded-md py-6 items-center justify-around m-6 cursor-pointer ${roleSignUp === "Người giúp việc" && 'text-primary'}`}
+                    className={`flex border rounded-md py-6 items-center justify-around my-6 md:m-6 cursor-pointer ${roleSignUp === "Người giúp việc" && 'text-primary'}`}
                     onClick={() => setRoleSignUp("Người giúp việc")}
                   >
                     <GiVacuumCleaner size={30} />
@@ -141,9 +141,9 @@ export const SignUpPage = () => {
                     <div>{roleSignUp === "Người giúp việc" && <FaCheck />}</div>
                   </button>
                 </div>
-                <div className="w-[40%] mx-auto mt-4">
+                <div className="w-[100%] sm:w-[80%] md:w-[40%] mx-auto mt-4">
                   {roleSignUp ?
-                    <button className="flex items-center justify-center p-4 bg-primary rounded-lg text-center text-white   font-bold cursor-pointer fea-item hover:bg-primary_dark"
+                    <button className="flex items-center justify-center p-4 bg-primary rounded-lg text-center text-white font-bold cursor-pointer fea-item hover:bg-primary_dark"
                       onClick={() => setOpenChooseRole(false)}
                     >
                       Đăng kí với vai trò "{roleSignUp}"
@@ -162,11 +162,11 @@ export const SignUpPage = () => {
 
         {/* Chọn phương thức đăng kí */}
         {pageLoginMethod &&
-          <div className="flex flex-col">
+          <div className="flex flex-col p-2 md:p-0">
             <h2 className="font-bold text-center text-2xl">
               Vui lòng chọn phương thức đăng kí ở bên dưới !!!!
             </h2>
-            <div className="flex justify-center items-end p-2">Bạn đang đăng kí với vai trò là <p className="text-primary font-bold mx-2 text-lg">"{roleSignUp}"</p> <div className="text-gray cursor-pointer hover:text-primary_dark" onClick={() => setOpenChooseRole(true)}>| Thay đổi ngay?</div></div>
+            <div className="flex flex-col justify-center items-center gap-y-2 p-2 sm:text-sx md:flex-row md:text-base md:gap-y-0">Bạn đang đăng kí với vai trò là <p className="text-primary font-bold mx-2 text-lg">"{roleSignUp}"</p> <div className="text-gray cursor-pointer hover:text-primary_dark" onClick={() => setOpenChooseRole(true)}>| Thay đổi ngay?</div></div>
             <div className="flex flex-col">
               <button
                 className="flex border border-gray rounded-md mt-6 py-6 px-3 items-center justify-between fea-item hover:border-primary hover:text-primary"
@@ -203,7 +203,7 @@ export const SignUpPage = () => {
         {/* Phương thức đăng kí */}
         {choosenMethodLogin === "OTP" && <SignUpWithOTP roleSignUp={roleSignUp} />}
         {choosenMethodLogin === "Google" && <SignUpWithGoogle roleSignUp={roleSignUp} googleAccount={googleAccount} />}
-        {choosenMethodLogin === "Facebook" && <SignUpWithFacebook roleSignUp={roleSignUp} facebookAccount={facebookAccount}/>}
+        {choosenMethodLogin === "Facebook" && <SignUpWithFacebook roleSignUp={roleSignUp} facebookAccount={facebookAccount} />}
       </div>
     </section>
   );

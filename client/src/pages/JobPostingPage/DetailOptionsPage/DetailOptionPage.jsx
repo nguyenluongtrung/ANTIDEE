@@ -61,7 +61,7 @@ export const DetailOptionPage = () => {
   const [promotionQuantity, setPromotionQuantity] = useState();
 
   const [accountPromotion, setAccountPromotion] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const promoOutput = await dispatch(getAllPromotions());
@@ -74,9 +74,9 @@ export const DetailOptionPage = () => {
 
   async function initiateAccountInformation() {
     let output = await dispatch(getAccountInformation());
-    setAccountId(output.payload._id); 
+    setAccountId(output.payload._id);
     setAccountApoints(output.payload.aPoints);
-   
+
   }
 
   useEffect(() => {
@@ -84,14 +84,14 @@ export const DetailOptionPage = () => {
   }, []);
 
   async function initiateAccountPromotion() {
-    if(accountId){
+    if (accountId) {
       let output = await dispatch(getAllAccountPromotion(accountId));
       setAccountPromotion(output.payload);
     }
   }
 
   useEffect(() => {
-    if(accountId){
+    if (accountId) {
       initiateAccountPromotion();
     }
   }, [accountId]);
@@ -152,10 +152,10 @@ export const DetailOptionPage = () => {
       return;
     }
     const promotion = findPromotion(promoCode);
-    
+
 
     if (promotion) {
- 
+
       if (promotion.promotionQuantity === 0) {
         toast.error("Mã ưu đãi này đã hết!", errorStyle);
         return;
@@ -181,8 +181,7 @@ export const DetailOptionPage = () => {
         setPromotionId(promotion._id);
         setPromotionQuantity(promotion.promotionQuantity);
         toast.success(
-          `Áp dụng khuyến mãi ${promoCode}: Giảm ${
-            promotion.promotionValue * 100
+          `Áp dụng khuyến mãi ${promoCode}: Giảm ${promotion.promotionValue * 100
           }%.`,
           successStyle
         );
@@ -392,7 +391,7 @@ export const DetailOptionPage = () => {
       setStartingHour("");
     } else if (
       startingDate.toISOString().slice(0, 10) ===
-        currentDate.toISOString().slice(0, 10) &&
+      currentDate.toISOString().slice(0, 10) &&
       value < min
     ) {
       toast.error(
@@ -411,9 +410,8 @@ export const DetailOptionPage = () => {
   const handleOpenTimeNote = () => {
     toast.custom((t) => (
       <div
-        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
-          t.visible ? "animate-enter" : "animate-leave"
-        }`}
+        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${t.visible ? "animate-enter" : "animate-leave"
+          }`}
       >
         Giá dịch vụ tăng 10% vào giờ cao điểm (trước 8h và sau 17h).
       </div>
@@ -423,9 +421,8 @@ export const DetailOptionPage = () => {
   const handleOpenPriceNote = (note) => {
     toast.custom((t) => (
       <div
-        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${
-          t.visible ? "animate-enter" : "animate-leave"
-        }`}
+        className={`bg-info text-white px-6 py-4 shadow-md rounded-full ${t.visible ? "animate-enter" : "animate-leave"
+          }`}
       >
         {note}
       </div>
@@ -523,7 +520,7 @@ export const DetailOptionPage = () => {
   }
 
   return (
-    <div className="w-full px-20">
+    <div className="w-full md:px-20">
       <StepBar serviceId={serviceId} />
       {openConfirmWorkingHoursModal && (
         <ConfirmModal
@@ -536,8 +533,8 @@ export const DetailOptionPage = () => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div
-          className="mx-auto shadow-xl py-10 px-10 hover:shadow-2xl hover:cursor-pointer"
-          style={{ width: "700px" }}
+          className="mx-auto shadow-xl p-2 pb-4 md:w-[700px] md:py-8 md:px-10 hover:shadow-2xl hover:cursor-pointer"
+
         >
           <div>
             <p className="font-extrabold mb-5">LỰA CHỌN CHI TIẾT</p>
@@ -549,7 +546,7 @@ export const DetailOptionPage = () => {
                       <td>
                         <p className="mr-3 mb-8">{option?.optionName}</p>
                       </td>
-                      <td className="pl-32">
+                      <td className="pl-0 md:pl-32">
                         {option?.optionList?.some(
                           (opt) => opt?.optionValue === ""
                         ) ? (
@@ -578,8 +575,8 @@ export const DetailOptionPage = () => {
                             }}
                           />
                         ) : option?.optionList?.some((op) =>
-                            /[^0-9]/.test(op?.optionValue)
-                          ) ? (
+                          /[^0-9]/.test(op?.optionValue)
+                        ) ? (
                           <table>
                             <tbody>
                               {option?.optionList?.map((op1, op1Index) => (
@@ -610,7 +607,7 @@ export const DetailOptionPage = () => {
                                           if (chosenIndex !== -1) {
                                             updatedInputOptions[chosenIndex] = {
                                               ...updatedInputOptions[
-                                                chosenIndex
+                                              chosenIndex
                                               ],
                                               optionValue: e.target.value,
                                             };
@@ -676,7 +673,7 @@ export const DetailOptionPage = () => {
                   <td>
                     <p className="mr-3 mb-8">Chọn ngày làm</p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <input
                       type="date"
                       {...register("startingDate")}
@@ -698,7 +695,7 @@ export const DetailOptionPage = () => {
                       </span>
                     </p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <input
                       type="time"
                       onChange={handleTimeChange}
@@ -713,7 +710,7 @@ export const DetailOptionPage = () => {
                       Ưu tiên người làm yêu thích
                     </p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <Switch
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                       onChange={handleToggleFavButton}
@@ -731,7 +728,7 @@ export const DetailOptionPage = () => {
                   <td>
                     <p className="mr-3 mb-6 mt-3">Bạn tự chọn người làm</p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <Switch
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                       onChange={handleToggleChosenYourselfButton}
@@ -749,7 +746,7 @@ export const DetailOptionPage = () => {
                   <td>
                     <p className="mr-3 mb-2 mt-3">Cần gấp</p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <Switch
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                       onChange={handleToggleUrgentButton}
@@ -767,7 +764,7 @@ export const DetailOptionPage = () => {
                   <td>
                     <p className="mr-3">Nhập mã khuyến mãi</p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <div className="flex">
                       <input
                         type="text"
@@ -792,7 +789,7 @@ export const DetailOptionPage = () => {
                   <td>
                     <p className="mr-3">Nhập mã mời của bạn bè</p>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <input
                       type="text"
                       className="border-2 rounded-md w-72 p-1.5 border-light_gray text-center focus:outline-none mb-5"
@@ -810,7 +807,7 @@ export const DetailOptionPage = () => {
                       </p>
                     </td>
 
-                    <td className="pl-32">
+                    <td className="pl-0 md:pl-32">
                       <Switch
                         className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                         onChange={(checked) => {
@@ -834,16 +831,16 @@ export const DetailOptionPage = () => {
                 <tr className="border-light_gray border-t-2">
                   <td>
                     <div className="flex">
-                      <p className="font-extrabold text-lg mt-5">GIÁ TIỀN</p>
+                      <p className="font-extrabold text-xs md:text-lg mt-5 md:mt-6">GIÁ TIỀN</p>
                       <span
-                        className="italic mt-6 ml-3 text-gray underline hover:text-primary"
+                        className="italic mt-5 md:mt-7 text-xs md:text-sm md:ml-3 text-gray underline hover:text-primary"
                         onClick={() => handleOpenPriceNote(chosenService?.note)}
                       >
                         (Xem lưu ý)
                       </span>
                     </div>
                   </td>
-                  <td className="pl-32">
+                  <td className="pl-0 md:pl-32">
                     <p className="font-extrabold text-green text-lg mt-5">
                       {isNaN(totalPrice) ? 0 : Math.round(totalPrice)} VND
                     </p>
@@ -856,7 +853,7 @@ export const DetailOptionPage = () => {
 
         <div className="flex items-center justify-center">
           <button
-            className="mt-10 mb-10 w-[500px] py-3 bg-primary rounded-full text-white hover:opacity-70"
+            className="mt-10 mb-10 w-60 md:w-[500px] py-3 bg-primary rounded-full text-white hover:opacity-70"
             type="submit"
           >
             Tiếp theo
