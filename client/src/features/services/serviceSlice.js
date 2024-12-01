@@ -177,7 +177,7 @@ export const serviceSlice = createSlice({
 				state.services = null;
 			})
 			.addCase(getRecommendedServices.pending, (state) => {
-				state.isLoading = true;
+				state.isLoading = false;
 			})
 			.addCase(getRecommendedServices.fulfilled, (state, action) => {
 				state.isLoading = false;

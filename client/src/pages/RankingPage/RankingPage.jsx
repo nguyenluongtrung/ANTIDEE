@@ -13,7 +13,17 @@ export const RankingPage = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const result = await dispatch(getDomesticHelpersRanking());
-			setRanking(result.payload);
+			if(result.type.includes('fulfilled')){
+				const rankingList = result.payload.map((rankItem, index) => {
+					return {
+						...rankItem,
+						index: index + 1
+					}
+				})
+				setRanking(rankingList);
+			} else{
+				setRanking([]);
+			}
 		};
 		fetchData();
 	}, []);
@@ -21,7 +31,7 @@ export const RankingPage = () => {
 	return (
 		<div className="px-32 flex flex-col pt-20" style={{ minHeight: '100vh' }}>
 			<div className="font-bold text-green text-2xl text-center mb-6">
-				BẢNG XẾP HẠNG
+				BẢNG XẾP HẠNG TRONG THÁNG
 			</div>
 			<div className="flex mb-2">
 				<div className="flex-1 pt-2">
@@ -46,15 +56,6 @@ export const RankingPage = () => {
 						</div>
 					</div>
 				</div>
-				<button
-					className="bg-pink text-white rounded-md block mx-auto"
-					style={{ width: '200px' }}
-				>
-					<div className="flex items-center">
-						<IoIosArrowDown className="size-6 pl-2 mr-2" />
-						<span className="text-sm pr-2">Xếp hạng theo tháng</span>
-					</div>
-				</button>
 			</div>
 			{ranking.length == 0 ||
 			ranking?.filter((domesticHelper) =>
@@ -95,7 +96,7 @@ export const RankingPage = () => {
 										} text-center `}
 									>
 										<td className="py-5">
-											<span>#{index + 1}</span>
+											<span>#{domesticHelper.index}</span>
 										</td>
 										<td>
 											<span>{domesticHelper.name}</span>
