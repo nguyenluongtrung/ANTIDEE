@@ -91,16 +91,16 @@ export const WorkingLocationPage = () => {
 	}
 
 	return (
-		<div className="w-full px-20">
+		<div className="w-full md:px-20">
 			<StepBar serviceId={serviceId}/>
 
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="location-form m-auto" style={{ width: '530px' }}>
+				<div className="location-form m-auto md:w-[530px] px-10">
 					<div>
 						<p className="font-bold">Tỉnh / thành phố</p>
 						<select
-							className="p-2 my-4 border-light_gray border-2 rounded-md hover:outline-none focus:outline-none"
-							style={{ width: '100%' }}
+							className="p-2 my-4 w-full border-light_gray border-2 rounded-md hover:outline-none focus:outline-none"
+							// style={{ width: '100%' }}
 							onChange={(e) => setCityCode(e.target.value)}
 						>
 							{cities?.map((city) => <option value={city.code}>{city.name}</option>)}
@@ -138,7 +138,7 @@ export const WorkingLocationPage = () => {
 
 				<div className="flex items-center justify-center">
 					<button
-						className="mt-10 w-[500px] mb-10 py-3 bg-primary rounded-full text-white hover:opacity-70"
+						className="mt-10 w-60 md:w-[500px] mb-10 py-3 bg-primary rounded-full text-white hover:opacity-70"
 						type="submit"
 					>
 						Tiếp theo

@@ -106,8 +106,8 @@ export const JobSchedulePage = () => {
 
 	return (
 		<>
-			<div className="flex py-24 mx-20">
-				<div className="w-[25%] pt-16">
+			<div className="flex flex-col p-5 md:flex-row md:py-24 md:mx-20">
+				<div className="md:w-[25%] pt-16">
 					<div className="font-bold text-2xl flex items-center">
 						<RiCalendarScheduleLine className="mr-2" />
 						Lịch của tôi

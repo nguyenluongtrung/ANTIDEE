@@ -154,40 +154,40 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
   return (
     <div className="popup active">
       <div className="overlay"></div>
-      <div className="content login-container m-auto rounded-xl">
+      <div className="content w-[90%] sm:w-[50%] md:w-[25%] login-container md:m-auto rounded-xl">
         <form onSubmit={handleSubmit(onSubmit)}>
           <AiOutlineClose
             className="absolute text-sm hover:cursor-pointer"
             onClick={() => setIsOpenLoginForm(false)}
           />
-          <h5 className="text-center font-bold mb-3">Đăng nhập</h5>
+          <h5 className="text-center font-bold mb-3 text-lg">Đăng nhập</h5>
           <hr></hr>
-          <p className="font-bold mt-3">
+          <p className="font-bold mt-3 text-base">
             Chào mừng quay trở lại <span className="text-primary">Antidee</span>
           </p>
           <div className="mb-3 mt-5">
-            <p className="small-text">Số điện thoại</p>
+            <p className="text-sm sm:text-sm">Số điện thoại</p>
             <input
               type="text"
-              className="border border-gray-500 rounded-md p-1 text-sm focus:outline-none"
+              className="border border-gray-500 rounded-md p-1 my-1 text-sm focus:outline-none"
               {...register("phoneNumber", rules.phoneNumber)}
             />
-            {errors.phoneNumber && (
-              <p className="text-red small-text">
+            {errors.phoneNumber ? (
+              <p className="text-red text-xs h-2">
                 {errors.phoneNumber.message}
               </p>
-            )}
+            ) : <p className="h-2"></p>}
           </div>
           <div className="mb-4">
-            <p className="small-text">Mật khẩu</p>
+            <p className="text-sm sm:text-sm">Mật khẩu</p>
             <input
               type="password"
-              className="border border-gray-500 rounded-md p-1 text-sm focus:outline-none"
+              className="border border-gray-500 rounded-md p-1 my-1 text-sm focus:outline-none"
               {...register("password", rules.password)}
             />
-            {errors.password && (
-              <p className="text-red small-text">{errors.password.message}</p>
-            )}
+            {errors.password ? (
+              <p className="text-red text-xs h-2">{errors.password.message}</p>
+            ) : <p className="h-2"></p>}
           </div>
           <button
             type="submit"
@@ -197,7 +197,7 @@ export const LoginPage = ({ setIsOpenLoginForm, setCustomerInfo }) => {
           </button>
           <Link to={"/forgot-password"}>
             <button
-              className="text-right small-text font-medium mb-2"
+              className="text-right text-xs font-medium mb-2 hover:text-primary"
               onClick={() => setIsOpenLoginForm(false)}
             >
               Quên mật khẩu

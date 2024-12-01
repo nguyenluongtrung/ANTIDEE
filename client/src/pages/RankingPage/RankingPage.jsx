@@ -19,11 +19,11 @@ export const RankingPage = () => {
 	}, []);
 
 	return (
-		<div className="px-32 flex flex-col pt-20" style={{ minHeight: '100vh' }}>
+		<div className="px-5 md:px-32 flex flex-col pt-20" style={{ minHeight: '100vh' }}>
 			<div className="font-bold text-green text-2xl text-center mb-6">
 				BẢNG XẾP HẠNG
 			</div>
-			<div className="flex mb-2">
+			<div className="flex flex-col md:flex-row mb-2 gap-y-4 md:gap-y-0">
 				<div className="flex-1 pt-2">
 					<div className="flex items-center">
 						<span>Hiển thị </span>
@@ -69,13 +69,13 @@ export const RankingPage = () => {
 			) : (
 				<table>
 					<thead>
-						<th className="py-3">Thứ hạng</th>
-						<th>Tên</th>
-						<th>Số giờ làm việc</th>
-						<th>Điểm phục vụ</th>
-						<th>Thu nhập</th>
-						<th>Cấp độ hiện tại</th>
-						<th>Điểm xếp hạng</th>
+						<th className="py-3 text-xs md:text-base">Thứ hạng</th>
+						<th className="py-3 text-xs md:text-base">Tên</th>
+						<th className="py-3 text-xs md:text-base">Số giờ làm việc</th>
+						<th className="py-3 text-xs md:text-base">Điểm phục vụ</th>
+						<th className="py-3 text-xs md:text-base">Thu nhập</th>
+						<th className="py-3 text-xs md:text-base">Cấp độ hiện tại</th>
+						<th className="py-3 text-xs md:text-base">Điểm xếp hạng</th>
 					</thead>
 					<tbody>
 						{ranking
@@ -88,9 +88,9 @@ export const RankingPage = () => {
 								return (
 									<tr
 										key={domesticHelper._id}
-										className={`${index == 0 && 'bg-primary'} ${
-											index == 1 && 'bg-another_primary'
-										} ${index == 2 && 'bg-yellow'} ${
+										className={`${index == 0 && 'bg-[#FFD700]'} ${
+											index == 1 && 'bg-[#C0C0C0]'
+										} ${index == 2 && 'bg-primary'} ${
 											index > 2 && 'odd:bg-super_light_purple'
 										} text-center `}
 									>
@@ -98,21 +98,21 @@ export const RankingPage = () => {
 											<span>#{index + 1}</span>
 										</td>
 										<td>
-											<span>{domesticHelper.name}</span>
+											<span className="text-xs md:text-base">{domesticHelper.name}</span>
 										</td>
 										<td>
-											<span>{domesticHelper?.totalWorkingHours} giờ</span>
+											<span className="text-xs md:text-base">{domesticHelper?.totalWorkingHours} giờ</span>
 										</td>
 										<td>
-											<span>
+											<span className="text-xs md:text-base">
 												{Math.round(domesticHelper.rating?.domesticHelperRating || 0)}
 											</span>
 										</td>
 										<td>
-											<span>{domesticHelper.accountBalance} VND</span>
+											<span className="text-xs md:text-base">{domesticHelper.accountBalance} VND</span>
 										</td>
-										<td>
-											<span className="bg-light_green text-green rounded-2xl px-7 py-2">
+										<td className='w-14 md:w-auto'>
+											<span className="text-xs md:text-base bg-light_green text-green rounded-sm md:rounded-2xl md:px-7 md:py-2">
 												{domesticHelper.accountLevel.domesticHelperLevel.name}
 											</span>
 										</td>
@@ -120,7 +120,7 @@ export const RankingPage = () => {
 											<span
 												className={`${
 													index <= 2 ? 'text-white' : 'text-anotherRed'
-												} `}
+												}text-xs md:text-base`}
 											>
 												{domesticHelper.domesticHelperRankingCriteria}
 											</span>

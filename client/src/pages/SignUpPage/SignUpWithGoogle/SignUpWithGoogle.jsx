@@ -89,7 +89,7 @@ const SignUpWithGoogle = ({ roleSignUp, googleAccount }) => {
 
     return (
         <div>
-            <div className="select-none">
+            <div className="select-none px-6 sm:px-0">
                 <form onSubmit={handleCheckGoogle}>
                     <h2 className="text-[25px] font-bold text-center mb-8">
                         Quý khách vui điền thông tin chi tiết !!!

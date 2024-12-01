@@ -17,6 +17,9 @@ import Select from 'react-select';
 import { getAllServices } from '../../features/services/serviceSlice';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { FaHourglassEnd, FaHourglassStart } from 'react-icons/fa';
+import { PiMoneyWavyLight } from "react-icons/pi";
+import { LuClock } from 'react-icons/lu';
 
 export const JobPostListPage = () => {
 	const location = useLocation();
@@ -100,7 +103,7 @@ export const JobPostListPage = () => {
 	}
 
 	return (
-		<div className="px-16 pt-20 mb-10">
+		<div className="md:px-16 pt-20 mb-10">
 			{isOpenJobPostDetail && (
 				<JobPostDetail
 					selectedJobPost={selectedJobPost}
@@ -111,7 +114,7 @@ export const JobPostListPage = () => {
 					}}
 				/>
 			)}
-			<div className="filter-jobs bg-light py-7 px-32 mb-8">
+			<div className="filter-jobs bg-light py-7 px-10 md:px-32 mb-8">
 				<div className="mb-5">
 					<Select
 						isMulti
@@ -132,17 +135,17 @@ export const JobPostListPage = () => {
 						<p className="font-bold">Lọc công việc trong khu vực đã đăng ký</p>
 					</div>
 				</div>
-				<div className="flex justify-end">
+				<div className="flex justify-center">
 					<button
-						className="bg-another_primary text-white py-1.5 text-center rounded-md block"
-						style={{ width: '100px' }}
+						className="bg-another_primary text-white py-1.5 text-center rounded-md block w-[100px] md:w-[200px] hover:bg-primary_dark"
+						// style={{ width: '100px' }}
 						onClick={handleFilterJobPosts}
 					>
 						Tìm kiếm
 					</button>
 				</div>
 			</div>
-			<div className="grid grid-cols-3 gap-28">
+			<div className="grid md:grid-cols-3 gap-28">
 				{jobPosts
 					?.filter(
 						(jobPost) =>
@@ -179,27 +182,30 @@ export const JobPostListPage = () => {
 					?.map((post) => {
 						return (
 							<div
-								className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
-									post?.isUrgent && 'bg-light_pink'
-								}`}
+								className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
+									}`}
 								style={{ height: '350px' }}
 							>
-								<p className="text-brown font-bold mb-3">
+								<p className="text-black font-bold text-lg md:text-base text-center mb-3">
 									{post?.serviceId?.name?.toUpperCase()}
 								</p>
 								{post?.isUrgent && (
 									<div className="triangle-down absolute top-0 right-0"></div>
 								)}
-								<p className="text-gray mb-2">
+								<p className="flex items-center text-gray mb-2">
+									{/* <FaHourglassStart /> */}
 									Bắt đầu lúc:{' '}
-									<span className="text-brown">
-										{formatDate(post?.workingTime?.startingDate)}{' '}
-										{formatWorkingTime(post?.workingTime?.startingHour)}
+									<span className="flex text-brown ml-2">
+										{formatDate(post?.workingTime?.startingDate)}{' '} |
+										<div className='font-bold ml-2 text-red'>
+											{formatWorkingTime(post?.workingTime?.startingHour)}
+										</div>
 									</span>
 								</p>
-								<p className="text-gray mb-2">
+								<p className="flex items-center text-gray mb-2">
+									{/* <FaHourglassEnd /> */}
 									Hết hạn lúc: {''}
-									<span className="text-brown">
+									<span className="text-brown ml-2">
 										{formatDate(post?.dueDate)}{' '}
 									</span>
 								</p>
@@ -218,10 +224,11 @@ export const JobPostListPage = () => {
 									) : (
 										<div className="grid grid-cols-2">
 											<div className="border-r-2 border-gray">
-												<p className="text-gray mb-2 text-center mt-3">
-													Làm trong:{' '}
+												<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+													Làm trong{' '}
+													<LuClock className='ml-2' />
 												</p>
-												<p className="text-center text-brown font-bold mb-3">
+												<p className="text-center text-primary font-bold mb-3">
 													{
 														post?.workload?.find(
 															(option) =>
@@ -232,10 +239,11 @@ export const JobPostListPage = () => {
 												</p>
 											</div>
 											<div>
-												<p className="text-gray mb-2 text-center mt-3">
-													Số tiền:{' '}
+												<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+													Số tiền{' '}
+													<PiMoneyWavyLight className='ml-2' />
 												</p>
-												<p className="text-center text-brown font-bold mb-3">
+												<p className="text-center text-green font-bold mb-3">
 													{Intl.NumberFormat().format(post?.totalPrice)} VND
 												</p>
 											</div>
@@ -245,10 +253,9 @@ export const JobPostListPage = () => {
 								<p className="text-gray mb-2 ">
 									Tại:{' '}
 									<span
-										className={`text-black ${
-											!JSON.parse(localStorage.getItem('account')) &&
+										className={`text-black ${!JSON.parse(localStorage.getItem('account')) &&
 											'blur-text'
-										}`}
+											}`}
 									>
 										{post?.contactInfo?.address}
 									</span>
@@ -261,7 +268,7 @@ export const JobPostListPage = () => {
 								</p>
 								<div className="flex flex-col items-center absolute bottom-5 left-12 w-72">
 									<button
-										className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 text-center hover:bg-light_yellow hover:text-brown"
+										className="mt-5 text-white bg-green rounded-2xl text-xs py-2.5 text-center hover:bg-primary_dark hover:text-white"
 										style={{ width: '70%' }}
 										onClick={() => {
 											setSearchParams({ id: post?._id });

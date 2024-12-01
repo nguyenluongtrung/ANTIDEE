@@ -198,13 +198,13 @@ export const ConfirmPage = () => {
 	}
 
 	return (
-		<div className="w-full px-20">
+		<div className="w-full md:px-20">
 			<StepBar serviceId={serviceId} />
 			{isOpenLoginForm && <LoginPage setIsOpenLoginForm={setIsOpenLoginForm} />}
 
 			<div
-				className="confirm-form mx-auto py-7 px-16 rounded-xl border-2 mt-5 border-light_gray"
-				style={{ width: '70%' }}
+				className="confirm-form mx-auto py-7 px-2 sm:px-16 md:w-[70%] rounded-xl border-2 mt-5 border-light_gray"
+				// style={{ width: '70%' }}
 			>
 				<p className="font-extrabold text-brown mb-3">
 					{services
@@ -220,7 +220,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Địa chỉ</p>
 							</td>
-							<td style={{ paddingLeft: '150px' }}>
+							<td className="pl-0 md:pl-[150px]">
 								<p>
 									{'Đường ' +
 										address?.street +
@@ -237,7 +237,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Ghi chú</p>
 							</td>
-							<td style={{ paddingLeft: '150px' }}>
+							<td className="pl-0 md:pl-[150px]">
 								<p>{otherInfo?.note || 'Không có'}</p>
 							</td>
 						</tr>
@@ -245,7 +245,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Thời gian làm việc</p>
 							</td>
-							<td style={{ paddingLeft: '150px' }}>
+							<td className="pl-0 md:pl-[150px]">
 								<p>{`${formatWorkingTime(
 									workingTime?.startingHour
 								)}, ${formatDate(workingTime?.startingDate)}`}</p>
@@ -255,7 +255,7 @@ export const ConfirmPage = () => {
 							<td className="w-36">
 								<p className="text-gray my-3">Khối lượng công việc</p>
 							</td>
-							<td style={{ paddingLeft: '150px' }}>
+							<td className="pl-0 md:pl-[150px]">
 								{inputOptions?.map((option) => {
 									return (
 										<p>
@@ -276,7 +276,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Tên liên hệ</p>
 							</td>
-							<td className="pl-32">
+							<td className="p-5 md:pl-32">
 								<p style={{ paddingLeft: '5px' }}>{contactInfo?.fullName}</p>
 							</td>
 						</tr>
@@ -284,7 +284,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Số điện thoại</p>
 							</td>
-							<td className="pl-32">
+							<td className="p-5 md:pl-32">
 								<p style={{ paddingLeft: '5px' }}>{contactInfo?.phoneNumber}</p>
 							</td>
 						</tr>
@@ -292,7 +292,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Email để nhận biên nhận</p>
 							</td>
-							<td className="pl-32">
+							<td className="p-5 md:pl-32">
 								<p style={{ paddingLeft: '5px' }}>{contactInfo?.email}</p>
 							</td>
 						</tr>
@@ -300,7 +300,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Hạn chốt cho bài đăng</p>
 							</td>
-							<td className="pl-32">
+							<td className="p-5 md:pl-32">
 								<p style={{ paddingLeft: '5px' }}>{formatDate(dueDate)}</p>
 							</td>
 						</tr>
@@ -315,7 +315,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Giá tiền</p>
 							</td>
-							<td className="pl-32">
+							<td className="p-5 md:pl-32">
 								<p style={{ paddingLeft: '5px' }}>
 									{otherInfo?.totalPrice} VND
 								</p>
@@ -325,7 +325,7 @@ export const ConfirmPage = () => {
 							<td>
 								<p className="text-gray my-3">Phương thức thanh toán</p>
 							</td>
-							<td className="pl-32">
+							<td className="p-5 md:pl-32">
 								<p style={{ paddingLeft: '5px' }}>{otherInfo?.paymentMethod}</p>
 							</td>
 						</tr>
