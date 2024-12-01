@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import AdminSidebar from '../components/AdminSidebar/AdminSidebar';
 import './ServiceManagement.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
 	deleteService,
 	getAllServices,
 } from '../../../features/services/serviceSlice';
-import { Spinner } from '../../../components';
 import toast, { Toaster, ToastBar } from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { BiEdit, BiTrash } from 'react-icons/bi';
@@ -32,15 +31,15 @@ export const ServiceManagement = () => {
 	const [selectedIdDelete, setSelectedIdDelete] = useState('');
 	async function initiateServices() {
 		let output = await dispatch(getAllServices());
-		setServices(output.payload);
+		if(output.type.includes('fulfilled')){
+			setServices(output.payload);
+		} else{
+			setServices([]);
+		}
 	}
 
 	useEffect(() => {
 		initiateServices();
-	}, []);
-
-	useEffect(() => {
-		dispatch(getAllServices());
 	}, []);
 
 	const openDeletePopup = (serviceId) => {
@@ -57,23 +56,16 @@ export const ServiceManagement = () => {
 		const result = await dispatch(deleteService(selectedIdDelete));
 		if (result.type.endsWith('fulfilled')) {
 			toast.success('Xoá dịch vụ thành công', successStyle);
-			dispatch(getAllServices());
+			initiateServices();
 		} else if (result?.error?.message === 'Rejected') {
 			toast.error(result?.payload, errorStyle);
 		}
-	};
-
-	const handleGetAllServices = () => {
-		Promise.all([dispatch(getAllServices())]).catch((error) => {
-			console.error('Error during dispatch:', error);
-		});
 	};
 
 	const handleRowsPerPageChange = (e) => {
 		setRowsPerPage(Number(e.target.value));
 		setCurrentPage(1);
 	};
-
 
 	const totalPages = calculateTotalPages(services.length, rowsPerPage);
 	const selectedServices = getPageItems(services, currentPage, rowsPerPage);
@@ -114,20 +106,20 @@ export const ServiceManagement = () => {
 				{isOpenCreateService && (
 					<CreateService
 						setIsOpenCreateService={setIsOpenCreateService}
-						handleGetAllServices={handleGetAllServices}
+						handleGetAllServices={initiateServices}
 					/>
 				)}
 				{isOpenUpdateService && (
 					<UpdateService
 						setIsOpenUpdateService={setIsOpenUpdateService}
-						handleGetAllServices={handleGetAllServices}
+						handleGetAllServices={initiateServices}
 						chosenServiceId={chosenServiceId}
 					/>
 				)}
 				{isOpenDetailService && (
 					<ServiceDetail
 						setIsOpenDetailService={setIsOpenDetailService}
-						handleGetAllServices={handleGetAllServices}
+						handleGetAllServices={initiateServices}
 						chosenServiceId={chosenServiceId}
 					/>
 				)}
@@ -163,7 +155,6 @@ export const ServiceManagement = () => {
 						<tr className="text-sm font-medium text-gray-700 border-b border-gray border-opacity-50">
 							<td className="py-2 px-4 text-center font-bold">STT</td>
 							<td className="py-2 px-4 text-center font-bold">Tên</td>
-							<td className="py-2 px-4 text-center font-bold">Hình ảnh</td>
 							<td className="py-2 px-4 text-center font-bold">
 								Chứng chỉ cần có
 							</td>
@@ -180,13 +171,6 @@ export const ServiceManagement = () => {
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>{services?.name}</span>
-									</td>
-									<td className="font-medium mx-auto text-gray">
-										<img
-											className="mx-auto"
-											src={services?.image}
-											style={{ width: '40px', height: '40px' }}
-										/>
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>{services?.requiredQualification?.name}</span>
