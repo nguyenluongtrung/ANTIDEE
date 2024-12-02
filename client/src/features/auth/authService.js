@@ -28,7 +28,6 @@ const register = async (accountData) => {
 };
 
 const changePassword = async (accountData) => {
-
 	const response = await axios.patch(API_URL + 'change-password', accountData);
 
 	if (response.data) {
