@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../../components";
 import { getAllAppFeedbacks } from "../../../features/appFeedbacks/appFeedbackSlice";
+import { BiReply } from "react-icons/bi";
 import {
   calculateTotalPages,
   getPageItems,
@@ -92,6 +93,7 @@ export const AppFeedbackManagement = () => {
               <td className="py-2 px-4 text-center font-bold">SĐT</td>
               <td className="py-2 px-4 text-center font-bold">Email</td>
               <td className="py-2 px-4 text-center font-bold">Nội dung</td>
+              <td className="py-2 px-4 text-center font-bold">Hành Động</td>
             </tr>
           </thead>
           <tbody>
@@ -113,8 +115,12 @@ export const AppFeedbackManagement = () => {
                   <td className="font-medium text-center text-gray">
                     <span>{appFeedback.description}</span>
                   </td>
-                  <td className="">
-                    <div className="flex items-center justify-center"></div>
+                  <td className="font-medium text-center text-gray">
+                    <button
+                      className="hover:cursor-pointer text-xl pt-1.5"
+                    >
+                      <BiReply className="block mx-auto text-green" />
+                    </button>
                   </td>
                 </tr>
               );
