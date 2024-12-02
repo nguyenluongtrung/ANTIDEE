@@ -36,6 +36,7 @@ export const UpdatePostForum = ({ allTopics, selectedForumPost, onClose }) => {
 	useEffect(() => {
 		if (selectedForumPost && selectedForumPost.topic) {
 			setSelectedTopics(selectedForumPost.topic.map((t) => t._id));
+			setImagesUrl(selectedForumPost.images[0]);
 		}
 	}, [selectedForumPost]);
 
@@ -180,7 +181,7 @@ export const UpdatePostForum = ({ allTopics, selectedForumPost, onClose }) => {
 					...formData,
 					title: updatedTitle,
 					content: updatedContent,
-					images: imagesUrl || formData.images,
+					images: imagesUrl,
 					topic: selectedTopics,
 				};
 				const result = await dispatch(
@@ -341,26 +342,24 @@ export const UpdatePostForum = ({ allTopics, selectedForumPost, onClose }) => {
 					{filePerc > 0 && <span> Đang tải ảnh lên: {filePerc}%</span>}
 					{fileUploadError && <p className="text-red">{fileUploadError}</p>}
 				</div>
-				{selectedForumPost.images &&
-					selectedForumPost.images.length > 0 &&
-					selectedForumPost.images.map((image) => {
-						return (
-							<div className="mt-3 image-preview">
-								<img
-									src={image}
-									alt="Preview"
-									className="w-[40%] max-h-96 object-contain"
-								/>
-								<button
-									type="button"
-									onClick={() => handleRemoveImage()}
-									className="absolute mt-[-80px] font-bold right-6 p-1 text-primary rounded-full  "
-								>
-									X
-								</button>
-							</div>
-						);
-					})}
+				<div className="mt-3 image-preview">
+					{imagesUrl && (
+						<>
+							<img
+								src={imagesUrl}
+								alt="Preview"
+								className="w-[40%] max-h-96 object-contain"
+							/>
+							<button
+								type="button"
+								onClick={() => handleRemoveImage()}
+								className="absolute mt-[-80px] font-bold right-6 p-1 text-primary rounded-full  "
+							>
+								X
+							</button>
+						</>
+					)}
+				</div>
 				<div className="flex mt-3 justify-center">
 					<button
 						className="btn-submit bg-primary w-full h-10 text-white p-2 rounded-md hover:bg-primary-dark"

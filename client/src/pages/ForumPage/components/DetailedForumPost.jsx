@@ -353,14 +353,18 @@ export const DetailedForumPost = ({
 									<p className="text-[14px]">{postContent?.content}</p>
 								</div>
 
-								{postContent?.images?.map((image, index) => (
-									<img
-										className="w-full object-cover"
-										src={image}
-										alt={`Post image ${index}`}
-										key={index}
-									/>
-								))}
+								{postContent?.images?.map((image, index) => {
+									return (
+										image && (
+											<img
+												className="w-full object-cover"
+												src={image}
+												alt={`Post image ${index}`}
+												key={index}
+											/>
+										)
+									);
+								})}
 							</div>
 
 							<div className="px-4 py-4 flex items-center justify-between border-t">

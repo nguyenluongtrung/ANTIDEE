@@ -95,7 +95,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 			};
 			await dispatch(
 				updateRatingDomesticHelper({
-					domesticHelperRatingData,
+					ratingData: domesticHelperRatingData,
 					domesticHelperId: selectedJobPost.domesticHelperId._id,
 				})
 			);
