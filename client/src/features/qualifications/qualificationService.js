@@ -30,7 +30,6 @@ const updateQualification = async (token, qualificationData, id) => {
 		qualificationData,
 		config
 	);
-	console.log(response);
 	return response.data.data.updatedQualification;
 };
 
@@ -42,20 +41,32 @@ const deleteQualification = async (token, id) => {
 	};
 
 	const response = await axios.delete(API_URL + `${id}`, config);
-	console.log(response);
 	return response.data.data.id;
 };
 
-const checkQualificationReceived = async (accountId, qualificationId) => {
+const checkQualificationReceived = async (qualificationId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
 	const response = await axios.get(
-		API_URL + `receive/${qualificationId}/${accountId}`
+		API_URL + `receive/${qualificationId}`,
+		config
 	);
 	return response.data.status;
 };
 
-const receiveNewQualification = async (accountId, qualificationId) => {
+const receiveNewQualification = async (qualificationId, token) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
 	const response = await axios.post(
-		API_URL + `receive/${qualificationId}/${accountId}`
+		API_URL + `receive/${qualificationId}`,
+		{},
+		config
 	);
 	return response.data.status;
 };

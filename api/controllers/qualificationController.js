@@ -109,7 +109,7 @@ const receiveNewQualification = asyncHandler(async (req, res) => {
 
 const checkQualificationReceived = asyncHandler(async (req, res) => {
 	const existingDocument = await AccountQualification.findOne({
-		accountId: req.params.accountId,
+		accountId: req.account._id,
 		qualificationId: req.params.qualificationId,
 	});
 
