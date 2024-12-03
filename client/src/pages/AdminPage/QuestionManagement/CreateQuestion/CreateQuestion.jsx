@@ -1,9 +1,7 @@
-import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
-import { AiOutlineClose } from 'react-icons/ai';
 import './CreateQuestion.css';
 import { useEffect, useRef, useState } from 'react';
 import { getAllServices } from '../../../../features/services/serviceSlice';
@@ -61,7 +59,7 @@ export const CreateQuestion = () => {
 	const handleSubmitQuestionList = async (data) => {
 		const newQuestionList = [];
 		data.forEach((question) => {
-			const choices = extractOptions(question['Các lựa chọn']);
+			const choices = extractOptions(question['Các lựa chọn'].replace(/\n/g, ''));
 			newQuestionList.push({
 				content: question['Nội dung'],
 				correctAnswer: question['Câu trả lời đúng'],
@@ -105,7 +103,8 @@ export const CreateQuestion = () => {
 					Đang <p className="text-primary text-2xl px-2">Tạo mới</p> câu hỏi{' '}
 				</div>
 				<form
-					onSubmit={() => {
+					onSubmit={(e) => {
+						e.preventDefault();
 						handleSubmitQuestionList(data);
 					}}
 					className="content"

@@ -91,9 +91,10 @@ export const receiveNewQualification = createAsyncThunk(
 	async (qualificationId, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
 			return await qualificationService.receiveNewQualification(
-				storedAccount.data.account._id,
-				qualificationId
+				qualificationId,
+				token
 			);
 		} catch (error) {
 			const message =
@@ -113,9 +114,10 @@ export const checkQualificationReceived = createAsyncThunk(
 	async (qualificationId, thunkAPI) => {
 		try {
 			const storedAccount = JSON.parse(localStorage.getItem('account'));
+			const token = storedAccount.data.token;
 			return await qualificationService.checkQualificationReceived(
-				storedAccount.data.account._id,
-				qualificationId
+				qualificationId,
+				token
 			);
 		} catch (error) {
 			const message =

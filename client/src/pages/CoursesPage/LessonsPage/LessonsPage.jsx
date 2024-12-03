@@ -10,8 +10,11 @@ import { GoDotFill } from 'react-icons/go';
 import { MdOutlineOndemandVideo } from 'react-icons/md';
 import { MdOutlineQuiz } from 'react-icons/md';
 import { GrNotes } from 'react-icons/gr';
-import Confetti from "react-confetti";
-import { checkQualificationReceived, receiveNewQualification } from '../../../features/qualifications/qualificationSlice';
+import Confetti from 'react-confetti';
+import {
+	checkQualificationReceived,
+	receiveNewQualification,
+} from '../../../features/qualifications/qualificationSlice';
 
 export const LessonsPage = () => {
 	const [openLessons, setOpenLessons] = useState([]);
@@ -40,10 +43,13 @@ export const LessonsPage = () => {
 
 	useEffect(() => {
 		const checkQualification = async () => {
-			const response = await dispatch(checkQualificationReceived(qualificationId));
+			const response = await dispatch(
+				checkQualificationReceived(qualificationId)
+			);
+			console.log(response);
 			if (response.payload == 'received') {
 				setIsQualificationReceived(true);
-			} else{
+			} else {
 				setIsQualificationReceived(false);
 			}
 		};
@@ -98,7 +104,9 @@ export const LessonsPage = () => {
 
 	return (
 		<div className="flex flex-col bg-gray-50 pt-14 mb-28">
-			{showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+			{showConfetti && (
+				<Confetti width={window.innerWidth} height={window.innerHeight} />
+			)}
 			<div className="bg-white p-6 top-0 z-10">
 				<h1 className="text-3xl font-bold text-gray-900 ml-10">
 					Nội dung khóa học
@@ -135,17 +143,16 @@ export const LessonsPage = () => {
 							{Math.round(learningProgress)}%
 						</span>{' '}
 					</p>
-					{learningProgress == 100 && !isQualificationReceived ? (
+					{learningProgress == 100 && !isQualificationReceived && (
 						<button
 							className="block bg-green text-white rounded-md px-3 py-1.5 w-40"
 							onClick={() => handleGetQualification(qualificationId)}
 						>
 							Nhận chứng chỉ
 						</button>
-					) : (
-						<button
-							className="block bg-yellow text-white rounded-md px-3 py-1.5 w-52"
-						>
+					)}
+					{learningProgress == 100 && isQualificationReceived && (
+						<button className="block bg-yellow text-white rounded-md px-3 py-1.5 w-52">
 							Bạn đã nhận chứng chỉ
 						</button>
 					)}
@@ -178,7 +185,10 @@ export const LessonsPage = () => {
 														key={content._id}
 														className={`p-2 rounded-lg shadow-md flex justify-between items-center cursor-pointer hover:bg-light_primary transition`}
 														onClick={(e) => {
-															if (content.isPassed && content.contentType == 'Exam') {
+															if (
+																content.isPassed &&
+																content.contentType == 'Exam'
+															) {
 																e.stopPropagation();
 																return;
 															}
