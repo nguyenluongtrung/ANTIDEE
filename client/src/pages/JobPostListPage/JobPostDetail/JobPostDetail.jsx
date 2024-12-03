@@ -1,5 +1,5 @@
 import { AiOutlineClose } from 'react-icons/ai';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
@@ -9,6 +9,7 @@ import { getAccountInformation } from '../../../features/auth/authSlice';
 
 export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 	const [isChecked, setIsChecked] = useState(false);
+	const { account } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 
@@ -186,7 +187,7 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 
 					<div className="flex justify-center">
 						{selectedJobPost?.applicants?.findIndex(
-							(applicant) => String(applicant) === String(account?._id)
+							(applicant) => String(applicant._id) === String(account?._id)
 						) != -1 ? (
 							<button
 								className={

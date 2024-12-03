@@ -20,6 +20,7 @@ import { createAccountPromotion, updatePromotionQuantity } from '../../../featur
 
 export const ConfirmPage = () => {
 	const { serviceId } = useParams();
+	const { account } = useSelector((state) => state.auth);
 	const [services, setServices] = useState([]);
 	const [isOpenLoginForm, setIsOpenLoginForm] = useState(false);
 	const [isChecked, setIsChecked] = useState(false);
@@ -34,13 +35,11 @@ export const ConfirmPage = () => {
 	const isChosenYourFav = location?.state?.isChosenYourFav;
 	const invitationCodeOwnerId = location?.state?.invitationCodeOwnerId;
 	const dueDate = location?.state?.dueDate;
-
 	const promoId = location?.state?.promoId;
 	const accountApoints = location?.state?.accountApoints;
 	const isUsedPoint = location?.state?.isUsedPoint;
 	const promotionId = location?.state?.promotionId;
 	const promotionQuantity = location?.state?.promotionQuantity;
-
 
 	const { isLoading: jobPostLoading } = useSelector((state) => state.jobPosts);
 	const dispatch = useDispatch();
@@ -65,8 +64,6 @@ export const ConfirmPage = () => {
 	}, []);
 
 	const handleSubmitJobPost = async () => {
-		const account = JSON.parse(localStorage.getItem('account')).data.account;
-
 		if (
 			otherInfo?.paymentMethod == 'Ví người dùng' &&
 			account.accountBalance < Math.round(otherInfo?.totalPrice)

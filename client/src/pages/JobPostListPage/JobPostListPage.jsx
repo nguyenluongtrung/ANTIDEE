@@ -138,7 +138,6 @@ export const JobPostListPage = () => {
 				<div className="flex justify-center">
 					<button
 						className="bg-another_primary text-white py-1.5 text-center rounded-md block w-[100px] md:w-[200px] hover:bg-primary_dark"
-						// style={{ width: '100px' }}
 						onClick={handleFilterJobPosts}
 					>
 						Tìm kiếm
@@ -193,7 +192,6 @@ export const JobPostListPage = () => {
 									<div className="triangle-down absolute top-0 right-0"></div>
 								)}
 								<p className="flex items-center text-gray mb-2">
-									{/* <FaHourglassStart /> */}
 									Bắt đầu lúc:{' '}
 									<span className="flex text-brown ml-2">
 										{formatDate(post?.workingTime?.startingDate)}{' '} |
@@ -203,7 +201,6 @@ export const JobPostListPage = () => {
 									</span>
 								</p>
 								<p className="flex items-center text-gray mb-2">
-									{/* <FaHourglassEnd /> */}
 									Hết hạn lúc: {''}
 									<span className="text-brown ml-2">
 										{formatDate(post?.dueDate)}{' '}

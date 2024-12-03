@@ -404,20 +404,35 @@ const applyAJob = asyncHandler(async (req, res) => {
 	const jobPostId = req.params.jobPostId;
 	const accountId = req.params.accountId;
 
-	const isFoundJobPost = await JobPost.findById(jobPostId);
+	const foundJobPost = await JobPost.findById(jobPostId);
 
-	if (!isFoundJobPost) {
+	if (!foundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
 
-	isFoundJobPost?.applicants?.push(accountId);
-	await isFoundJobPost.save();
+	const qualifications = await AccountQualification.find({
+		accountId,
+	});
+
+	const requiredQualification = foundJobPost.serviceId.requiredQualification;
+	const isValidQualification = qualifications.find(
+		(qualification) =>
+			String(qualification.qualificationId) == String(requiredQualification)
+	);
+
+	if (!isValidQualification) {
+		res.status(400);
+		throw new Error('Bạn không có chứng chỉ phù hợp với công việc này!');
+	}
+
+	foundJobPost?.applicants?.push(accountId);
+	await foundJobPost.save();
 
 	res.status(200).json({
 		status: 'success',
 		data: {
-			jobPost: isFoundJobPost,
+			jobPost: foundJobPost,
 		},
 	});
 });
@@ -426,10 +441,10 @@ const selectATasker = asyncHandler(async (req, res) => {
 	const jobPostId = req.params.jobPostId;
 	const taskerId = req.params.taskerId;
 
-	const isFoundJobPost = await JobPost.findById(jobPostId);
+	const foundJobPost = await JobPost.findById(jobPostId);
 	const tasker = await Account.findById(taskerId);
 
-	if (!isFoundJobPost) {
+	if (!foundJobPost) {
 		res.status(404);
 		throw new Error('Không tìm thấy bài đăng công việc');
 	}
@@ -442,12 +457,25 @@ const selectATasker = asyncHandler(async (req, res) => {
 		{ new: true }
 	);
 
-	tasker?.receivedJobList?.push({
-		jobPostId,
+	await AccountJobPost.create({
+		customerId: req.account._id,
+		domesticHelperId: taskerId,
+		jobPostId: jobPostId,
 		receivedAt: new Date(),
 	});
 
+	tasker.accountBalance =
+		tasker.accountBalance - Math.round(0.3 * foundJobPost?.totalPrice);
 	await tasker.save();
+	await addNewTransaction(
+		Math.round(0.3 * foundJobPost?.totalPrice),
+		tasker._id,
+		'Lợi nhuận sau khi giúp việc nhận việc',
+		'commission_fee',
+		jobPostId,
+		'',
+		'Ví người dùng'
+	);
 
 	res.status(200).json({
 		status: 'success',
