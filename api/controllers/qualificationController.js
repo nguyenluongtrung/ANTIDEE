@@ -85,13 +85,13 @@ const updateQualification = asyncHandler(async (req, res) => {
 
 const receiveNewQualification = asyncHandler(async (req, res) => {
 	const existingDocument = await AccountQualification.findOne({
-		accountId: req.params.accountId,
+		accountId: req.account._id,
 		qualificationId: req.params.qualificationId,
 	});
 
 	if (!existingDocument) {
 		await AccountQualification.create({
-			accountId: req.params.accountId,
+			accountId: req.account._id,
 			qualificationId: req.params.qualificationId,
 		});
 
