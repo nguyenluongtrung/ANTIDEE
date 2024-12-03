@@ -14,6 +14,7 @@ export const ForumRepositories = ({ repositories, onClose, onOpenRepositoryDetai
 					Bộ sưu tập của tôi
 				</p>
 				{repositories.map((repo, index) => {
+					console.log(repo)
 					return (
 						<div
 							className="flex gap-4 items-center rounded-md p-2 hover:bg-[#ebeced] hover:cursor-pointer"
@@ -25,7 +26,7 @@ export const ForumRepositories = ({ repositories, onClose, onOpenRepositoryDetai
 							<p className="font-semibold text-[16px]">{repo.repositoryName}</p>
 							<div className="ml-auto">
 								<p className="rounded-lg py-1 px-3 bg-light_pink">
-									{repo.postsList.length} bài viết
+									{repo.postsList.filter((post) => post.postId != null).length} bài viết
 								</p>
 							</div>
 						</div>
