@@ -404,7 +404,7 @@ const applyAJob = asyncHandler(async (req, res) => {
 	const jobPostId = req.params.jobPostId;
 	const accountId = req.params.accountId;
 
-	const foundJobPost = await JobPost.findById(jobPostId);
+	const foundJobPost = await JobPost.findById(jobPostId).populate('serviceId');
 
 	if (!foundJobPost) {
 		res.status(404);

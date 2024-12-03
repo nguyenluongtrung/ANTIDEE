@@ -12,7 +12,7 @@ export const MyJobDetail = ({
 	onCancelJob,
 	onDomesticHelperFeedback,
 	onFeedbackReview,
-	onCompleteJob
+	onCompleteJob,
 }) => {
 	const checkIsCompleted = () => {
 		const startingDate = new Date(selectedJobPost.workingTime.startingDate);
@@ -55,10 +55,14 @@ export const MyJobDetail = ({
 					</p>
 					<p className="text-gray mb-2">
 						Bắt đầu lúc:{' '}
-						<span className="text-brown">
-							{formatDate(selectedJobPost?.workingTime?.startingDate)}{' '}
-							{formatWorkingTime(selectedJobPost?.workingTime?.startingHour)}
-						</span>
+						{selectedJobPost?.workingTime ? (
+							<span className="text-brown">
+								{formatDate(selectedJobPost?.workingTime?.startingDate)}{' '}
+								{formatWorkingTime(selectedJobPost?.workingTime?.startingHour)}
+							</span>
+						) : (
+							<></>
+						)}
 					</p>
 					<div className="border-2 border-gray  my-3">
 						{selectedJobPost?.workload?.find(

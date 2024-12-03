@@ -543,15 +543,16 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 	const feedbacks = await DomesticHelperFeedback.find({
 		feedbackFrom: 'Khách hàng',
 	}).populate('jobPostId');
-	const numberOfRatings = feedbacks.filter(
+	const validFeedbacks = feedbacks.filter(
 		(feedback) =>
 			String(feedback.jobPostId.domesticHelperId) == String(domesticHelperId)
-	).length;
+	);
+	const numberOfRatings = validFeedbacks.length;
 
 	if (numberOfRatings == 0) {
 		account.rating.domesticHelperRating = domesticHelperRating;
 	} else {
-		const totalRating = feedbacks.reduce(
+		const totalRating = validFeedbacks.reduce(
 			(sum, feedback) => sum + Number(feedback.rating),
 			0
 		);
@@ -582,16 +583,20 @@ const updateRatingCustomer = asyncHandler(async (req, res) => {
 	}
 
 	const feedbacks = await DomesticHelperFeedback.find({
-		customerId,
 		feedbackFrom: 'Người giúp việc',
-	});
-	const numberOfRatings = feedbacks.length;
+	}).populate('jobPostId');
 
-	if (numberOfRatings === 0) {
+	const validFeedbacks = feedbacks.filter(
+		(feedback) => String(feedback.jobPostId.customerId) == String(customerId)
+	);
+
+	const numberOfRatings = validFeedbacks.length;
+
+	if (numberOfRatings == 0) {
 		account.rating.customerRating = rating;
 	} else {
-		const totalRating = feedbacks.reduce(
-			(sum, feedback) => sum + feedback.rating,
+		const totalRating = validFeedbacks.reduce(
+			(sum, feedback) => sum + Number(feedback.rating),
 			0
 		);
 		account.rating.customerRating = (totalRating / numberOfRatings).toFixed(1);
