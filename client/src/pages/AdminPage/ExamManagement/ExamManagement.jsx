@@ -145,10 +145,7 @@ export const ExamManagement = () => {
 									</td>
 									<td className="font-medium text-center text-gray">
 										<span>
-											{String(exam?.qualificationId?.name)
-												.substring(10, 11)
-												.toUpperCase() +
-												String(exam?.qualificationId?.name).substring(11)}
+											{String(exam?.qualificationId?.name)}
 										</span>
 									</td>
 									<td className="font-medium text-center text-gray">
