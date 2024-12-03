@@ -22,8 +22,10 @@ import { Sidebar } from './components/Sidebar/Sidebar';
 import { GoPencil } from "react-icons/go";
 import { FaRegEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-
+import { GoArrowRight, GoArrowLeft } from "react-icons/go";
 export const MyAccount = () => {
+	const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const fileRef = useRef(null);
 	const { account, isLoading } = useSelector((state) => state.auth);
 	const [file, setFile] = useState(undefined);
@@ -108,13 +110,24 @@ export const MyAccount = () => {
 	if (isLoading) {
 		return <Spinner />;
 	}
-
+	const toggleSidebar = () => {
+		setIsSidebarOpen(!isSidebarOpen);
+	  };
+	
 	return (
-		<div className="flex px-16 pt-20 mb-10">
-			<div className="left-container pr-24 pt-3">
-				<Sidebar account={account}/>
+		<div className="flex account-wrapper mb-10">
+			<div className={`sidebar transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-50'}`}>
+				<Sidebar />
 			</div>
-			<div className="right-container rounded-xl p-5 relative">
+			<div className={`menu-icon ${isSidebarOpen ? 'open' : ''}`} onClick={toggleSidebar}>
+				{!isSidebarOpen && <span>Danh mục</span>}
+				{isSidebarOpen ? (
+					<GoArrowLeft size={24} />
+				) : (
+					<GoArrowRight size={24} />
+				)}
+			</div>
+			<div className="right-container rounded-xl relative">
 				<GoPencil
 					className="absolute top-5 right-5 hover:cursor-pointer"
 					size={23}
@@ -124,8 +137,8 @@ export const MyAccount = () => {
 				<p className="mb-2 bottom-horizontal pb-3">
 					Quản lí hồ sơ tài khoản của bạn
 				</p>
-				<div className="flex">
-					<div className="pl-5 customized-width w-2/3">
+				<div className="flex form-wrapper justify-center">
+					<div className="pl-5 form-content customized-width w-2/3">
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<table className="">
 								<thead></thead>
@@ -138,8 +151,7 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="text"
-													className={`update-input ml-10 w-40 placeholder:text-red ${
-														errors?.name && 'text-red'
+													className={`update-input ml-10 w-40 placeholder:text-red ${errors?.name && 'text-red'
 														}`}
 													placeholder={errors?.name?.message}
 													{...register('name', rules.name)}
@@ -158,8 +170,7 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="text"
-													className={`update-input ml-10 w-40 placeholder:text-red ${
-														errors?.email && 'text-red'
+													className={`update-input ml-10 w-40 placeholder:text-red ${errors?.email && 'text-red'
 														}`}
 													placeholder={errors?.email?.message}
 													{...register('email', rules.email)}
@@ -178,8 +189,7 @@ export const MyAccount = () => {
 											{isUpdateAccountInformation ? (
 												<input
 													type="text"
-													className={`update-input ml-10 w-40 placeholder:text-red ${
-														errors?.phoneNumber && 'text-red'
+													className={`update-input ml-10 w-40 placeholder:text-red ${errors?.phoneNumber && 'text-red'
 														}`}
 													placeholder={errors?.phoneNumber?.message}
 													{...register('phoneNumber', rules.phoneNumber)}
@@ -229,18 +239,23 @@ export const MyAccount = () => {
 									</tr>
 									<tr>
 										<td className="py-1.5">
-											<span className="text-gray">aPoints</span>
-											<span className="right-vertical px-10">
+											<span className="text-gray">Apoints</span>
+										</td>
+										<td>
+											<span className="pl-10">
 												{account?.aPoints} điểm
 											</span>
 										</td>
+									</tr>
+									<tr>
 										<td>
-											<span className="text-gray px-10">Ngày sinh</span>
+											<span className="text-gray">Ngày sinh</span>
+										</td>
+										<td>
 											{isUpdateAccountInformation ? (
 												<input
 													type="date"
-													className={`update-input ml-5 text-center w-40 ${
-														errors?.dob && 'text-red'
+													className={`update-input ml-5 text-center w-40 ${errors?.dob && 'text-red'
 														}`}
 													{...register('dob', rules.dob)}
 													max={maxDateString}
@@ -248,7 +263,7 @@ export const MyAccount = () => {
 													defaultValue={formatDateInput(account?.dob)}
 												/>
 											) : (
-												<span className="">
+												<span className="pl-10">
 													{account?.dob
 														? formatDate(account?.dob)
 														: 'Chưa cập nhật'}
@@ -258,7 +273,7 @@ export const MyAccount = () => {
 									</tr>
 									<tr>
 										<td className="py-1.5">
-											<span className="text-gray">Hạng giúp việc</span>
+											<span className="text-gray">Cấp độ</span>
 										</td>
 										<td>
 											<span className="pl-10">
@@ -271,10 +286,10 @@ export const MyAccount = () => {
 											<span className="text-gray">Mật khẩu</span>
 										</td>
 										<td>
-											<span className="flex justify-center items-center pl-10">***********
+											<span className="flex items-center pl-10">***********
 												<Link to={'change-password'}>
 													<p className='ml-4 flex justify-center items-center bg-primary text-white rounded-lg p-2 cursor-pointer fea-item hover:bg-primary_dark'>
-														Đổi mật khẩu <FaRegEdit className='ml-2' />
+														<FaRegEdit />
 													</p>
 												</Link>
 											</span>
@@ -287,7 +302,7 @@ export const MyAccount = () => {
 									<button
 										type="submit"
 										className={`cancel-btn block bg-gray text-white text-center rounded-md font-medium mb-1 mt-5 ml-24 ${fileUploadError ? 'bg-primary' : 'bg-gray'}`}
-										onClick={() => {setIsUpdateAccountInformation(false); setFileUploadError(false); setFilePerc(0); initiateAccountInformation()}}
+										onClick={() => { setIsUpdateAccountInformation(false); setFileUploadError(false); setFilePerc(0); initiateAccountInformation() }}
 									>
 										<p>Hủy</p>
 									</button>
@@ -302,10 +317,10 @@ export const MyAccount = () => {
 							)}
 						</form>
 					</div>
-					<div className="left-vertical mb-4 px-14 h-60 pt-10 mt-2 w-1/3">
+					<div className="left-vertical avatar-wrapper mb-4 h-60 pt-10 mt-2">
 						<img
 							src={`${avatarUrl}` || '../../assets/img/Ellipse 16.png'}
-							className="block w-16 mr-2 mb-5 ml-10 rounded-full"
+							className="block avatar-image mb-5 rounded-full"
 						/>
 						<button
 							className={`rounded-md rounded-customized-gray p-1 ${!isUpdateAccountInformation ? 'bg-light_gray border-0 text-white' : 'hover:cursor-pointer'}`}
@@ -315,7 +330,7 @@ export const MyAccount = () => {
 							<span>Chọn ảnh đại diện</span>
 						</button>
 						<div className="mt-2">
-							<p className="text-xs ml-3">Dung lượng file tối đa 2MB</p>
+							<p className="text-xs">Dung lượng file tối đa 2MB</p>
 						</div>
 						<input
 							type="file"

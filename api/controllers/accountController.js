@@ -41,7 +41,6 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const changePassword = asyncHandler(async (req, res) => {
-
 	const { phoneNumber, oldPassword, newPassword } = req.body.accountData;
 
 	const account = await Account.findOne({ phoneNumber }).select('+password');
@@ -50,13 +49,12 @@ const changePassword = asyncHandler(async (req, res) => {
 		account &&
 		(await account.comparePasswordInDb(oldPassword, account.password))
 	) {
-
 		const hashedPassword = await bcrypt.hash(newPassword, 12);
 
 		const updatedAccount = await Account.findByIdAndUpdate(
 			account._id,
 			{ password: hashedPassword },
-			{ new: true,}
+			{ new: true }
 		);
 
 		res.status(200).json({
@@ -71,7 +69,6 @@ const changePassword = asyncHandler(async (req, res) => {
 		throw new Error('Mật khẩu cũ không chính xác');
 	}
 });
-
 
 const loginWithGoogle = asyncHandler(async (req, res) => {
 	const { email } = req.body;
@@ -534,7 +531,7 @@ const loadMoneyAfterUsingInvitationCode = asyncHandler(async (req, res) => {
 
 const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 	const { domesticHelperId } = req.params;
-	const { rating } = req.body;
+	const { domesticHelperRating } = req.body;
 
 	const account = await Account.findById(domesticHelperId);
 
@@ -544,16 +541,18 @@ const updateRatingDomesticHelper = asyncHandler(async (req, res) => {
 	}
 
 	const feedbacks = await DomesticHelperFeedback.find({
-		domesticHelperId,
 		feedbackFrom: 'Khách hàng',
-	});
-	const numberOfRatings = feedbacks.length;
+	}).populate('jobPostId');
+	const numberOfRatings = feedbacks.filter(
+		(feedback) =>
+			String(feedback.jobPostId.domesticHelperId) == String(domesticHelperId)
+	).length;
 
-	if (numberOfRatings === 0) {
-		account.rating.domesticHelperRating = rating;
+	if (numberOfRatings == 0) {
+		account.rating.domesticHelperRating = domesticHelperRating;
 	} else {
 		const totalRating = feedbacks.reduce(
-			(sum, feedback) => sum + feedback.rating,
+			(sum, feedback) => sum + Number(feedback.rating),
 			0
 		);
 		account.rating.domesticHelperRating = (
@@ -844,85 +843,93 @@ const getAccountBalance = asyncHandler(async (req, res) => {
 });
 
 const getAccountSalary = asyncHandler(async (req, res) => {
-    const accountId = req.account._id;
-    const account = await Account.findById(accountId);
-    if (!account) {
-        res.status(404);
-        throw new Error('Account not found');
-    }
+	const accountId = req.account._id;
+	const account = await Account.findById(accountId);
+	if (!account) {
+		res.status(404);
+		throw new Error('Account not found');
+	}
 
-    try {
-        const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-        const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+	try {
+		const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+		const endOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
 
-        const completedJobs = await JobPost.find({
-            'hasCompleted.customerConfirm': true,
-            'hasCompleted.domesticHelperConfirm': true,
-            'hasCompleted.completedAt': { 
-                $gte: startOfYear, 
-                $lt: endOfYear 
-            }
-        });
+		const completedJobs = await JobPost.find({
+			'hasCompleted.customerConfirm': true,
+			'hasCompleted.domesticHelperConfirm': true,
+			'hasCompleted.completedAt': {
+				$gte: startOfYear,
+				$lt: endOfYear,
+			},
+		});
 
-        const jobIds = completedJobs.map((job) => job._id);
+		const jobIds = completedJobs.map((job) => job._id);
 
-        const monthlySalary = await Transaction.aggregate([
-            {
-                $match: {
-                    accountId: accountId,
-                    jobId: { $in: jobIds },
-                    category: { $in: ['salary', 'commission_fee'] },
-                    date: {
-                        $gte: startOfYear,
-                        $lt: endOfYear,
-                    },
-                },
-            },
-            {
-                $group: {
-                    _id: { $month: '$date' },
-                    totalSalary: {
-                        $sum: { 
-                            $cond: { if: { $eq: ['$category', 'salary'] }, then: '$amount', else: 0 }
-                        },
-                    },
-                    totalCommission: {
-                        $sum: {
-                            $cond: { if: { $eq: ['$category', 'commission_fee'] }, then: '$amount', else: 0 }
-                        },
-                    },
-                },
-            },
-            {
-                $project: {
-                    totalSalary: 1,
-                    totalCommission: 1,
-                    totalSalaryAfterDeductions: {
-                        $subtract: ['$totalSalary', '$totalCommission'],
-                    },
-                },
-            },
-            {
-                $sort: { _id: 1 },
-            },
-        ]);		
+		const monthlySalary = await Transaction.aggregate([
+			{
+				$match: {
+					accountId: accountId,
+					jobId: { $in: jobIds },
+					category: { $in: ['salary', 'commission_fee'] },
+					date: {
+						$gte: startOfYear,
+						$lt: endOfYear,
+					},
+				},
+			},
+			{
+				$group: {
+					_id: { $month: '$date' },
+					totalSalary: {
+						$sum: {
+							$cond: {
+								if: { $eq: ['$category', 'salary'] },
+								then: '$amount',
+								else: 0,
+							},
+						},
+					},
+					totalCommission: {
+						$sum: {
+							$cond: {
+								if: { $eq: ['$category', 'commission_fee'] },
+								then: '$amount',
+								else: 0,
+							},
+						},
+					},
+				},
+			},
+			{
+				$project: {
+					totalSalary: 1,
+					totalCommission: 1,
+					totalSalaryAfterDeductions: {
+						$subtract: ['$totalSalary', '$totalCommission'],
+					},
+				},
+			},
+			{
+				$sort: { _id: 1 },
+			},
+		]);
 
-        const salaries = new Array(12).fill(0);
+		const salaries = new Array(12).fill(0);
 
-        monthlySalary.forEach(item => {
-            salaries[item._id - 1] = item.totalSalaryAfterDeductions;
-        });
+		monthlySalary.forEach((item) => {
+			salaries[item._id - 1] = item.totalSalaryAfterDeductions;
+		});
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                monthlySalary: salaries,
-            },
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy dữ liệu lương.' });
-    }
+		res.status(200).json({
+			status: 'success',
+			data: {
+				monthlySalary: salaries,
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy dữ liệu lương.' });
+	}
 });
 
 module.exports = {

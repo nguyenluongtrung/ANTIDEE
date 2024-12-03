@@ -25,6 +25,7 @@ export default {
 			info: '#ffc107',
 			hero: '#efa37f',
 			blue: '#24acf2',
+			dark_blue:'#063E77',
 			purple: '#be84ff',
 			anotherRed: '#f61818',
 		},

@@ -222,7 +222,7 @@ export const HomePage = () => {
 			</main>
 
 			<div
-				className="py-10 sm:py-16 lg:py-20 bg-white md:mt-0 mt-72"
+				className="py-10 sm:py-16 lg:py-20 bg-white md:mt-0"
 				ref={serviceRef}
 			>
 				<div
@@ -243,7 +243,7 @@ export const HomePage = () => {
 						<Marquee
 							autoFill
 							pauseOnHover
-							className="h-52 sm:h-56 lg:h-64 rounded-lg bg-primary"
+							className="h-60 lg:h-64 rounded-lg bg-primary"
 						>
 							{services?.map((service, index) => (
 								<div 
@@ -276,7 +276,7 @@ export const HomePage = () => {
 												<FaStar size={15} className="mx-2 text-yellow" />
 											</p>
 											<div className="text-primary mt-4">
-												<button className="flex justify-center items-center font-bold text-base hvr-shutter-in-horizontal rounded-lg">
+												<button className="flex justify-center items-center font-bold text-base rounded-lg hover:bg-primary hover:text-white">
 													Trải nghiệm ngay
 													<FaPaperPlane
 														size={15}

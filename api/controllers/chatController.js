@@ -4,7 +4,7 @@ const chatting = require('../models/chatModel');
 const getAllChats = async (req, res) => {
     try {
         const chats = await chatting.find({})
-            .populate('firstId secondId', 'avatar name role email');
+            .populate('firstId secondId', 'avatar name role email gender address phoneNumber');
         res.status(200).json({
             success: true,
             data: chats,
@@ -21,8 +21,6 @@ const getAllChats = async (req, res) => {
 const createChat = async (req, res) => {
     try {
         const { firstId, secondId } = req.body;
-
-        // Kiểm tra xem đã có chat giữa hai ID này chưa
         const existingChat = await chatting.findOne({
             $or: [
                 { firstId, secondId },
