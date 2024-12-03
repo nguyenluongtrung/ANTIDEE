@@ -18,9 +18,9 @@ router
 	.post(protect, restrict('Admin'), createQualification)
 	.get(getAllQualifications);
 router
-	.route('/receive/:qualificationId/:accountId')
-	.get(checkQualificationReceived)
-	.post(receiveNewQualification);
+	.route('/receive/:qualificationId')
+	.get(protect, checkQualificationReceived)
+	.post(protect, receiveNewQualification);
 router
 	.route('/get-account-qualifications/:accountId')
 	.get(getAccountQualifications);

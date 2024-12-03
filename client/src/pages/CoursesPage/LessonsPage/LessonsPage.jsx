@@ -41,6 +41,7 @@ export const LessonsPage = () => {
 	useEffect(() => {
 		const checkQualification = async () => {
 			const response = await dispatch(checkQualificationReceived(qualificationId));
+			console.log(response)
 			if (response.payload == 'received') {
 				setIsQualificationReceived(true);
 			} else{
