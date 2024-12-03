@@ -130,6 +130,7 @@ export const ForumPage = () => {
 		}
 		fetchTopDiscussions();
 		fetchAllTopics();
+		fetchAllRepositories();
 	};
 
 	const handleOpenDiscussionDetail = async (id) => {
