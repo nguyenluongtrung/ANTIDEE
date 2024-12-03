@@ -27,8 +27,10 @@ import {
 	getCurrentTimeString,
 } from '../../utils/format';
 import PromotionPage from './Promotion/PromotionPage';
+import { CreateAppFeedback } from './AppFeedback/AppFeedbackPage';
 
 export const HomePage = () => {
+	const [isOpenCreateAppFeedback, setIsOpenCreateAppFeedback] = useState(false)
 	const [services, setServices] = useState([]);
 	const [recommendedServices, setRecommendedServices] = useState();
 	const [jobPosts, setJobPosts] = useState([]);
@@ -166,6 +168,11 @@ export const HomePage = () => {
 
 	return (
 		<div className="body-homepage pb-10">
+			{isOpenCreateAppFeedback && (
+              <CreateAppFeedback
+              setIsOpenCreateAppFeedback={setIsOpenCreateAppFeedback}
+              />
+            )}
 			<div
 				className="fixed right-4 sm:right-6 md:right-8 lg:right-10 bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 rounded-full p-3 sm:p-4 md:p-5 bg-light_purple hover:cursor-pointer hover:opacity-80"
 				onClick={scrolLWithUseRef}
@@ -603,7 +610,10 @@ export const HomePage = () => {
 								hảo từ đầu đến cuối...
 							</span>
 
-							<div className="text-xl font-bold hover:text-primary cursor-pointer">
+							<div
+							className="text-xl font-bold hover:text-primary cursor-pointer"
+							onClick={() => setIsOpenCreateAppFeedback(true)}
+							>
 								<PiArrowBendDownRightBold
 									size={40}
 									className="inline-block animate-bounce mr-2"
