@@ -4,6 +4,8 @@ import {
 	formatWorkingTime,
 	getCurrentTimeString,
 } from '../../../../utils/format';
+import { LuClock } from 'react-icons/lu';
+import { PiMoneyWavyLight } from 'react-icons/pi';
 
 export const MyJobDetail = ({
 	onClose,
@@ -41,7 +43,7 @@ export const MyJobDetail = ({
 		<div className="popup active">
 			<div className="overlay"></div>
 
-			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
+			<form className="content rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={onClose}
@@ -50,7 +52,7 @@ export const MyJobDetail = ({
 					XEM CHI TIẾT CÔNG VIỆC ĐÃ NHẬN
 				</p>
 				<div className="">
-					<p className="text-brown font-bold mb-3">
+					<p className="text-primary font-bold text-base md:text-base text-center mb-3">
 						{selectedJobPost?.serviceId?.name?.toUpperCase()}
 					</p>
 					<p className="text-gray mb-2">
@@ -77,8 +79,11 @@ export const MyJobDetail = ({
 						) : (
 							<div className="grid grid-cols-2">
 								<div className="border-r-2 border-gray">
-									<p className="text-gray mb-2 text-center mt-3">Làm trong: </p>
-									<p className="text-center text-brown font-bold mb-3">
+									<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+										Làm trong{' '}
+										<LuClock className='ml-2' />
+									</p>
+									<p className="text-center text-primary font-bold mb-3">
 										{
 											selectedJobPost?.workload?.find(
 												(option) => String(option?.optionName) === 'Thời gian'
@@ -88,8 +93,11 @@ export const MyJobDetail = ({
 									</p>
 								</div>
 								<div>
-									<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
-									<p className="text-center text-brown font-bold mb-3">
+									<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+										Số tiền{' '}
+										<PiMoneyWavyLight className='ml-2' />
+									</p>
+									<p className="text-center text-green font-bold mb-3">
 										{Intl.NumberFormat().format(selectedJobPost?.totalPrice)}{' '}
 										VND
 									</p>

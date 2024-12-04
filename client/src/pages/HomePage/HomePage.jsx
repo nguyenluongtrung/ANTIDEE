@@ -17,7 +17,7 @@ import {
 import { GiBowTieRibbon } from "react-icons/gi";
 import Marquee from 'react-fast-marquee';
 import AOS from 'aos';
-import { PiArrowBendDownRightBold } from 'react-icons/pi';
+import { PiArrowBendDownRightBold, PiMoneyWavyLight } from 'react-icons/pi';
 import features2 from '../../assets/img/features2.jpg';
 import features3 from '../../assets/img/features3.jpg';
 import { getAllJobPosts } from '../../features/jobPosts/jobPostsSlice';
@@ -27,6 +27,7 @@ import {
 	getCurrentTimeString,
 } from '../../utils/format';
 import PromotionPage from './Promotion/PromotionPage';
+import { LuClock } from 'react-icons/lu';
 
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
@@ -41,34 +42,34 @@ export const HomePage = () => {
 	const benefit = [
 		{
 			name: 'Đặt lịch nhanh chóng',
-			image: 'image/time.png',
-			text: ' Thao tác chỉ mất 60 giây trên ứng dụng, giúp bạn dễ dàng đặt lịch hẹn với người giúp việc chuyên nghiệp. Sau khi hoàn tất đặt lịch, chỉ trong vòng 60 phút, người giúp việc sẽ có mặt tại nhà bạn, sẵn sàng hỗ trợ và làm sạch không gian sống của bạn một cách nhanh chóng và hiệu quả.',
+			image: 'image/nhanh-chong-icon.webp',
+			text: 'Chỉ mất chưa đến một phút qua ứng dụng, bạn có thể dễ dàng đặt lịch hẹn với người giúp việc chuyên nghiệp. Sau khi hoàn tất đặt lịch, chỉ trong vòng 60 phút, người giúp việc sẽ có mặt tại nhà bạn, sẵn sàng hỗ trợ và làm sạch không gian sống của bạn một cách nhanh chóng và hiệu quả.',
 		},
 		{
-			name: 'Giá cả rõ ràng',
-			image: 'image/money.png',
-			text: 'Giá cả dịch vụ trên ứng dụng hiển thị rõ ràng, bạn không cần trả thêm bất kỳ khoản chi phí nào. Tất cả các khoản phí đều được minh bạch và chi tiết, giúp bạn yên tâm sử dụng dịch vụ mà không lo ngại về các chi phí ẩn. Chúng tôi cam kết cung cấp cho bạn những thông tin chính xác và trung thực về giá cả ngay từ đầu, đảm bảo bạn nhận được giá trị dịch vụ đúng với số tiền bỏ ra.',
+			name: 'Giá cả hợp lí',
+			image: 'image/ro-rang-icon.jpg',
+			text: 'Giá cả của từng dịch vụ hợp lí rõ ràng, bạn không cần trả thêm bất kỳ khoản chi phí nào. Tất cả các khoản phí đều được minh bạch và chi tiết, giúp bạn yên tâm sử dụng dịch vụ mà không lo ngại về các chi phí ẩn. Chúng tôi cam kết cung cấp cho bạn những thông tin chính xác và trung thực về giá cả ngay từ đầu, đảm bảo bạn nhận được giá trị dịch vụ đúng với số tiền bỏ ra.',
 		},
 		{
 			name: 'Đa dạng dịch vụ',
-			image: 'image/dadang.png',
-			text: 'Antidee sẵn sàng hỗ trợ mọi nhu cầu việc nhà của bạn. Từ dọn dẹp nhà cửa, giặt là, nấu ăn đến chăm sóc cây cảnh và thú cưng, chúng tôi cung cấp một loạt các dịch vụ đa dạng để đáp ứng mọi yêu cầu của bạn. Sự đa dạng và linh hoạt trong dịch vụ giúp bạn tiết kiệm thời gian và tận hưởng cuộc sống tiện nghi hơn.',
+			image: 'image/da-dang.png',
+			text: 'Antidee sẵn sàng hỗ trợ mọi nhu cầu của bạn từ dọn dẹp nhà cửa, giặt là, nấu ăn đến chăm sóc cây cảnh và thú cưng, chúng tôi cung cấp một loạt các dịch vụ đa dạng để đáp ứng mọi yêu cầu của bạn. Sự đa dạng và linh hoạt trong dịch vụ giúp bạn tiết kiệm thời gian và tận hưởng cuộc sống tiện nghi hơn.',
 		},
 		{
-			name: 'An toàn tối đa',
-			image: 'image/baove.png',
-			text: 'Người làm uy tín, luôn có hồ sơ lý lịch rõ ràng và được công ty giám sát trong suốt quá trình làm việc. Chúng tôi hiểu rằng an toàn và tin cậy là yếu tố hàng đầu khi lựa chọn dịch vụ giúp việc nhà. Vì vậy, tất cả nhân viên của chúng tôi đều phải trải qua quy trình kiểm tra nghiêm ngặt và được đào tạo bài bản. Hơn nữa, chúng tôi luôn theo dõi và đánh giá hiệu suất làm việc của họ để đảm bảo bạn nhận được dịch vụ tốt nhất và an toàn nhất.',
+			name: 'An toàn tuyệt đối',
+			image: 'image/an-toan-icon.jpg',
+			text: 'Chúng tôi hiểu rằng an toàn và tin cậy là yếu tố hàng đầu khi lựa chọn dịch vụ giúp việc nhà. Vì vậy, tất cả nhân viên của chúng tôi đều phải trải qua quy trình kiểm tra nghiêm ngặt và được đào tạo bài bản. Hơn nữa, chúng tôi luôn theo dõi và đánh giá hiệu suất làm việc của họ để đảm bảo bạn nhận được dịch vụ tốt nhất và an toàn nhất.',
 		},
 	];
 
 	const achievement = [
-		{ name: '97%', image: 'image/nguoi.png', text: 'Khách hàng hài lòng' },
+		{ name: '99%', image: 'image/khach-hang-icon.png', text: 'Khách hàng hài lòng' },
+		{ name: '10,000,000+', image: 'image/truy-cap-icon.png', text: 'Lượt truy cập' },
 		{
 			name: '3,600,000',
-			image: 'image/tich.png',
+			image: 'image/cong-viec-hoan-thanh-icon.png',
 			text: 'Công việc được hoàn thành',
 		},
-		{ name: '11,500,000+', image: 'image/dongho.png', text: 'Giờ làm việc' },
 	];
 
 	async function initiateServices() {
@@ -246,7 +247,7 @@ export const HomePage = () => {
 							className="h-60 lg:h-64 rounded-lg bg-primary"
 						>
 							{services?.map((service, index) => (
-								<div 
+								<div
 									key={index}
 									className="bg-white rounded-2xl relative p-5 text-white mx-2 transition duration-300 hover:scale-105 cursor-pointer"
 									onClick={() => navigateToServicePage(service?._id)}
@@ -255,10 +256,10 @@ export const HomePage = () => {
 										(recommend) =>
 											String(recommend.itemId) == String(service._id)
 									) && (
-										<div className="absolute top-0 left-0" style={{ transform: "rotate(-30deg)" }}>
-											<GiBowTieRibbon size={60} color="#27c250" />
-										</div>
-									)}
+											<div className="absolute top-0 left-0" style={{ transform: "rotate(-30deg)" }}>
+												<GiBowTieRibbon size={60} color="#27c250" />
+											</div>
+										)}
 									<div className="flex items-center rounded-sm">
 										<div className="w-52 h-48 bg-white flex items-center justify-center overflow-hidden rounded-lg">
 											<img
@@ -308,12 +309,11 @@ export const HomePage = () => {
 						<div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
 							{jobPosts.slice(0, 3)?.map((post) => (
 								<div
-									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${
-										post?.isUrgent && 'bg-light_pink'
-									}`}
+									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${post?.isUrgent && 'bg-light_pink'
+										}`}
 									style={{ height: '350px' }}
 								>
-									<p className="text-brown font-bold mb-3">
+									<p className="text-black font-bold text-lg md:text-base text-center mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
 									</p>
 									{post?.isUrgent && (
@@ -337,20 +337,22 @@ export const HomePage = () => {
 											(option) => String(option?.optionName) === 'Thời gian'
 										) == undefined ? (
 											<div>
-												<p className="text-gray mb-2 text-center mt-3">
-													Số tiền:
-												</p>
-												<p className="text-center text-brown font-bold mb-3">
+												<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Số tiền{' '}
+														<PiMoneyWavyLight className='ml-2' />
+													</p>
+												<p className="text-center text-green font-bold mb-3">
 													{Intl.NumberFormat().format(post?.totalPrice)} VND
 												</p>
 											</div>
 										) : (
 											<div className="grid grid-cols-2">
 												<div className="border-r-2 border-gray">
-													<p className="text-gray mb-2 text-center mt-3">
-														Làm trong:
+													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Làm trong{' '}
+														<LuClock className='ml-2' />
 													</p>
-													<p className="text-center text-brown font-bold mb-3">
+													<p className="text-center text-primary font-bold mb-3">
 														{
 															post?.workload?.find(
 																(option) =>
@@ -361,10 +363,11 @@ export const HomePage = () => {
 													</p>
 												</div>
 												<div>
-													<p className="text-gray mb-2 text-center mt-3">
-														Số tiền:
+													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Số tiền{' '}
+														<PiMoneyWavyLight className='ml-2' />
 													</p>
-													<p className="text-center text-brown font-bold mb-3">
+													<p className="text-center text-green font-bold mb-3">
 														{Intl.NumberFormat().format(post?.totalPrice)} VND
 													</p>
 												</div>
@@ -374,10 +377,9 @@ export const HomePage = () => {
 									<p className="text-gray mb-2">
 										Tại:{' '}
 										<span
-											className={`text-black ${
-												!JSON.parse(localStorage.getItem('account')) &&
+											className={`text-black ${!JSON.parse(localStorage.getItem('account')) &&
 												'blur-text'
-											}`}
+												}`}
 										>
 											{post?.contactInfo?.address}
 										</span>
@@ -390,7 +392,7 @@ export const HomePage = () => {
 									</p>
 									<div className="flex flex-col items-center absolute bottom-5 left-1/2 transform -translate-x-1/2 w-full">
 										<button
-											className="mt-5 text-white bg-brown rounded-2xl text-xs py-2.5 w-3/4 text-center hover:bg-light_yellow hover:text-brown"
+											className="mt-5 text-white bg-brown rounded-2xl text-sm py-2.5 w-3/4 text-center hover:bg-light_yellow hover:text-brown"
 											onClick={() => {
 												navigate(`/job-posts/${post?._id}`, {
 													state: { isOpenJobPostDetail: true, jobPosts },
@@ -424,7 +426,7 @@ export const HomePage = () => {
 					data-aos="fade-down"
 					data-aos-offset="200"
 				>
-					An tâm với lựa chọn của bạn
+					Ưu tiên trải nghiệm người dùng lên hàng đầu
 				</div>
 
 				<div
@@ -531,7 +533,7 @@ export const HomePage = () => {
 					</span>
 					<span className="text-2xl sm:text-3xl lg:text-4xl">
 						{' '}
-						khách hàng sử dụng ứng dụng Antidee
+						khách hàng tin dùng Antidee
 					</span>
 				</div>
 

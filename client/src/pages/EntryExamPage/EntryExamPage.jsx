@@ -131,7 +131,7 @@ export const EntryExamPage = () => {
 					</span>
 				</p>
 				<p className="mb-1">Câu hỏi:</p>
-				<div className="number-list mb-2 flex">
+				<div className="number-list mb-2 flex flex-wrap ">
 					{Array.from(
 						{ length: questionList.length },
 						(_, index) => index + 1
@@ -148,7 +148,7 @@ export const EntryExamPage = () => {
 									answers.find(
 										(answer) => Number(answer.questionNumber) === Number(item)
 									) && 'bg-yellow'
-								} number-item rounded-md text-center mr-3 hover:cursor-pointer`}
+								} number-item rounded-md text-center mt-3 mr-3 hover:cursor-pointer`}
 								onClick={handleClickQuestion}
 							>
 								<span>{item}</span>
@@ -199,7 +199,7 @@ export const EntryExamPage = () => {
 									<div>
 										<input
 											type="radio"
-											className="w-3 mr-2 radio-answer-item"
+											className="w-3 mr-2 radio-answer-item cursor-pointer"
 											defaultChecked={false}
 											name={question._id}
 											value={choice}
@@ -231,6 +231,7 @@ export const EntryExamPage = () => {
 						</div>
 					);
 				})}
+				<h1 className='text-center mb-8 font-bold text-anotherRed animate-bounce'>*Lướt lên trên để nộp bài</h1>
 			</div>
 		</div>
 	);

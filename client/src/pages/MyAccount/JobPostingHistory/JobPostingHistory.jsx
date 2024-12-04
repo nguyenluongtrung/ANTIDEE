@@ -26,6 +26,8 @@ import { DomesticHelperReview } from './DomesticHelperPage/DomesticHelperReview'
 import { getFeedbackDetail } from '../../../features/domesticHelperFeedback/domesticHelperFeedbackSlice';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
+import { LuClock } from 'react-icons/lu';
+import { PiMoneyWavyLight } from 'react-icons/pi';
 
 export const JobPostingHistory = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -122,7 +124,7 @@ export const JobPostingHistory = () => {
 
 	return (
 		<div>
-			<div className="px-16 pt-20 mb-10">
+			<div className="md:px-16 pt-20 mb-10">
 				{isOpenJobPostDetail && (
 					<HistoryJobPostDetail
 						selectedJobPost={selectedJobPost}
@@ -193,10 +195,10 @@ export const JobPostingHistory = () => {
 				)}
 
 				<div
-					className="filter-jobs bg-light mb-8"
-					style={{ padding: '30px 300px' }}
+					className="filter-jobs bg-light mb-8 p-10 md:px-[300px] md:py-[30px]"
+				// style={{ padding: '30px 300px' }}
 				>
-					<div className="flex mb-4 justify-between">
+					<div className="flex flex-col gap-y-2 md:gap-y-0 md:flex-row mb-4 justify-between">
 						<div className="flex mr-5">
 							<input
 								type="radio"
@@ -272,15 +274,14 @@ export const JobPostingHistory = () => {
 						</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-3 gap-28">
+					<div className="grid md:grid-cols-3 gap-28">
 						{selectedJobs?.map((post) => {
 							return (
 								<div
-									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
-										post?.isUrgent && 'bg-light_pink'
-									}`}
+									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
+										}`}
 								>
-									<p className="text-brown font-bold mb-3">
+									<p className="text-black font-bold text-lg md:text-base text-center mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
 									</p>
 									{post?.isUrgent && (
@@ -294,7 +295,7 @@ export const JobPostingHistory = () => {
 										</span>
 									</p>
 									{post?.hasCompleted?.customerConfirm &&
-									post?.hasCompleted?.domesticHelperConfirm ? (
+										post?.hasCompleted?.domesticHelperConfirm ? (
 										<p className="text-gray mb-2">
 											Hoàn thành lúc: {''}
 											<span className="text-brown">
@@ -337,10 +338,11 @@ export const JobPostingHistory = () => {
 										) : (
 											<div className="grid grid-cols-2">
 												<div className="border-r-2 border-gray">
-													<p className="text-gray mb-2 text-center mt-3">
-														Làm trong:{' '}
+													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Làm trong{' '}
+														<LuClock className='ml-2' />
 													</p>
-													<p className="text-center text-brown font-bold mb-3">
+													<p className="text-center text-primary font-bold mb-3">
 														{
 															post?.workload?.find(
 																(option) =>
@@ -351,10 +353,11 @@ export const JobPostingHistory = () => {
 													</p>
 												</div>
 												<div>
-													<p className="text-gray mb-2 text-center mt-3">
-														Số tiền:{' '}
+													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Số tiền{' '}
+														<PiMoneyWavyLight className='ml-2' />
 													</p>
-													<p className="text-center text-brown font-bold mb-3">
+													<p className="text-center text-green font-bold mb-3">
 														{Intl.NumberFormat().format(post?.totalPrice)} VND
 													</p>
 												</div>

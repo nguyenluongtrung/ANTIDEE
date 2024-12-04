@@ -11,6 +11,8 @@ import toast from 'react-hot-toast';
 import { IoMdCheckboxOutline } from 'react-icons/io';
 import { selectATasker } from '../../../../features/jobPosts/jobPostsSlice';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
+import { PiMoneyWavyLight } from 'react-icons/pi';
+import { LuClock } from 'react-icons/lu';
 
 export const HistoryJobPostDetail = ({
 	onClose,
@@ -46,7 +48,7 @@ export const HistoryJobPostDetail = ({
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
+			<form className="content rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={onClose}
@@ -58,7 +60,7 @@ export const HistoryJobPostDetail = ({
 							XEM CHI TIẾT CÔNG VIỆC
 						</p>
 						<div className="">
-							<p className="text-brown font-bold mb-3">
+							<p className="text-red font-bold text-base md:text-base text-center mb-3">
 								{selectedJobPost?.serviceId?.name?.toUpperCase()}
 							</p>
 							<p className="text-gray mb-2">
@@ -97,10 +99,11 @@ export const HistoryJobPostDetail = ({
 								) : (
 									<div className="grid grid-cols-2">
 										<div className="border-r-2 border-gray">
-											<p className="text-gray mb-2 text-center mt-3">
-												Làm trong:{' '}
+											<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+												Làm trong{' '}
+												<LuClock className='ml-2' />
 											</p>
-											<p className="text-center text-brown font-bold mb-3">
+											<p className="text-center text-primary font-bold mb-3">
 												{
 													selectedJobPost?.workload?.find(
 														(option) =>
@@ -111,10 +114,11 @@ export const HistoryJobPostDetail = ({
 											</p>
 										</div>
 										<div>
-											<p className="text-gray mb-2 text-center mt-3">
-												Số tiền:{' '}
+											<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+												Số tiền{' '}
+												<PiMoneyWavyLight className='ml-2' />
 											</p>
-											<p className="text-center text-brown font-bold mb-3">
+											<p className="text-center text-green font-bold mb-3">
 												{Intl.NumberFormat().format(
 													selectedJobPost?.totalPrice
 												)}{' '}
@@ -193,7 +197,7 @@ export const HistoryJobPostDetail = ({
 							{selectedJobPost?.cancelDetails?.isCanceled && (
 								<p className="text-gray mb-3">
 									Lí do hủy việc:{' '}
-									<span className="text-black">
+									<span className="text-red">
 										{selectedJobPost?.cancelDetails?.reason}
 									</span>
 								</p>

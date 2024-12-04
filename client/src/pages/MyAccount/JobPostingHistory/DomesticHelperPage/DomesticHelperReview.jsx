@@ -29,8 +29,8 @@ export const DomesticHelperReview = ({
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl p-10 max-h-[90vh] overflow-y-auto">
-				<form className="content rounded-md p-5">
+			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
+				<form className="content rounded-md p-5 w-full">
 					<AiOutlineClose
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={onClose}
@@ -39,11 +39,11 @@ export const DomesticHelperReview = ({
 						REVIEW ĐÁNH GIÁ NGƯỜI GIÚP VIỆC
 					</h2>
 					<div>
-						<p className="text-brown font-bold text-center">
+						<p className="text-brown font-bold text-center mt-4">
 							{selectedJobPost?.serviceId?.name?.toUpperCase()}
 						</p>
 					</div>
-					<div className="flex justify-center mb-3">
+					<div className="flex justify-center mb-4">
 						{[...Array(5)].map((star, i) => {
 							const ratingValue = i + 1;
 							return (

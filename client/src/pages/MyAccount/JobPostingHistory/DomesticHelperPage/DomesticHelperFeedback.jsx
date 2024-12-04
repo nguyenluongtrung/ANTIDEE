@@ -113,7 +113,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl mt-5 p-10 max-h-[80vh] overflow-y-auto">
+			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="content rounded-md p-5"
@@ -131,8 +131,8 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 						</p>
 					</div>
 					<div className="flex flex-col mb-2">
-						<div className="flex gap-3">
-							<p className="text-[14px]">Đánh giá giúp việc </p>
+						<div className="flex flex-col text-center gap-3">
+							<p className="text-base font-semibold">Đánh giá giúp việc</p>
 							<div className="flex justify-center">
 								{[...Array(5)].map((star, i) => {
 									const domesticHelperRatingValue = i + 1;
@@ -168,8 +168,8 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 								})}
 							</div>
 						</div>
-						<div className="flex gap-3">
-							<p>Đánh giá trải nghiệm</p>
+						<div className="flex flex-col text-center mt-4 gap-3 mb-4">
+							<p className='text-base font-semibold'>Đánh giá trải nghiệm</p>
 							<div className="flex justify-center">
 								{[...Array(5)].map((_star, i) => {
 									const serviceRatingValue = i + 1;
@@ -206,7 +206,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 					</div>
 
 					<div>
-						<p className="text-[14px] font-semibold mb-2">
+						<p className="text-[14px] font-semibold mb-2 mt-10 md:mt-0">
 							Điều gì bạn mong muốn tốt hơn?
 						</p>
 						<div className="grid grid-cols-2 gap-4">

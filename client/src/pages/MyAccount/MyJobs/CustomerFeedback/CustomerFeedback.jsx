@@ -66,11 +66,11 @@ export const CustomerFeedback = ({ selectedJobPost, onClose }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="mx-auto bg-white shadow-2xl rounded-lg max-w-2xl p-10 max-h-[90vh] overflow-y-auto">
+			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className="content rounded-md p-5"
-					style={{ width: '35vw' }}
+					className="content rounded-md p-5 w-full"
+					// style={{ width: '35vw' }}
 				>
 					<AiOutlineClose
 						className="absolute text-sm hover:cursor-pointer"
@@ -80,11 +80,11 @@ export const CustomerFeedback = ({ selectedJobPost, onClose }) => {
 						ĐÁNH GIÁ CHỦ NHÀ
 					</h2>
 					<div>
-						<p className="text-brown font-bold text-center">
+						<p className="text-brown font-bold text-center mt-4">
 							{selectedJobPost?.serviceId?.name?.toUpperCase()}
 						</p>
 					</div>
-					<div className="flex justify-center mb-3">
+					<div className="flex justify-center mb-4">
 						{[...Array(5)].map((star, i) => {
 							const ratingValue = i + 1;
 							return (
@@ -190,14 +190,14 @@ export const CustomerFeedback = ({ selectedJobPost, onClose }) => {
 
 					{showOtherFeedback && (
 						<>
-							<div className=" flex justify-center mt-10 pb-10">
+							<div className=" flex justify-center mt-10">
 								<textarea
-									rows={10}
-									cols={60}
+									rows={4}
+									cols={40}
 									{...register('content')}
 									value={feedback}
 									onChange={(e) => setFeedback(e.target.value)}
-									placeholder="Enter your feedback"
+									placeholder="Điền phản hồi của bạn"
 									className=" rounded-md shadow-2xl shadow-gray p-3"
 									required
 								/>

@@ -53,7 +53,7 @@ const PromotionPage = () => {
     };
 
     return (
-        <div className="relative mt-20 w-full h-[35vw] mb-60 md:mb-0">
+        <div className="relative w-full h-[35vw] mb-60 md:mb-0">
             <img
                 alt="promotion background"
                 src={bannerPromotion}
