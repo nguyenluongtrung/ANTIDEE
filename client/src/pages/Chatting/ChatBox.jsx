@@ -17,7 +17,7 @@ import { app } from "../../firebase";
 import { errorStyle, successStyle } from "../../utils/toast-customize";
 moment.locale("vi");
 
-const socket = io("http://localhost:5000");
+const socket = io("https://antidee.onrender.com");
 
 export const Chatbox = ({
   openChat,
