@@ -6,6 +6,8 @@ import { errorStyle, successStyle } from '../../../utils/toast-customize';
 import { applyAJob, getAJob } from '../../../features/jobPosts/jobPostsSlice';
 import './JobPostDetail.css';
 import { getAccountInformation } from '../../../features/auth/authSlice';
+import { LuClock } from 'react-icons/lu';
+import { PiMoneyWavyLight } from 'react-icons/pi';
 
 export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 	const [isChecked, setIsChecked] = useState(false);
@@ -33,7 +35,7 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 		const jobCity = addressDetails[addressDetails.length - 1].trim();
 		const myCity = account?.address
 			.split(',')
-			[account?.address.split(',').length - 1].trim();
+		[account?.address.split(',').length - 1].trim();
 		if (!jobCity.toUpperCase().includes(myCity.toUpperCase())) {
 			toast.error(
 				'Địa chỉ làm việc của bạn không phù hợp cho công việc này',
@@ -96,7 +98,7 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<form className="content rounded-md p-5" style={{ width: '35vw' }}>
+			<form className="content rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={onClose}
@@ -105,7 +107,7 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 					XEM CHI TIẾT CÔNG VIỆC
 				</p>
 				<div className="">
-					<p className="text-brown font-bold mb-3">
+					<p className="text-primary font-bold text-base md:text-base text-center mb-3">
 						{selectedJobPost?.serviceId?.name?.toUpperCase()}{' '}
 						{selectedJobPost?.isUrgent && (
 							<span className="text-red">(CẦN GẤP)</span>
@@ -124,8 +126,11 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 						) : (
 							<div className="grid grid-cols-2">
 								<div className="border-r-2 border-gray">
-									<p className="text-gray mb-2 text-center mt-3">Làm trong: </p>
-									<p className="text-center text-brown font-bold mb-3">
+									<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+										Làm trong{' '}
+										<LuClock className='ml-2' />
+									</p>
+									<p className="text-center text-primary font-bold mb-3">
 										{
 											selectedJobPost?.workload?.find(
 												(option) => String(option?.optionName) === 'Thời gian'
@@ -135,8 +140,11 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 									</p>
 								</div>
 								<div>
-									<p className="text-gray mb-2 text-center mt-3">Số tiền: </p>
-									<p className="text-center text-brown font-bold mb-3">
+									<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+										Số tiền{' '}
+										<PiMoneyWavyLight className='ml-2' />
+									</p>
+									<p className="text-center text-green font-bold mb-3">
 										{Intl.NumberFormat().format(selectedJobPost?.totalPrice)} VND
 									</p>
 								</div>
@@ -146,9 +154,8 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 					<p className="text-gray mb-2 ">
 						Tại:{' '}
 						<span
-							className={`text-black ${
-								!JSON.parse(localStorage.getItem('account')) && 'blur-text'
-							}`}
+							className={`text-black ${!JSON.parse(localStorage.getItem('account')) && 'blur-text'
+								}`}
 						>
 							{selectedJobPost?.contactInfo?.address}
 						</span>
@@ -172,18 +179,18 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 					{selectedJobPost?.applicants?.findIndex(
 						(applicant) => String(applicant) === String(account?._id)
 					) == -1 && (
-						<div className="flex mb-3">
-							<input
-								type="checkbox"
-								className="w-3 mr-2"
-								onChange={() => setIsChecked(!isChecked)}
-							/>
-							<p className="text-red">
-								Bạn đã đọc kỹ thông tin và muốn{' '}
-								{selectedJobPost?.isChosenYourself ? 'ứng tuyển' : 'nhận việc'}?
-							</p>
-						</div>
-					)}
+							<div className="flex mb-3">
+								<input
+									type="checkbox"
+									className="w-3 mr-2"
+									onChange={() => setIsChecked(!isChecked)}
+								/>
+								<p className="text-red">
+									Bạn đã đọc kỹ thông tin và muốn{' '}
+									{selectedJobPost?.isChosenYourself ? 'ứng tuyển' : 'nhận việc'}?
+								</p>
+							</div>
+						)}
 
 					<div className="flex justify-center">
 						{selectedJobPost?.applicants?.findIndex(
@@ -202,11 +209,10 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 							</button>
 						) : selectedJobPost?.isChosenYourself ? (
 							<button
-								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
-									!isChecked
-										? 'bg-gray'
-										: 'bg-brown hover:bg-light_yellow hover:text-brown'
-								}`}
+								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${!isChecked
+									? 'bg-gray'
+									: 'bg-brown hover:bg-light_yellow hover:text-brown'
+									}`}
 								style={{ width: '70%' }}
 								disabled={!isChecked}
 								onClick={handleGetAJob}
@@ -215,11 +221,10 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 							</button>
 						) : (
 							<button
-								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${
-									!isChecked
-										? 'bg-gray'
-										: 'bg-brown hover:bg-light_yellow hover:text-brown'
-								}`}
+								className={`text-white rounded-2xl text-xs py-2.5 text-center  ${!isChecked
+									? 'bg-gray'
+									: 'bg-brown hover:bg-light_yellow hover:text-brown'
+									}`}
 								style={{ width: '70%' }}
 								disabled={!isChecked}
 								onClick={handleGetAJob}
