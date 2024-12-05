@@ -108,14 +108,14 @@ export const UpdateProfileForDW = () => {
 	};
 
 	const onSubmit = async () => {
-		const updatedResume = 
-			{
-				frontIdCard: frontIdCardUrl,
-				backIdCard: backIdCardUrl,
-				curriculumVitae: curriculumVitaeUrl,
-				certificateOfResidence: certificateOfResidenceUrl,
-			}
-		;
+		const updatedResume =
+		{
+			frontIdCard: frontIdCardUrl,
+			backIdCard: backIdCardUrl,
+			curriculumVitae: curriculumVitaeUrl,
+			certificateOfResidence: certificateOfResidenceUrl,
+		}
+			;
 		const account = { ...accountData, resume: updatedResume };
 		const result = await dispatch(updateAccountInformation(account));
 
@@ -149,8 +149,8 @@ export const UpdateProfileForDW = () => {
 						<span className="text-red">(* bắt buộc)</span>
 					</div>
 					<div className="shadow-md rounded-2xl p-5">
-						<p className="font-semibold  ">Chụp 2 mặt của giấy tờ</p>
-						<div className="justify-center m-auto grid grid-cols-2 p-4">
+						<p className="font-semibold">Chụp 2 mặt của giấy tờ</p>
+						<div className="justify-center m-auto grid md:grid-cols-2 p-4 flex-col">
 							<div className="justify-center">
 								<img
 									className="m-auto p-4"
@@ -159,11 +159,11 @@ export const UpdateProfileForDW = () => {
 											? `${frontIdCardUrl}`
 											: front
 									}
-									style={{ width: '230px', height: '230px' }}
+								// style={{ width: '230px', height: '230px' }}
 								/>
 								<div className="grid justify-center h-5 ">
 									<button
-										className="bg-red text-center text-white w-72 p-1 rounded-full"
+										className="bg-red text-center text-white w-72 p-1 rounded-full hover:bg-anotherRed"
 										onClick={() => frontIdCardRef.current.click()}
 									>
 										Tải ảnh mặt trước
@@ -176,7 +176,7 @@ export const UpdateProfileForDW = () => {
 									/>
 								</div>
 							</div>
-							<div className="justify-center">
+							<div className="justify-center mt-10 md:mt-0">
 								<img
 									className="m-auto p-4"
 									src={
@@ -184,11 +184,11 @@ export const UpdateProfileForDW = () => {
 											? `${backIdCardUrl}`
 											: back
 									}
-									style={{ width: '230px', height: '230px' }}
+								// style={{ width: '230px', height: '230px' }}
 								/>
 								<div className="grid justify-center h-5 ">
 									<button
-										className="bg-red text-center text-white w-72 p-1 rounded-full"
+										className="bg-red text-center text-white w-72 p-1 rounded-full hover:bg-anotherRed"
 										onClick={() => backIdCardRef.current.click()}
 									>
 										Tải ảnh mặt sau
@@ -206,7 +206,7 @@ export const UpdateProfileForDW = () => {
 				</div>
 			</div>
 			<div className="p-5">
-				<div className="grid grid-cols-2 flex">
+				{/* <div className="grid grid-cols-2">
 					<div className="flex">
 						<p className="font-bold">Giấy xác nhận cư trú</p>
 						<span className="text-red">(* bắt buộc)</span>
@@ -215,23 +215,27 @@ export const UpdateProfileForDW = () => {
 						<p className="font-bold">Sơ yếu lý lịch</p>
 						<span className="text-red">(* bắt buộc)</span>
 					</div>
-				</div>
+				</div> */}
 
-				<div className="justify-center m-auto grid grid-cols-2 p-4">
-					<div className="justify-center">
+				<div className=" m-auto grid md:grid-cols-2 p-4 flex-col">
+					<div className="">
+						<div className="flex">
+							<p className="font-bold">Giấy xác nhận cư trú</p>
+							<span className="text-red">(* bắt buộc)</span>
+						</div>
 						<p className="text-gray underline italic">Mẫu</p>
 						<img
-							className="m-auto p-4"
+							className="m-auto p-4 h-[460px]"
 							src={
 								`${certificateOfResidenceUrl}` !== 'undefined'
 									? `${certificateOfResidenceUrl}`
 									: cer
 							}
-							style={{ height: '586px' }}
+							// style={{ height: '586px' }}
 						/>
 						<div className="grid justify-center h-5 ">
 							<button
-								className="bg-red text-center text-white w-72 p-1 rounded-full"
+								className="bg-red text-center text-white w-72 p-1 rounded-full hover:bg-anotherRed"
 								onClick={() => certificateOfResidenceRef.current.click()}
 							>
 								Tải ảnh giấy xác nhận cư trú
@@ -244,7 +248,11 @@ export const UpdateProfileForDW = () => {
 							/>
 						</div>
 					</div>
-					<div className="justify-center">
+					<div className="mt-14 md:mt-0">
+						<div className="flex">
+							<p className="font-bold">Sơ yếu lý lịch</p>
+							<span className="text-red">(* bắt buộc)</span>
+						</div>
 						<p className="text-gray underline italic">Mẫu</p>
 						<img
 							className="m-auto p-4"
@@ -253,11 +261,11 @@ export const UpdateProfileForDW = () => {
 									? `${curriculumVitaeUrl}`
 									: resume
 							}
-							style={{ height: '586px' }}
+							// style={{ height: '586px' }}
 						/>
 						<div className="grid justify-center h-5 ">
 							<button
-								className="bg-red text-center text-white w-72 p-1 rounded-full"
+								className="bg-red text-center text-white w-72 p-1 rounded-full hover:bg-anotherRed"
 								onClick={() => curriculumVitaeRef.current.click()}
 							>
 								Tải ảnh sơ yếu lý lịch
@@ -275,14 +283,13 @@ export const UpdateProfileForDW = () => {
 			<div className="grid justify-center">
 				<button
 					onClick={onSubmit}
-					className={`w-72 p-1 mb-5 rounded-full text-white ${
-						curriculumVitaeUrl == '' ||
-						frontIdCardUrl == ''  ||
-						backIdCardUrl == ''  ||
-						certificateOfResidenceUrl == '' 
+					className={`w-72 p-1 mb-5 rounded-full text-white ${curriculumVitaeUrl == '' ||
+							frontIdCardUrl == '' ||
+							backIdCardUrl == '' ||
+							certificateOfResidenceUrl == ''
 							? 'bg-gray'
-							: 'bg-green'
-					}`}
+							: 'bg-green hover:bg-primary'
+						}`}
 					disabled={
 						curriculumVitaeUrl == '' ||
 						frontIdCardUrl == '' ||

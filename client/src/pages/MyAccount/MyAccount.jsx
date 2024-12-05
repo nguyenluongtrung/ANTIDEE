@@ -112,7 +112,7 @@ export const MyAccount = () => {
 	}
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen);
-	  };
+	};
 	
 	return (
 		<div className="flex account-wrapper mb-10">

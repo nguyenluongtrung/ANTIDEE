@@ -17,7 +17,7 @@ import { app } from "../../../firebase";
 import { errorStyle, successStyle } from "../../../utils/toast-customize";
 import { getAccountInformation } from "../../../features/auth/authSlice";
 moment.locale("vi");
-const socket = io("http://localhost:5000");
+const socket = io("https://antidee.onrender.com/");
 
 export const ChatBoxAdmin = ({
   openChat,
@@ -278,10 +278,6 @@ export const ChatBoxAdmin = ({
           {address}
         </p>
       </div>
-
     </div>
-
-
-
   );
 };

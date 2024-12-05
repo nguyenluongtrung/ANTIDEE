@@ -26,6 +26,8 @@ import { CustomerFeedBackReview } from './CustomerFeedback/CustomerFeedbackRevie
 import { CustomerFeedback } from './CustomerFeedback/CustomerFeedback';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../utils/toast-customize';
+import { LuClock } from 'react-icons/lu';
+import { PiMoneyWavyLight } from 'react-icons/pi';
 
 export const MyJobs = () => {
 	const [isOpenJobPostDetail, setIsOpenJobPostDetail] = useState(false);
@@ -116,7 +118,7 @@ export const MyJobs = () => {
 
 	return (
 		<div>
-			<div className="px-16 pt-20 mb-10">
+			<div className="md:px-16 pt-20 mb-10">
 				{isOpenJobPostDetail && (
 					<MyJobDetail
 						selectedJobPost={selectedJobPost}
@@ -184,8 +186,8 @@ export const MyJobs = () => {
 					/>
 				)}
 				<div
-					className="filter-jobs bg-light mb-8"
-					style={{ padding: '30px 300px' }}
+					className="filter-jobs bg-light mb-8 p-10 md:px-[300px] md:py-[30px]"
+				// style={{ padding: '30px 300px' }}
 				>
 					<div className="flex mb-4 justify-between">
 						<div className="flex mr-5">
@@ -224,15 +226,14 @@ export const MyJobs = () => {
 						</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-3 gap-28">
+					<div className="grid md:grid-cols-3 gap-28">
 						{selectedJobs?.map((post) => {
 							return (
 								<div
-									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${
-										post?.isUrgent && 'bg-light_pink'
-									}`}
+									className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
+										}`}
 								>
-									<p className="text-brown font-bold mb-3">
+									<p className="text-black font-bold text-lg md:text-base text-center mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
 									</p>
 									{post?.isUrgent && (
@@ -263,20 +264,22 @@ export const MyJobs = () => {
 											(option) => String(option?.optionName) === 'Thời gian'
 										)?.optionValue == undefined ? (
 											<div>
-												<p className="text-gray mb-2 text-center mt-3">
-													Số tiền:{' '}
+												<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+													Số tiền{' '}
+													<PiMoneyWavyLight className='ml-2' />
 												</p>
-												<p className="text-center text-brown font-bold mb-3">
+												<p className="text-center text-green font-bold mb-3">
 													{Intl.NumberFormat().format(post?.totalPrice)} VND
 												</p>
 											</div>
 										) : (
 											<div className="grid grid-cols-2">
 												<div className="border-r-2 border-gray">
-													<p className="text-gray mb-2 text-center mt-3">
-														Làm trong:{' '}
+													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Làm trong{' '}
+														<LuClock className='ml-2' />
 													</p>
-													<p className="text-center text-brown font-bold mb-3">
+													<p className="text-center text-primary font-bold mb-3">
 														{
 															post?.workload?.find(
 																(option) =>
@@ -287,10 +290,11 @@ export const MyJobs = () => {
 													</p>
 												</div>
 												<div>
-													<p className="text-gray mb-2 text-center mt-3">
-														Số tiền:{' '}
+													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
+														Số tiền{' '}
+														<PiMoneyWavyLight className='ml-2' />
 													</p>
-													<p className="text-center text-brown font-bold mb-3">
+													<p className="text-center text-green font-bold mb-3">
 														{Intl.NumberFormat().format(post?.totalPrice)} VND
 													</p>
 												</div>
