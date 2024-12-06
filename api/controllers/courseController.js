@@ -41,7 +41,7 @@ const getAllCourses = asyncHandler(async (req, res) => {
 								const examByAccountId = await AccountExam.findOne({
 									accountId: req.account._id,
 									examId: content.examId,
-								});
+								}).sort({ createdAt: -1 });
 
 								return {
 									...content.toObject(),
