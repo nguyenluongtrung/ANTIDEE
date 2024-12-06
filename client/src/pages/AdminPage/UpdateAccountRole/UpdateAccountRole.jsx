@@ -51,7 +51,7 @@ export const UpdateAccountRole = () => {
     } else if (response?.error?.message === "Rejected") {
       toast.error(response?.payload, errorStyle);
     }
-    handleGetAllAccount();
+    handleGetAllEligibleAccount();
   };
 
   const handleGetDetailQualificationImg = async (accountId) => {

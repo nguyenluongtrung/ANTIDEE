@@ -3,6 +3,8 @@ import ReactApexChart from 'react-apexcharts';
 import { getRevenueByMonths } from '../../../../../features/jobPosts/jobPostsSlice';
 import { useDispatch } from 'react-redux';
 
+const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0'];
+
 const AreaChart = () => {
 	const [months, setMonths] = useState();
 	const [revenues, setRevenues] = useState();
@@ -12,7 +14,6 @@ const AreaChart = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const result = await dispatch(getRevenueByMonths());
-			console.log(result)
 			setMonths(result.payload.months);
 			setRevenues(result.payload.revenues);
 		};
@@ -21,10 +22,25 @@ const AreaChart = () => {
 
 	const [chartOptions, setChartOptions] = useState({
 		chart: {
-			type: 'area',
 			height: 350,
-			zoom: {
-				enabled: false,
+			type: 'bar',
+		},
+		colors: colors,
+		plotOptions: {
+			bar: {
+				columnWidth: '30%',
+				distributed: true,
+			},
+		},
+		legend: {
+			show: false,
+		},
+		tooltip: {
+			custom: function({ series, seriesIndex, dataPointIndex, w }) {
+				const amount = series[seriesIndex][dataPointIndex];
+				return `<div style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+							<strong>${amount.toLocaleString()} VNĐ</strong>
+						</div>`;
 			},
 		},
 		dataLabels: {
@@ -35,15 +51,6 @@ const AreaChart = () => {
 		},
 		xaxis: {
 			categories: [],
-		},
-		fill: {
-			type: 'gradient',
-			gradient: {
-				shadeIntensity: 1,
-				opacityFrom: 0.7,
-				opacityTo: 0.9,
-				stops: [0, 100],
-			},
 		},
 	});
 
@@ -76,7 +83,7 @@ const AreaChart = () => {
 			<ReactApexChart
 				options={chartOptions}
 				series={chartSeries}
-				type="area"
+				type="bar"
 				height={350}
 			/>
 		</div>
