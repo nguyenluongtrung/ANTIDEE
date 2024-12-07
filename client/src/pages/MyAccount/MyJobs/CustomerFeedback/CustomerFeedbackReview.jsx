@@ -26,8 +26,8 @@ export const CustomerFeedBackReview = ({
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
-				<form className="content rounded-md p-5 w-full">
+			<div className="rounded-md p-5 lg:w-[470px] sm:w-[50%] md:w-[25%] !min-w-[370px]">
+				<form className="content rounded-md p-5">
 					<AiOutlineClose
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={onClose}

@@ -98,7 +98,7 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<form className="content rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
+			<form className="content rounded-md p-5 lg:w-[470px] !sm:w-[70%] md:w-[25%] min-w-[370px]">
 				<AiOutlineClose
 					className="absolute text-sm hover:cursor-pointer"
 					onClick={onClose}
