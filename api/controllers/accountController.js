@@ -666,7 +666,9 @@ const updateDomesticHelperLevel = asyncHandler(async (req, res) => {
 
 	let newLevelName = journey[currentLevelIndex].level;
 
-	if (totalWorkingHours >= journey[currentLevelIndex].requiredHours) {
+	if (totalWorkingHours >= 5) {
+		newLevelName = 'Kiến chúa';
+	} else if (totalWorkingHours >= journey[currentLevelIndex].requiredHours) {
 		const haveIndexJourney = Math.ceil(
 			currentLevelIndex +
 				totalWorkingHours / journey[currentLevelIndex].requiredHours -
