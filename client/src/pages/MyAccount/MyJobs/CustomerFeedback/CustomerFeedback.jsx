@@ -66,10 +66,10 @@ export const CustomerFeedback = ({ selectedJobPost, onClose }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
+			<div className="rounded-md p-5 lg:w-[470px] sm:w-[50%] md:w-[25%] !min-w-[370px]">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className="content rounded-md p-5 w-full"
+					className="content rounded-md p-5"
 					// style={{ width: '35vw' }}
 				>
 					<AiOutlineClose

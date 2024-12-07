@@ -29,8 +29,8 @@ export const DomesticHelperReview = ({
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
-				<form className="content rounded-md p-5 w-full">
+			<div className="rounded-md p-5 lg:[470px] sm:w-[70%] md:w-[25%] min-w-[370px]">
+				<form className="content rounded-md p-5">
 					<AiOutlineClose
 						className="absolute text-sm hover:cursor-pointer"
 						onClick={onClose}
@@ -69,7 +69,7 @@ export const DomesticHelperReview = ({
 							<label
 								for="select1"
 								className={`flex justify-center rounded-md 
-                            cursor-pointer items-center h-24 text-sm p-5 shadow-2xl ${
+                            cursor-pointer items-center h-20 text-sm p-5 shadow-2xl ${
 															selectedFeedback?.content ===
 															'Mặc đồng phục khi đi làm'
 																? 'bg-light_yellow'
@@ -81,7 +81,7 @@ export const DomesticHelperReview = ({
 							<label
 								for="select2"
 								className={`flex justify-center rounded-md 
-                  cursor-pointer items-center h-24 text-sm p-5 shadow-2xl ${
+                  cursor-pointer items-center h-20 text-sm p-5 shadow-2xl ${
 										selectedFeedback?.content === 'Làm cẩn thận hơn'
 											? 'bg-light_yellow'
 											: ''
@@ -92,7 +92,7 @@ export const DomesticHelperReview = ({
 							<label
 								htmlFor="select3"
 								className={`flex justify-center rounded-md 
-                  cursor-pointer items-center h-24 text-sm p-5 shadow-2xl ${
+                  cursor-pointer items-center h-20 text-sm p-5 shadow-2xl ${
 										selectedFeedback?.content === 'Thân thiện hơn'
 											? 'bg-light_yellow'
 											: ''
@@ -103,7 +103,7 @@ export const DomesticHelperReview = ({
 							<label
 								htmlFor="select4"
 								className={`flex justify-center rounded-md 
-                  cursor-pointer items-center h-24 text-sm p-5 shadow-2xl
+                  cursor-pointer items-center h-20 text-sm p-5 shadow-2xl
                    ${
 											![
 												'Thân thiện hơn',

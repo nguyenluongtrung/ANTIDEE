@@ -113,7 +113,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>
-			<div className="rounded-md p-5 w-[90%] sm:w-[50%] md:w-[25%]">
+			<div className="rounded-md lg:w-[470px] sm:w-[50%] md:w-[25%] min-w-[370px]">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="content rounded-md p-5"
@@ -131,8 +131,8 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 						</p>
 					</div>
 					<div className="flex flex-col mb-2">
-						<div className="flex flex-col text-center gap-3">
-							<p className="text-base font-semibold">Đánh giá giúp việc</p>
+						<div className="flex flex-col text-center gap-2">
+							<p className="text-sm font-semibold">Đánh giá giúp việc</p>
 							<div className="flex justify-center">
 								{[...Array(5)].map((star, i) => {
 									const domesticHelperRatingValue = i + 1;
@@ -168,8 +168,8 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 								})}
 							</div>
 						</div>
-						<div className="flex flex-col text-center mt-4 gap-3 mb-4">
-							<p className='text-base font-semibold'>Đánh giá trải nghiệm</p>
+						<div className="flex flex-col text-center mt-2 gap-2 mb-2">
+							<p className='text-sm font-semibold'>Đánh giá trải nghiệm</p>
 							<div className="flex justify-center">
 								{[...Array(5)].map((_star, i) => {
 									const serviceRatingValue = i + 1;
@@ -222,7 +222,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 							<label
 								for="select1"
 								className="flex justify-center rounded-md 
-                            cursor-pointer items-center h-24 shadow-2xl text-sm p-5 hover:bg-light_yellow"
+                            cursor-pointer items-center h-20 shadow-2xl text-sm p-5 hover:bg-light_yellow"
 							>
 								Mặc đồng phục khi đi làm
 							</label>
@@ -239,7 +239,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 							<label
 								for="select2"
 								className="flex justify-center rounded-md 
-                            cursor-pointer items-center h-24 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
+                            cursor-pointer items-center h-20 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
 							>
 								Làm cẩn thận hơn
 							</label>
@@ -256,7 +256,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 							<label
 								htmlFor="select3"
 								className="flex  justify-center rounded-md
-                             cursor-pointer items-center h-24 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
+                             cursor-pointer items-center h-20 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
 							>
 								Thân thiện hơn
 							</label>
@@ -273,7 +273,7 @@ export const DomesticHelperFeedback = ({ selectedJobPost, onClose }) => {
 							<label
 								htmlFor="select4"
 								className="flex  justify-center rounded-md
-                             cursor-pointer items-center h-24 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
+                             cursor-pointer items-center h-20 shadow-2xl  text-sm p-5 hover:bg-light_yellow"
 							>
 								Khác
 							</label>
