@@ -48,8 +48,8 @@ export const QualificationPage = () => {
 	const checkEntryExamPassed = (qualificationId) => {
 		return results?.find(
 			(result) =>
-				String(result.examId.category) == 'Kiểm tra đầu vào' &&
-				String(result.examId.qualificationId) ===
+				String(result.examId?.category) == 'Kiểm tra đầu vào' &&
+				String(result.examId?.qualificationId) ===
 					String(qualificationId) && result.isPassed 
 		)
 	}

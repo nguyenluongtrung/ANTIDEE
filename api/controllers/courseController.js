@@ -28,7 +28,7 @@ const getAllCourses = asyncHandler(async (req, res) => {
 	}).populate('examId');
 
 	const entryExamResults = results.filter(
-		(exam) => exam.examId.category == 'Kiểm tra đầu vào'
+		(exam) => exam.examId?.category == 'Kiểm tra đầu vào'
 	);
 
 	const updatedCourses = await Promise.all(

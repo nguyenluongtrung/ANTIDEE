@@ -1,7 +1,6 @@
 import toast, { Toaster, ToastBar } from "react-hot-toast";
 import AdminSidebar from "../components/AdminSidebar/AdminSidebar";
 import "./QualificationManagement.css";
-// import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { errorStyle, successStyle } from "../../../utils/toast-customize";
 import { BiEdit, BiTrash } from "react-icons/bi";
 import { useEffect, useState } from "react";
@@ -65,7 +64,6 @@ export const QualificationManagement = () => {
 
   const handleDeleteQualification = async () => {
     const result = await dispatch(deleteQualification(selectedIdDelete));
-    console.log("***", result);
     if (result.type.endsWith("fulfilled")) {
       toast.success("Xoá chứng chỉ thành công");
     } else if (result?.error?.message === "Rejected") {
