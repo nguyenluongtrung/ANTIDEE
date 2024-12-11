@@ -7,6 +7,13 @@ import toast from "react-hot-toast";
 import { errorStyle, successStyle } from "../../../../utils/toast-customize";
 import { FiUploadCloud } from 'react-icons/fi';
 import { createVideo } from "../../../../features/videos/videoSlice";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../../../../firebase';
 
 export const CreateVideo = () => {
   const {
@@ -68,40 +75,22 @@ export const CreateVideo = () => {
       description: data.description.trim(),
     };
 
-    const { title, url, description } = videoData;
+    const { title, description } = videoData;
 
     if (!title.trim()) {
       toast.error('Vui lòng nhập "Tiêu Đề"', errorStyle);
       return;
     }
-
     if (/ {2,}/.test(title)) {
       toast.error("Tiêu đề không được chứa khoảng trắng !!!", errorStyle);
       return;
     }
-
-    if (!url.trim()) {
-      toast.error('Vui lòng nhập "Đường dẫn Youtube"', errorStyle);
-      return;
-    }
-
-    if (/ {2,}/.test(url)) {
-      toast.error("Đường dẫn không được chứa khoảng trắng !!!", errorStyle);
-      return;
-    }
-
     if (!description.trim()) {
       toast.error('Vui lòng nhập "Mô tả" chứng chỉ', errorStyle);
       return;
     }
-
     if (/ {2,}/.test(description)) {
       toast.error("Mô tả không được chứa khoảng trắng !!!", errorStyle);
-      return;
-    }
-
-    if (checkExistUrl(url)) {
-      toast.error("Đường dẫn đã tồn tại", errorStyle);
       return;
     }
 
