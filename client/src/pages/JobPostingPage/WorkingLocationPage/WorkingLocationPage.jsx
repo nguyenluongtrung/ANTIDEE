@@ -100,7 +100,6 @@ export const WorkingLocationPage = () => {
 						<p className="font-bold">Tỉnh / thành phố</p>
 						<select
 							className="p-2 my-4 w-full border-light_gray border-2 rounded-md hover:outline-none focus:outline-none"
-							// style={{ width: '100%' }}
 							onChange={(e) => setCityCode(e.target.value)}
 						>
 							{cities?.map((city) => <option value={city.code}>{city.name}</option>)}
