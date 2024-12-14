@@ -331,36 +331,6 @@ export const DetailOptionPage = () => {
   ]);
 
   useEffect(() => {
-    if (totalPrice) {
-      if (isUrgent) {
-        setTotalPrice((prevPrice) => Math.round(prevPrice * 1.3));
-      } else {
-        setTotalPrice((prevPrice) => Math.round(prevPrice / 1.3));
-      }
-    }
-  }, [isUrgent]);
-
-  useEffect(() => {
-    if (totalPrice) {
-      if (isChosenYourself) {
-        setTotalPrice((prevPrice) => Math.round(prevPrice * 1.3));
-      } else {
-        setTotalPrice((prevPrice) => Math.round(prevPrice / 1.3));
-      }
-    }
-  }, [isChosenYourself]);
-
-  useEffect(() => {
-    if (totalPrice) {
-      if (isChosenYourFav) {
-        setTotalPrice((prevPrice) => Math.round(prevPrice * 1.3));
-      } else {
-        setTotalPrice((prevPrice) => Math.round(prevPrice / 1.3));
-      }
-    }
-  }, [isChosenYourFav]);
-
-  useEffect(() => {
     if (startingHour) {
       if (
         (startingHour < "08:00:00" || startingHour > "17:00:00") &&
