@@ -14,7 +14,7 @@ import {
 	FaStar,
 	FaUserCheck,
 } from 'react-icons/fa';
-import { GiBowTieRibbon } from "react-icons/gi";
+import { GiBowTieRibbon } from 'react-icons/gi';
 import Marquee from 'react-fast-marquee';
 import AOS from 'aos';
 import { PiArrowBendDownRightBold, PiMoneyWavyLight } from 'react-icons/pi';
@@ -28,10 +28,12 @@ import {
 } from '../../utils/format';
 import PromotionPage from './Promotion/PromotionPage';
 import { LuClock } from 'react-icons/lu';
+import { CreateAppFeedback } from './AppFeedback/AppFeedbackPage';
 
 export const HomePage = () => {
 	const [services, setServices] = useState([]);
 	const [recommendedServices, setRecommendedServices] = useState();
+	const [isOpenCreateAppFeedback, setIsOpenCreateAppFeedback] = useState(false);
 	const [jobPosts, setJobPosts] = useState([]);
 	const topRef = useRef();
 	const serviceRef = useRef();
@@ -63,8 +65,16 @@ export const HomePage = () => {
 	];
 
 	const achievement = [
-		{ name: '99%', image: 'image/khach-hang-icon.png', text: 'Khách hàng hài lòng' },
-		{ name: '10,000,000+', image: 'image/truy-cap-icon.png', text: 'Lượt truy cập' },
+		{
+			name: '99%',
+			image: 'image/khach-hang-icon.png',
+			text: 'Khách hàng hài lòng',
+		},
+		{
+			name: '10,000,000+',
+			image: 'image/truy-cap-icon.png',
+			text: 'Lượt truy cập',
+		},
 		{
 			name: '3,600,000',
 			image: 'image/cong-viec-hoan-thanh-icon.png',
@@ -133,7 +143,7 @@ export const HomePage = () => {
 					} else {
 						return false;
 					}
-				})
+				});
 			setJobPosts(filteredJobPosts);
 		} else {
 			setJobPosts([]);
@@ -167,6 +177,11 @@ export const HomePage = () => {
 
 	return (
 		<div className="body-homepage pb-10">
+			{isOpenCreateAppFeedback && (
+				<CreateAppFeedback
+					setIsOpenCreateAppFeedback={setIsOpenCreateAppFeedback}
+				/>
+			)}
 			<div
 				className="fixed right-4 sm:right-6 md:right-8 lg:right-10 bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 rounded-full p-3 sm:p-4 md:p-5 bg-light_purple hover:cursor-pointer hover:opacity-80"
 				onClick={scrolLWithUseRef}
@@ -256,10 +271,13 @@ export const HomePage = () => {
 										(recommend) =>
 											String(recommend.itemId) == String(service._id)
 									) && (
-											<div className="absolute top-0 left-0" style={{ transform: "rotate(-30deg)" }}>
-												<GiBowTieRibbon size={60} color="#27c250" />
-											</div>
-										)}
+										<div
+											className="absolute top-0 left-0"
+											style={{ transform: 'rotate(-30deg)' }}
+										>
+											<GiBowTieRibbon size={60} color="#27c250" />
+										</div>
+									)}
 									<div className="flex items-center rounded-sm">
 										<div className="w-52 h-48 bg-white flex items-center justify-center overflow-hidden rounded-lg">
 											<img
@@ -309,8 +327,9 @@ export const HomePage = () => {
 						<div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
 							{jobPosts.slice(0, 3)?.map((post) => (
 								<div
-									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${post?.isUrgent && 'bg-light_pink'
-										}`}
+									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${
+										post?.isUrgent && 'bg-light_pink'
+									}`}
 									style={{ height: '350px' }}
 								>
 									<p className="text-black font-bold text-lg md:text-base text-center mb-3">
@@ -338,9 +357,8 @@ export const HomePage = () => {
 										) == undefined ? (
 											<div>
 												<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
-														Số tiền{' '}
-														<PiMoneyWavyLight className='ml-2' />
-													</p>
+													Số tiền <PiMoneyWavyLight className="ml-2" />
+												</p>
 												<p className="text-center text-green font-bold mb-3">
 													{Intl.NumberFormat().format(post?.totalPrice)} VND
 												</p>
@@ -349,8 +367,7 @@ export const HomePage = () => {
 											<div className="grid grid-cols-2">
 												<div className="border-r-2 border-gray">
 													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
-														Làm trong{' '}
-														<LuClock className='ml-2' />
+														Làm trong <LuClock className="ml-2" />
 													</p>
 													<p className="text-center text-primary font-bold mb-3">
 														{
@@ -364,8 +381,7 @@ export const HomePage = () => {
 												</div>
 												<div>
 													<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
-														Số tiền{' '}
-														<PiMoneyWavyLight className='ml-2' />
+														Số tiền <PiMoneyWavyLight className="ml-2" />
 													</p>
 													<p className="text-center text-green font-bold mb-3">
 														{Intl.NumberFormat().format(post?.totalPrice)} VND
@@ -377,9 +393,10 @@ export const HomePage = () => {
 									<p className="text-gray mb-2">
 										Tại:{' '}
 										<span
-											className={`text-black ${!JSON.parse(localStorage.getItem('account')) &&
+											className={`text-black ${
+												!JSON.parse(localStorage.getItem('account')) &&
 												'blur-text'
-												}`}
+											}`}
 										>
 											{post?.contactInfo?.address}
 										</span>
@@ -605,7 +622,10 @@ export const HomePage = () => {
 								hảo từ đầu đến cuối...
 							</span>
 
-							<div className="text-xl font-bold hover:text-primary cursor-pointer">
+							<div
+								className="text-xl font-bold hover:text-primary cursor-pointer"
+								onClick={() => setIsOpenCreateAppFeedback(true)}
+							>
 								<PiArrowBendDownRightBold
 									size={40}
 									className="inline-block animate-bounce mr-2"
