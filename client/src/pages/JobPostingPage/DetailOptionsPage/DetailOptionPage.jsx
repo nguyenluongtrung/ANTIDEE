@@ -780,6 +780,7 @@ export const DetailOptionPage = () => {
                     <td className="pl-0 md:pl-32">
                       <Switch
                         className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
+                        disabled={!totalPrice}
                         onChange={(checked) => {
                           if (checked) {
                             setInitialPoints(accountApoints);

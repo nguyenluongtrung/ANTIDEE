@@ -2,9 +2,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-	createForumPost,
-} from '../../../../features/forumPost/forumPostSlice';
+import { createForumPost } from '../../../../features/forumPost/forumPostSlice';
 import { Spinner } from '../../../../components';
 import toast from 'react-hot-toast';
 import { errorStyle, successStyle } from '../../../../utils/toast-customize';
@@ -162,7 +160,7 @@ export const CreatePostForum = ({ allTopics, onClose }) => {
 				const forumPostData = {
 					...formData,
 					images: imagesUrl || formData.images,
-					topic: selectedTopics
+					topic: selectedTopics,
 				};
 				const result = await dispatch(createForumPost(forumPostData));
 				if (result.type.endsWith('fulfilled')) {
@@ -301,7 +299,10 @@ export const CreatePostForum = ({ allTopics, onClose }) => {
 					<button
 						className="bg-blue text-white py-2 rounded-md mb-3 flex gap-2 justify-center items-center"
 						style={{ width: '170px' }}
-						onClick={(e) => {e.preventDefault(); fileRef.current.click()}}
+						onClick={(e) => {
+							e.preventDefault();
+							fileRef.current.click();
+						}}
 					>
 						<FiUploadCloud size={20} /> Tải ảnh lên
 					</button>
@@ -339,13 +340,7 @@ export const CreatePostForum = ({ allTopics, onClose }) => {
 						type="submit"
 						disabled={isCheckingImage}
 					>
-						{isCheckingImage ? (
-							<>
-								<Spinner /> Đang kiểm tra hình ảnh
-							</>
-						) : (
-							'Đăng bài'
-						)}
+						{isCheckingImage ? 'Đang kiểm tra hình ảnh' : 'Đăng bài'}
 					</button>
 				</div>
 			</form>

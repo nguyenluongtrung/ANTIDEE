@@ -84,7 +84,7 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                             onChange={e => {
                                 handleContentChange('examId', e.target.value)
                             }}
-                            className="border rounded"
+                            className="border rounded !max-w-[240px] w-[240px]"
                         >
                             <option value="">Chọn đề thi</option>
 
@@ -100,16 +100,14 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                     </div>
                 )}
 
-
-
                 {content.contentType === 'Video' && (
                     <div className="flex flex-col w-full">
                         <select
                             value={content.videoId ? content.videoId._id : ''}
                             onChange={e => handleContentChange('videoId', e.target.value)}
-                            className="border rounded"
+                            className="border rounded !max-w-[240px] w-[240px]"
                         >
-                            <option value="">Chọn URL Video</option>
+                            <option value="">Chọn Video</option>
 
                             {videos?.map(videoUrl => (
                                 <option key={videoUrl._id} value={videoUrl._id}>
@@ -129,7 +127,6 @@ const ContentComponent = ({ content, lessonIndex, contentIndex, setFormData, for
                 </div>
             </div>
         </div>
-
     );
 };
 
