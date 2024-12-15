@@ -30,7 +30,7 @@ export default function AdminSidebar() {
     { name: "Ngân hàng câu hỏi", icon: <MdOutlineQuestionMark />, to: '/admin-question' },
     { name: "Các chứng chỉ", icon: <BiCreditCardAlt />, to: '/admin-qualification' },
     { name: "Dịch vụ", icon: <MdCleaningServices />, to: '/admin-service' },
-    { name: "Tin Nhắn", icon: <BiMessage />, to: '/admin-appfeedback' },
+    { name: "Phản hồi", icon: <BiMessage />, to: '/admin-appfeedback' },
     { name: "Tài Khoản", icon:<BiUser/>, to: '/admin-account'},
     { name: "Xét duyệt", icon:<TbReportSearch/>, to: '/admin-censor'},
     { name: "Video", icon:<BiVideo/>, to: '/admin-video'},
