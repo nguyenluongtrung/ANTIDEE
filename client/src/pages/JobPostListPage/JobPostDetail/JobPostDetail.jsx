@@ -88,13 +88,6 @@ export const JobPostDetail = React.memo(({ onClose, selectedJobPost }) => {
 		await dispatch(getAccountInformation());
 	};
 
-	// useEffect(() => {
-	// 	if (JSON.parse(localStorage.getItem('account'))) {
-	// 		setAccount(JSON.parse(localStorage.getItem('account')).data.account);
-	// 		setIsOpenLoginForm(false);
-	// 	}
-	// }, [JSON.parse(localStorage.getItem('account'))]);
-
 	return (
 		<div className="popup active">
 			<div className="overlay"></div>

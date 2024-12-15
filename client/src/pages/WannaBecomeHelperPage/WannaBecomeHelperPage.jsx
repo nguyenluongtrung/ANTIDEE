@@ -7,7 +7,7 @@ import learningStep3 from '../../assets/img/learningStep3.png'
 export const WannaBecomeHelperPage = () => {
     return (
         <div className='p-10 md:p-0 md:pb-10'>
-            <h1 className=' grid text-green font-bold text-2xl justify-center pt-20 text-center'>BA BƯỚC ĐỂ CÓ THỂ TRỞ THÀNH NGƯỜI GIÚP VIỆC</h1>
+            <h1 className=' grid text-green font-bold text-2xl justify-center pt-20 text-center'>BA BƯỚC ĐỂ CÓ THỂ TRỞ THÀNH NGƯỜI GIÚP VIỆC CHUYÊN NGHIỆP</h1>
             <span className='grid justify-center mt-2 mb-10 text-base text-gray font-medium text-center'>Để trở thành một người giúp việc chuyên nghiệp,
                 bạn cần lần lượt hoàn thành 3 mục tiêu sau</span>
 
