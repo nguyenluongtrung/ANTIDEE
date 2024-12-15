@@ -502,7 +502,7 @@ const checkInvitationCode = asyncHandler(async (req, res) => {
 		throw new Error('Mã mời không tồn tại!');
 	} else if (String(account._id) === String(req.account._id)) {
 		res.status(400);
-		throw new Error('Mã mời không hợp lệ!');
+		throw new Error('Mã mời không hợp lệ!'); // Cannot use my own invitation code
 	} else if (jobPosts.length > 0) {
 		res.status(400);
 		throw new Error('Tài khoản đã mua dịch vụ!');
