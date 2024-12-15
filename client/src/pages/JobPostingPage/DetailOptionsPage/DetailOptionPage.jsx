@@ -20,7 +20,6 @@ import {
   getAllAccountPromotion,
   getAllPromotions,
 } from "../../../features/promotions/promotionSlice";
-import { ConfirmModal } from "../../../components/ConfirmModal/ConfirmModal";
 
 export const DetailOptionPage = () => {
   const { serviceId } = useParams();
@@ -492,19 +491,9 @@ export const DetailOptionPage = () => {
   return (
     <div className="w-full md:px-20">
       <StepBar serviceId={serviceId} />
-      {openConfirmWorkingHoursModal && (
-        <ConfirmModal
-          confirmMsg={
-            "Bạn đã có công việc được đăng trùng thời gian. Bạn có muốn tiếp tục đăng công việc này không?"
-          }
-          setAgree={setAgree}
-          setOpenConfirmWorkingHoursModal={setOpenConfirmWorkingHoursModal}
-        />
-      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div
           className="mx-auto shadow-xl p-2 pb-4 md:w-[700px] md:py-8 md:px-10 hover:shadow-2xl hover:cursor-pointer"
-
         >
           <div>
             <p className="font-extrabold mb-5">LỰA CHỌN CHI TIẾT</p>
