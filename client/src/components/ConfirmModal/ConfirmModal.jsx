@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaAngleRight } from 'react-icons/fa';
 
 export const ConfirmModal = ({ confirmMsg, setAgree }) => {
 	return (
