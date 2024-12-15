@@ -80,8 +80,7 @@ export const MyJobDetail = ({
 							<div className="grid grid-cols-2">
 								<div className="border-r-2 border-gray">
 									<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
-										Làm trong{' '}
-										<LuClock className='ml-2' />
+										Làm trong <LuClock className="ml-2" />
 									</p>
 									<p className="text-center text-primary font-bold mb-3">
 										{
@@ -94,8 +93,7 @@ export const MyJobDetail = ({
 								</div>
 								<div>
 									<p className="flex items-center justify-center text-gray mb-2 text-center mt-3">
-										Số tiền{' '}
-										<PiMoneyWavyLight className='ml-2' />
+										Số tiền <PiMoneyWavyLight className="ml-2" />
 									</p>
 									<p className="text-center text-green font-bold mb-3">
 										{Intl.NumberFormat().format(selectedJobPost?.totalPrice)}{' '}
@@ -163,29 +161,57 @@ export const MyJobDetail = ({
 						</p>
 					</p>
 					<div className="flex justify-center">
-						{checkIsCompleted() ? (
-							<button
-								className={
-									'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
-								}
-								style={{ width: '70%' }}
-								onClick={onCompleteJob}
-							>
-								<p className="text-center">Hoàn thành công việc</p>
-							</button>
+						{selectedJobPost.serviceId.priceOptions.find(
+							(option) => option.optionName == 'Thời gian'
+						) == true ? (
+							<>
+								{checkIsCompleted() ? (
+									<button
+										className={
+											'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+										}
+										style={{ width: '70%' }}
+										onClick={onCompleteJob}
+									>
+										<p className="text-center">Hoàn thành công việc</p>
+									</button>
+								) : (
+									<button
+										className={
+											'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
+										}
+										style={{ width: '70%' }}
+										onClick={(e) => {
+											e.preventDefault();
+											onCancelJob();
+										}}
+									>
+										<p className="text-center">Hủy việc</p>
+									</button>
+								)}
+							</>
 						) : (
-							<button
-								className={
-									'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown'
-								}
-								style={{ width: '70%' }}
-								onClick={(e) => {
-									e.preventDefault();
-									onCancelJob();
-								}}
-							>
-								<p className="text-center">Hủy việc</p>
-							</button>
+							<div className='flex flex-col gap-2'>
+								<button
+									className={
+										'text-white rounded-2xl text-xs py-2.5 text-center bg-brown hover:bg-light_yellow hover:text-brown w-[200px]'
+									}
+									onClick={(e) => {
+										e.preventDefault();
+										onCancelJob();
+									}}
+								>
+									<p className="text-center">Hủy việc</p>
+								</button>
+								<button
+									className={
+										'text-white rounded-2xl text-xs py-2.5 text-center bg-green hover:bg-yellow hover:text-white w-[200px]'
+									}
+									onClick={onCompleteJob}
+								>
+									<p className="text-center">Hoàn thành công việc</p>
+								</button>
+							</div>
 						)}
 					</div>
 				</div>

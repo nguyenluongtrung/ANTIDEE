@@ -22,6 +22,7 @@ export const EntryExamPage = () => {
 	const navigate = useNavigate();
 	const { examId } = useParams();
 	const [openConfirmSubmitPopup, setOpenConfirmSubmitPopup] = useState(false);
+	const submitRef = useRef();
 
 	useEffect(() => {
 		const asyncFn = async () => {
@@ -67,7 +68,10 @@ export const EntryExamPage = () => {
 			const question = questionList.find(
 				(question) => question._id == answer.questionId
 			);
-			if (String(question.correctAnswer).trim().toLowerCase() == String(answer.answerContent).trim().toLowerCase()) {
+			if (
+				String(question.correctAnswer).trim().toLowerCase() ==
+				String(answer.answerContent).trim().toLowerCase()
+			) {
 				setTotalScore((totalScore) => totalScore + 1);
 			}
 		});
@@ -116,7 +120,7 @@ export const EntryExamPage = () => {
 				/>
 			)}
 
-			<div className="exam-info p-3 rounded-xl bg-light mb-8">
+			<div className="exam-info p-3 rounded-xl bg-light mb-8" ref={submitRef}>
 				<p className="text-brown font-bold mb-1">
 					Chuyên môn: <span>{chosenExam?.qualificationId?.name}</span>
 				</p>
@@ -192,8 +196,10 @@ export const EntryExamPage = () => {
 										(answer) =>
 											Number(answer.questionNumber) ===
 												Number(customIndex + 1) &&
-											String(answer.answerContent).trim().toLowerCase() != String(question.correctAnswer).trim().toLowerCase() &&
-											String(choice).trim().toLowerCase() == String(answer.answerContent).trim().toLowerCase()
+											String(answer.answerContent).trim().toLowerCase() !=
+												String(question.correctAnswer).trim().toLowerCase() &&
+											String(choice).trim().toLowerCase() ==
+												String(answer.answerContent).trim().toLowerCase()
 									);
 								return (
 									<div>
@@ -214,7 +220,10 @@ export const EntryExamPage = () => {
 										<span
 											className={`${
 												isSubmit &&
-												String(choice).trim().toLowerCase() == String(question?.correctAnswer).trim().toLowerCase()  &&
+												String(choice).trim().toLowerCase() ==
+													String(question?.correctAnswer)
+														.trim()
+														.toLowerCase() &&
 												'text-green'
 											} ${isWrongAnswer && 'text-red'}`}
 										>
@@ -231,7 +240,17 @@ export const EntryExamPage = () => {
 						</div>
 					);
 				})}
-				<h1 className='text-center mb-8 font-bold text-anotherRed animate-bounce'>*Lướt lên trên để nộp bài</h1>
+				<h1
+					className="text-center mb-8 font-bold text-anotherRed animate-bounce hover:cursor-pointer"
+					onClick={() => {
+						submitRef.current?.scrollIntoView({
+							block: 'center',
+							behavior: 'smooth',
+						});
+					}}
+				>
+					*Lướt lên trên để nộp bài
+				</h1>
 			</div>
 		</div>
 	);

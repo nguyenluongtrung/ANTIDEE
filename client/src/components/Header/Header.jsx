@@ -144,7 +144,7 @@ export const Header = () => {
 					{account?.role === 'Người giúp việc' && (
 						<li className="mr-5">
 							<Link to={'/become-helper'}>
-								<span>Trở thành người giúp việc</span>
+								<span>Đào tạo giúp việc chuyên nghiệp</span>
 							</Link>
 						</li>
 					)}

@@ -6,14 +6,6 @@
     font-size: 14px;
 }
 
-.btn-submit {
-    transition: background-color 0.3s ease;
-}
-
-.btn-submit:hover {
-    background-color: orangered;
-}
-
 .image-preview img {
     border-radius: 8px;
     object-fit: cover;
