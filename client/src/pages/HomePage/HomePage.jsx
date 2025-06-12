@@ -191,20 +191,25 @@ export const HomePage = () => {
 			</div>
 
 			<main
-				className="w-full h-full relative px-5 md:px-10 lg:px-20 py-9 bg-hero text-white"
+				className="w-full h-full relative px-5 py-9 bg-hero text-white"
 				ref={topRef}
 			>
-				<div className="flex flex-col-reverse lg:flex-row mt-8 md:mt-16">
-					<section className="w-full lg:w-[50%] flex flex-col lg:translate-x-10 p-5 lg:p-10">
+				<div className="md:flex mt-8 md:mt-16">
+					<div className="w-full lg:w-[50%] flex flex-col lg:translate-x-10 pt-5 ">
 						<div className="w-full h-auto lg:pt-7">
-							<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 text-yellow font-extrabold">
-								Cùng Antidee
-							</h1>
-							<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 text-primary font-extrabold">
-								nâng tầm
-							</h1>
-							<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-primary_dark font-extrabold">
-								chất lượng cuộc sống
+							<h1>
+								<span className="text-5xl sm:text-5xl lg:text-6xl text-yellow font-extrabold">
+									Cùng Antidee
+								</span>
+								<br/>
+								<span className="text-5xl sm:text-5xl lg:text-6xl text-primary font-extrabold">
+									nâng tầm
+								</span>
+								<br/>
+								<span className="text-5xl sm:text-5xl lg:text-6xl text-primary_dark font-extrabold">
+									chất lượng cuộc sống
+								</span>
+								<br/>
 							</h1>
 							<p className="max-w-sm py-5 text-gray-400 text-base md:text-lg">
 								Hãy để chúng tôi mang lại cho bạn những trải nghiệm sống thư thả
@@ -220,10 +225,10 @@ export const HomePage = () => {
 								</div>
 							</div>
 						</div>
-					</section>
+					</div>
 
-					<section className="relative w-full lg:w-[50%] flex items-center justify-center p-5 lg:p-10">
-						<div className="container relative lg:left-32">
+					<div className="relative w-full lg:w-[50%] flex items-center justify-center p-5 lg:p-10">
+						<div className="container relative w-[auto]">
 							<div className="blob">
 								<img
 									src="image/chi_dep.png"
@@ -232,23 +237,22 @@ export const HomePage = () => {
 								/>
 							</div>
 						</div>
-					</section>
+					</div>
 				</div>
-				<div className="background absolute"></div>
 			</main>
 
-			<div
+			<section
 				className="py-10 sm:py-16 lg:py-20 bg-white md:mt-0"
 				ref={serviceRef}
 			>
-				<div
-					className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-10 sm:mb-12 lg:mb-16 flex justify-center items-center"
+				<h2
+					className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-10 px-[.625rem] sm:mb-12 lg:mb-16 flex justify-center items-center"
 					data-aos="fade-down"
 					data-aos-offset="200"
 				>
 					Các dịch vụ dành cho bạn{' '}
 					<FaUserCheck className="ml-4 animate-bounce" size={50} />
-				</div>
+				</h2>
 
 				<div className="flex justify-center bg-primary py-4">
 					<div
@@ -287,9 +291,9 @@ export const HomePage = () => {
 											/>
 										</div>
 										<div className="flex flex-col ml-4 gap-y-2">
-											<h2 className="text-xl font-semibold min-w-[200px] text-primary ">
+											<h3 className="text-xl font-semibold min-w-[200px] text-primary ">
 												{service.name}
-											</h2>
+											</h3>
 											<p className="text-gray font-normal flex justify-center items-center">
 												Chất lượng dịch vụ | {service.rating ? '5' : '5'}{' '}
 												<FaStar size={15} className="mx-2 text-yellow" />
@@ -310,13 +314,13 @@ export const HomePage = () => {
 						</Marquee>
 					</div>
 				</div>
-			</div>
+			</section>
 
 			<PromotionPage />
 
 			{jobPosts.length > 0 && (
 				<>
-					<div className="mt-20 px-4 md:px-16 lg:px-28">
+					<div className="mt-20 px-4">
 						<div
 							className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10"
 							data-aos="fade-down"
@@ -330,7 +334,7 @@ export const HomePage = () => {
 									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${
 										post?.isUrgent && 'bg-light_pink'
 									}`}
-									style={{ height: '350px' }}
+									style={{ minHeight: '21.875rem' }}
 								>
 									<p className="text-black font-bold text-lg md:text-base text-center mb-3">
 										{post?.serviceId?.name?.toUpperCase()}
@@ -437,16 +441,16 @@ export const HomePage = () => {
 				</>
 			)}
 
-			<div className="mt-20 flex flex-col bg-white gap-y-16 sm:gap-y-8 lg:gap-y-28">
-				<div
+			<section className="mt-20 flex flex-col bg-white gap-y-10 sm:gap-y-8 lg:gap-y-28">
+				<h2
 					className="mx-auto mt-8 text-2xl sm:text-2xl md:text-4xl font-bold text-center"
 					data-aos="fade-down"
 					data-aos-offset="200"
 				>
 					Ưu tiên trải nghiệm người dùng lên hàng đầu
-				</div>
+				</h2>
 
-				<div
+				<h3
 					className="relative flex flex-col md:flex-row py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 rounded-lg"
 					data-aos="fade-up-right"
 					data-aos-offset="400"
@@ -456,20 +460,20 @@ export const HomePage = () => {
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[0].name}
 						</div>
-						<div className="mt-4 ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
+						<div className="mt-4 md:ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
 							{benefit[0].text}
 						</div>
 					</div>
-					<div className="mt-6 md:mt-0">
+					<div className="mt-10 md:mt-0">
 						<img
 							src={benefit[0].image}
 							alt="Time Icon"
-							className="w-24 sm:w-20 md:w-32 lg:w-40 h-auto animate-bounce"
+							className="w-32 lg:w-40 h-auto animate-bounce"
 						/>
 					</div>
-				</div>
+				</h3>
 
-				<div
+				<h3
 					className="relative flex flex-col md:flex-row-reverse py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 bg-white rounded-lg"
 					data-aos="fade-up-left"
 					data-aos-offset="400"
@@ -479,20 +483,20 @@ export const HomePage = () => {
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[1].name}
 						</div>
-						<div className="mt-4 ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
+						<div className="mt-4 md:ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
 							{benefit[1].text}
 						</div>
 					</div>
-					<div className="mt-6 md:mt-0">
+					<div className="mt-10 md:mt-0">
 						<img
 							src={benefit[1].image}
 							alt="Clarity Icon"
-							className="w-24 sm:w-20 md:w-32 lg:w-40 h-auto animate-bounce"
+							className="w-32 lg:w-40 h-auto animate-bounce"
 						/>
 					</div>
-				</div>
+				</h3>
 
-				<div
+				<h3
 					className="relative flex flex-col md:flex-row py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 bg-white rounded-lg"
 					data-aos="fade-up-right"
 					data-aos-offset="400"
@@ -502,20 +506,20 @@ export const HomePage = () => {
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[2].name}
 						</div>
-						<div className="mt-4 ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
+						<div className="mt-4 md:ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
 							{benefit[2].text}
 						</div>
 					</div>
-					<div className="mt-6 md:mt-0">
+					<div className="mt-10 md:mt-0">
 						<img
 							src={benefit[2].image}
 							alt="Diversity Icon"
-							className="w-24 sm:w-20 md:w-32 lg:w-40 h-auto animate-bounce"
+							className="w-32 lg:w-40 h-auto animate-bounce"
 						/>
 					</div>
-				</div>
+				</h3>
 
-				<div
+				<h3
 					className="relative flex flex-col md:flex-row-reverse py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 bg-white rounded-lg"
 					data-aos="fade-up-left"
 					data-aos-offset="400"
@@ -525,22 +529,22 @@ export const HomePage = () => {
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[3].name}
 						</div>
-						<div className="mt-4 ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
+						<div className="mt-4 md:ml-8 sm:ml-4 md:ml-16 text-base font-normal w-full text-gray text-justify">
 							{benefit[3].text}
 						</div>
 					</div>
-					<div className="mt-6 md:mt-0">
+					<div className="mt-10 md:mt-0">
 						<img
 							src={benefit[3].image}
 							alt="Safety Icon"
-							className="w-24 sm:w-20 md:w-32 lg:w-40 h-auto animate-pulse"
+							className="w-32 lg:w-40 h-auto animate-bounce"
 						/>
 					</div>
-				</div>
-			</div>
+				</h3>
+			</section>
 
-			<div className="container mx-auto mt-20 px-4">
-				<div
+			<section className="container mx-auto mt-20 px-4">
+				<h2
 					className="my-16 font-bold text-center"
 					data-aos="fade-down"
 					data-aos-offset="200"
@@ -552,7 +556,7 @@ export const HomePage = () => {
 						{' '}
 						khách hàng tin dùng Antidee
 					</span>
-				</div>
+				</h2>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-[30px] justify-center">
 					{achievement.map((item, index) => (
@@ -565,18 +569,18 @@ export const HomePage = () => {
 						>
 							<img src={item.image} alt={item.name} className="w-16 h-16" />
 
-							<h4 className="mt-2 text-primary text-xl sm:text-2xl font-bold">
+							<span className="mt-2 text-primary text-xl sm:text-2xl font-bold">
 								{item.name}
-							</h4>
+							</span>
 							<p className="font-bold text-md sm:text-lg text-center">
 								{item.text}
 							</p>
 						</div>
 					))}
 				</div>
-			</div>
+			</section>
 
-			<div className="mt-16">
+			<section className="mt-16">
 				<div className="relative px-4 sm:px-12 lg:px-60 flex flex-col lg:flex-row">
 					<div
 						className="w-full lg:w-1/2 mb-6 lg:mb-0"
@@ -588,18 +592,18 @@ export const HomePage = () => {
 					</div>
 
 					<div className="flex flex-col gap-y-4 lg:w-1/2 lg:mx-12">
-						<h1
-							className="text-3xl sm:text-4xl lg:text-[62px] text-primary leading-[38px] sm:leading-[52px] lg:leading-[62px] font-extrabold lg:absolute lg:top-0 lg:left-[600px] lg:w-[600px]"
+						<h2
+							className="text-3xl sm:text-4xl lg:text-[62px] text-primary leading-[38px] sm:leading-[52px] lg:leading-[62px] font-extrabold lg:absolute lg:top-0"
 							data-aos="fade-up"
 							data-aos-delay="700"
 							data-aos-offset="400"
 						>
 							Xin chào chúng tôi là Antidee
-						</h1>
+						</h2>
 						<div className="flex flex-col gap-y-4 pt-8 sm:pt-16 lg:pt-32">
-							<h2 className="text-lg sm:text-xl text-start font-secondary font-medium text-four">
+							<h3 className="text-lg sm:text-xl text-start font-secondary font-medium text-four">
 								Luôn sẵn sàng hỗ trợ khách hàng
-							</h2>
+							</h3>
 							<span className="text-sm sm:text-lg">
 								Tại Antidee, chúng tôi hiểu rằng cuộc sống bận rộn và công việc
 								hàng ngày có thể khiến bạn không có đủ thời gian và năng lượng
@@ -613,9 +617,9 @@ export const HomePage = () => {
 				<div className="relative px-4 sm:px-12 lg:px-60 mt-16 flex flex-col lg:flex-row">
 					<div className="flex flex-col justify-center w-full lg:w-1/2 mb-6 lg:mb-0">
 						<div className="flex flex-col gap-y-4 justify-center">
-							<h2 className="text-lg sm:text-xl font-secondary font-medium">
+							<h3 className="text-lg sm:text-xl font-secondary font-medium">
 								Sự hài lòng của khách hàng là niềm vinh hạnh của chúng tôi
-							</h2>
+							</h3>
 							<span className="text-sm sm:text-lg">
 								Tại đây, chúng tôi không chỉ đơn thuần là mang lại sự sạch sẽ
 								cho ngôi nhà của bạn, mà còn tạo ra một trải nghiệm dịch vụ hoàn
@@ -642,7 +646,7 @@ export const HomePage = () => {
 						<img className="w-full h-auto" src={features3} alt="" />
 					</div>
 				</div>
-			</div>
+			</section>
 		</div>
 	);
 };
