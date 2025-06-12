@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Slider from "react-slick";
 import { getAllPromotions } from "../../../features/promotions/promotionSlice";
-import bannerPromotion from "../../../../public/image/banner-promotion.png"
 import { formatDate } from "../../../utils/format";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -53,23 +52,15 @@ const PromotionPage = () => {
     };
 
     return (
-        <div className="relative w-full h-[35vw] mb-60 md:mb-0">
-            <img
-                alt="promotion background"
-                src={bannerPromotion}
-                className="w-full h-full hidden md:block"
-            />
-
-            <strong className="absolute md:top-[7%] right-[12%] md:text-5xl text-xl md:text-white text-red">SỐC: NGẬP TRÀN KHUYẾN MÃI</strong>
-
-
-            <div className="absolute md:top-[20%] top-[2%] md:right-[15%] rounded bg-white bg-opacity-70 transform md:w-[35%] w-[80%] m-10">
+        <section className="section-promotion w-full mb-0 relative">
+            <h2 className="relative md:top-[7%] md:text-right text-center md:text-5xl text-4xl top-[12%] font-extrabold text-white px-3 py-1 animate-bounce">SỐC: NGẬP TRÀN KHUYẾN MÃI</h2>
+            <div className="relative md:top-[15%] top-[15%] md:left-[45%] rounded bg-white bg-opacity-70 transform md:w-[45%] w-[80%] m-10">
                 {promotionList.length > 0 ? (
                     <Slider {...settings}>
                         {promotionList.map((promotion, index) => (
                             <div
                                 key={index}
-                                className="text-center p-5 rounded-lg md:h-[230px] h-[300px]"
+                                className="text-center p-5 rounded-lg md:h-[14.375rem] h-[18.75rem]"
                             >
                                 <p className="pt-2 text-2xl font-semibold">
                                     Giảm
@@ -109,7 +100,7 @@ const PromotionPage = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </section>
 
     );
 };

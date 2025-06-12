@@ -27,3 +27,8 @@
 .body-homepage {
   background: #f1f4fc;
 }
+
+.section-promotion {
+  background: url('/image/banner-promotion.png') center / cover no-repeat;
+  height: 31.25rem;
+}
