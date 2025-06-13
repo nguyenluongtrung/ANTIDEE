@@ -31,31 +31,27 @@ export const ViewServiceDetail = () => {
 	}
 
 	return (
-		<div className="w-full md:px-20">
-			<StepBar serviceId={serviceId}/>
+		<div className="w-full px-4 md:px-6 lg:px-20">
+			<StepBar serviceId={serviceId} />
 
-			<div className="flex flex-col md:flex-row relative gap-x-10 mt-10 mx-10 md:mx-40">
-				<div className="">
+			<div className="max-w-screen-lg mx-auto mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center px-4 sm:px-8">
+				<div>
 					<img
-						className="rounded-2xl"
-						style={{width: '400px'}}
 						src={chosenService?.image}
+						alt={chosenService?.name}
+						className="w-full max-w-md mx-auto rounded-2xl"
 					/>
 				</div>
-				<div className="flex-1">
-					<div className="mb-6 font-bold text-primary text-lg">
-						{chosenService?.name}
-					</div>
-					<div className='text-justify'>
-						{chosenService?.description}
-					</div>
+				<div className="text-center lg:text-left">
+					<h2 className="text-primary text-xl font-bold mb-4">{chosenService?.name}</h2>
+					<p className="text-gray-700 text-justify">{chosenService?.description}</p>
 				</div>
 			</div>
 
-			<div className="flex items-center justify-center">
+			<div className="flex items-center justify-center mt-12 mb-10">
 				<button
-					className="mt-10 w-60 md:w-[500px] py-3 mb-10 bg-primary rounded-full text-white hover:opacity-70"
 					onClick={handleNextStep}
+					className="w-60 sm:w-72 md:w-96 py-3 bg-primary rounded-full text-white font-semibold hover:opacity-80 transition"
 				>
 					Tiếp theo
 				</button>
