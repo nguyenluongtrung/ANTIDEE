@@ -52,7 +52,7 @@ export const Chat = () => {
   };
 
   return (
-    <div className="fixed bottom-[7%] right-[4.8%] lg:bottom-32 lg:right-[3%]  z-50">
+    <div className="fixed bottom-[14%] md:bottom-[20%] right-[4.8%] lg:bottom-32 lg:right-12  z-50">
       <strong
         className="text-white bg-green flex items-center justify-center p-2 md:p-4 rounded-full cursor-pointer shadow-lg transform "
         onClick={handleOpenAndCreateChat}

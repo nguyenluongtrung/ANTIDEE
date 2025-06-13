@@ -7,14 +7,14 @@ export const Footer = () => {
         <div className="bg-primary p-5">
             <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="p-5 about-us">
-                    <h2 className="font-semibold text-white pb-3">Antidee</h2>
+                    <p className="font-semibold text-white pb-3">Antidee</p>
                     <p className="text-sm text-white pb-2">Về chúng tôi</p>
                     <p className="text-sm text-white pb-2">Câu chuyện truyền cảm hứng</p>
                     <p className="text-sm text-white pb-2">Chương trình khuyến mãi</p>
                     <p className="text-sm text-white">Trở thành người giúp việc?</p>
                 </div>
                 <div className="p-5 services hidden md:block"> {/* Ẩn dịch vụ trên màn hình nhỏ hơn md */}
-                    <h2 className="font-semibold text-white pb-3">Dịch vụ</h2>
+                    <p className="font-semibold text-white pb-3">Dịch vụ</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
                         <div>
                             <p className="text-sm text-white pb-2">Dọn dẹp văn phòng</p>
@@ -34,7 +34,7 @@ export const Footer = () => {
                     </div>
                 </div>
                 <div className="p-5 contact">
-                    <h2 className="font-semibold text-white pb-3">Liên hệ</h2>
+                    <p className="font-semibold text-white pb-3">Liên hệ</p>
                     <div className="flex items-center space-x-2">
                         <img className="h-7" src={diachi} alt="Địa chỉ" />
                         <span className="text-sm text-white">

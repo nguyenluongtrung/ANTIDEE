@@ -194,7 +194,7 @@ export const HomePage = () => {
 				className="w-full h-full relative px-5 py-9 bg-hero text-white"
 				ref={topRef}
 			>
-				<div className="md:flex mt-8 md:mt-16">
+				<div className="md:flex mt-8 md:mt-16 md:wrapper">
 					<div className="w-full lg:w-[50%] flex flex-col lg:translate-x-10 pt-5 ">
 						<div className="w-full h-auto lg:pt-7">
 							<h1>
@@ -320,7 +320,7 @@ export const HomePage = () => {
 
 			{jobPosts.length > 0 && (
 				<>
-					<div className="mt-20 px-4">
+					<div className="mt-20  px-4 lg:px-25">
 						<div
 							className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10"
 							data-aos="fade-down"
@@ -328,7 +328,7 @@ export const HomePage = () => {
 						>
 							Công việc dành cho bạn
 						</div>
-						<div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
+						<div className=" md:wrapper grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
 							{jobPosts.slice(0, 3)?.map((post) => (
 								<div
 									className={`shadow-xl p-5 hover:shadow-2xl hover:cursor-pointer relative bg-super_light_purple ${
@@ -441,7 +441,7 @@ export const HomePage = () => {
 				</>
 			)}
 
-			<section className="mt-20 flex flex-col bg-white gap-y-10 sm:gap-y-8 lg:gap-y-28">
+			<section className= "mt-20 flex flex-col bg-white gap-y-10 sm:gap-y-8 lg:gap-y-28">
 				<h2
 					className="mx-auto mt-8 text-2xl sm:text-2xl md:text-4xl font-bold text-center"
 					data-aos="fade-down"
@@ -450,12 +450,12 @@ export const HomePage = () => {
 					Ưu tiên trải nghiệm người dùng lên hàng đầu
 				</h2>
 
-				<h3
-					className="relative flex flex-col md:flex-row py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 rounded-lg"
+				<h3 
+					className="relative flex flex-col max-w-6xl mx-auto md:flex-row py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between rounded-lg"
 					data-aos="fade-up-right"
 					data-aos-offset="400"
 				>
-					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-8xl font-semibold relative text-primary w-full md:w-[800px]">
+					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-7xl font-semibold relative text-primary w-full md:w-[800px]">
 						Nhanh chóng
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[0].name}
@@ -474,11 +474,11 @@ export const HomePage = () => {
 				</h3>
 
 				<h3
-					className="relative flex flex-col md:flex-row-reverse py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 bg-white rounded-lg"
+					className="relative flex flex-col max-w-6xl mx-auto md:flex-row-reverse py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between bg-white rounded-lg"
 					data-aos="fade-up-left"
 					data-aos-offset="400"
 				>
-					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-8xl font-semibold relative text-primary w-full md:w-[800px]">
+					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-7xl font-semibold relative text-primary w-full md:w-[800px]">
 						Rõ ràng
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[1].name}
@@ -497,11 +497,11 @@ export const HomePage = () => {
 				</h3>
 
 				<h3
-					className="relative flex flex-col md:flex-row py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 bg-white rounded-lg"
+					className="relative flex flex-col max-w-6xl mx-auto md:flex-row py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between bg-white rounded-lg"
 					data-aos="fade-up-right"
 					data-aos-offset="400"
 				>
-					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-8xl font-semibold relative text-primary w-full md:w-[800px]">
+					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-7xl font-semibold relative text-primary w-full md:w-[800px]">
 						Đa dạng
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[2].name}
@@ -520,11 +520,11 @@ export const HomePage = () => {
 				</h3>
 
 				<h3
-					className="relative flex flex-col md:flex-row-reverse py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between ml-4 mr-4 md:ml-10 md:mr-10 bg-white rounded-lg"
+					className="relative flex flex-col max-w-6xl mx-auto md:flex-row-reverse py-8 px-8 sm:px-4 md:px-16 lg:px-32 items-center justify-between bg-white rounded-lg"
 					data-aos="fade-up-left"
 					data-aos-offset="400"
 				>
-					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-8xl font-semibold relative text-primary w-full md:w-[800px]">
+					<div className="text-4xl sm:text-3xl md:text-5xl lg:text-7xl font-semibold relative text-primary w-full md:w-[800px]">
 						An toàn
 						<div className="text-2xl sm:text-xl md:text-3xl lg:text-4xl font-bold mt-4 text-black">
 							{benefit[3].name}
@@ -581,7 +581,7 @@ export const HomePage = () => {
 			</section>
 
 			<section className="mt-16">
-				<div className="relative px-4 sm:px-12 lg:px-60 flex flex-col lg:flex-row">
+				<div className="relative px-4 sm:px-12 lg:px-[12rem] flex flex-col lg:flex-row">
 					<div
 						className="w-full lg:w-1/2 mb-6 lg:mb-0"
 						data-aos="fade-right"
@@ -614,7 +614,7 @@ export const HomePage = () => {
 					</div>
 				</div>
 
-				<div className="relative px-4 sm:px-12 lg:px-60 mt-16 flex flex-col lg:flex-row">
+				<div className="relative px-4 sm:px-12 lg:px-[12rem] mt-16 flex flex-col lg:flex-row">
 					<div className="flex flex-col justify-center w-full lg:w-1/2 mb-6 lg:mb-0">
 						<div className="flex flex-col gap-y-4 justify-center">
 							<h3 className="text-lg sm:text-xl font-secondary font-medium">

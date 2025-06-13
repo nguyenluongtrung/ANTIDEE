@@ -6,7 +6,7 @@ export const Layout = () => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<Header />
-			<div className="flex-grow">
+			<div className="flex-grow overflow-x-hidden">
 				<Outlet />
 			</div>
 			<Footer />

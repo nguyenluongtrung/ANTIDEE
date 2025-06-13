@@ -170,7 +170,7 @@ export const Chatbox = ({
         onClick={() => setIsOpenChat(false)}
       ></div>
 
-      <div className="fixed h-[32rem] right-4 bottom-20 bg-light_green rounded-lg shadow-lg max-w-sm w-full grid grid-rows-[auto_1fr_auto]">
+      <div className="fixed sm:h-[32rem] h-[28rem] right-4 bottom-20 bg-light_green rounded-lg shadow-lg sm:max-w-sm max-w-[21rem] w-full grid grid-rows-[auto_1fr_auto]">
         <AiOutlineClose
           className="absolute top-2 right-2 text-gray hover:cursor-pointer hover:text-primary_dark"
           onClick={() => setIsOpenChat(false)}
