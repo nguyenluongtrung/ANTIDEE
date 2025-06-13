@@ -76,7 +76,7 @@ export const Sidebar = ({ sidebarVisible, setSidebarVisible, services, account, 
 					))}
  
 					<div className="p-4 cursor-pointer hover:bg-primary" onClick={() => setIsServicesOpen(!isServicesOpen)}>
-						<span className="flex items-center justify-between hover:bg-orange-100 text-black transition-colors duration-200 ease-in-out">
+						<span className="flex items-center justify-between hover:text-gray text-black transition-colors duration-200 ease-in-out">
 							Dịch vụ
 							<IoIosArrowDown className={`transform transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
 						</span>
@@ -97,10 +97,17 @@ export const Sidebar = ({ sidebarVisible, setSidebarVisible, services, account, 
 					)}
 					<Link
 						to={''}
-						className="flex items-center p-4 hover:bg-primary text-black hover:text-orange-500 transition-colors duration-200 ease-in-out"
+						className="flex items-center p-4 hover:bg-primary text-black hover:text-gray transition-colors duration-200 ease-in-out"
 						onClick={() => setSidebarVisible(false)}
 					>
 						<span>Về Antidee</span>
+					</Link>
+					<Link
+						to={'/job-posts'}
+						className="flex items-center p-4 hover:bg-primary text-black hover:text-gray transition-colors duration-200 ease-in-out"
+						onClick={() => setSidebarVisible(false)}
+					>
+						<span>Danh sách công việc</span>
 					</Link>
 				</div>
 			</div>
