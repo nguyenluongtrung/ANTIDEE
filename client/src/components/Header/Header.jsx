@@ -97,7 +97,7 @@ export const Header = () => {
 						onClick={() => setIsMobileMenuVisible(true)}
 					/>
 					<Link to="/home">
-						<p className="text-primary font-bold logo-text pt-2">Antidee</p>
+						<p className="text-primary font-bold logo-text">Antidee</p>
 					</Link>
 				</div>
 

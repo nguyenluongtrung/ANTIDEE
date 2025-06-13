@@ -581,7 +581,7 @@ export const HomePage = () => {
 			</section>
 
 			<section className="mt-16">
-				<div className="relative px-4 sm:px-12 lg:px-60 flex flex-col lg:flex-row">
+				<div className="relative px-4 sm:px-12 lg:px-[12rem] flex flex-col lg:flex-row">
 					<div
 						className="w-full lg:w-1/2 mb-6 lg:mb-0"
 						data-aos="fade-right"
@@ -614,7 +614,7 @@ export const HomePage = () => {
 					</div>
 				</div>
 
-				<div className="relative px-4 sm:px-12 lg:px-60 mt-16 flex flex-col lg:flex-row">
+				<div className="relative px-4 sm:px-12 lg:px-[12rem] mt-16 flex flex-col lg:flex-row">
 					<div className="flex flex-col justify-center w-full lg:w-1/2 mb-6 lg:mb-0">
 						<div className="flex flex-col gap-y-4 justify-center">
 							<h3 className="text-lg sm:text-xl font-secondary font-medium">
