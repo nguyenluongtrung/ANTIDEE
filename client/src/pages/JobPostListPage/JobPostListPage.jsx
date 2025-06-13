@@ -103,7 +103,7 @@ export const JobPostListPage = () => {
 	}
 
 	return (
-		<div className="md:px-16 pt-20 mb-10">
+		<div className="pt-20 mb-10">
 			{isOpenJobPostDetail && (
 				<JobPostDetail
 					selectedJobPost={selectedJobPost}
@@ -144,7 +144,7 @@ export const JobPostListPage = () => {
 					</button>
 				</div>
 			</div>
-			<div className="grid md:grid-cols-3 gap-28">
+			<div className="grid lg:grid-cols-3 md:px-12 px-10 md:grid-cols-2 gap-8">
 				{jobPosts
 					?.filter(
 						(jobPost) =>
@@ -181,9 +181,8 @@ export const JobPostListPage = () => {
 					?.map((post) => {
 						return (
 							<div
-								className={`shadow-xl p-7 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
+								className={`shadow-xl p-2 hover:shadow-2xl hover:cursor-pointer relative ${post?.isUrgent && 'bg-light_pink'
 									}`}
-								style={{ height: '350px' }}
 							>
 								<p className="text-black font-bold text-lg md:text-base text-center mb-3">
 									{post?.serviceId?.name?.toUpperCase()}
@@ -263,18 +262,15 @@ export const JobPostListPage = () => {
 										{post?.note ? post?.note : 'Không có'}
 									</span>
 								</p>
-								<div className="flex flex-col items-center absolute bottom-5 left-12 w-72">
-									<button
-										className="mt-5 text-white bg-green rounded-2xl text-xs py-2.5 text-center hover:bg-primary_dark hover:text-white"
-										style={{ width: '70%' }}
-										onClick={() => {
-											setSearchParams({ id: post?._id });
-											handleGetJobPostDetail(post?._id);
-										}}
-									>
-										<p className="text-center">Xem chi tiết công việc</p>
-									</button>
-								</div>
+								<button
+									className="mt-5 px-2 flex justify-center text-white bg-green rounded-2xl text-xs lg:w-[80%] mx-auto py-2.5 text-center hover:bg-primary_dark hover:text-white"
+									onClick={() => {
+										setSearchParams({ id: post?._id });
+										handleGetJobPostDetail(post?._id);
+									}}
+								>
+									<p className="text-center">Xem chi tiết công việc</p>
+								</button>
 							</div>
 						);
 					})}

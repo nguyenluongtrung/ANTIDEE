@@ -493,25 +493,25 @@ export const DetailOptionPage = () => {
       <StepBar serviceId={serviceId} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div
-          className="mx-auto shadow-xl p-2 pb-4 md:w-[700px] md:py-8 md:px-10 hover:shadow-2xl hover:cursor-pointer"
+          className="mx-auto shadow-xl px-10 pb-4 lg:w-[43.75rem] py-8 md:px-13 hover:shadow-2xl hover:cursor-pointer"
         >
-          <div>
-            <p className="font-extrabold mb-5">LỰA CHỌN CHI TIẾT</p>
-            <table>
+          <div >
+            <p className="font-extrabold text-center text-lg mb-10">LỰA CHỌN CHI TIẾT</p>
+            <table className="sm:w-full mx-auto">
               <tbody>
                 {chosenService?.priceOptions?.map((option, index) => {
                   return (
-                    <tr key={index}>
-                      <td>
-                        <p className="mr-3 mb-8">{option?.optionName}</p>
+                    <tr key={index} className="flex flex-wrap sm:flex-nowrap mb-6">
+                      <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                        <p className=" ">{option?.optionName}</p>
                       </td>
-                      <td className="pl-0 md:pl-32">
+                      <td className="pl-0 sm:pl-32 w-full">
                         {option?.optionList?.some(
                           (opt) => opt?.optionValue === ""
                         ) ? (
                           <input
                             type="number"
-                            className="border-b-2 border-light_gray w-72 focus:outline-none text-center"
+                            className="border-b-2 border-light_gray sm:w-72 focus:outline-none text-center"
                             onChange={(e) => {
                               setInputOptions((prevInputOptions) => {
                                 const updatedInputOptions = [
@@ -582,7 +582,7 @@ export const DetailOptionPage = () => {
                           </table>
                         ) : (
                           <select
-                            className="border-2 rounded-md w-72 p-2 border-light_gray text-center focus:outline-none"
+                            className="border-2 rounded-md sm:w-72 p-2 border-light_gray text-center focus:outline-none"
                             onChange={(e) => {
                               const input = e.target.value;
                               const inputValue = input.split("-")[0];
@@ -628,23 +628,23 @@ export const DetailOptionPage = () => {
                   );
                 })}
 
-                <tr>
-                  <td>
-                    <p className="mr-3 mb-8">Chọn ngày làm</p>
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className="">Chọn ngày làm</p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <input
                       type="date"
                       {...register("startingDate")}
                       min={new Date().toISOString().split("T")[0]}
                       defaultValue={formatDateInput(new Date())}
-                      className="border-2 rounded-md w-72 p-1.5 border-light_gray text-center focus:outline-none hover:cursor-pointer"
+                      className="border-2 rounded-md sm:w-72 p-1.5 border-light_gray text-center focus:outline-none hover:cursor-pointer"
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <p className="mr-3 mb-6">
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className="">
                       Chọn giờ làm{" "}
                       <span
                         className="italic text-gray underline hover:text-primary"
@@ -654,7 +654,7 @@ export const DetailOptionPage = () => {
                       </span>
                     </p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <input
                       type="time"
                       onChange={handleTimeChange}
@@ -663,13 +663,13 @@ export const DetailOptionPage = () => {
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <p className="mr-3 mb-6 mt-3">
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className="">
                       Ưu tiên người làm yêu thích
                     </p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <Switch
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                       onChange={handleToggleFavButton}
@@ -683,11 +683,11 @@ export const DetailOptionPage = () => {
                     </Switch>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <p className="mr-3 mb-6 mt-3">Bạn tự chọn người làm</p>
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className="">Bạn tự chọn người làm</p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <Switch
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                       onChange={handleToggleChosenYourselfButton}
@@ -701,11 +701,11 @@ export const DetailOptionPage = () => {
                     </Switch>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <p className="mr-3 mb-2 mt-3">Cần gấp</p>
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className=" mb-2">Cần gấp</p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <Switch
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                       onChange={handleToggleUrgentButton}
@@ -719,15 +719,15 @@ export const DetailOptionPage = () => {
                     </Switch>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <p className="mr-3">Nhập mã khuyến mãi</p>
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className="">Nhập mã khuyến mãi</p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <div className="flex">
                       <input
                         type="text"
-                        className="border-2 rounded-md w-72 p-1.5 border-light_gray text-center focus:outline-none mb-5"
+                        className="border-2 rounded-md sm:w-72 p-1.5 border-light_gray text-center focus:outline-none"
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
                       />
@@ -744,29 +744,29 @@ export const DetailOptionPage = () => {
                   </td>
                 </tr>
 
-                <tr>
-                  <td>
-                    <p className="mr-3">Nhập mã mời của bạn bè</p>
+                <tr className="flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
+                    <p className="">Nhập mã mời của bạn bè</p>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <input
                       type="text"
-                      className="border-2 rounded-md w-72 p-1.5 border-light_gray text-center focus:outline-none mb-5"
+                      className="border-2 rounded-md sm:w-72 p-1.5 border-light_gray text-center focus:outline-none"
                       onChange={handleInvitationCode}
                       value={invitationCode}
                     />
                   </td>
                 </tr>
                 {accountApoints !== undefined && (
-                  <tr>
+                  <tr className="flex flex-wrap sm:flex-nowrap mb-6">
                     <td>
-                      <p className="mr-3 mb-2 mt-3">
+                      <p className=" mb-2">
                         Dùng <span className="font-bold">{accountApoints}</span>{" "}
                         aPoints
                       </p>
                     </td>
 
-                    <td className="pl-0 md:pl-32">
+                    <td className="pl-0 sm:pl-32 w-full">
                       <Switch
                         className="group inline-flex h-6 w-11 items-center rounded-full bg-primary transition data-[checked]:bg-green data-[disabled]:opacity-50"
                         disabled={!totalPrice}
@@ -788,8 +788,8 @@ export const DetailOptionPage = () => {
                   </tr>
                 )}
 
-                <tr className="border-light_gray border-t-2">
-                  <td>
+                <tr className="border-light_gray border-t-2 flex flex-wrap sm:flex-nowrap mb-6">
+                  <td className="sm:max-w-[11.5625rem] w-full sm:mb-0 mb-6">
                     <div className="flex">
                       <p className="font-extrabold text-xs md:text-lg mt-5 md:mt-6">GIÁ TIỀN</p>
                       <span
@@ -800,7 +800,7 @@ export const DetailOptionPage = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="pl-0 md:pl-32">
+                  <td className="pl-0 sm:pl-32 w-full">
                     <p className="font-extrabold text-green text-lg mt-5">
                       {isNaN(totalPrice) ? 0 : Math.round(totalPrice)} VND
                     </p>
