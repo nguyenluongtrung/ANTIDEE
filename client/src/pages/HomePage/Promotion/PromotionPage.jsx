@@ -52,8 +52,8 @@ const PromotionPage = () => {
     };
 
     return (
-        <section className="section-promotion w-full mb-0 relative">
-            <h2 className="relative md:top-[7%] md:text-right text-center md:text-5xl text-4xl top-[12%] font-extrabold text-white px-3 py-1 animate-bounce">SỐC: NGẬP TRÀN KHUYẾN MÃI</h2>
+        <section className="section-promotion w-full mb-0 relative ">
+            <h2 className="relative md:top-[7%] md:text-right text-center lg:left-[13rem] sm:left-[10rem] sm:w-[80%] lg:text-5xl text-4xl top-[12%] font-extrabold text-white px-3 py-1 animate-bounce">SỐC: NGẬP TRÀN KHUYẾN MÃI</h2>
             <div className="relative md:top-[15%] top-[15%] md:left-[45%] rounded bg-white bg-opacity-70 transform md:w-[45%] w-[80%] m-10">
                 {promotionList.length > 0 ? (
                     <Slider {...settings}>

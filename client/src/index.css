@@ -28,3 +28,12 @@ span {
     left: 10px;
     transform: translateY(-50%);
 }
+
+.wrapper {
+  @media print, (min-width: 768px) {
+    width: calc(100% - 3.75rem);
+    max-width: 1120px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
